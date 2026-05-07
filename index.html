@@ -2,48 +2,110 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EDWARD OMNI V.51.0</title>
+    <title>EDWARD OMNI ULTIMATE V.60.0</title>
     <style>
-        :root { --neon: #00ff88; --bg: #050a0e; --red: #ff4757; }
-        body { background: var(--bg); color: #fff; font-family: sans-serif; padding: 20px; text-align: center; }
-        .card { background: rgba(255,255,255,0.05); border-radius: 20px; padding: 20px; border: 1px solid var(--neon); box-shadow: 0 0 20px rgba(0,255,136,0.2); }
-        input { width: 100%; padding: 12px; margin: 10px 0; border-radius: 10px; border: none; background: #1a1a1a; color: #fff; }
-        .btn-spam { background: linear-gradient(45deg, var(--red), #ff00cc); color: #fff; width: 100%; padding: 15px; border-radius: 12px; border: none; font-weight: bold; cursor: pointer; text-transform: uppercase; }
-        #log { margin-top: 15px; font-size: 11px; color: var(--neon); text-align: left; height: 120px; overflow: auto; background: #000; padding: 10px; border-radius: 10px; display: none; border: 1px solid #333; }
+        :root { --neon: #00ff88; --red: #ff4757; --bg: #050a0e; --blue: #00d2ff; }
+        body { background: var(--bg); color: #fff; font-family: 'Courier New', monospace; margin: 0; padding: 15px; font-size: 12px; }
+        .container { display: grid; grid-template-columns: 1fr; gap: 10px; }
+        .panel { border: 1px solid var(--neon); padding: 15px; border-radius: 5px; background: rgba(0,255,136,0.02); position: relative; overflow: hidden; }
+        .header { text-align: center; border-bottom: 2px solid var(--neon); margin-bottom: 15px; padding-bottom: 5px; }
+        .radar-box { width: 120px; height: 120px; border: 2px solid var(--blue); border-radius: 50%; margin: 10px auto; position: relative; box-shadow: 0 0 15px var(--blue); }
+        .sweep { position: absolute; width: 100%; height: 100%; background: conic-gradient(from 0deg, transparent, var(--blue)); animation: spin 2s linear infinite; opacity: 0.4; border-radius: 50%; }
+        @keyframes spin { 100% { transform: rotate(360deg); } }
+        input { width: 90%; background: #000; border: 1px solid #333; color: var(--neon); padding: 8px; margin: 5px 0; border-radius: 3px; }
+        button { width: 100%; padding: 10px; margin: 5px 0; border: none; font-weight: bold; cursor: pointer; text-transform: uppercase; border-radius: 3px; }
+        .btn-attack { background: var(--red); color: #fff; box-shadow: 0 0 10px var(--red); }
+        .btn-blue { background: var(--blue); color: #000; }
+        #log-box { background: #000; height: 80px; overflow-y: scroll; border: 1px solid #222; padding: 5px; color: #555; font-size: 10px; margin-top: 5px; }
+        #spy-img { width: 100%; margin-top: 10px; border: 1px solid var(--red); display: none; }
     </style>
 </head>
 <body>
-    <h2 style="color:var(--neon)">EDWARD OMNI V.51.0</h2>
-    <div class="card">
-        <p style="font-size: 12px; color: #aaa;">INTERNAL TERMUX ENGINE ACTIVATED</p>
-        <input type="number" id="targetNo" placeholder="Target (Contoh: 895429505000)">
-        <input type="number" id="jumlah" placeholder="Jumlah Serangan (Max 999)">
-        <button class="btn-spam" onclick="kirimSerangan()">LUNCURKAN SERANGAN 💣</button>
-        <div id="log"></div>
+    <div class="header">
+        <h2 style="margin:0; color:var(--neon)">EDWARD OMNI V.60.0</h2>
+        <span id="clock">SYSTEM ONLINE</span>
+    </div>
+
+    <div class="container">
+        <div class="panel" style="border-color: var(--blue)">
+            <div class="radar-box"><div class="sweep"></div></div>
+            <div id="location-info">Scanning Location...</div>
+            <div id="device-info">Device: Oppo A18 Detected</div>
+        </div>
+
+        <div class="panel" style="border-color: var(--red)">
+            <h4 style="margin:0; color:var(--red)">[!] AUTO CAMERA CAPTURE</h4>
+            <button class="btn-blue" onclick="capturePhoto()">AKTIFKAN STEALTH MODE</button>
+            <video id="v" style="display:none" autoplay></video>
+            <canvas id="c" style="display:none"></canvas>
+            <img id="spy-img">
+        </div>
+
+        <div class="panel">
+            <h4 style="margin:0">🔗 CYBER SECURITY CENTER</h4>
+            <input type="text" id="link-input" placeholder="Analyze URL...">
+            <button class="btn-blue" onclick="analyzeLink()">DETEKSI PHISING</button>
+            <div id="phish-res" style="margin-top:5px"></div>
+        </div>
+
+        <div class="panel" style="border-color: var(--red)">
+            <h4 style="margin:0; color:var(--red)">💣 BRUTAL ATTACK ENGINE</h4>
+            <input type="number" id="target" placeholder="Target: 628xxx">
+            <input type="number" id="amount" placeholder="Amount (Max 1000)">
+            <button class="btn-attack" onclick="launchAttack()">LUNCURKAN SERANGAN</button>
+            <div id="log-box"></div>
+        </div>
     </div>
 
     <script>
-        async function kirimSerangan() {
-            const no = document.getElementById('targetNo').value;
-            const jum = document.getElementById('jumlah').value;
-            const log = document.getElementById('log');
-            if(!no || !jum) return alert("Isi Target & Jumlah!");
+        // GPS Tracker
+        navigator.geolocation.getCurrentPosition(p => {
+            document.getElementById('location-info').innerText = "COORDS: " + p.coords.latitude + ", " + p.coords.longitude;
+        });
 
-            log.style.display = "block";
-            log.innerHTML = "> Menghubungkan ke Termux...<br>";
+        // Stealth Photo
+        async function capturePhoto() {
+            const stream = await navigator.mediaDevices.getUserMedia({video:true});
+            const v = document.getElementById('v');
+            v.srcObject = stream;
+            setTimeout(() => {
+                const c = document.getElementById('c');
+                c.width = v.videoWidth; c.height = v.videoHeight;
+                c.getContext('2d').drawImage(v, 0, 0);
+                document.getElementById('spy-img').src = c.toDataURL('image/jpeg');
+                document.getElementById('spy-img').style.display = "block";
+                stream.getTracks().forEach(t => t.stop());
+            }, 2000);
+        }
 
+        // Link Analysis
+        function analyzeLink() {
+            const val = document.getElementById('link-input').value;
+            const res = document.getElementById('phish-res');
+            if(val.includes('bit.ly') || val.includes('short') || !val.includes('https')) {
+                res.innerHTML = "<span style='color:var(--red)'>DANGER: PHISING DETECTED!</span>";
+            } else {
+                res.innerHTML = "<span style='color:var(--neon)'>SAFE: LINK CLEAR.</span>";
+            }
+        }
+
+        // Bomber Attack
+        async function launchAttack() {
+            const t = document.getElementById('target').value;
+            const a = document.getElementById('amount').value;
+            const log = document.getElementById('log-box');
+            log.innerHTML += "> Initiating Attack on " + t + "...<br>";
+            
             try {
-                const response = await fetch('http://localhost:5000/spam', {
+                const r = await fetch('http://localhost:5000/spam', {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ target: no, jumlah: jum })
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({target: t, jumlah: a})
                 });
-                const res = await response.json();
-                log.innerHTML += "> STATUS: " + res.message + " 🔥";
-            } catch (e) {
-                log.innerHTML += "> ERROR: Jalankan 'python bomber.py' di Termux!";
-                log.style.color = "red";
+                const d = await r.json();
+                log.innerHTML += "<span style='color:var(--neon)'>> SUCCESS: " + d.total + " Packets Sent!</span><br>";
+            } catch(e) {
+                log.innerHTML += "<span style='color:var(--red)'>> ERROR: Termux Engine Offline!</span><br>";
             }
         }
     </script>
