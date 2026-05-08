@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="manifest" href="manifest.json">
-    <title>EDWARD OMNI V.150</title>
+    <title>EDWARD OMNI V.151</title>
     <style>
         :root { --neon: #00ff88; --bg: #050a0e; --red: #ff4757; --purple: #bc13fe; --blue: #00bdff; --gold: #ffd700; }
         * { box-sizing: border-box; transition: 0.2s; }
@@ -15,114 +15,74 @@
         h3 { margin: 0 0 12px 0; font-size: 10px; color: rgba(255,255,255,0.5); letter-spacing: 2px; text-transform: uppercase; }
         input, select { background: rgba(0,0,0,0.5); border: 1px solid rgba(0,255,136,0.3); border-radius: 10px; color: var(--neon); padding: 12px; width: 100%; margin-bottom: 10px; outline: none; }
         .btn { width: 100%; padding: 14px; border-radius: 12px; border: none; cursor: pointer; font-weight: 800; font-size: 11px; text-transform: uppercase; display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 5px; }
+        .btn-dork { background: linear-gradient(45deg, #004e92, #000428); color: #fff; border: 1px solid var(--blue); }
         .btn-hunt { background: linear-gradient(45deg, var(--gold), #b8860b); color: #000; }
-        .btn-scan { background: #1a1a1a; color: var(--neon); border: 1px solid var(--neon); }
-        .btn-atk { background: linear-gradient(45deg, var(--red), var(--purple)); color: #fff; }
-        .sys-monitor { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px; }
-        .mon-box { border: 1px solid rgba(0,255,136,0.3); padding: 10px; border-radius: 12px; text-align: center; color: var(--neon); font-size: 11px; font-weight: bold; }
         .log-box { display: none; margin-top: 12px; background: #000; border-radius: 10px; padding: 10px; font-family: monospace; font-size: 9px; height: 120px; overflow-y: auto; border: 1px solid #1a1a1a; color: var(--neon); }
-        #webcamContainer { display: none; margin-top: 10px; border-radius: 15px; overflow: hidden; border: 1px solid var(--blue); }
-        #webcamLive { width: 100%; filter: sepia(100%) hue-rotate(80deg) brightness(1.2); }
-        #radarOverlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 9999; flex-direction: column; align-items: center; justify-content: center; }
         #customNotif { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); background: var(--neon); color: #000; padding: 12px 25px; border-radius: 50px; font-weight: 800; font-size: 11px; display: none; z-index: 10001; }
     </style>
 </head>
 <body>
     <div id="customNotif"></div>
     <div class="master-header">
-        <p class="master-name">EDWARD OMNI V.150</p>
-        <div class="sys-monitor">
-            <div class="mon-box">CPU: <span id="cpuLoad">0%</span></div>
-            <div class="mon-box">BOUNTY: <span id="bountyPot" style="color:var(--gold)">,500</span></div>
-        </div>
+        <p class="master-name">EDWARD OMNI V.151</p>
     </div>
 
     <div class="card">
-        <h3>💰 BUG BOUNTY PAYLOAD SET</h3>
-        <select id="payloadType">
-            <option value="XSS">Cross-Site Scripting (XSS)</option>
-            <option value="SQLI">SQL Injection</option>
-            <option value="IDOR">IDOR (Insecure Object Ref)</option>
+        <h3>🔍 GOOGLE DORKING (MANTRA)</h3>
+        <input type="text" id="dorkTarget" placeholder="Target Domain (misal: syfe.com)">
+        <select id="dorkType">
+            <option value="dir">Directory Listing (Intip Folder)</option>
+            <option value="log">Log Files (Cari Password/Email)</option>
+            <option value="config">Config Files (Cari Database)</option>
+            <option value="env">Environmental Files (.env)</option>
+            <option value="sub">Find Subdomains (Cari Anak Web)</option>
         </select>
-        <button class="btn btn-hunt" onclick="generatePayload()">🎁 GENERATE PAYLOAD</button>
-        <div id="huntLog" class="log-box"></div>
+        <button class="btn btn-dork" onclick="generateDork()">🔮 CAST MANTRA</button>
+        <div id="dorkLog" class="log-box"></div>
     </div>
 
     <div class="card">
-        <h3>🛡️ DEEP SCANNER & PHISHING DETECT</h3>
-        <input type="text" id="scanInput" placeholder="Target Domain (syfe.com)...">
-        <button class="btn btn-scan" onclick="analyzeLink()">⚡ ANALYZE TARGET</button>
-        <div id="scanLog" class="log-box"></div>
+        <h3>🎁 BUG BOUNTY PAYLOAD</h3>
+        <button class="btn btn-hunt" onclick="showPayload()">GENERATE PAYLOAD</button>
     </div>
 
     <div class="card">
-        <h3>📹 LIVE MONITORING</h3>
-        <button class="btn" style="background:var(--blue); color:#000" onclick="toggleWebcam()">🛰️ ACTIVATE CAM</button>
-        <div id="webcamContainer"><video id="webcamLive" autoplay playsinline></video></div>
-    </div>
-
-    <div class="card">
-        <h3>🔥 NUCLEAR BRUTAL</h3>
-        <input type="text" id="target1" placeholder="Flood Target">
-        <button class="btn btn-atk" id="atkBtn" onclick="toggleAtk()">LAUNCH NUCLEAR 🚀</button>
+        <h3>🛡️ DEEP SCANNER</h3>
+        <button class="btn" style="background:#1a1a1a; color:var(--neon)" onclick="alert('Scanner Ready')">SCAN TARGET</button>
     </div>
 
     <script>
-        const TOKEN = '8766727574:AAHYs-g11Up4SWnl4t8P3pHpMvS1XkKkr0g';
-        const CHAT_ID = '7898572558';
-        let isAtk = false;
-
-        setInterval(() => {
-            document.getElementById('cpuLoad').innerText = Math.floor(Math.random() * 30 + 60) + "%";
-        }, 1000);
-
         function showNotif(msg) {
             const n = document.getElementById('customNotif');
             n.innerText = msg; n.style.display = 'block';
-            setTimeout(() => { n.style.display = 'none'; }, 2500);
+            setTimeout(() => { n.style.display = 'none'; }, 2000);
         }
 
-        function generatePayload() {
-            const type = document.getElementById('payloadType').value;
-            const log = document.getElementById('huntLog');
+        function generateDork() {
+            const target = document.getElementById('dorkTarget').value || "target.com";
+            const type = document.getElementById('dorkType').value;
+            const log = document.getElementById('dorkLog');
             log.style.display = "block";
-            let p = "";
-            if(type === "XSS") p = "<script>alert('EDWARD-BAIK_XSS')<\/script>";
-            else if(type === "SQLI") p = "' OR 1=1 --";
-            else p = "/api/v1/user/10001 -> Ganti ID-nya!";
             
-            log.innerHTML = "> Payload Ready Master:<br><code style='color:var(--gold)'>" + p + "</code><br>> Copied to clipboard!";
-            navigator.clipboard.writeText(p);
-            showNotif("PAYLOAD COPIED!");
-        }
-
-        async function toggleWebcam() {
-            const c = document.getElementById('webcamContainer');
-            const v = document.getElementById('webcamLive');
-            if(c.style.display === 'block') {
-                v.srcObject.getTracks().forEach(t => t.stop());
-                c.style.display = 'none';
-            } else {
-                const s = await navigator.mediaDevices.getUserMedia({ video: true });
-                v.srcObject = s; c.style.display = 'block';
+            let mantra = "";
+            switch(type) {
+                case 'dir': mantra = "site:" + target + " intitle:index.of"; break;
+                case 'log': mantra = "site:" + target + " filetype:log"; break;
+                case 'config': mantra = "site:" + target + " extension:config OR extension:conf"; break;
+                case 'env': mantra = "site:" + target + " filetype:env \"DB_PASSWORD\""; break;
+                case 'sub': mantra = "site:*." + target + " -www"; break;
             }
+
+            log.innerHTML = "> Mantra Tercipta Master:<br><code style='color:var(--blue)'>" + mantra + "</code><br><br>> Menuju Google dalam 3 detik...";
+            showNotif("MANTRA COPIED!");
+            navigator.clipboard.writeText(mantra);
+            
+            setTimeout(() => {
+                window.open("https://www.google.com/search?q=" + encodeURIComponent(mantra), "_blank");
+            }, 3000);
         }
 
-        function analyzeLink() {
-            const url = document.getElementById('scanInput').value;
-            const log = document.getElementById('scanLog');
-            log.style.display = "block";
-            log.innerHTML = "> Scanning " + url + "...<br>> Subdomains found: api, uat, mark8<br>> Scope Validated!";
-            showNotif("TARGET ANALYZED");
-        }
-
-        function toggleAtk() {
-            if(isAtk) location.reload();
-            else {
-                isAtk = true; document.getElementById('atkBtn').innerText = "STOP 🛑";
-                showNotif("ATTACK STARTED");
-            }
-        }
+        function showPayload() { showNotif("PAYLOAD MODULE ACTIVE"); }
     </script>
 </body>
 </html>
