@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EDWARD OMNI V.177</title>
+    <title>EDWARD OMNI V.178</title>
     <style>
-        :root { --neon: #00ff88; --bg: #050a0e; --red: #ff4757; --gold: #ffd700; }
+        :root { --neon: #00ff88; --bg: #050a0e; --red: #ff4757; --blue: #00bdff; }
         * { box-sizing: border-box; transition: 0.2s; outline: none; }
         body { background: var(--bg); color: #fff; font-family: sans-serif; margin:0; padding: 15px; }
         .master-name { text-align: center; font-size: 22px; font-weight: 800; color: var(--neon); margin-bottom: 15px; text-transform: uppercase; text-shadow: 0 0 10px var(--neon); }
@@ -13,63 +13,68 @@
         h3 { margin: 0 0 10px 0; font-size: 10px; color: rgba(255,255,255,0.4); letter-spacing: 2px; text-transform: uppercase; border-left: 3px solid var(--neon); padding-left: 10px; }
         .input-group { background: rgba(0,0,0,0.6); border: 1px solid rgba(0,255,136,0.3); border-radius: 12px; padding: 8px; margin-bottom: 8px; }
         .label-text { font-size: 9px; color: var(--neon); display: block; margin-bottom: 3px; font-weight: bold; }
-        input { background: transparent; border: none; color: #fff; width: 100%; padding: 5px; font-size: 13px; }
+        input, select { background: transparent; border: none; color: #fff; width: 100%; padding: 5px; font-size: 13px; }
+        option { background: #050a0e; color: #fff; }
         .btn { width: 100%; padding: 12px; border-radius: 10px; border: none; cursor: pointer; font-weight: 800; font-size: 10px; text-transform: uppercase; display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 6px; }
-        .btn-gov { background: var(--gold); color: #000; font-size: 9px; }
-        .btn-cast { background: var(--neon); color: #000; }
-        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-        #customAlert { position: fixed; top: -150px; left: 50%; transform: translateX(-50%); width: 85%; background: #000; border: 2px solid var(--neon); color: #fff; padding: 15px; border-radius: 15px; font-size: 11px; font-weight: bold; text-align: center; z-index: 10001; box-shadow: 0 0 20px var(--neon); }
+        .btn-cast { background: var(--neon); color: #000; box-shadow: 0 0 15px var(--neon); }
+        .btn-atk { background: linear-gradient(45deg, var(--red), #bc13fe); color: #fff; }
+        #customAlert { position: fixed; top: -150px; left: 50%; transform: translateX(-50%); width: 85%; background: #000; border: 2px solid var(--neon); color: #fff; padding: 15px; border-radius: 15px; font-size: 11px; font-weight: bold; text-align: center; z-index: 10001; }
     </style>
 </head>
 <body>
-    <div id="customAlert"><p id="alertMsg"></p><button onclick="closeAlert()" style="background:var(--neon); border:none; padding:5px 15px; border-radius:5px; font-weight:bold;">OKE</button></div>
-    <p class="master-name">EDWARD OMNI V.177</p>
+    <div id="customAlert"><p id="alertMsg"></p><button onclick="closeAlert()" style="background:var(--neon); border:none; padding:5px 15px; border-radius:5px; font-weight:bold; margin-top:10px;">OKE</button></div>
+    <p class="master-name">EDWARD OMNI V.178</p>
 
     <div class="card">
-        <h3>🏛️ GOV INFILTRATOR (MANTRA TERLARANG)</h3>
-        <div class="input-group"><span class="label-text">TARGET (misal: go.id):</span><input type="text" id="govTarget" value="go.id"></div>
-        <div class="grid-2">
-            <button class="btn btn-gov" onclick="govMantra(1)">📂 DATA WARGA</button>
-            <button class="btn btn-gov" onclick="govMantra(2)">💰 ANGGARAN</button>
-            <button class="btn btn-gov" onclick="govMantra(3)">🔑 DB PASSWORD</button>
-            <button class="btn btn-gov" onclick="govMantra(4)">🚪 ADMIN PANEL</button>
+        <h3>🎯 TARGET & MANTRA (BUG HUNTER)</h3>
+        <div class="input-group"><span class="label-text">TARGET DOMAIN (e.g., go.id):</span><input type="text" id="targetMain" placeholder="Kosongkan untuk Global"></div>
+        <div class="input-group"><span class="label-text">MANTRA MANUAL:</span><input type="text" id="mantraManual" placeholder="intitle:index.of"></div>
+        <div class="input-group"><span class="label-text">MANTRA OTOMATIS:</span>
+            <select id="mantraAuto">
+                <option value="">-- PILIH MANTRA KHUSUS --</option>
+                <option value='filetype:xls OR filetype:xlsx "data penduduk"'>📂 DATA WARGA (EXCEL)</option>
+                <option value='filetype:pdf "anggaran" OR "dana"'>💰 CEK ANGGARAN</option>
+                <option value='filetype:env OR filetype:conf "db_password"'>🔑 DATABASE PASSWORD</option>
+                <option value='inurl:admin OR inurl:login'>🚪 LOGIN ADMIN</option>
+                <option value='intitle:index.of "parent directory"'>📁 DIRECTORY LISTING</option>
+            </select>
         </div>
-        <button class="btn btn-gov" style="width:100%; margin-top:5px; background:var(--red); color:#fff;" onclick="govMantra(5)">📁 DIRECTORY LISTING</button>
+        <button class="btn btn-cast" onclick="cast()">CAST MANTRA 🔮</button>
     </div>
 
     <div class="card">
         <h3>🛡️ TERMINATOR SCANNER</h3>
         <div class="input-group"><span class="label-text">SCAN LINK:</span><input type="text" id="scanInput"></div>
-        <button class="btn btn-cast" onclick="deepAnalyze()">⚡ START DEEP ANALYZE</button>
+        <button class="btn" style="background:transparent; border:1px solid var(--neon); color:var(--neon);" onclick="deepAnalyze()">⚡ START DEEP ANALYZE</button>
     </div>
 
     <div class="card">
-        <h3>🔥 NUCLEAR STRIKE</h3>
+        <h3>🔥 NUCLEAR STRIKE (BREAKER)</h3>
         <div class="input-group"><span class="label-text">TARGET:</span><input type="text" id="targetAtk"></div>
-        <button class="btn" style="background:var(--red); color:#fff;" id="atkBtn" onclick="launchAtk()">LAUNCH NUCLEAR 🚀</button>
+        <button class="btn btn-atk" id="atkBtn" onclick="launchAtk()">LAUNCH NUCLEAR 🚀</button>
     </div>
 
     <script>
         let isAtk = false;
         function showAlert(m) { const a=document.getElementById('customAlert'); document.getElementById('alertMsg').innerText=m; a.style.top='20px'; }
-        function closeAlert() { document.getElementById('customAlert').style.top='-150px'; }
+        function closeAlert() { document.getElementById('customAlert').style.top='-100px'; }
 
-        function govMantra(type) {
-            const t = document.getElementById('govTarget').value;
-            let q = "";
-            if(type==1) q = `site:${t} filetype:xls OR filetype:xlsx "data penduduk"`;
-            if(type==2) q = `site:${t} filetype:pdf "anggaran" OR "dana"`;
-            if(type==3) q = `site:${t} filetype:env OR filetype:conf "db_password"`;
-            if(type==4) q = `site:${t} inurl:admin OR inurl:login`;
-            if(type==5) q = `site:${t} intitle:index.of "parent directory"`;
-            window.open("https://www.google.com/search?q=" + encodeURIComponent(q), "_blank");
+        function cast() {
+            const t = document.getElementById('targetMain').value;
+            const manual = document.getElementById('mantraManual').value;
+            const auto = document.getElementById('mantraAuto').value;
+            const finalMantra = manual || auto;
+            
+            if(!finalMantra) return showAlert("ISI MANTRA DULU!");
+            const query = t ? `site:${t} ${finalMantra}` : finalMantra;
+            window.open("https://www.google.com/search?q=" + encodeURIComponent(query), "_blank");
         }
 
         function deepAnalyze() {
             const u = document.getElementById('scanInput').value.toLowerCase();
-            if(!u) return showAlert("KOSONG!");
+            if(!u) return showAlert("INPUT KOSONG!");
             if(u.startsWith("http://") || u.includes("dana") || u.includes("kaget")) {
-                showAlert("[DANGER] PHISING/UNSAFE DETECTED!");
+                showAlert("[DANGER] UNSAFE/PHISING DETECTED!");
             } else { showAlert("[SAFE] LINK CLEAN"); }
         }
 
