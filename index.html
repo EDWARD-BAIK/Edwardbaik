@@ -62,7 +62,7 @@ body{background:#0a0e17;color:#fff;font-family:'Segoe UI',sans-serif;padding:10p
 
 <div class="header">
 <h1>🎬 EDWARD</h1>
-<p>Nonton Anime, Movie, Donghua & Drama • 100% GRATIS</p>
+<p>Nonton Anime & Movie Gratis • 100% GRATIS</p>
 </div>
 
 <div class="search-wrap">
@@ -73,9 +73,7 @@ body{background:#0a0e17;color:#fff;font-family:'Segoe UI',sans-serif;padding:10p
 <div class="cat-scroll" id="cat">
 <button class="active" onclick="setCat('all')">🔥 Semua</button>
 <button onclick="setCat('anime')">🎌 Anime</button>
-<button onclick="setCat('donghua')">🐉 Donghua</button>
 <button onclick="setCat('movie')">🎬 Movie</button>
-<button onclick="setCat('kdrama')">🇰🇷 K-Drama</button>
 <button onclick="setCat('classic')">📼 Classic</button>
 </div>
 
@@ -98,7 +96,7 @@ body{background:#0a0e17;color:#fff;font-family:'Segoe UI',sans-serif;padding:10p
 </div>
 
 <script>
-// ===== DATA FILM (HAPUS AVENGERS 5, SPIDER-MAN 4, THE GLORY, SQUID GAME S3, ALL OF US ARE DEAD) =====
+// ===== DATA FILM =====
 const FILMS = [
 {title:'Attack on Titan',id:'tt2560140',type:'Anime'},
 {title:'Demon Slayer',id:'tt9335498',type:'Anime'},
@@ -154,7 +152,6 @@ function render(){
     if(curCat !== 'all'){
         items = FILMS.filter(i => 
             i.type.toLowerCase() === curCat.toLowerCase() ||
-            (curCat === 'kdrama' && i.type === 'K-Drama') ||
             (curCat === 'classic' && i.type === 'Classic')
         );
     }
