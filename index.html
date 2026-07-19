@@ -36,6 +36,7 @@ body{background:#121212;color:#fff;font-family:'Segoe UI',sans-serif;padding:0;m
 .search-wrap button:active{transform:scale(.95)}
 
 .cat-scroll{display:flex;gap:8px;overflow-x:auto;padding:0 30px 10px;scrollbar-width:none;position:relative;z-index:1}
+.cat-scroll::-webkit-scrollbar{display:none}
 .cat-scroll button{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);border-radius:30px;padding:6px 18px;color:#aaa;font-size:12px;cursor:pointer;white-space:nowrap;transition:.2s}
 .cat-scroll button.active{background:#1db954;border-color:#1db954;color:#121212}
 .cat-scroll button:active{transform:scale(.95)}
@@ -125,8 +126,9 @@ body{background:#121212;color:#fff;font-family:'Segoe UI',sans-serif;padding:0;m
 
 <script>
 // ============================================
-// YOUTUBE MUSIC API - GA PAKE TOKEN! NO GIMMICK!
+// PROXY CORS BUAT YOUTUBE MUSIC API
 // ============================================
+const PROXY = 'https://api.allorigins.win/raw?url=';
 const YT_API = 'https://api.ytmusicapi.com';
 
 // ============================================
@@ -165,6 +167,15 @@ function renderServers(){
 }
 
 // ============================================
+// FETCH DENGAN PROXY
+// ============================================
+async function fetchWithProxy(url){
+    const response = await fetch(PROXY + encodeURIComponent(url));
+    if(!response.ok) throw new Error('Failed to fetch');
+    return await response.json();
+}
+
+// ============================================
 // LOAD TRENDING
 // ============================================
 async function loadTrending(){
@@ -172,8 +183,7 @@ async function loadTrending(){
     grid.innerHTML = '<div class="loading">Loading...</div>';
     
     try {
-        const response = await fetch(`${YT_API}/browse/trending`);
-        const data = await response.json();
+        const data = await fetchWithProxy(`${YT_API}/browse/trending`);
         
         if(data && data.length > 0){
             const items = data.map(i => ({
@@ -203,8 +213,7 @@ async function loadCharts(){
     grid.innerHTML = '<div class="loading">Loading charts...</div>';
     
     try {
-        const response = await fetch(`${YT_API}/browse/charts`);
-        const data = await response.json();
+        const data = await fetchWithProxy(`${YT_API}/browse/charts`);
         
         if(data && data.length > 0){
             const items = data.map(i => ({
@@ -235,8 +244,7 @@ async function loadRandom(){
     
     try {
         const randomId = Math.floor(Math.random() * 1000000000);
-        const response = await fetch(`${YT_API}/search?q=music+${randomId}`);
-        const data = await response.json();
+        const data = await fetchWithProxy(`${YT_API}/search?q=music+${randomId}`);
         
         if(data && data.length > 0){
             const items = data.map(i => ({
@@ -269,8 +277,7 @@ async function search(){
     grid.innerHTML = '<div class="loading">Mencari...</div>';
     
     try {
-        const response = await fetch(`${YT_API}/search?q=${encodeURIComponent(q)}`);
-        const data = await response.json();
+        const data = await fetchWithProxy(`${YT_API}/search?q=${encodeURIComponent(q)}`);
         
         if(data && data.length > 0){
             const items = data.map(i => ({
