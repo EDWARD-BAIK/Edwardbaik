@@ -6,78 +6,26 @@
 <title>EDWARD - Nonton Gratis</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-body{background:#0a0e17;color:#fff;font-family:'Segoe UI',sans-serif;padding:10px;min-height:100vh;overflow-x:hidden}
+body{background:linear-gradient(135deg,#0a0e17,#1a1a3e,#0d1b2a);color:#fff;font-family:'Segoe UI',sans-serif;padding:10px;min-height:100vh;overflow-x:hidden}
 ::selection{background:#ff2d55;color:#fff}
 
-/* ===== BACKGROUND GERAK ===== */
-.background-scene{position:fixed;top:0;left:0;width:100%;height:100%;z-index:-1;overflow:hidden}
-.sky{position:absolute;top:0;left:0;width:100%;height:60%;background:linear-gradient(180deg,#1a237e,#42a5f5,#81d4fa);animation:skyAnim 20s ease-in-out infinite alternate}
-@keyframes skyAnim{
-0%{background:linear-gradient(180deg,#1a237e,#42a5f5,#81d4fa)}
-50%{background:linear-gradient(180deg,#0d47a1,#1e88e5,#4fc3f7)}
-100%{background:linear-gradient(180deg,#1a237e,#42a5f5,#81d4fa)}
-}
-.sun{position:absolute;top:8%;right:10%;width:60px;height:60px;background:radial-gradient(circle,#ffeb3b,#ff9800);border-radius:50%;box-shadow:0 0 80px #ffeb3b;animation:sunAnim 15s ease-in-out infinite alternate}
-@keyframes sunAnim{
-0%{transform:translateX(0) scale(1)}
-100%{transform:translateX(30px) scale(1.1)}
-}
-.clouds{position:absolute;top:10%;width:100%;height:100px;display:flex;gap:50px;animation:cloudMove 25s linear infinite}
-.cloud{width:120px;height:40px;background:rgba(255,255,255,.2);border-radius:50px;filter:blur(3px)}
-.cloud:nth-child(1){animation:cloudFloat 20s ease-in-out infinite}
-.cloud:nth-child(2){animation:cloudFloat 25s ease-in-out infinite reverse}
-.cloud:nth-child(3){animation:cloudFloat 30s ease-in-out infinite}
-@keyframes cloudFloat{
-0%{transform:translateX(-200px)}
-100%{transform:translateX(calc(100vw + 200px))}
-}
-@keyframes cloudMove{
-0%{transform:translateX(0)}
-100%{transform:translateX(-50%)}
-}
-.mountains{position:absolute;bottom:25%;width:100%;height:150px;display:flex;gap:0}
-.mountain{width:0;height:0;border-left:80px solid transparent;border-right:80px solid transparent;border-bottom:120px solid #2e7d32;filter:drop-shadow(0 5px 10px rgba(0,0,0,.3))}
-.mountain:nth-child(1){border-bottom-color:#1b5e20;transform:scale(1.2)}
-.mountain:nth-child(2){border-bottom-color:#2e7d32;transform:scale(1.5)}
-.mountain:nth-child(3){border-bottom-color:#388e3c;transform:scale(1)}
-.mountain:nth-child(4){border-bottom-color:#1b5e20;transform:scale(1.3)}
-.trees{position:absolute;bottom:15%;width:100%;display:flex;gap:10px;justify-content:space-around;flex-wrap:wrap}
-.tree{width:20px;height:40px;background:linear-gradient(180deg,#2e7d32,#1b5e20);clip-path:polygon(50% 0%,0% 100%,100% 100%);animation:treeSway 3s ease-in-out infinite alternate;transform-origin:bottom}
-.tree:nth-child(odd){animation-delay:.5s}
-.tree:nth-child(3n){height:50px;width:25px}
-.tree:nth-child(5n){height:35px;width:18px}
-@keyframes treeSway{
-0%{transform:rotate(-3deg)}
-100%{transform:rotate(3deg)}
-}
-.grass{position:absolute;bottom:0;width:100%;height:15%;background:linear-gradient(0deg,#2e7d32,#4caf50,#66bb6a);border-radius:50% 50% 0 0 / 20% 20% 0 0}
-.grass-blade{position:absolute;bottom:0;width:4px;height:20px;background:#4caf50;border-radius:50% 50% 0 0;animation:grassSway 2s ease-in-out infinite alternate;transform-origin:bottom}
-@keyframes grassSway{
-0%{transform:rotate(-5deg)}
-100%{transform:rotate(5deg)}
-}
-
-/* ===== OVERLAY ===== */
-.overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.5);z-index:0;pointer-events:none}
-
-/* ===== KONTEN ===== */
-.header{text-align:center;padding:15px 0 10px;border-bottom:2px solid #ff2d55;margin-bottom:10px;position:relative;z-index:1}
+.header{text-align:center;padding:15px 0 10px;border-bottom:2px solid #ff2d55;margin-bottom:10px}
 .header h1{font-size:26px;background:linear-gradient(135deg,#ff2d55,#00d4ff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;letter-spacing:1px}
 .header p{font-size:11px;color:rgba(255,255,255,.4);margin-top:4px}
 
-.search-wrap{display:flex;gap:8px;margin:10px 0;background:#141b2b;border-radius:30px;padding:4px;position:relative;z-index:1}
+.search-wrap{display:flex;gap:8px;margin:10px 0;background:#141b2b;border-radius:30px;padding:4px}
 .search-wrap input{flex:1;background:0;border:0;padding:12px 16px;color:#fff;font-size:13px;outline:0}
 .search-wrap input::placeholder{color:rgba(255,255,255,.3)}
 .search-wrap button{background:#ff2d55;border:0;border-radius:30px;padding:10px 20px;color:#fff;font-weight:600;cursor:pointer}
 .search-wrap button:active{transform:scale(.95)}
 
-.cat-scroll{display:flex;gap:8px;overflow-x:auto;padding:8px 0;margin-bottom:8px;scrollbar-width:none;position:relative;z-index:1}
+.cat-scroll{display:flex;gap:8px;overflow-x:auto;padding:8px 0;margin-bottom:8px;scrollbar-width:none}
 .cat-scroll::-webkit-scrollbar{display:none}
 .cat-scroll button{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);border-radius:30px;padding:6px 16px;color:#aaa;font-size:11px;cursor:pointer;white-space:nowrap;transition:.2s}
 .cat-scroll button.active{background:#ff2d55;border-color:#ff2d55;color:#fff}
 .cat-scroll button:active{transform:scale(.95)}
 
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:12px;margin-top:10px;position:relative;z-index:1}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:12px;margin-top:10px}
 .card{background:#141b2b;border-radius:14px;overflow:hidden;cursor:pointer;border:1px solid transparent;transition:.2s}
 .card:active{transform:scale(.96)}
 .card .poster{width:100%;aspect-ratio:2/3;display:flex;align-items:center;justify-content:center;text-align:center;padding:10px;font-size:13px;font-weight:700;color:#fff;position:relative;background:#1a2335}
@@ -105,29 +53,13 @@ body{background:#0a0e17;color:#fff;font-family:'Segoe UI',sans-serif;padding:10p
 .player-wrap .server-area button:hover{background:rgba(255,45,85,.2)}
 
 .loading{text-align:center;padding:30px;color:rgba(255,255,255,.3);font-size:13px}
-.footer{text-align:center;padding:20px 0 8px;border-top:1px solid rgba(255,255,255,.05);margin-top:15px;position:relative;z-index:1}
+.footer{text-align:center;padding:20px 0 8px;border-top:1px solid rgba(255,255,255,.05);margin-top:15px}
 .footer p{font-size:10px;color:rgba(255,255,255,.2)}
 .footer span{color:#ff2d55}
 </style>
 </head>
 <body>
 
-<!-- ===== BACKGROUND ===== -->
-<div class="background-scene">
-<div class="sky"></div>
-<div class="sun"></div>
-<div class="clouds"><div class="cloud"></div><div class="cloud"></div><div class="cloud"></div></div>
-<div class="mountains"><div class="mountain"></div><div class="mountain"></div><div class="mountain"></div><div class="mountain"></div></div>
-<div class="trees">
-<div class="tree"></div><div class="tree"></div><div class="tree"></div><div class="tree"></div>
-<div class="tree"></div><div class="tree"></div><div class="tree"></div><div class="tree"></div>
-<div class="tree"></div><div class="tree"></div><div class="tree"></div><div class="tree"></div>
-</div>
-<div class="grass"></div>
-</div>
-<div class="overlay"></div>
-
-<!-- ===== KONTEN ===== -->
 <div class="header">
 <h1>🎬 EDWARD</h1>
 <p>Nonton Anime & Movie Gratis • 100% GRATIS</p>
@@ -164,16 +96,14 @@ body{background:#0a0e17;color:#fff;font-family:'Segoe UI',sans-serif;padding:10p
 </div>
 
 <script>
-// ===== DATA FILM (DENGAN POSTER ASLI) =====
+// ===== DATA FILM =====
 const FILMS = [
-// ANIME
 {title:'Attack on Titan',id:'tt2560140',type:'Anime',img:'https://m.media-amazon.com/images/M/MV5BNDFjYTI4MjctNjExMS00MjBjLWJhMzYtYzUyMTE4MzQ4NjgxXkEyXkFqcGc@._V1_.jpg'},
 {title:'Demon Slayer',id:'tt9335498',type:'Anime',img:'https://m.media-amazon.com/images/M/MV5BZjZjNzI5MDctY2Y4YS00NmM4LTljMmItZTFkOTExNGI3ODRhXkEyXkFqcGc@._V1_.jpg'},
 {title:'One Piece',id:'tt0388629',type:'Anime',img:'https://m.media-amazon.com/images/M/MV5BODcwNWE3OTMtMDc3MS00NDFjLWE3OTctNDU3NjI3NjBmMWQyXkEyXkFqcGc@._V1_.jpg'},
 {title:'Jujutsu Kaisen',id:'tt12343534',type:'Anime',img:'https://m.media-amazon.com/images/M/MV5BZDg4YjRlMTAtNzY1Ny00NzA5LWEyNDYtZjk3ZThiYzA0ZDkzXkEyXkFqcGc@._V1_.jpg'},
 {title:'Naruto',id:'tt0988824',type:'Anime',img:'https://m.media-amazon.com/images/M/MV5BZmQ5NGFiNWEtMmMyMC00MDdiLTg4YjktOGY5Yzc2MDUxMTE1XkEyXkFqcGc@._V1_.jpg'},
 {title:'Bleach',id:'tt0434665',type:'Anime',img:'https://m.media-amazon.com/images/M/MV5BZjE0YjVjODQtZGY2NS00MDcyLThhMDAtZGQwMTZiOWNmNjRiXkEyXkFqcGc@._V1_.jpg'},
-// MOVIE
 {title:'The Lion',id:'tt6105098',type:'Movie',img:'https://m.media-amazon.com/images/M/MV5BOTk4ODU0MzYtODQyNi00ODI0LWIyZjAtY2ZlZDMzMTM0YzY4XkEyXkFqcGc@._V1_.jpg'},
 {title:'Everything Everywhere All at Once',id:'tt6710474',type:'Movie',img:'https://m.media-amazon.com/images/M/MV5BYTdiOTM5MWMtYjRjZC00YjdmLTk5MTYtZDA5YzI5N2MxNjBjXkEyXkFqcGc@._V1_.jpg'},
 {title:'Only the Brave',id:'tt3829920',type:'Movie',img:'https://m.media-amazon.com/images/M/MV5BMjA5NDM1MzE1MF5BMl5BanBnXkFtZTgwMjg4MjI4MjE@._V1_.jpg'},
@@ -183,7 +113,6 @@ const FILMS = [
 {title:'Final Destination 4',id:'tt1144884',type:'Movie',img:'https://m.media-amazon.com/images/M/MV5BMTc5OTU2OTM0M15BMl5BanBnXkFtZTYwMTM1ODg5._V1_.jpg'},
 {title:'Final Destination 5',id:'tt1622979',type:'Movie',img:'https://m.media-amazon.com/images/M/MV5BMTc5OTU2OTM0M15BMl5BanBnXkFtZTYwMTM1ODg5._V1_.jpg'},
 {title:'Deadpool 3',id:'tt6263850',type:'Movie',img:'https://m.media-amazon.com/images/M/MV5BZmU0M2Y1OGUtZjIxNi00ZjBkLTg1MjgtOWIyNThiZWIwYjRiXkEyXkFqcGc@._V1_.jpg'},
-// CLASSIC
 {title:'The Godfather',id:'tt0068646',type:'Classic',img:'https://m.media-amazon.com/images/M/MV5BM2MyNjYxNmUtYTVlMC00MmU3LTg5NmUtMTk4OTg0YzA1MGIxXkEyXkFqcGc@._V1_.jpg'},
 {title:'The Dark Knight',id:'tt0468569',type:'Classic',img:'https://m.media-amazon.com/images/M/MV5BMTMxNTMwODM0NF5BMl5BanBnXkFtZTcwODAyMTk2Mw@@._V1_.jpg'}
 ];
