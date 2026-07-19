@@ -28,7 +28,6 @@ body{background:#0a0e17;color:#fff;font-family:'Segoe UI',sans-serif;padding:15p
 .card .info{padding:12px}
 .card .info h4{font-size:13px;margin-bottom:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .card .info p{font-size:10px;color:rgba(255,255,255,.5)}
-.card .badge{position:absolute;top:8px;right:8px;background:var(--p);padding:2px 10px;border-radius:20px;font-size:9px;font-weight:700}
 .card-wrap{position:relative}
 .player-wrap{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.97);z-index:9999;flex-direction:column;align-items:center;justify-content:center;padding:20px}
 .player-wrap iframe{width:95%;max-width:1000px;height:70vh;border-radius:20px;border:2px solid var(--p)}
@@ -42,7 +41,7 @@ body{background:#0a0e17;color:#fff;font-family:'Segoe UI',sans-serif;padding:15p
 </head>
 <body>
 <div class="header">
-<h1>🎬 ANIX</h1>
+<h1>🎬 EDWARD</h1>
 <p>Nonton Anime & Movie Gratis • 100% No Iklan</p>
 </div>
 <div class="search-wrap">
@@ -50,14 +49,13 @@ body{background:#0a0e17;color:#fff;font-family:'Segoe UI',sans-serif;padding:15p
 <button onclick="searchMedia()">🔍 Cari</button>
 </div>
 <div class="cat-scroll" id="categoryList">
-<button class="active" onclick="setCategory('popular')">🔥 Populer</button>
+<button class="active" onclick="setCategory('all')">🔥 Semua</button>
 <button onclick="setCategory('anime')">🎌 Anime</button>
 <button onclick="setCategory('movie')">🎬 Movie</button>
-<button onclick="setCategory('k-drama')">🇰🇷 K-Drama</button>
-<button onclick="setCategory('china')">🇨🇳 China</button>
+<button onclick="setCategory('kdrama')">🇰🇷 K-Drama</button>
 </div>
 <div id="resultGrid" class="grid"><div class="loading">⏳ Loading...</div></div>
-<div class="footer"><p>© 2026 <span>ANIX</span> • 100% Gratis - <span>EDWARD</span></p></div>
+<div class="footer"><p>© 2026 <span>EDWARD</span> • 100% Gratis</p></div>
 
 <div class="player-wrap" id="playerWrap">
 <button class="close-btn" onclick="closePlayer()">✕</button>
@@ -65,89 +63,116 @@ body{background:#0a0e17;color:#fff;font-family:'Segoe UI',sans-serif;padding:15p
 </div>
 
 <script>
-const API_BASE = 'https://api.consumet.org';
-let currentCategory = 'popular';
-let currentPage = 1;
-let isLoading = false;
+// ============================================
+// DATABASE KONTEN LENGKAP (NO API, FULL OFFLINE)
+// ============================================
+const CONTENT_DB = [
+    // ===== ANIME =====
+    {title: 'Attack on Titan', id: 'tt2560140', type: 'Anime', img: 'https://cdn.myanimelist.net/images/anime/1000/110531.jpg'},
+    {title: 'Demon Slayer', id: 'tt9335498', type: 'Anime', img: 'https://cdn.myanimelist.net/images/anime/1286/99889.jpg'},
+    {title: 'One Piece', id: 'tt0388629', type: 'Anime', img: 'https://cdn.myanimelist.net/images/anime/1244/138851.jpg'},
+    {title: 'Jujutsu Kaisen', id: 'tt12343534', type: 'Anime', img: 'https://cdn.myanimelist.net/images/anime/1171/109222.jpg'},
+    {title: 'Solo Leveling', id: 'tt26635464', type: 'Anime', img: 'https://cdn.myanimelist.net/images/anime/1303/138497.jpg'},
+    {title: 'Naruto', id: 'tt0988824', type: 'Anime', img: 'https://cdn.myanimelist.net/images/anime/1460/98853.jpg'},
+    {title: 'Bleach', id: 'tt0434665', type: 'Anime', img: 'https://cdn.myanimelist.net/images/anime/1220/142476.jpg'},
+    {title: 'Chainsaw Man', id: 'tt11737520', type: 'Anime', img: 'https://cdn.myanimelist.net/images/anime/1806/126216.jpg'},
+    {title: 'My Hero Academia', id: 'tt10839590', type: 'Anime', img: 'https://cdn.myanimelist.net/images/anime/1276/142967.jpg'},
+    {title: 'Tokyo Revengers', id: 'tt15340256', type: 'Anime', img: 'https://cdn.myanimelist.net/images/anime/1222/113359.jpg'},
+    {title: 'Vinland Saga', id: 'tt13830912', type: 'Anime', img: 'https://cdn.myanimelist.net/images/anime/1500/103005.jpg'},
+    {title: 'Spy x Family', id: 'tt14731938', type: 'Anime', img: 'https://cdn.myanimelist.net/images/anime/1441/122425.jpg'},
+    {title: 'Mushoku Tensei', id: 'tt13215870', type: 'Anime', img: 'https://cdn.myanimelist.net/images/anime/1530/117776.jpg'},
+    {title: 'Re:Zero', id: 'tt12753044', type: 'Anime', img: 'https://cdn.myanimelist.net/images/anime/1526/117578.jpg'},
+    {title: '86 Eighty-Six', id: 'tt15174698', type: 'Anime', img: 'https://cdn.myanimelist.net/images/anime/1137/111268.jpg'},
+    {title: 'Hunter x Hunter', id: 'tt2098220', type: 'Anime', img: 'https://cdn.myanimelist.net/images/anime/1337/99013.jpg'},
+    {title: 'Fullmetal Alchemist', id: 'tt1355642', type: 'Anime', img: 'https://cdn.myanimelist.net/images/anime/1223/96541.jpg'},
+    {title: 'Death Note', id: 'tt0877057', type: 'Anime', img: 'https://cdn.myanimelist.net/images/anime/1079/133529.jpg'},
+    {title: 'Tokyo Ghoul', id: 'tt3741634', type: 'Anime', img: 'https://cdn.myanimelist.net/images/anime/1485/119329.jpg'},
+    {title: 'Black Clover', id: 'tt7441658', type: 'Anime', img: 'https://cdn.myanimelist.net/images/anime/1975/121705.jpg'},
+    
+    // ===== MOVIE =====
+    {title: 'Top Gun Maverick', id: 'tt1745960', type: 'Movie', img: 'https://m.media-amazon.com/images/M/MV5BZmEzZTk3YzgtY2JhYS00NzUzLWFjZjYtZmZkYzRlYmE0NzZiXkEyXkFqcGdeQXVyMTUzMTg2ODkz._V1_.jpg'},
+    {title: 'John Wick 4', id: 'tt10366206', type: 'Movie', img: 'https://m.media-amazon.com/images/M/MV5BMDExZGMyOTMtMDgyYi00NGIwLWJhMTEtOTQ1ODA0ZjE3MTFkXkEyXkFqcGdeQXVyMjM4NTM5NDY@._V1_.jpg'},
+    {title: 'Avatar 2', id: 'tt1630029', type: 'Movie', img: 'https://m.media-amazon.com/images/M/MV5BYjhiNjBlODctY2ZiOC00YjVlLWFlNzAtNTVhNzM1YjI1NzMxXkEyXkFqcGdeQXVyMjQxNTE1MDA@._V1_.jpg'},
+    {title: 'Spider-Man No Way Home', id: 'tt10872600', type: 'Movie', img: 'https://m.media-amazon.com/images/M/MV5BZWMyYzFjYTYtNTRjYi00OGExLWE2YzgtOGRmYjAxZTU3NzBiXkEyXkFqcGdeQXVyMzQ0MzA0NTM@._V1_.jpg'},
+    {title: 'Dune 2', id: 'tt13668894', type: 'Movie', img: 'https://m.media-amazon.com/images/M/MV5BNzU2NTY2MjU0OF5BMl5BanBnXkFtZTgwMTQ1NjU2MjE@._V1_.jpg'},
+    {title: 'Barbie', id: 'tt14539740', type: 'Movie', img: 'https://m.media-amazon.com/images/M/MV5BNjU3N2QxNzYtMjkxNC00MTc4LTk1NjQtMGEyODljNmJkOTI1XkEyXkFqcGdeQXVyODE5NzE3OTE@._V1_.jpg'},
+    {title: 'Fast X', id: 'tt1746090', type: 'Movie', img: 'https://m.media-amazon.com/images/M/MV5BN2Q0MTA0ODQtYzRlZi00ZmQwLWEwNmYtOGE4MzQzODU5ZGYzXkEyXkFqcGdeQXVyODE5NzE3OTE@._V1_.jpg'},
+    {title: 'The Batman', id: 'tt1877830', type: 'Movie', img: 'https://m.media-amazon.com/images/M/MV5BMDdmMTBiNTYtMDIzNi00NGVlLWIzMDYtZTk3MTQ3NGQxZGEwXkEyXkFqcGdeQXVyMzMwOTU5MDk@._V1_.jpg'},
+    {title: 'Doctor Strange 2', id: 'tt9419884', type: 'Movie', img: 'https://m.media-amazon.com/images/M/MV5BZmU0M2Y1OGUtZjIxNi00ZjBkLTg1MjgtOWIyNThiZWIwYjRiXkEyXkFqcGdeQXVyMTQyMTMwOTk0._V1_.jpg'},
+    {title: 'Eternals', id: 'tt9032400', type: 'Movie', img: 'https://m.media-amazon.com/images/M/MV5BZjQzMWM5NmMtODA2Yy00NjU2LWE2NTYtZjU1NzM3MGIyZGJjXkEyXkFqcGdeQXVyODE5NzE3OTE@._V1_.jpg'},
+    {title: 'Bullet Train', id: 'tt12593682', type: 'Movie', img: 'https://m.media-amazon.com/images/M/MV5BMDU2ZmM2OTYtNzIxYy00NjU5LWFlNTAtM2UwY2I5MjUyMzU5XkEyXkFqcGdeQXVyMTUzMTg2ODkz._V1_.jpg'},
+    {title: 'Everything Everywhere', id: 'tt6710474', type: 'Movie', img: 'https://m.media-amazon.com/images/M/MV5BYTdiOTM5MWMtYjRjZC00YjdmLTk5MTYtZDA5YzI5N2MxNjBjXkEyXkFqcGdeQXVyMTA1OTYzOTUx._V1_.jpg'},
+    {title: 'The Flash', id: 'tt0439572', type: 'Movie', img: 'https://m.media-amazon.com/images/M/MV5BOTk2NzUyOTctZDdlMS00MDJlLTgzNTEtNzQzYjFhNjA0YjJkXkEyXkFqcGdeQXVyMjkwOTAyMDU@._V1_.jpg'},
+    {title: 'Oppenheimer', id: 'tt15398776', type: 'Movie', img: 'https://m.media-amazon.com/images/M/MV5BMDBmYTZjNjUtN2M1MS00MTQ2LTk2ODgtNzc2M2QyZGE5NTVjXkEyXkFqcGdeQXVyNzAwMjU2MTY@._V1_.jpg'},
+    {title: 'The Meg 2', id: 'tt9224104', type: 'Movie', img: 'https://m.media-amazon.com/images/M/MV5BNjQ3NWM3ZjAtMTQ2NC00MjU4LTg2MzUtNzQ4MGM5NjI5N2RiXkEyXkFqcGdeQXVyMTUzMTg2ODkz._V1_.jpg'},
+    
+    // ===== K-DRAMA =====
+    {title: 'Squid Game', id: 'tt10919420', type: 'K-Drama', img: 'https://m.media-amazon.com/images/M/MV5BZjAyZmE4OTAtYmVkZi00NThjLWIxYzgtNmU5NTViNzhhMmQxXkEyXkFqcGdeQXVyMTEyMjM2NDc2._V1_.jpg'},
+    {title: 'All of Us Are Dead', id: 'tt13669776', type: 'K-Drama', img: 'https://m.media-amazon.com/images/M/MV5BNDU0OTNmODEtZjFhYi00MjA0LWJkNzktZTIyMDBiM2ExYzIwXkEyXkFqcGdeQXVyMTUzMTg2ODkz._V1_.jpg'},
+    {title: 'The Glory', id: 'tt17462624', type: 'K-Drama', img: 'https://m.media-amazon.com/images/M/MV5BOTIzZmRmOTQtYzhiNy00NDQyLWE1ZDEtZTdkYzRkZDA3MmI4XkEyXkFqcGdeQXVyMTUzMTg2ODkz._V1_.jpg'},
+    {title: 'My Name', id: 'tt15553894', type: 'K-Drama', img: 'https://m.media-amazon.com/images/M/MV5BYzA0NzA3NDUtZTE4Ny00MmE4LWE4NTAtNzA3ZDM5OTI1MWM2XkEyXkFqcGdeQXVyMTUzMTg2ODkz._V1_.jpg'},
+    {title: 'Hellbound', id: 'tt13106780', type: 'K-Drama', img: 'https://m.media-amazon.com/images/M/MV5BZTM2Y2IxMTAtNWE4OS00Y2NlLThlOWQtZjNlYmNhZTk1N2EwXkEyXkFqcGdeQXVyMTUzMTg2ODkz._V1_.jpg'},
+    {title: 'Vincenzo', id: 'tt12451520', type: 'K-Drama', img: 'https://m.media-amazon.com/images/M/MV5BMTQyNzU2MjE5N15BMl5BanBnXkFtZTgwMjA5MzUxMjE@._V1_.jpg'},
+    {title: 'Crash Landing on You', id: 'tt12732000', type: 'K-Drama', img: 'https://m.media-amazon.com/images/M/MV5BNTQ0NTc3MzEtODIzMC00YzQ5LTljMDUtODZlY2I5NzE4MjFhXkEyXkFqcGdeQXVyMTUzMTg2ODkz._V1_.jpg'},
+    {title: 'Kingdom', id: 'tt12891186', type: 'K-Drama', img: 'https://m.media-amazon.com/images/M/MV5BMmFiODQ3ZTQtMDg2MC00NmU3LThmODMtZWE2NWM3ODFjN2ZhXkEyXkFqcGdeQXVyMTUzMTg2ODkz._V1_.jpg'},
+    {title: 'Business Proposal', id: 'tt15800070', type: 'K-Drama', img: 'https://m.media-amazon.com/images/M/MV5BNGY4NmI0ZGItM2I5MS00YWI1LWJlNGMtN2E5ZjUwZGIzM2NmXkEyXkFqcGdeQXVyMTUzMTg2ODkz._V1_.jpg'},
+    {title: 'Itaewon Class', id: 'tt10751394', type: 'K-Drama', img: 'https://m.media-amazon.com/images/M/MV5BYzRkMjUxM2ItZTUzNi00YWI5LWI5ZTgtOWQxOGYwM2I4MDQzXkEyXkFqcGdeQXVyMTUzMTg2ODkz._V1_.jpg'},
+    {title: 'Extraordinary Attorney Woo', id: 'tt20859970', type: 'K-Drama', img: 'https://m.media-amazon.com/images/M/MV5BNDUwMDk3OTctYzE4ZC00Zjg5LWFlYjktMTI0MDk3M2RlM2QwXkEyXkFqcGdeQXVyMTUzMTg2ODkz._V1_.jpg'}
+];
 
-async function fetchMedia(category, page = 1, query = '') {
-    try {
-        let url = '';
-        if (query) {
-            url = `${API_BASE}/anime/gogoanime/${encodeURIComponent(query)}?page=${page}`;
-        } else {
-            const catMap = {
-                'popular': `${API_BASE}/anime/gogoanime/top-airing?page=${page}`,
-                'anime': `${API_BASE}/anime/gogoanime/recent-episodes?page=${page}`,
-                'movie': `${API_BASE}/movies?page=${page}`,
-                'k-drama': `${API_BASE}/drama?page=${page}`,
-                'china': `${API_BASE}/anime?page=${page}`
-            };
-            url = catMap[category] || catMap['popular'];
-        }
-        const resp = await fetch(url);
-        if (!resp.ok) throw new Error('Gagal fetch');
-        return await resp.json();
-    } catch(e) {
-        console.error('API Error:', e);
-        return fallbackData(query || category);
-    }
+// ============================================
+// PLAYER SOURCE (NO GIMMICK)
+// ============================================
+function getPlayerUrl(id) {
+    return `https://vidsrc.to/embed/movie/${id}`;
 }
 
-function fallbackData(key) {
-    const samples = {
-        'popular': [
-            {title:'Attack on Titan', image:'https://cdn.myanimelist.net/images/anime/1000/110531.jpg', id:'1', type:'Anime'},
-            {title:'Demon Slayer', image:'https://cdn.myanimelist.net/images/anime/1286/99889.jpg', id:'2', type:'Anime'},
-            {title:'One Piece', image:'https://cdn.myanimelist.net/images/anime/1244/138851.jpg', id:'3', type:'Anime'},
-            {title:'Jujutsu Kaisen', image:'https://cdn.myanimelist.net/images/anime/1171/109222.jpg', id:'4', type:'Anime'},
-            {title:'Solo Leveling', image:'https://cdn.myanimelist.net/images/anime/1303/138497.jpg', id:'5', type:'Anime'}
-        ],
-        'anime': [
-            {title:'Naruto', image:'https://cdn.myanimelist.net/images/anime/1460/98853.jpg', id:'6', type:'Anime'},
-            {title:'Bleach', image:'https://cdn.myanimelist.net/images/anime/1220/142476.jpg', id:'7', type:'Anime'}
-        ]
-    };
-    return { results: samples[key] || samples['popular'] };
-}
-
-async function searchMedia() {
-    const q = document.getElementById('searchInput').value.trim();
-    if (!q) return setCategory('popular');
-    showLoading();
-    try {
-        const data = await fetchMedia('', 1, q);
-        renderResults(data.results || data || []);
-    } catch(e) {
-        renderFallback(q);
-    }
-}
+// ============================================
+// FUNGSI UTAMA
+// ============================================
+let currentCategory = 'all';
 
 function setCategory(cat) {
     currentCategory = cat;
     document.querySelectorAll('.cat-scroll button').forEach(b => b.classList.remove('active'));
-    document.querySelector(`.cat-scroll button:contains(${cat})`)?.classList.add('active');
+    document.querySelector(`.cat-scroll button[onclick="setCategory('${cat}')"]`)?.classList.add('active');
     document.getElementById('searchInput').value = '';
-    loadCategory(cat);
+    renderContent();
 }
 
-function loadCategory(cat) {
-    showLoading();
-    fetchMedia(cat).then(data => {
-        renderResults(data.results || data || []);
-    }).catch(() => renderFallback(cat));
+function searchMedia() {
+    const q = document.getElementById('searchInput').value.trim().toLowerCase();
+    if (!q) return renderContent();
+    
+    const filtered = CONTENT_DB.filter(item => 
+        item.title.toLowerCase().includes(q) || 
+        item.type.toLowerCase().includes(q)
+    );
+    renderResults(filtered.length ? filtered : [{title: 'Tidak ditemukan', id: null, type: 'Error', img: ''}]);
+}
+
+function renderContent() {
+    let filtered = CONTENT_DB;
+    if (currentCategory !== 'all') {
+        filtered = CONTENT_DB.filter(item => 
+            item.type.toLowerCase() === currentCategory.toLowerCase() ||
+            (currentCategory === 'kdrama' && item.type === 'K-Drama')
+        );
+    }
+    renderResults(filtered);
 }
 
 function renderResults(items) {
     const grid = document.getElementById('resultGrid');
-    if (!items || !items.length) {
+    if (!items || !items.length || (items.length === 1 && items[0].title === 'Tidak ditemukan')) {
         grid.innerHTML = '<div class="loading">😞 Tidak ada hasil</div>';
         return;
     }
+    
     grid.innerHTML = items.map(item => `
         <div class="card-wrap">
-            <div class="card" onclick="playMedia('${item.id || item.title}')">
-                <img src="${item.image || 'https://via.placeholder.com/200x300/1a2335/fff?text=No+Image'}" 
+            <div class="card" onclick="${item.id ? `playMedia('${item.id}')` : 'alert(\'ID tidak valid\')'}">
+                <img src="${item.img || 'https://via.placeholder.com/200x300/1a2335/fff?text=No+Image'}" 
                      onerror="this.src='https://via.placeholder.com/200x300/1a2335/fff?text=Error'">
                 <div class="info">
                     <h4>${item.title || 'Unknown'}</h4>
@@ -158,21 +183,10 @@ function renderResults(items) {
     `).join('');
 }
 
-function renderFallback(key) {
-    const dummy = [
-        {title:'Demon Slayer - Mugen Train', image:'https://cdn.myanimelist.net/images/anime/1704/106947.jpg', id:'movie1', type:'Movie'},
-        {title:'Spy x Family', image:'https://cdn.myanimelist.net/images/anime/1441/122425.jpg', id:'anime1', type:'Anime'},
-        {title:'Kingdom Season 5', image:'https://cdn.myanimelist.net/images/anime/1130/138785.jpg', id:'anime2', type:'Anime'},
-        {title:'Squid Game S2', image:'https://cdn.myanimelist.net/images/anime/1190/138563.jpg', id:'drama1', type:'K-Drama'}
-    ];
-    renderResults(dummy);
-}
-
 function playMedia(id) {
     const player = document.getElementById('playerWrap');
     const iframe = document.getElementById('playerIframe');
-    // Redirect ke layanan streaming gratis
-    iframe.src = `https://vidsrc.to/embed/movie/${id}`;
+    iframe.src = getPlayerUrl(id);
     player.style.display = 'flex';
 }
 
@@ -181,41 +195,17 @@ function closePlayer() {
     document.getElementById('playerIframe').src = '';
 }
 
-function showLoading() {
-    document.getElementById('resultGrid').innerHTML = '<div class="loading">⏳ Memuat...</div>';
-}
+// ============================================
+// INIT & EVENT
+// ============================================
+window.onload = () => {
+    renderContent();
+    document.querySelector('.cat-scroll button.active')?.classList.remove('active');
+    document.querySelector('.cat-scroll button:first-child')?.classList.add('active');
+};
 
-// Init
-window.onload = () => loadCategory('popular');
-
-// Auto-hide player on ESC
 document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') closePlayer();
-    if (e.key === 'Enter' && document.activeElement === document.getElementById('searchInput')) {
-        searchMedia();
-    }
-});
-
-// Smooth scroll for category buttons
-document.querySelectorAll('.cat-scroll button').forEach(btn => {
-    btn.addEventListener('click', function() {
-        document.querySelectorAll('.cat-scroll button').forEach(b => b.classList.remove('active'));
-        this.classList.add('active');
-    });
-});
-
-// Touch support for mobile
-let touchStartX = 0;
-document.addEventListener('touchstart', e => touchStartX = e.changedTouches[0].screenX);
-document.addEventListener('touchend', e => {
-    const diff = touchStartX - e.changedTouches[0].screenX;
-    if (Math.abs(diff) > 50) {
-        const btns = document.querySelectorAll('.cat-scroll button');
-        const active = document.querySelector('.cat-scroll button.active');
-        const idx = Array.from(btns).indexOf(active);
-        if (diff > 0 && idx < btns.length - 1) btns[idx+1].click();
-        else if (diff < 0 && idx > 0) btns[idx-1].click();
-    }
 });
 </script>
 </body>
