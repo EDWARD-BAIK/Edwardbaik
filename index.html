@@ -9,26 +9,22 @@
 body{background:#0a0e17;color:#fff;font-family:'Segoe UI',sans-serif;padding:10px;min-height:100vh}
 ::selection{background:#ff2d55;color:#fff}
 
-/* HEADER */
 .header{text-align:center;padding:15px 0 10px;border-bottom:2px solid #ff2d55;margin-bottom:10px}
 .header h1{font-size:26px;background:linear-gradient(135deg,#ff2d55,#00d4ff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;letter-spacing:1px}
 .header p{font-size:11px;color:rgba(255,255,255,.4);margin-top:4px}
 
-/* SEARCH */
 .search-wrap{display:flex;gap:8px;margin:10px 0;background:#141b2b;border-radius:30px;padding:4px}
 .search-wrap input{flex:1;background:0;border:0;padding:12px 16px;color:#fff;font-size:13px;outline:0}
 .search-wrap input::placeholder{color:rgba(255,255,255,.3)}
 .search-wrap button{background:#ff2d55;border:0;border-radius:30px;padding:10px 20px;color:#fff;font-weight:600;cursor:pointer}
 .search-wrap button:active{transform:scale(.95)}
 
-/* CATEGORY */
 .cat-scroll{display:flex;gap:8px;overflow-x:auto;padding:8px 0;margin-bottom:8px;scrollbar-width:none}
 .cat-scroll::-webkit-scrollbar{display:none}
 .cat-scroll button{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);border-radius:30px;padding:6px 16px;color:#aaa;font-size:11px;cursor:pointer;white-space:nowrap;transition:.2s}
 .cat-scroll button.active{background:#ff2d55;border-color:#ff2d55;color:#fff}
 .cat-scroll button:active{transform:scale(.95)}
 
-/* GRID */
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:12px;margin-top:10px}
 .card{background:#141b2b;border-radius:14px;overflow:hidden;cursor:pointer;border:1px solid transparent;transition:.2s}
 .card:active{transform:scale(.96)}
@@ -39,7 +35,6 @@ body{background:#0a0e17;color:#fff;font-family:'Segoe UI',sans-serif;padding:10p
 .card .info h4{font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .card .info p{font-size:10px;color:rgba(255,255,255,.4);margin-top:2px}
 
-/* PLAYER */
 .player-wrap{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.97);z-index:9999;flex-direction:column;align-items:center;justify-content:flex-start;padding:10px;padding-top:60px}
 .player-wrap .top{position:absolute;top:0;left:0;right:0;padding:12px 16px;display:flex;justify-content:space-between;align-items:center;background:rgba(0,0,0,.8);border-bottom:2px solid #ff2d55;flex-wrap:wrap;gap:8px;z-index:10}
 .player-wrap .top .t{font-size:14px;font-weight:600;max-width:60%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
@@ -49,10 +44,8 @@ body{background:#0a0e17;color:#fff;font-family:'Segoe UI',sans-serif;padding:10p
 .player-wrap .top .close{background:#ff2d55}
 .player-wrap iframe{width:100%;max-width:1100px;height:65vh;border-radius:12px;border:2px solid #ff2d55;background:#000;flex-shrink:0}
 
-/* GARIS MERAH PEMISAH */
 .player-wrap .server-divider{width:80%;max-width:800px;height:2px;background:linear-gradient(90deg,transparent,#ff2d55,transparent);margin:10px 0 8px 0;opacity:.6;flex-shrink:0}
 
-/* SERVER AREA - DI BAWAH VIDEO */
 .player-wrap .server-area{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;background:rgba(0,0,0,.7);padding:10px 16px;border-radius:30px;backdrop-filter:blur(8px);z-index:10;max-width:95%;border:1px solid rgba(255,45,85,.2);min-width:280px;flex-shrink:0}
 .player-wrap .server-area button{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);border-radius:30px;padding:8px 12px;color:#fff;font-size:11px;cursor:pointer;transition:.2s;font-weight:500;text-align:center;min-width:50px}
 .player-wrap .server-area button.active{background:#ff2d55;border-color:#ff2d55;box-shadow:0 0 20px rgba(255,45,85,.3)}
@@ -133,18 +126,16 @@ const FILMS = [
 {title:'The Dark Knight',id:'tt0468569',type:'Classic'}
 ];
 
-// ===== 8 SERVER WORK TERBARU (GANTI TOTAL) =====
+// ===== 6 SERVER PALING WORK =====
 const SERVERS = [
-    id => `https://vidsrc.xyz/embed/movie/${id}`,
-    id => `https://vidsrc.pro/embed/movie/${id}`,
-    id => `https://vidsrc.pm/embed/movie/${id}`,
+    id => `https://vidsrc.to/embed/movie/${id}`,
+    id => `https://vidsrc.net/embed/movie/${id}`,
+    id => `https://vidsrc.in/embed/movie/${id}`,
     id => `https://embed.su/embed/${id}`,
-    id => `https://www.2embed.cc/embed/${id}`,
     id => `https://multiembed.mov/?video_id=${id}&tmdb=1`,
-    id => `https://vidsrc.cc/v2/embed/movie/${id}`,
-    id => `https://vidembed.cc/embed/movie/${id}`
+    id => `https://www.2embed.cc/embed/${id}`
 ];
-const SERVER_NAMES = ['S1', 'S2', 'S3', 'S4', 'S5', 'S6', 'S7', 'S8'];
+const SERVER_NAMES = ['S1', 'S2', 'S3', 'S4', 'S5', 'S6'];
 
 let curSvr = 0, curId = '', curCat = 'all';
 
@@ -165,7 +156,6 @@ function refreshPlayer(){
     if(curId) document.getElementById('iframe').src = getUrl(curId); 
 }
 
-// ===== RENDER SERVER =====
 function renderServers(){
     const container = document.getElementById('sv');
     container.innerHTML = SERVERS.map((_, i) => 
@@ -173,7 +163,6 @@ function renderServers(){
     ).join('');
 }
 
-// ===== RENDER FILM =====
 function render(){
     let items = FILMS;
     if(curCat !== 'all'){
@@ -242,7 +231,6 @@ function closePlayer(){
     document.body.style.overflow = 'auto';
 }
 
-// ===== START =====
 window.onload = function(){ 
     render(); 
     renderServers(); 
