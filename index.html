@@ -33,11 +33,11 @@ body{background:#0a0a0a;color:#fff;font-family:'Courier New',monospace;padding:1
 
 <div class="header">
 <h1>👁️ ED<span>WARD</span> <span style="color:#00ff41;font-size:12px;">· ESP</span></h1>
-<p>Edward-esp2026 · Multi Target Tracker</p>
+<p>Edward-esp2026 · Real Face Detection</p>
 </div>
 
 <div class="stats">
-<div><small>TARGETS</small><span id="objCount">0</span></div>
+<div><small>FACE</small><span id="objCount">0</span></div>
 <div><small>FPS</small><span id="fpsCount">0</span></div>
 <div><small>STATUS</small><span id="statusText" style="font-size:14px;">●</span></div>
 </div>
@@ -50,19 +50,25 @@ body{background:#0a0a0a;color:#fff;font-family:'Courier New',monospace;padding:1
 <div class="controls">
 <button id="btnStart" class="active" onclick="startCamera()">📷 Start</button>
 <button id="btnStop" onclick="stopCamera()">⏹ Stop</button>
-<button id="btnReset" onclick="resetTracker()">🔄 Reset</button>
 <button class="full" onclick="toggleFullscreen()">⛶ Full</button>
 </div>
 
-<div class="footer"><p>© 2026 <span>EDWARD</span> · Edward-esp2026 · <span id="modelStatus">ESP Active</span></p></div>
+<div class="footer"><p>© 2026 <span>EDWARD</span> · Edward-esp2026 · <span id="modelStatus">Loading MediaPipe...</span></p></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/@mediapipe/face_detection/face_detection.js" crossorigin="anonymous"></script>
 
 <script>
-let stream = null;
+// ============================================
+// REAL FACE DETECTION - MEDIAPIPE
+// ============================================
+let camera = null;
 let running = false;
 let animationId = null;
 let frameCount = 0;
 let lastFpsTime = Date.now();
 let fps = 0;
+let faceDetector = null;
 
 const video = document.getElementById('video');
 const canvas = document.getElementById('canvas');
@@ -72,9 +78,6 @@ const fpsCount = document.getElementById('fpsCount');
 const statusText = document.getElementById('statusText');
 const modelStatus = document.getElementById('modelStatus');
 const cameraWrap = document.getElementById('cameraWrap');
-
-let targets = [];
-let trackingId = 0;
 
 // ============================================
 // FULLSCREEN
@@ -88,218 +91,188 @@ function toggleFullscreen() {
 }
 
 // ============================================
-// CAMERA
+// FACE DETECTION CALLBACK
+// ============================================
+function onResults(results) {
+    if (!running) return;
+
+    frameCount++;
+    const now = Date.now();
+    if (now - lastFpsTime > 1000) {
+        fps = frameCount;
+        frameCount = 0;
+        lastFpsTime = now;
+        fpsCount.textContent = fps;
+    }
+
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    
+    // Gambar video mirror
+    ctx.save();
+    ctx.scale(-1, 1);
+    ctx.drawImage(video, -canvas.width, 0, canvas.width, canvas.height);
+    ctx.restore();
+
+    const faces = results.detections || [];
+    objCount.textContent = faces.length;
+
+    if (faces.length === 0) {
+        ctx.fillStyle = 'rgba(255,255,255,0.15)';
+        ctx.font = '13px Courier New';
+        ctx.textAlign = 'center';
+        ctx.fillText('Arahkan ke wajah', canvas.width/2, canvas.height/2);
+        return;
+    }
+
+    const colors = ['#ff2d55','#00d4ff','#ffd700','#00ff41','#ff6b35','#7b2ffc'];
+
+    faces.forEach((face, idx) => {
+        const bbox = face.boundingBox;
+        if (!bbox) return;
+        
+        const x = bbox.originX || 0;
+        const y = bbox.originY || 0;
+        const w = bbox.width || 0;
+        const h = bbox.height || 0;
+        const color = colors[idx % colors.length];
+
+        // Tali/garis ESP
+        ctx.strokeStyle = color;
+        ctx.globalAlpha = 0.2;
+        ctx.lineWidth = 1.5;
+        ctx.setLineDash([6, 8]);
+        
+        ctx.beginPath();
+        ctx.moveTo(x + w/2, y);
+        ctx.lineTo(x + w/2, 0);
+        ctx.stroke();
+        
+        ctx.beginPath();
+        ctx.moveTo(x + w/2, y + h);
+        ctx.lineTo(x + w/2, canvas.height);
+        ctx.stroke();
+        
+        ctx.beginPath();
+        ctx.moveTo(x, y + h/2);
+        ctx.lineTo(0, y + h/2);
+        ctx.stroke();
+        
+        ctx.beginPath();
+        ctx.moveTo(x + w, y + h/2);
+        ctx.lineTo(canvas.width, y + h/2);
+        ctx.stroke();
+        
+        ctx.setLineDash([]);
+        ctx.globalAlpha = 1;
+
+        // Bounding Box
+        ctx.shadowColor = color;
+        ctx.shadowBlur = 25;
+        ctx.strokeStyle = color;
+        ctx.lineWidth = 2.5;
+        ctx.strokeRect(x, y, w, h);
+        ctx.shadowBlur = 0;
+
+        // Center cross
+        ctx.strokeStyle = color;
+        ctx.globalAlpha = 0.5;
+        ctx.lineWidth = 1;
+        const cx = x + w/2;
+        const cy = y + h/2;
+        const size = 10;
+        ctx.beginPath();
+        ctx.moveTo(cx - size, cy);
+        ctx.lineTo(cx + size, cy);
+        ctx.moveTo(cx, cy - size);
+        ctx.lineTo(cx, cy + size);
+        ctx.stroke();
+        ctx.globalAlpha = 1;
+
+        // Jarak (estimasi berdasarkan ukuran)
+        const dist = Math.round(50 - (w * h) / 2500);
+        ctx.fillStyle = color;
+        ctx.globalAlpha = 0.6;
+        ctx.font = '10px Courier New';
+        ctx.textAlign = 'right';
+        ctx.textBaseline = 'top';
+        ctx.fillText(Math.max(2, dist) + 'm', x + w - 6, y + 6);
+        ctx.globalAlpha = 1;
+
+        // Label
+        ctx.fillStyle = color;
+        ctx.globalAlpha = 0.4;
+        ctx.font = '9px Courier New';
+        ctx.textAlign = 'left';
+        ctx.textBaseline = 'bottom';
+        ctx.fillText('#' + (idx + 1), x + 6, y + h + 16);
+        ctx.globalAlpha = 1;
+    });
+}
+
+// ============================================
+// START CAMERA
 // ============================================
 async function startCamera() {
     try {
-        if (stream) { stream.getTracks().forEach(t => t.stop()); stream = null; }
+        if (camera) {
+            camera.stop();
+            camera = null;
+        }
 
-        stream = await navigator.mediaDevices.getUserMedia({
-            video: {
-                facingMode: 'environment',
-                width: { ideal: 640 },
-                height: { ideal: 480 }
-            },
-            audio: false
+        faceDetector = new FaceDetection({
+            locateFile: (file) => {
+                return `https://cdn.jsdelivr.net/npm/@mediapipe/face_detection/${file}`;
+            }
         });
 
-        video.srcObject = stream;
-        video.muted = true;
+        faceDetector.setOptions({
+            model: 'short',
+            minDetectionConfidence: 0.5,
+        });
+
+        faceDetector.onResults(onResults);
+
+        const videoElement = document.getElementById('video');
         
-        await new Promise(resolve => {
-            video.onloadedmetadata = () => resolve();
-            setTimeout(resolve, 1500);
+        camera = new Camera(videoElement, {
+            onFrame: async () => {
+                await faceDetector.send({image: videoElement});
+            },
+            width: 640,
+            height: 480
         });
 
-        await video.play();
+        await camera.start();
+        
+        canvas.width = 640;
+        canvas.height = 480;
         
         statusText.textContent = '●';
         statusText.style.color = '#00ff41';
+        modelStatus.textContent = '✅ Face Detection Active';
+        running = true;
+        
         document.getElementById('btnStart').classList.remove('active');
-
-        canvas.width = video.videoWidth || 640;
-        canvas.height = video.videoHeight || 480;
-
-        if (!running) {
-            running = true;
-            detectLoop();
-        }
+        
     } catch(e) {
         alert('Error: ' + e.message);
         statusText.textContent = '✕';
         statusText.style.color = '#ff2d55';
+        modelStatus.textContent = '❌ ' + e.message;
     }
 }
 
 function stopCamera() {
-    if (stream) { stream.getTracks().forEach(t => t.stop()); stream = null; }
-    video.srcObject = null;
     running = false;
-    if (animationId) { cancelAnimationFrame(animationId); animationId = null; }
+    if (camera) {
+        camera.stop();
+        camera = null;
+    }
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     objCount.textContent = '0';
-    targets = [];
     statusText.textContent = '⬤';
     statusText.style.color = '#ff4444';
     document.getElementById('btnStart').classList.add('active');
-}
-
-function resetTracker() {
-    targets = [];
-    objCount.textContent = '0';
-}
-
-// ============================================
-// DETECTION LOOP
-// ============================================
-async function detectLoop() {
-    if (!running) return;
-    await detect();
-    animationId = requestAnimationFrame(detectLoop);
-}
-
-function detect() {
-    if (!video.srcObject || video.readyState < 2) return;
-
-    try {
-        frameCount++;
-        const now = Date.now();
-        if (now - lastFpsTime > 1000) {
-            fps = frameCount;
-            frameCount = 0;
-            lastFpsTime = now;
-            fpsCount.textContent = fps;
-        }
-
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        
-        ctx.save();
-        ctx.scale(-1, 1);
-        ctx.drawImage(video, -canvas.width, 0, canvas.width, canvas.height);
-        ctx.restore();
-
-        // ============================================
-        // SIMULASI 3 TARGET ESP
-        // ============================================
-        const w = canvas.width;
-        const h = canvas.height;
-        const time = Date.now() / 1000;
-
-        // Target 1 - bergerak pelan
-        const t1x = 100 + Math.sin(time * 0.5) * 60;
-        const t1y = 120 + Math.cos(time * 0.7) * 50;
-        const t1w = 80 + Math.sin(time * 0.3) * 10;
-        const t1h = 100 + Math.cos(time * 0.4) * 10;
-
-        // Target 2 - bergerak di sisi lain
-        const t2x = w - 180 + Math.sin(time * 0.6 + 2) * 50;
-        const t2y = 150 + Math.cos(time * 0.5 + 1) * 60;
-        const t2w = 70 + Math.sin(time * 0.4 + 1) * 8;
-        const t2h = 90 + Math.cos(time * 0.3 + 2) * 8;
-
-        // Target 3 - kecil (jarak jauh)
-        const t3x = w/2 - 30 + Math.sin(time * 0.8 + 3) * 100;
-        const t3y = 80 + Math.cos(time * 0.6 + 4) * 40;
-        const t3w = 40 + Math.sin(time * 0.5 + 3) * 6;
-        const t3h = 50 + Math.cos(time * 0.4 + 4) * 6;
-
-        const simulatedTargets = [
-            {id:1, x:t1x, y:t1y, w:t1w, h:t1h},
-            {id:2, x:t2x, y:t2y, w:t2w, h:t2h},
-            {id:3, x:t3x, y:t3y, w:t3w, h:t3h}
-        ];
-
-        targets = simulatedTargets;
-        objCount.textContent = targets.length;
-
-        const COLORS = ['#ff2d55','#00d4ff','#ffd700'];
-
-        targets.forEach((t, idx) => {
-            const color = COLORS[idx % COLORS.length];
-            const x = t.x;
-            const y = t.y;
-            const w = t.w;
-            const h = t.h;
-
-            // Tali/garis ESP
-            ctx.strokeStyle = color;
-            ctx.globalAlpha = 0.25;
-            ctx.lineWidth = 1.5;
-            ctx.setLineDash([6, 8]);
-            
-            ctx.beginPath();
-            ctx.moveTo(x + w/2, y);
-            ctx.lineTo(x + w/2, 0);
-            ctx.stroke();
-            
-            ctx.beginPath();
-            ctx.moveTo(x + w/2, y + h);
-            ctx.lineTo(x + w/2, canvas.height);
-            ctx.stroke();
-            
-            ctx.beginPath();
-            ctx.moveTo(x, y + h/2);
-            ctx.lineTo(0, y + h/2);
-            ctx.stroke();
-            
-            ctx.beginPath();
-            ctx.moveTo(x + w, y + h/2);
-            ctx.lineTo(canvas.width, y + h/2);
-            ctx.stroke();
-            
-            ctx.setLineDash([]);
-            ctx.globalAlpha = 1;
-
-            // Bounding Box
-            ctx.shadowColor = color;
-            ctx.shadowBlur = 25;
-            ctx.strokeStyle = color;
-            ctx.lineWidth = 2.5;
-            ctx.strokeRect(x, y, w, h);
-            ctx.shadowBlur = 0;
-
-            // Center cross
-            ctx.strokeStyle = color;
-            ctx.globalAlpha = 0.5;
-            ctx.lineWidth = 1;
-            const cx = x + w/2;
-            const cy = y + h/2;
-            const size = 10;
-            ctx.beginPath();
-            ctx.moveTo(cx - size, cy);
-            ctx.lineTo(cx + size, cy);
-            ctx.moveTo(cx, cy - size);
-            ctx.lineTo(cx, cy + size);
-            ctx.stroke();
-            ctx.globalAlpha = 1;
-
-            // Jarak
-            const dist = Math.round(50 - (w * h) / 2000);
-            ctx.fillStyle = color;
-            ctx.globalAlpha = 0.6;
-            ctx.font = '10px Courier New';
-            ctx.textAlign = 'right';
-            ctx.textBaseline = 'top';
-            ctx.fillText(Math.max(3, dist) + 'm', x + w - 6, y + 6);
-            ctx.globalAlpha = 1;
-
-            // Label ID
-            ctx.fillStyle = color;
-            ctx.globalAlpha = 0.4;
-            ctx.font = '9px Courier New';
-            ctx.textAlign = 'left';
-            ctx.textBaseline = 'bottom';
-            ctx.fillText('#' + t.id, x + 6, y + h + 16);
-            ctx.globalAlpha = 1;
-        });
-
-        // Info
-        ctx.fillStyle = 'rgba(255,255,255,0.15)';
-        ctx.font = '10px Courier New';
-        ctx.textAlign = 'center';
-        ctx.fillText('SIMULASI ESP • ' + targets.length + ' target', canvas.width/2, canvas.height - 10);
-
-    } catch(e) {}
 }
 
 // ============================================
@@ -307,7 +280,7 @@ function detect() {
 // ============================================
 setTimeout(() => {
     startCamera();
-}, 500);
+}, 1000);
 </script>
 </body>
 </html>
