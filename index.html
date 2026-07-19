@@ -22,7 +22,7 @@ body{background:#0a0e17;color:#fff;font-family:'Segoe UI',sans-serif;padding:15p
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:15px;margin-top:15px}
 .card{background:#141b2b;border-radius:16px;overflow:hidden;cursor:pointer;border:1px solid transparent}
 .card:hover{transform:translateY(-5px);border-color:var(--p)}
-.card img{width:100%;aspect-ratio:2/3;object-fit:cover}
+.card img{width:100%;aspect-ratio:2/3;object-fit:cover;background:#1a2335}
 .card .info{padding:12px}
 .card .info h4{font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .card .info p{font-size:10px;color:rgba(255,255,255,.5)}
@@ -86,55 +86,64 @@ body{background:#0a0e17;color:#fff;font-family:'Segoe UI',sans-serif;padding:15p
 </div>
 
 <script>
-// ===== DATABASE DENGAN POSTER RESMI =====
+// ===== FUNGSI GET POSTER (MULTI SOURCE) =====
+function getPoster(id, title) {
+    // Kalo ID gak ada, pake placeholder
+    if (!id) return 'https://via.placeholder.com/200x300/1a2335/fff?text=No+Image';
+    
+    // Coba pake TMDB alternatif
+    return `https://img.omdbapi.com/?i=${id}&apikey=8a4b7b1e`;
+}
+
+// ===== DATABASE =====
 const DB = [
-// ===== ANIME =====
-{title:'Attack on Titan Final',id:'tt2560140',type:'Anime',img:'https://image.tmdb.org/t/p/w500/9yjvyDMLBw54rRJmItF2qP8aYbC.jpg'},
-{title:'Demon Slayer S4',id:'tt9335498',type:'Anime',img:'https://image.tmdb.org/t/p/w500/zC6pzViEeJXeLnlWvKd6V8dKqkf.jpg'},
-{title:'One Piece (Latest)',id:'tt0388629',type:'Anime',img:'https://image.tmdb.org/t/p/w500/9k5sRc1yR5jqI5wP5J8fJ8X1Xkf.jpg'},
-{title:'Jujutsu Kaisen S3',id:'tt12343534',type:'Anime',img:'https://image.tmdb.org/t/p/w500/4A3Y1sX5l5g5Qh5l5g5Qh5l5g5.jpg'},
-{title:'Solo Leveling S2',id:'tt26635464',type:'Anime',img:'https://image.tmdb.org/t/p/w500/5g5Qh5l5g5Qh5l5g5Qh5l5g5.jpg'},
-{title:'Naruto Shippuden',id:'tt0988824',type:'Anime',img:'https://image.tmdb.org/t/p/w500/5g5Qh5l5g5Qh5l5g5Qh5l5g5.jpg'},
-{title:'Bleach TYBW',id:'tt0434665',type:'Anime',img:'https://image.tmdb.org/t/p/w500/5g5Qh5l5g5Qh5l5g5Qh5l5g5.jpg'},
-{title:'Chainsaw Man',id:'tt11737520',type:'Anime',img:'https://image.tmdb.org/t/p/w500/5g5Qh5l5g5Qh5l5g5Qh5l5g5.jpg'},
-{title:'My Hero Academia S7',id:'tt10839590',type:'Anime',img:'https://image.tmdb.org/t/p/w500/5g5Qh5l5g5Qh5l5g5Qh5l5g5.jpg'},
-{title:'Tokyo Revengers S3',id:'tt15340256',type:'Anime',img:'https://image.tmdb.org/t/p/w500/5g5Qh5l5g5Qh5l5g5Qh5l5g5.jpg'},
+// ANIME
+{title:'Attack on Titan Final',id:'tt2560140',type:'Anime'},
+{title:'Demon Slayer S4',id:'tt9335498',type:'Anime'},
+{title:'One Piece (Latest)',id:'tt0388629',type:'Anime'},
+{title:'Jujutsu Kaisen S3',id:'tt12343534',type:'Anime'},
+{title:'Solo Leveling S2',id:'tt26635464',type:'Anime'},
+{title:'Naruto Shippuden',id:'tt0988824',type:'Anime'},
+{title:'Bleach TYBW',id:'tt0434665',type:'Anime'},
+{title:'Chainsaw Man',id:'tt11737520',type:'Anime'},
+{title:'My Hero Academia S7',id:'tt10839590',type:'Anime'},
+{title:'Tokyo Revengers S3',id:'tt15340256',type:'Anime'},
 
-// ===== DONGHUA =====
-{title:'Soul Land',id:'tt10544940',type:'Donghua',img:'https://image.tmdb.org/t/p/w500/5g5Qh5l5g5Qh5l5g5Qh5l5g5.jpg'},
-{title:'Battle Through Heavens',id:'tt10544942',type:'Donghua',img:'https://image.tmdb.org/t/p/w500/5g5Qh5l5g5Qh5l5g5Qh5l5g5.jpg'},
-{title:'The King\'s Avatar',id:'tt10544944',type:'Donghua',img:'https://image.tmdb.org/t/p/w500/5g5Qh5l5g5Qh5l5g5Qh5l5g5.jpg'},
-{title:'Scissor Seven',id:'tt10544946',type:'Donghua',img:'https://image.tmdb.org/t/p/w500/5g5Qh5l5g5Qh5l5g5Qh5l5g5.jpg'},
-{title:'Mo Dao Zu Shi',id:'tt10544950',type:'Donghua',img:'https://image.tmdb.org/t/p/w500/5g5Qh5l5g5Qh5l5g5Qh5l5g5.jpg'},
-{title:'Tian Guan Ci Fu',id:'tt10544952',type:'Donghua',img:'https://image.tmdb.org/t/p/w500/5g5Qh5l5g5Qh5l5g5Qh5l5g5.jpg'},
+// DONGHUA
+{title:'Soul Land',id:'tt10544940',type:'Donghua'},
+{title:'Battle Through Heavens',id:'tt10544942',type:'Donghua'},
+{title:'The King\'s Avatar',id:'tt10544944',type:'Donghua'},
+{title:'Scissor Seven',id:'tt10544946',type:'Donghua'},
+{title:'Mo Dao Zu Shi',id:'tt10544950',type:'Donghua'},
+{title:'Tian Guan Ci Fu',id:'tt10544952',type:'Donghua'},
 
-// ===== MOVIE + FINAL DESTINATION + MERAH PUTIH =====
-{title:'Final Destination 1',id:'tt0195714',type:'Movie',img:'https://image.tmdb.org/t/p/w500/6bB7cVJZ4hQJ5w5w5w5w5w5w5.jpg'},
-{title:'Final Destination 2',id:'tt0309593',type:'Movie',img:'https://image.tmdb.org/t/p/w500/6bB7cVJZ4hQJ5w5w5w5w5w5w5.jpg'},
-{title:'Final Destination 3',id:'tt0414982',type:'Movie',img:'https://image.tmdb.org/t/p/w500/6bB7cVJZ4hQJ5w5w5w5w5w5w5.jpg'},
-{title:'The Final Destination 4',id:'tt1144884',type:'Movie',img:'https://image.tmdb.org/t/p/w500/6bB7cVJZ4hQJ5w5w5w5w5w5w5.jpg'},
-{title:'Final Destination 5',id:'tt1622979',type:'Movie',img:'https://image.tmdb.org/t/p/w500/6bB7cVJZ4hQJ5w5w5w5w5w5w5.jpg'},
-{title:'Final Destination: Bloodlines (2025)',id:'tt27040740',type:'Movie',img:'https://image.tmdb.org/t/p/w500/6bB7cVJZ4hQJ5w5w5w5w5w5w5.jpg'},
-{title:'Merah Putih One For All',id:'tt12345678',type:'Movie',img:'https://image.tmdb.org/t/p/w500/6bB7cVJZ4hQJ5w5w5w5w5w5w5.jpg'},
-{title:'Deadpool 3',id:'tt6263850',type:'Movie',img:'https://image.tmdb.org/t/p/w500/6bB7cVJZ4hQJ5w5w5w5w5w5w5.jpg'},
-{title:'Dune 3',id:'tt30933272',type:'Movie',img:'https://image.tmdb.org/t/p/w500/6bB7cVJZ4hQJ5w5w5w5w5w5w5.jpg'},
-{title:'Avatar 3',id:'tt17576734',type:'Movie',img:'https://image.tmdb.org/t/p/w500/6bB7cVJZ4hQJ5w5w5w5w5w5w5.jpg'},
-{title:'Avengers 5',id:'tt21361868',type:'Movie',img:'https://image.tmdb.org/t/p/w500/6bB7cVJZ4hQJ5w5w5w5w5w5w5.jpg'},
-{title:'Spider-Man 4',id:'tt31289056',type:'Movie',img:'https://image.tmdb.org/t/p/w500/6bB7cVJZ4hQJ5w5w5w5w5w5w5.jpg'},
-{title:'The Batman 2',id:'tt20118904',type:'Movie',img:'https://image.tmdb.org/t/p/w500/6bB7cVJZ4hQJ5w5w5w5w5w5w5.jpg'},
-{title:'Joker 2',id:'tt14858048',type:'Movie',img:'https://image.tmdb.org/t/p/w500/6bB7cVJZ4hQJ5w5w5w5w5w5w5.jpg'},
-{title:'Gladiator 2',id:'tt10366206',type:'Movie',img:'https://image.tmdb.org/t/p/w500/6bB7cVJZ4hQJ5w5w5w5w5w5w5.jpg'},
+// MOVIE + FINAL DESTINATION + MERAH PUTIH
+{title:'Final Destination 1',id:'tt0195714',type:'Movie'},
+{title:'Final Destination 2',id:'tt0309593',type:'Movie'},
+{title:'Final Destination 3',id:'tt0414982',type:'Movie'},
+{title:'The Final Destination 4',id:'tt1144884',type:'Movie'},
+{title:'Final Destination 5',id:'tt1622979',type:'Movie'},
+{title:'Final Destination: Bloodlines (2025)',id:'tt27040740',type:'Movie'},
+{title:'Merah Putih One For All',id:'tt12345678',type:'Movie'},
+{title:'Deadpool 3',id:'tt6263850',type:'Movie'},
+{title:'Dune 3',id:'tt30933272',type:'Movie'},
+{title:'Avatar 3',id:'tt17576734',type:'Movie'},
+{title:'Avengers 5',id:'tt21361868',type:'Movie'},
+{title:'Spider-Man 4',id:'tt31289056',type:'Movie'},
+{title:'The Batman 2',id:'tt20118904',type:'Movie'},
+{title:'Joker 2',id:'tt14858048',type:'Movie'},
+{title:'Gladiator 2',id:'tt10366206',type:'Movie'},
 
-// ===== K-DRAMA =====
-{title:'Squid Game S3',id:'tt19463462',type:'K-Drama',img:'https://image.tmdb.org/t/p/w500/6bB7cVJZ4hQJ5w5w5w5w5w5w5.jpg'},
-{title:'All of Us Are Dead S2',id:'tt23898882',type:'K-Drama',img:'https://image.tmdb.org/t/p/w500/6bB7cVJZ4hQJ5w5w5w5w5w5w5.jpg'},
-{title:'The Glory S2',id:'tt20859782',type:'K-Drama',img:'https://image.tmdb.org/t/p/w500/6bB7cVJZ4hQJ5w5w5w5w5w5w5.jpg'},
-{title:'My Name',id:'tt15553894',type:'K-Drama',img:'https://image.tmdb.org/t/p/w500/6bB7cVJZ4hQJ5w5w5w5w5w5w5.jpg'},
+// K-DRAMA
+{title:'Squid Game S3',id:'tt19463462',type:'K-Drama'},
+{title:'All of Us Are Dead S2',id:'tt23898882',type:'K-Drama'},
+{title:'The Glory S2',id:'tt20859782',type:'K-Drama'},
+{title:'My Name',id:'tt15553894',type:'K-Drama'},
 
-// ===== CLASSIC =====
-{title:'The Godfather',id:'tt0068646',type:'Classic',img:'https://image.tmdb.org/t/p/w500/6bB7cVJZ4hQJ5w5w5w5w5w5w5.jpg'},
-{title:'Shawshank Redemption',id:'tt0111161',type:'Classic',img:'https://image.tmdb.org/t/p/w500/6bB7cVJZ4hQJ5w5w5w5w5w5w5.jpg'},
-{title:'The Dark Knight',id:'tt0468569',type:'Classic',img:'https://image.tmdb.org/t/p/w500/6bB7cVJZ4hQJ5w5w5w5w5w5w5.jpg'}
+// CLASSIC
+{title:'The Godfather',id:'tt0068646',type:'Classic'},
+{title:'Shawshank Redemption',id:'tt0111161',type:'Classic'},
+{title:'The Dark Knight',id:'tt0468569',type:'Classic'}
 ];
 
 // ===== PLAYER SERVERS =====
@@ -146,7 +155,7 @@ const SVR = [
     id => `https://embed.su/embed/${id}`
 ];
 
-let curSvr = 0, curId = '', curCat = 'all', retryCount = 0;
+let curSvr = 0, curId = '', curCat = 'all';
 
 function getUrl(id){ return SVR[curSvr](id) }
 
@@ -155,14 +164,12 @@ function switchSvr(i){
     document.querySelectorAll('#sv button').forEach((b,j) => b.classList.toggle('active', j === i));
     if(curId) {
         document.getElementById('iframe').src = getUrl(curId);
-        retryCount = 0;
     }
 }
 
 function refreshPlayer(){
     if(curId) {
         document.getElementById('iframe').src = getUrl(curId);
-        retryCount = 0;
     }
 }
 
@@ -178,7 +185,7 @@ function search(){
     const q = document.getElementById('search').value.trim().toLowerCase();
     if(!q) return render();
     const f = DB.filter(i => i.title.toLowerCase().includes(q) || i.type.toLowerCase().includes(q));
-    renderResults(f.length ? f : [{title:'Tidak ditemukan', id:null, type:'Error', img:''}]);
+    renderResults(f.length ? f : [{title:'Tidak ditemukan', id:null, type:'Error'}]);
 }
 
 function render(){
@@ -200,21 +207,22 @@ function renderResults(items){
         g.innerHTML = '<div class="loading">😞 Tidak ada hasil</div>';
         return;
     }
-    g.innerHTML = items.map(i => `
+    g.innerHTML = items.map(i => {
+        const poster = getPoster(i.id, i.title);
+        return `
         <div class="card" onclick="${i.id ? `play('${i.id}','${i.title.replace(/'/g, "\\'")}')` : ''}">
-            <img src="${i.img || 'https://image.tmdb.org/t/p/w500/placeholder.jpg'}" 
-                 onerror="this.src='https://image.tmdb.org/t/p/w500/placeholder.jpg'">
+            <img src="${poster}" 
+                 onerror="this.src='https://via.placeholder.com/200x300/1a2335/fff?text=${encodeURIComponent(i.title)}'">
             <div class="info">
                 <h4>${i.title}</h4>
                 <p>${i.type}</p>
             </div>
         </div>
-    `).join('');
+    `}).join('');
 }
 
 function play(id, title){
     curId = id;
-    retryCount = 0;
     document.getElementById('ptitle').textContent = '🎬 ' + title;
     document.getElementById('iframe').src = getUrl(id);
     document.getElementById('player').style.display = 'flex';
