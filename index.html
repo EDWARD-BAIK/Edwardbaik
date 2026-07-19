@@ -125,15 +125,9 @@ body{background:#141414;color:#fff;font-family:'Segoe UI',sans-serif;padding:0;m
 
 <script>
 // ============================================
-// PROXY PALING GACOR
+// CONSUMET API - GA PAKE PROXY!
 // ============================================
-const PROXIES = [
-    'https://api.allorigins.win/raw?url=',
-    'https://corsproxy.io/?'
-];
-
-const TMDB_KEY = 'e5b9a63f3b5d8450a9d923a2b72a8e9a';
-const TMDB_URL = 'https://api.themoviedb.org/3';
+const CONSUMET = 'https://api.consumet.org';
 
 // ============================================
 // SERVER PLAYER
@@ -171,23 +165,6 @@ function renderServers(){
 }
 
 // ============================================
-// FETCH TMDB PAKE PROXY
-// ============================================
-async function fetchTMDB(url){
-    for(let i = 0; i < PROXIES.length; i++){
-        try {
-            const response = await fetch(PROXIES[i] + encodeURIComponent(url));
-            if(response.ok){
-                return await response.json();
-            }
-        } catch(e) {
-            console.warn('Proxy ' + i + ' error:', e);
-        }
-    }
-    throw new Error('Semua proxy gagal');
-}
-
-// ============================================
 // LOAD TRENDING
 // ============================================
 async function loadTrending(){
@@ -195,18 +172,29 @@ async function loadTrending(){
     grid.innerHTML = '<div class="loading">Loading...</div>';
     
     try {
-        const url = `${TMDB_URL}/trending/all/week?api_key=${TMDB_KEY}`;
-        const data = await fetchTMDB(url);
+        const url = `${CONSUMET}/anime/gogoanime/top-airing`;
+        const resp = await fetch(url);
+        const data = await resp.json();
         
         if(data.results && data.results.length > 0){
-            renderResults(data.results);
-            heroData = data.results[0];
-            updateHero(heroData);
+            const items = data.results.map(i => ({
+                title: i.title || 'Unknown',
+                id: i.id || '',
+                type: 'Anime',
+                img: i.image || 'https://via.placeholder.com/200x300/1a2335/fff?text=No+Image',
+                overview: i.synopsis || 'Anime rekomendasi untukmu.',
+                year: i.releaseDate || ''
+            }));
+            renderResults(items);
+            if(items.length > 0) {
+                heroData = items[0];
+                updateHero(heroData);
+            }
         } else {
             grid.innerHTML = '<div class="loading">😞 Gagal memuat data</div>';
         }
     } catch(e){
-        grid.innerHTML = '<div class="loading">⚠️ Proxy error: ' + e.message + '</div>';
+        grid.innerHTML = '<div class="loading">⚠️ Error: ' + e.message + '</div>';
     }
 }
 
@@ -221,26 +209,29 @@ async function search(){
     grid.innerHTML = '<div class="loading">Mencari...</div>';
     
     try {
-        const url = `${TMDB_URL}/search/multi?api_key=${TMDB_KEY}&query=${encodeURIComponent(q)}`;
-        const data = await fetchTMDB(url);
+        const url = `${CONSUMET}/anime/gogoanime/${encodeURIComponent(q)}`;
+        const resp = await fetch(url);
+        const data = await resp.json();
         
         if(data.results && data.results.length > 0){
-            let results = data.results.filter(i => i.media_type !== 'person');
-            if(curCat !== 'all' && curCat !== 'anime'){
-                results = results.filter(i => i.media_type === curCat);
-            }
-            if(results.length > 0){
-                renderResults(results);
-                heroData = results[0];
+            const items = data.results.map(i => ({
+                title: i.title || 'Unknown',
+                id: i.id || '',
+                type: 'Anime',
+                img: i.image || 'https://via.placeholder.com/200x300/1a2335/fff?text=No+Image',
+                overview: i.synopsis || '',
+                year: i.releaseDate || ''
+            }));
+            renderResults(items);
+            if(items.length > 0) {
+                heroData = items[0];
                 updateHero(heroData);
-            } else {
-                grid.innerHTML = '<div class="loading">😞 Tidak ada hasil</div>';
             }
         } else {
             grid.innerHTML = '<div class="loading">😞 Tidak ada hasil</div>';
         }
     } catch(e){
-        grid.innerHTML = '<div class="loading">⚠️ Proxy error: ' + e.message + '</div>';
+        grid.innerHTML = '<div class="loading">⚠️ Error: ' + e.message + '</div>';
     }
 }
 
@@ -255,17 +246,16 @@ function renderResults(items){
     }
     
     grid.innerHTML = items.map(i => {
-        const title = i.title || i.name || 'Unknown';
-        const poster = i.poster_path ? `https://image.tmdb.org/t/p/w500${i.poster_path}` : null;
-        const type = i.media_type || 'Movie';
+        const title = i.title || 'Unknown';
+        const poster = i.img || 'https://via.placeholder.com/200x300/1a2335/fff?text=' + encodeURIComponent(title);
+        const type = i.type || 'Anime';
         const id = i.id || '';
-        const year = i.release_date || i.first_air_date || '';
+        const year = i.year || '';
         const yearStr = year ? year.substring(0,4) : '';
-        const img = poster || 'https://via.placeholder.com/200x300/1a2335/fff?text=' + encodeURIComponent(title);
         
         return `<div class="card" onclick="play('${id}','${title.replace(/'/g,"\\'")}','${type}')">
             <div class="poster">
-                <img src="${img}" onerror="this.src='https://via.placeholder.com/200x300/1a2335/fff?text=${encodeURIComponent(title)}'">
+                <img src="${poster}" onerror="this.src='https://via.placeholder.com/200x300/1a2335/fff?text=${encodeURIComponent(title)}'">
                 <span>${title}</span>
                 <div class="label">${type} ${yearStr ? '• '+yearStr : ''}</div>
             </div>
@@ -279,10 +269,10 @@ function renderResults(items){
 // ============================================
 function updateHero(item){
     if(!item) return;
-    const title = item.title || item.name || 'EDWARD';
+    const title = item.title || 'EDWARD';
     const desc = item.overview || 'Nonton semua film & anime gratis. Tanpa batas. Tanpa iklan.';
-    const poster = item.backdrop_path ? `https://image.tmdb.org/t/p/original${item.backdrop_path}` : 'https://image.tmdb.org/t/p/original/8Bd0r4A2M5vLxGfN6vF1jU9yWpI.jpg';
-    const type = item.media_type || 'Movie';
+    const poster = item.img || 'https://image.tmdb.org/t/p/original/8Bd0r4A2M5vLxGfN6vF1jU9yWpI.jpg';
+    const type = item.type || 'Anime';
     const id = item.id || 'tt2560140';
     
     document.getElementById('heroTitle').textContent = title;
@@ -294,8 +284,8 @@ function updateHero(item){
 
 function playHero(){
     if(heroData){
-        const title = heroData.title || heroData.name || 'EDWARD';
-        const type = heroData.media_type || 'Movie';
+        const title = heroData.title || 'EDWARD';
+        const type = heroData.type || 'Anime';
         play(heroData.id, title, type);
     }
 }
