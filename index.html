@@ -46,8 +46,8 @@ body{background:#0a0e17;color:#fff;font-family:'Segoe UI',sans-serif;padding:10p
 
 .player-wrap .server-divider{width:80%;max-width:800px;height:2px;background:linear-gradient(90deg,transparent,#ff2d55,transparent);margin:10px 0 8px 0;opacity:.6;flex-shrink:0}
 
-.player-wrap .server-area{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;background:rgba(0,0,0,.7);padding:10px 16px;border-radius:30px;backdrop-filter:blur(8px);z-index:10;max-width:95%;border:1px solid rgba(255,45,85,.2);flex-shrink:0}
-.player-wrap .server-area button{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);border-radius:30px;padding:6px 8px;color:#fff;font-size:9px;cursor:pointer;transition:.2s;font-weight:500;text-align:center}
+.player-wrap .server-area{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;background:rgba(0,0,0,.7);padding:10px 16px;border-radius:30px;backdrop-filter:blur(8px);z-index:10;max-width:95%;border:1px solid rgba(255,45,85,.2);min-width:150px;flex-shrink:0}
+.player-wrap .server-area button{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);border-radius:30px;padding:8px 12px;color:#fff;font-size:11px;cursor:pointer;transition:.2s;font-weight:500;text-align:center}
 .player-wrap .server-area button.active{background:#ff2d55;border-color:#ff2d55;box-shadow:0 0 20px rgba(255,45,85,.3)}
 .player-wrap .server-area button:active{transform:scale(.95)}
 .player-wrap .server-area button:hover{background:rgba(255,45,85,.2)}
@@ -115,7 +115,6 @@ const FILMS = [
 {title:'Final Destination 3',id:'tt0414982',type:'Movie'},
 {title:'Final Destination 4',id:'tt1144884',type:'Movie'},
 {title:'Final Destination 5',id:'tt1622979',type:'Movie'},
-{title:'Merah Putih One For All',id:'tt12345678',type:'Movie'},
 {title:'Deadpool 3',id:'tt6263850',type:'Movie'},
 {title:'Avengers 5',id:'tt21361868',type:'Movie'},
 {title:'Spider-Man 4',id:'tt31289056',type:'Movie'},
@@ -126,30 +125,12 @@ const FILMS = [
 {title:'The Dark Knight',id:'tt0468569',type:'Classic'}
 ];
 
-// ===== 20 SERVER =====
+// ===== 2 SERVER (S1 & S2) =====
 const SERVERS = [
     id => `https://vidsrc.in/embed/movie/${id}`,
-    id => `https://vidsrc.to/embed/movie/${id}`,
-    id => `https://vidsrc.net/embed/movie/${id}`,
-    id => `https://vidsrc.xyz/embed/movie/${id}`,
-    id => `https://vidsrc.pro/embed/movie/${id}`,
-    id => `https://vidsrc.pm/embed/movie/${id}`,
-    id => `https://vidsrc.cc/v2/embed/movie/${id}`,
-    id => `https://embed.su/embed/${id}`,
-    id => `https://multiembed.mov/?video_id=${id}&tmdb=1`,
-    id => `https://www.2embed.cc/embed/${id}`,
-    id => `https://vidembed.cc/embed/movie/${id}`,
-    id => `https://vidsrc.vip/embed/movie/${id}`,
-    id => `https://vidsrc.fun/embed/movie/${id}`,
-    id => `https://vidsrc.tv/embed/movie/${id}`,
-    id => `https://vidsrc.me/embed/${id}`,
-    id => `https://vidsrc.space/embed/movie/${id}`,
-    id => `https://vidsrc.icu/embed/movie/${id}`,
-    id => `https://vidsrc.win/embed/movie/${id}`,
-    id => `https://vidsrc.best/embed/movie/${id}`,
-    id => `https://vidsrc.cloud/embed/movie/${id}`
+    id => `https://vidsrc.me/embed/${id}`
 ];
-const SERVER_NAMES = ['S1','S2','S3','S4','S5','S6','S7','S8','S9','S10','S11','S12','S13','S14','S15','S16','S17','S18','S19','S20'];
+const SERVER_NAMES = ['S1', 'S2'];
 
 let curSvr = 0, curId = '', curCat = 'all';
 
