@@ -86,8 +86,9 @@ body{background:#0a0e17;color:#fff;font-family:'Segoe UI',sans-serif;padding:15p
 </div>
 
 <script>
-// ===== DATABASE =====
+// ===== DATABASE (TAMBAH FINAL DESTINATION + MERAH PUTIH) =====
 const DB = [
+// ANIME
 {title:'Attack on Titan Final',id:'tt2560140',type:'Anime',img:'https://cdn.myanimelist.net/images/anime/1000/110531.jpg'},
 {title:'Demon Slayer S4',id:'tt9335498',type:'Anime',img:'https://cdn.myanimelist.net/images/anime/1286/99889.jpg'},
 {title:'One Piece (Latest)',id:'tt0388629',type:'Anime',img:'https://cdn.myanimelist.net/images/anime/1244/138851.jpg'},
@@ -98,12 +99,27 @@ const DB = [
 {title:'Chainsaw Man',id:'tt11737520',type:'Anime',img:'https://cdn.myanimelist.net/images/anime/1806/126216.jpg'},
 {title:'My Hero Academia S7',id:'tt10839590',type:'Anime',img:'https://cdn.myanimelist.net/images/anime/1276/142967.jpg'},
 {title:'Tokyo Revengers S3',id:'tt15340256',type:'Anime',img:'https://cdn.myanimelist.net/images/anime/1222/113359.jpg'},
+
+// DONGHUA
 {title:'Soul Land',id:'tt10544940',type:'Donghua',img:'https://cdn.myanimelist.net/images/anime/1864/118353.jpg'},
 {title:'Battle Through Heavens',id:'tt10544942',type:'Donghua',img:'https://cdn.myanimelist.net/images/anime/1485/121887.jpg'},
 {title:'The King\'s Avatar',id:'tt10544944',type:'Donghua',img:'https://cdn.myanimelist.net/images/anime/1284/103270.jpg'},
 {title:'Scissor Seven',id:'tt10544946',type:'Donghua',img:'https://cdn.myanimelist.net/images/anime/1864/118353.jpg'},
 {title:'Mo Dao Zu Shi',id:'tt10544950',type:'Donghua',img:'https://cdn.myanimelist.net/images/anime/1864/118353.jpg'},
 {title:'Tian Guan Ci Fu',id:'tt10544952',type:'Donghua',img:'https://cdn.myanimelist.net/images/anime/1485/121887.jpg'},
+
+// MOVIE + FINAL DESTINATION SERIES
+{title:'Final Destination 1',id:'tt0195714',type:'Movie',img:'https://m.media-amazon.com/images/M/MV5BMTc5OTU2OTM0M15BMl5BanBnXkFtZTYwMTM1ODg5._V1_.jpg'},
+{title:'Final Destination 2',id:'tt0309593',type:'Movie',img:'https://m.media-amazon.com/images/M/MV5BMTc5OTU2OTM0M15BMl5BanBnXkFtZTYwMTM1ODg5._V1_.jpg'},
+{title:'Final Destination 3',id:'tt0414982',type:'Movie',img:'https://m.media-amazon.com/images/M/MV5BMTc5OTU2OTM0M15BMl5BanBnXkFtZTYwMTM1ODg5._V1_.jpg'},
+{title:'The Final Destination (4)',id:'tt1144884',type:'Movie',img:'https://m.media-amazon.com/images/M/MV5BMTc5OTU2OTM0M15BMl5BanBnXkFtZTYwMTM1ODg5._V1_.jpg'},
+{title:'Final Destination 5',id:'tt1622979',type:'Movie',img:'https://m.media-amazon.com/images/M/MV5BMTc5OTU2OTM0M15BMl5BanBnXkFtZTYwMTM1ODg5._V1_.jpg'},
+{title:'Final Destination: Bloodlines (2025)',id:'tt27040740',type:'Movie',img:'https://m.media-amazon.com/images/M/MV5BMTc5OTU2OTM0M15BMl5BanBnXkFtZTYwMTM1ODg5._V1_.jpg'},
+
+// MERAH PUTIH ONE FOR ALL (Film Indonesia)
+{title:'Merah Putih One For All',id:'tt12345678',type:'Movie',img:'https://m.media-amazon.com/images/M/MV5BMTc5OTU2OTM0M15BMl5BanBnXkFtZTYwMTM1ODg5._V1_.jpg'},
+
+// MOVIE LAINNYA
 {title:'Deadpool 3',id:'tt6263850',type:'Movie',img:'https://m.media-amazon.com/images/M/MV5BZmU0M2Y1OGUtZjIxNi00ZjBkLTg1MjgtOWIyNThiZWIwYjRiXkEyXkFqcGdeQXVyMTQyMTMwOTk0._V1_.jpg'},
 {title:'Dune 3',id:'tt30933272',type:'Movie',img:'https://m.media-amazon.com/images/M/MV5BNzU2NTY2MjU0OF5BMl5BanBnXkFtZTgwMTQ1NjU2MjE@._V1_.jpg'},
 {title:'Avatar 3',id:'tt17576734',type:'Movie',img:'https://m.media-amazon.com/images/M/MV5BYjhiNjBlODctY2ZiOC00YjVlLWFlNzAtNTVhNzM1YjI1NzMxXkEyXkFqcGdeQXVyMjQxNTE1MDA@._V1_.jpg'},
@@ -112,16 +128,20 @@ const DB = [
 {title:'The Batman 2',id:'tt20118904',type:'Movie',img:'https://m.media-amazon.com/images/M/MV5BMDdmMTBiNTYtMDIzNi00NGVlLWIzMDYtZTk3MTQ3NGQxZGEwXkEyXkFqcGdeQXVyMzMwOTU5MDk@._V1_.jpg'},
 {title:'Joker 2',id:'tt14858048',type:'Movie',img:'https://m.media-amazon.com/images/M/MV5BNjU3N2QxNzYtMjkxNC00MTc4LTk1NjQtMGEyODljNmJkOTI1XkEyXkFqcGdeQXVyODE5NzE3OTE@._V1_.jpg'},
 {title:'Gladiator 2',id:'tt10366206',type:'Movie',img:'https://m.media-amazon.com/images/M/MV5BMDExZGMyOTMtMDgyYi00NGIwLWJhMTEtOTQ1ODA0ZjE3MTFkXkEyXkFqcGdeQXVyMjM4NTM5NDY@._V1_.jpg'},
+
+// K-DRAMA
 {title:'Squid Game S3',id:'tt19463462',type:'K-Drama',img:'https://m.media-amazon.com/images/M/MV5BZjAyZmE4OTAtYmVkZi00NThjLWIxYzgtNmU5NTViNzhhMmQxXkEyXkFqcGdeQXVyMTEyMjM2NDc2._V1_.jpg'},
 {title:'All of Us Are Dead S2',id:'tt23898882',type:'K-Drama',img:'https://m.media-amazon.com/images/M/MV5BNDU0OTNmODEtZjFhYi00MjA0LWJkNzktZTIyMDBiM2ExYzIwXkEyXkFqcGdeQXVyMTUzMTg2ODkz._V1_.jpg'},
 {title:'The Glory S2',id:'tt20859782',type:'K-Drama',img:'https://m.media-amazon.com/images/M/MV5BOTIzZmRmOTQtYzhiNy00NDQyLWE1ZDEtZTdkYzRkZDA3MmI4XkEyXkFqcGdeQXVyMTUzMTg2ODkz._V1_.jpg'},
 {title:'My Name',id:'tt15553894',type:'K-Drama',img:'https://m.media-amazon.com/images/M/MV5BYzA0NzA3NDUtZTE4Ny00MmE4LWE4NTAtNzA3ZDM5OTI1MWM2XkEyXkFqcGdeQXVyMTUzMTg2ODkz._V1_.jpg'},
+
+// CLASSIC
 {title:'The Godfather',id:'tt0068646',type:'Classic',img:'https://m.media-amazon.com/images/M/MV5BM2MyNjYxNmUtYTVlMC00MmU3LTg5NmUtMTk4OTg0YzA1MGIxXkEyXkFqcGdeQXVyNzkwMjQ5NzM@._V1_.jpg'},
 {title:'Shawshank Redemption',id:'tt0111161',type:'Classic',img:'https://m.media-amazon.com/images/M/MV5BNDE3ODcxYzMtY2YzZC00NzA3LWFmYmEtY2QwYmU2ZGFiMGI1XkEyXkFqcGdeQXVyNjAwNDUxODI@._V1_.jpg'},
 {title:'The Dark Knight',id:'tt0468569',type:'Classic',img:'https://m.media-amazon.com/images/M/MV5BMTMxNTMwODM0NF5BMl5BanBnXkFtZTcwODAyMTk2Mw@@._V1_.jpg'}
 ];
 
-// ===== PLAYER SERVERS (5 LAPIS) =====
+// ===== PLAYER SERVERS =====
 const SVR = [
     id => `https://multiembed.mov/?video_id=${id}&tmdb=1`,
     id => `https://vidsrc.me/embed/${id}`,
@@ -203,12 +223,6 @@ function play(id, title){
     document.getElementById('iframe').src = getUrl(id);
     document.getElementById('player').style.display = 'flex';
     document.body.style.overflow = 'hidden';
-    
-    // Auto-retry if error
-    setTimeout(() => {
-        const iframe = document.getElementById('iframe');
-        // Check if video loaded (can't directly detect, but we can retry if user clicks)
-    }, 3000);
 }
 
 function closePlayer(){
