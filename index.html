@@ -3,21 +3,27 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>EDWARD - Minecraft Style</title>
+<title>EDWARD - Nonton Gratis</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
-
 *{box-sizing:border-box;margin:0;padding:0;image-rendering:pixelated}
-body{background:#2d2d2d;color:#fff;font-family:'Press Start 2P',monospace;padding:10px;min-height:100vh;image-rendering:pixelated}
+body{background:#1a1a1a;color:#fff;font-family:'Press Start 2P',monospace;padding:10px;min-height:100vh;image-rendering:pixelated}
 ::selection{background:#4caf50;color:#fff}
 
-/* ===== MINECRAFT STYLE ===== */
+/* HD TEXT */
+h1, p, span, button, input, .info h4, .info p, .loading, .footer p {
+    text-rendering: geometricPrecision;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    image-rendering: auto;
+}
+
 .header{text-align:center;padding:15px 10px;margin-bottom:10px;background:linear-gradient(180deg,#4caf50,#2e7d32);border:4px solid #8b8b8b;border-top-color:#fff;border-left-color:#fff;border-bottom-color:#555;border-right-color:#555;image-rendering:pixelated;position:relative}
-.header h1{font-size:22px;color:#fff;text-shadow:3px 3px 0 #1b5e20;letter-spacing:2px;word-break:break-word}
-.header p{font-size:8px;color:#e8f5e9;margin-top:5px;text-shadow:2px 2px 0 #1b5e20}
+.header h1{font-size:24px;color:#fff;text-shadow:4px 4px 0 #1b5e20;letter-spacing:3px;word-break:break-word}
+.header p{font-size:9px;color:#e8f5e9;margin-top:5px;text-shadow:2px 2px 0 #1b5e20;letter-spacing:1px}
 .search-wrap{display:flex;gap:6px;margin:10px 0;padding:4px;background:#8b8b8b;border:4px solid #555;border-top-color:#fff;border-left-color:#fff;border-bottom-color:#555;border-right-color:#555}
-.search-wrap input{flex:1;background:#c6c6c6;border:4px solid #555;border-top-color:#8b8b8b;border-left-color:#8b8b8b;border-bottom-color:#fff;border-right-color:#fff;padding:10px 14px;font-family:'Press Start 2P',monospace;font-size:10px;color:#222;outline:0;image-rendering:pixelated}
-.search-wrap input::placeholder{color:#555;font-size:8px}
+.search-wrap input{flex:1;background:#c6c6c6;border:4px solid #555;border-top-color:#8b8b8b;border-left-color:#8b8b8b;border-bottom-color:#fff;border-right-color:#fff;padding:10px 14px;font-family:'Press Start 2P',monospace;font-size:11px;color:#111;outline:0;image-rendering:pixelated}
+.search-wrap input::placeholder{color:#444;font-size:9px}
 .search-wrap button{background:#4caf50;border:4px solid #8b8b8b;border-top-color:#fff;border-left-color:#fff;border-bottom-color:#555;border-right-color:#555;padding:10px 18px;font-family:'Press Start 2P',monospace;font-size:10px;color:#fff;cursor:pointer;text-shadow:2px 2px 0 #1b5e20;image-rendering:pixelated;transition:none;min-width:70px}
 .search-wrap button:active{transform:translate(2px,2px);border-top-color:#555;border-left-color:#555;border-bottom-color:#fff;border-right-color:#fff}
 .cat-scroll{display:flex;gap:8px;overflow-x:auto;padding:8px 0;margin-bottom:8px;scrollbar-width:none;image-rendering:pixelated}
@@ -28,15 +34,15 @@ body{background:#2d2d2d;color:#fff;font-family:'Press Start 2P',monospace;paddin
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:12px;margin-top:10px}
 .card{background:#8b8b8b;border:4px solid #555;border-top-color:#fff;border-left-color:#fff;border-bottom-color:#555;border-right-color:#555;overflow:hidden;cursor:pointer;image-rendering:pixelated;transition:none}
 .card:active{transform:translate(2px,2px);border-top-color:#555;border-left-color:#555;border-bottom-color:#fff;border-right-color:#fff}
-.card .poster{width:100%;aspect-ratio:2/3;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;text-align:center;padding:8px;color:#fff;text-shadow:2px 2px 0 #000;background:#3a3a3a;position:relative;image-rendering:pixelated}
-.card .poster .title{position:absolute;bottom:6px;left:4px;right:4px;background:rgba(0,0,0,.7);padding:6px;font-size:7px;border:2px solid #555;border-top-color:#8b8b8b;border-left-color:#8b8b8b;border-bottom-color:#fff;border-right-color:#fff}
+.card .poster{width:100%;aspect-ratio:2/3;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;text-align:center;padding:8px;color:#fff;text-shadow:3px 3px 0 #000;background:#3a3a3a;position:relative;image-rendering:pixelated}
+.card .poster .title{position:absolute;bottom:6px;left:4px;right:4px;background:rgba(0,0,0,.75);padding:6px;font-size:8px;border:2px solid #555;border-top-color:#8b8b8b;border-left-color:#8b8b8b;border-bottom-color:#fff;border-right-color:#fff}
 .card .poster img{width:100%;height:100%;object-fit:cover;position:absolute;top:0;left:0;image-rendering:pixelated}
 .card .info{padding:8px 10px;background:#c6c6c6;border-top:4px solid #555}
-.card .info h4{font-size:9px;color:#222;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-family:'Press Start 2P',monospace}
-.card .info p{font-size:7px;color:#555;margin-top:3px;font-family:'Press Start 2P',monospace}
+.card .info h4{font-size:10px;color:#111;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-family:'Press Start 2P',monospace;text-shadow:none}
+.card .info p{font-size:8px;color:#333;margin-top:3px;font-family:'Press Start 2P',monospace}
 .player-wrap{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.95);z-index:99999;flex-direction:column;align-items:center;justify-content:center;padding:10px;image-rendering:pixelated}
-.player-wrap .top{position:absolute;top:0;width:100%;padding:12px 16px;display:flex;justify-content:space-between;align-items:center;background:#2d2d2d;border-bottom:4px solid #4caf50;flex-wrap:wrap;gap:8px}
-.player-wrap .top .t{font-family:'Press Start 2P',monospace;font-size:12px;color:#fff;text-shadow:2px 2px 0 #1b5e20}
+.player-wrap .top{position:absolute;top:0;width:100%;padding:12px 16px;display:flex;justify-content:space-between;align-items:center;background:#1a1a1a;border-bottom:4px solid #4caf50;flex-wrap:wrap;gap:8px}
+.player-wrap .top .t{font-family:'Press Start 2P',monospace;font-size:13px;color:#fff;text-shadow:2px 2px 0 #1b5e20}
 .player-wrap .top .actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
 .player-wrap .top .actions button{background:#4caf50;border:4px solid #8b8b8b;border-top-color:#fff;border-left-color:#fff;border-bottom-color:#555;border-right-color:#555;padding:6px 14px;font-family:'Press Start 2P',monospace;font-size:8px;color:#fff;cursor:pointer;text-shadow:2px 2px 0 #1b5e20;image-rendering:pixelated;transition:none}
 .player-wrap .top .actions button:active{transform:translate(2px,2px);border-top-color:#555;border-left-color:#555;border-bottom-color:#fff;border-right-color:#fff}
@@ -49,22 +55,20 @@ body{background:#2d2d2d;color:#fff;font-family:'Press Start 2P',monospace;paddin
 .player-wrap .servers button.active{background:#4caf50;border-color:#8b8b8b;border-top-color:#fff;border-left-color:#fff;border-bottom-color:#555;border-right-color:#555;color:#fff;text-shadow:2px 2px 0 #1b5e20}
 .custom-link-wrap{display:flex;gap:8px;margin-top:10px;padding:8px;background:rgba(0,0,0,.5);border:4px solid #555;border-top-color:#8b8b8b;border-left-color:#8b8b8b;border-bottom-color:#fff;border-right-color:#fff;flex-wrap:wrap;width:95%;max-width:1100px;justify-content:center}
 .custom-link-wrap input{flex:1;background:#c6c6c6;border:4px solid #555;border-top-color:#8b8b8b;border-left-color:#8b8b8b;border-bottom-color:#fff;border-right-color:#fff;padding:8px 14px;font-family:'Press Start 2P',monospace;font-size:8px;color:#222;outline:0;min-width:150px;image-rendering:pixelated}
-.custom-link-wrap input::placeholder{color:#555;font-size:7px}
+.custom-link-wrap input::placeholder{color:#444;font-size:7px}
 .custom-link-wrap button{background:#4caf50;border:4px solid #8b8b8b;border-top-color:#fff;border-left-color:#fff;border-bottom-color:#555;border-right-color:#555;padding:8px 18px;font-family:'Press Start 2P',monospace;font-size:8px;color:#fff;cursor:pointer;text-shadow:2px 2px 0 #1b5e20;image-rendering:pixelated;transition:none}
 .custom-link-wrap button:active{transform:translate(2px,2px);border-top-color:#555;border-left-color:#555;border-bottom-color:#fff;border-right-color:#fff}
-.loading{text-align:center;padding:30px;color:#aaa;font-size:10px;font-family:'Press Start 2P',monospace}
+.loading{text-align:center;padding:30px;color:#aaa;font-size:11px;font-family:'Press Start 2P',monospace;text-shadow:1px 1px 0 #000}
 .footer{text-align:center;padding:20px 0 10px;border-top:4px solid #555;margin-top:15px;image-rendering:pixelated}
-.footer p{font-size:7px;color:#777;font-family:'Press Start 2P',monospace}
-.footer span{color:#4caf50}
-::-webkit-scrollbar{width:8px;background:#2d2d2d}
-::-webkit-scrollbar-thumb{background:#4caf50;border:2px solid #555;border-top-color:#8b8b8b;border-left-color:#8b8b8b;border-bottom-color:#fff;border-right-color:#fff}
+.footer p{font-size:8px;color:#aaa;font-family:'Press Start 2P',monospace;letter-spacing:1px}
+.footer span{color:#4caf50;text-shadow:0 0 10px rgba(76,175,80,.3)}
 </style>
 </head>
 <body>
 
 <div class="header">
 <h1>⛏️ EDWARD</h1>
-<p>Nonton Anime, Movie, Donghua & Drama Ilegal</p>
+<p>Nonton Anime, Movie, Donghua & Drama • 100% GRATIS</p>
 </div>
 
 <div class="search-wrap">
@@ -83,7 +87,7 @@ body{background:#2d2d2d;color:#fff;font-family:'Press Start 2P',monospace;paddin
 
 <div id="grid" class="grid"><div class="loading">⏳ Loading...</div></div>
 
-<div class="footer"><p>© 2026 <span>EDWARD</span> • 100% Ilegal</p></div>
+<div class="footer"><p>© 2026 <span>EDWARD</span> • 100% GRATIS</p></div>
 
 <div class="player-wrap" id="player">
 <div class="top">
@@ -104,7 +108,7 @@ body{background:#2d2d2d;color:#fff;font-family:'Press Start 2P',monospace;paddin
 
 <script>
 // ============================================
-// 3 SERVER BARU (ONLINE)
+// 3 SERVER
 // ============================================
 const SVR = [
     id => `https://vidsrc.to/embed/movie/${id}`,
@@ -235,7 +239,7 @@ const DB = [
 ];
 
 // ============================================
-// RENDER SERVER BUTTON
+// RENDER
 // ============================================
 function renderServerButtons() {
     const container = document.getElementById('sv');
@@ -244,9 +248,6 @@ function renderServerButtons() {
     ).join('');
 }
 
-// ============================================
-// FUNGSI UTAMA (NO DELAY)
-// ============================================
 function setCat(c){
     curCat = c;
     document.querySelectorAll('#cat button').forEach(b => b.classList.remove('active'));
@@ -288,7 +289,7 @@ function renderResults(items){
         <div class="card" onclick="${i.id ? `play('${i.id}','${i.title.replace(/'/g, "\\'")}')` : ''}">
             <div class="poster" style="background:${color};">
                 ${poster ? `<img src="${poster}" onerror="this.style.display='none'">` : ''}
-                <span style="font-size:10px;font-weight:700;text-align:center;padding:6px;word-wrap:break-word;z-index:1;text-shadow:2px 2px 0 #000;font-family:'Press Start 2P',monospace;">${i.title}</span>
+                <span style="font-size:11px;font-weight:700;text-align:center;padding:6px;word-wrap:break-word;z-index:1;text-shadow:3px 3px 0 #000;font-family:'Press Start 2P',monospace;">${i.title}</span>
                 <div class="title">${i.type}</div>
             </div>
             <div class="info">
@@ -330,21 +331,27 @@ cd ~/mywebsite && cat > index.html << 'EOF'
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>EDWARD - Minecraft Style</title>
+<title>EDWARD - Nonton Gratis</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
-
 *{box-sizing:border-box;margin:0;padding:0;image-rendering:pixelated}
-body{background:#2d2d2d;color:#fff;font-family:'Press Start 2P',monospace;padding:10px;min-height:100vh;image-rendering:pixelated}
+body{background:#1a1a1a;color:#fff;font-family:'Press Start 2P',monospace;padding:10px;min-height:100vh;image-rendering:pixelated}
 ::selection{background:#4caf50;color:#fff}
 
-/* ===== MINECRAFT STYLE ===== */
+/* HD TEXT */
+h1, p, span, button, input, .info h4, .info p, .loading, .footer p {
+    text-rendering: geometricPrecision;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    image-rendering: auto;
+}
+
 .header{text-align:center;padding:15px 10px;margin-bottom:10px;background:linear-gradient(180deg,#4caf50,#2e7d32);border:4px solid #8b8b8b;border-top-color:#fff;border-left-color:#fff;border-bottom-color:#555;border-right-color:#555;image-rendering:pixelated;position:relative}
-.header h1{font-size:22px;color:#fff;text-shadow:3px 3px 0 #1b5e20;letter-spacing:2px;word-break:break-word}
-.header p{font-size:8px;color:#e8f5e9;margin-top:5px;text-shadow:2px 2px 0 #1b5e20}
+.header h1{font-size:24px;color:#fff;text-shadow:4px 4px 0 #1b5e20;letter-spacing:3px;word-break:break-word}
+.header p{font-size:9px;color:#e8f5e9;margin-top:5px;text-shadow:2px 2px 0 #1b5e20;letter-spacing:1px}
 .search-wrap{display:flex;gap:6px;margin:10px 0;padding:4px;background:#8b8b8b;border:4px solid #555;border-top-color:#fff;border-left-color:#fff;border-bottom-color:#555;border-right-color:#555}
-.search-wrap input{flex:1;background:#c6c6c6;border:4px solid #555;border-top-color:#8b8b8b;border-left-color:#8b8b8b;border-bottom-color:#fff;border-right-color:#fff;padding:10px 14px;font-family:'Press Start 2P',monospace;font-size:10px;color:#222;outline:0;image-rendering:pixelated}
-.search-wrap input::placeholder{color:#555;font-size:8px}
+.search-wrap input{flex:1;background:#c6c6c6;border:4px solid #555;border-top-color:#8b8b8b;border-left-color:#8b8b8b;border-bottom-color:#fff;border-right-color:#fff;padding:10px 14px;font-family:'Press Start 2P',monospace;font-size:11px;color:#111;outline:0;image-rendering:pixelated}
+.search-wrap input::placeholder{color:#444;font-size:9px}
 .search-wrap button{background:#4caf50;border:4px solid #8b8b8b;border-top-color:#fff;border-left-color:#fff;border-bottom-color:#555;border-right-color:#555;padding:10px 18px;font-family:'Press Start 2P',monospace;font-size:10px;color:#fff;cursor:pointer;text-shadow:2px 2px 0 #1b5e20;image-rendering:pixelated;transition:none;min-width:70px}
 .search-wrap button:active{transform:translate(2px,2px);border-top-color:#555;border-left-color:#555;border-bottom-color:#fff;border-right-color:#fff}
 .cat-scroll{display:flex;gap:8px;overflow-x:auto;padding:8px 0;margin-bottom:8px;scrollbar-width:none;image-rendering:pixelated}
@@ -355,15 +362,15 @@ body{background:#2d2d2d;color:#fff;font-family:'Press Start 2P',monospace;paddin
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:12px;margin-top:10px}
 .card{background:#8b8b8b;border:4px solid #555;border-top-color:#fff;border-left-color:#fff;border-bottom-color:#555;border-right-color:#555;overflow:hidden;cursor:pointer;image-rendering:pixelated;transition:none}
 .card:active{transform:translate(2px,2px);border-top-color:#555;border-left-color:#555;border-bottom-color:#fff;border-right-color:#fff}
-.card .poster{width:100%;aspect-ratio:2/3;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;text-align:center;padding:8px;color:#fff;text-shadow:2px 2px 0 #000;background:#3a3a3a;position:relative;image-rendering:pixelated}
-.card .poster .title{position:absolute;bottom:6px;left:4px;right:4px;background:rgba(0,0,0,.7);padding:6px;font-size:7px;border:2px solid #555;border-top-color:#8b8b8b;border-left-color:#8b8b8b;border-bottom-color:#fff;border-right-color:#fff}
+.card .poster{width:100%;aspect-ratio:2/3;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;text-align:center;padding:8px;color:#fff;text-shadow:3px 3px 0 #000;background:#3a3a3a;position:relative;image-rendering:pixelated}
+.card .poster .title{position:absolute;bottom:6px;left:4px;right:4px;background:rgba(0,0,0,.75);padding:6px;font-size:8px;border:2px solid #555;border-top-color:#8b8b8b;border-left-color:#8b8b8b;border-bottom-color:#fff;border-right-color:#fff}
 .card .poster img{width:100%;height:100%;object-fit:cover;position:absolute;top:0;left:0;image-rendering:pixelated}
 .card .info{padding:8px 10px;background:#c6c6c6;border-top:4px solid #555}
-.card .info h4{font-size:9px;color:#222;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-family:'Press Start 2P',monospace}
-.card .info p{font-size:7px;color:#555;margin-top:3px;font-family:'Press Start 2P',monospace}
+.card .info h4{font-size:10px;color:#111;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-family:'Press Start 2P',monospace;text-shadow:none}
+.card .info p{font-size:8px;color:#333;margin-top:3px;font-family:'Press Start 2P',monospace}
 .player-wrap{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.95);z-index:99999;flex-direction:column;align-items:center;justify-content:center;padding:10px;image-rendering:pixelated}
-.player-wrap .top{position:absolute;top:0;width:100%;padding:12px 16px;display:flex;justify-content:space-between;align-items:center;background:#2d2d2d;border-bottom:4px solid #4caf50;flex-wrap:wrap;gap:8px}
-.player-wrap .top .t{font-family:'Press Start 2P',monospace;font-size:12px;color:#fff;text-shadow:2px 2px 0 #1b5e20}
+.player-wrap .top{position:absolute;top:0;width:100%;padding:12px 16px;display:flex;justify-content:space-between;align-items:center;background:#1a1a1a;border-bottom:4px solid #4caf50;flex-wrap:wrap;gap:8px}
+.player-wrap .top .t{font-family:'Press Start 2P',monospace;font-size:13px;color:#fff;text-shadow:2px 2px 0 #1b5e20}
 .player-wrap .top .actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
 .player-wrap .top .actions button{background:#4caf50;border:4px solid #8b8b8b;border-top-color:#fff;border-left-color:#fff;border-bottom-color:#555;border-right-color:#555;padding:6px 14px;font-family:'Press Start 2P',monospace;font-size:8px;color:#fff;cursor:pointer;text-shadow:2px 2px 0 #1b5e20;image-rendering:pixelated;transition:none}
 .player-wrap .top .actions button:active{transform:translate(2px,2px);border-top-color:#555;border-left-color:#555;border-bottom-color:#fff;border-right-color:#fff}
@@ -376,22 +383,20 @@ body{background:#2d2d2d;color:#fff;font-family:'Press Start 2P',monospace;paddin
 .player-wrap .servers button.active{background:#4caf50;border-color:#8b8b8b;border-top-color:#fff;border-left-color:#fff;border-bottom-color:#555;border-right-color:#555;color:#fff;text-shadow:2px 2px 0 #1b5e20}
 .custom-link-wrap{display:flex;gap:8px;margin-top:10px;padding:8px;background:rgba(0,0,0,.5);border:4px solid #555;border-top-color:#8b8b8b;border-left-color:#8b8b8b;border-bottom-color:#fff;border-right-color:#fff;flex-wrap:wrap;width:95%;max-width:1100px;justify-content:center}
 .custom-link-wrap input{flex:1;background:#c6c6c6;border:4px solid #555;border-top-color:#8b8b8b;border-left-color:#8b8b8b;border-bottom-color:#fff;border-right-color:#fff;padding:8px 14px;font-family:'Press Start 2P',monospace;font-size:8px;color:#222;outline:0;min-width:150px;image-rendering:pixelated}
-.custom-link-wrap input::placeholder{color:#555;font-size:7px}
+.custom-link-wrap input::placeholder{color:#444;font-size:7px}
 .custom-link-wrap button{background:#4caf50;border:4px solid #8b8b8b;border-top-color:#fff;border-left-color:#fff;border-bottom-color:#555;border-right-color:#555;padding:8px 18px;font-family:'Press Start 2P',monospace;font-size:8px;color:#fff;cursor:pointer;text-shadow:2px 2px 0 #1b5e20;image-rendering:pixelated;transition:none}
 .custom-link-wrap button:active{transform:translate(2px,2px);border-top-color:#555;border-left-color:#555;border-bottom-color:#fff;border-right-color:#fff}
-.loading{text-align:center;padding:30px;color:#aaa;font-size:10px;font-family:'Press Start 2P',monospace}
+.loading{text-align:center;padding:30px;color:#aaa;font-size:11px;font-family:'Press Start 2P',monospace;text-shadow:1px 1px 0 #000}
 .footer{text-align:center;padding:20px 0 10px;border-top:4px solid #555;margin-top:15px;image-rendering:pixelated}
-.footer p{font-size:7px;color:#777;font-family:'Press Start 2P',monospace}
-.footer span{color:#4caf50}
-::-webkit-scrollbar{width:8px;background:#2d2d2d}
-::-webkit-scrollbar-thumb{background:#4caf50;border:2px solid #555;border-top-color:#8b8b8b;border-left-color:#8b8b8b;border-bottom-color:#fff;border-right-color:#fff}
+.footer p{font-size:8px;color:#aaa;font-family:'Press Start 2P',monospace;letter-spacing:1px}
+.footer span{color:#4caf50;text-shadow:0 0 10px rgba(76,175,80,.3)}
 </style>
 </head>
 <body>
 
 <div class="header">
 <h1>⛏️ EDWARD</h1>
-<p>Nonton Anime, Movie, Donghua & Drama Ilegal</p>
+<p>Nonton Anime, Movie, Donghua & Drama • 100% GRATIS</p>
 </div>
 
 <div class="search-wrap">
@@ -410,7 +415,7 @@ body{background:#2d2d2d;color:#fff;font-family:'Press Start 2P',monospace;paddin
 
 <div id="grid" class="grid"><div class="loading">⏳ Loading...</div></div>
 
-<div class="footer"><p>© 2026 <span>EDWARD</span> • 100% Ilegal</p></div>
+<div class="footer"><p>© 2026 <span>EDWARD</span> • 100% GRATIS</p></div>
 
 <div class="player-wrap" id="player">
 <div class="top">
@@ -431,7 +436,7 @@ body{background:#2d2d2d;color:#fff;font-family:'Press Start 2P',monospace;paddin
 
 <script>
 // ============================================
-// 3 SERVER BARU (ONLINE)
+// 3 SERVER
 // ============================================
 const SVR = [
     id => `https://vidsrc.to/embed/movie/${id}`,
@@ -562,7 +567,7 @@ const DB = [
 ];
 
 // ============================================
-// RENDER SERVER BUTTON
+// RENDER
 // ============================================
 function renderServerButtons() {
     const container = document.getElementById('sv');
@@ -571,9 +576,6 @@ function renderServerButtons() {
     ).join('');
 }
 
-// ============================================
-// FUNGSI UTAMA (NO DELAY)
-// ============================================
 function setCat(c){
     curCat = c;
     document.querySelectorAll('#cat button').forEach(b => b.classList.remove('active'));
@@ -615,7 +617,7 @@ function renderResults(items){
         <div class="card" onclick="${i.id ? `play('${i.id}','${i.title.replace(/'/g, "\\'")}')` : ''}">
             <div class="poster" style="background:${color};">
                 ${poster ? `<img src="${poster}" onerror="this.style.display='none'">` : ''}
-                <span style="font-size:10px;font-weight:700;text-align:center;padding:6px;word-wrap:break-word;z-index:1;text-shadow:2px 2px 0 #000;font-family:'Press Start 2P',monospace;">${i.title}</span>
+                <span style="font-size:11px;font-weight:700;text-align:center;padding:6px;word-wrap:break-word;z-index:1;text-shadow:3px 3px 0 #000;font-family:'Press Start 2P',monospace;">${i.title}</span>
                 <div class="title">${i.type}</div>
             </div>
             <div class="info">
