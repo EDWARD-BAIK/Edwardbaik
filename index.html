@@ -27,10 +27,12 @@ body{background:#0a0e17;color:#fff;font-family:'Segoe UI',sans-serif;padding:15p
 .card .info h4{font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .card .info p{font-size:10px;color:rgba(255,255,255,.5)}
 .player-wrap{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.98);z-index:99999;flex-direction:column;align-items:center;justify-content:center;padding:15px}
-.player-wrap .top{position:absolute;top:0;width:100%;padding:15px 20px;display:flex;justify-content:space-between;background:rgba(0,0,0,.7);border-bottom:2px solid var(--p)}
+.player-wrap .top{position:absolute;top:0;width:100%;padding:15px 20px;display:flex;justify-content:space-between;align-items:center;background:rgba(0,0,0,.7);border-bottom:2px solid var(--p)}
 .player-wrap .top .t{font-weight:700;font-size:16px}
-.player-wrap .close{background:var(--p);border:0;color:#fff;width:44px;height:44px;border-radius:50%;font-size:20px;cursor:pointer}
-.player-wrap iframe{width:100%;max-width:1100px;height:75vh;border-radius:16px;border:2px solid var(--p)}
+.player-wrap .top .actions{display:flex;gap:10px;align-items:center}
+.player-wrap .top .actions button{background:var(--p);border:0;color:#fff;padding:8px 16px;border-radius:30px;cursor:pointer;font-weight:700;font-size:12px}
+.player-wrap .top .close{background:var(--p);border:0;color:#fff;width:44px;height:44px;border-radius:50%;font-size:20px;cursor:pointer}
+.player-wrap iframe{width:100%;max-width:1100px;height:75vh;border-radius:16px;border:2px solid var(--p);background:#000}
 .player-wrap .servers{position:absolute;bottom:30px;display:flex;gap:10px;flex-wrap:wrap;justify-content:center;background:rgba(0,0,0,.6);padding:12px 20px;border-radius:50px}
 .player-wrap .servers button{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);border-radius:30px;padding:8px 18px;color:#fff;cursor:pointer;font-size:11px}
 .player-wrap .servers button.active{background:var(--p);border-color:var(--p)}
@@ -68,7 +70,10 @@ body{background:#0a0e17;color:#fff;font-family:'Segoe UI',sans-serif;padding:15p
 <div class="player-wrap" id="player">
 <div class="top">
 <span class="t" id="ptitle">🎬 Now Playing</span>
+<div class="actions">
+<button onclick="refreshPlayer()">🔄 Refresh</button>
 <button class="close" onclick="closePlayer()">✕</button>
+</div>
 </div>
 <iframe id="iframe" src="" allowfullscreen></iframe>
 <div class="servers" id="sv">
@@ -116,41 +121,112 @@ const DB = [
 {title:'The Dark Knight',id:'tt0468569',type:'Classic',img:'https://m.media-amazon.com/images/M/MV5BMTMxNTMwODM0NF5BMl5BanBnXkFtZTcwODAyMTk2Mw@@._V1_.jpg'}
 ];
 
-// ===== PLAYER SERVERS =====
+// ===== PLAYER SERVERS (5 LAPIS) =====
 const SVR = [
-id=>`https://multiembed.mov/?video_id=${id}&tmdb=1`,
-id=>`https://www.2embed.cc/embed/${id}`,
-id=>`https://vidsrc.me/embed/${id}`,
-id=>`https://vidsrc.cc/v2/embed/movie/${id}`,
-id=>`https://embed.su/embed/${id}`
+    id => `https://multiembed.mov/?video_id=${id}&tmdb=1`,
+    id => `https://vidsrc.me/embed/${id}`,
+    id => `https://www.2embed.cc/embed/${id}`,
+    id => `https://vidsrc.to/embed/movie/${id}`,
+    id => `https://embed.su/embed/${id}`
 ];
 
-let curSvr=0, curId='', curCat='all';
+let curSvr = 0, curId = '', curCat = 'all', retryCount = 0;
 
-function getUrl(id){return SVR[curSvr](id)}
+function getUrl(id){ return SVR[curSvr](id) }
 
-function switchSvr(i){curSvr=i;document.querySelectorAll('#sv button').forEach((b,j)=>b.classList.toggle('active',j==i));if(curId)document.getElementById('iframe').src=getUrl(curId)}
+function switchSvr(i){
+    curSvr = i;
+    document.querySelectorAll('#sv button').forEach((b,j) => b.classList.toggle('active', j === i));
+    if(curId) {
+        document.getElementById('iframe').src = getUrl(curId);
+        retryCount = 0;
+    }
+}
 
-function setCat(c){curCat=c;document.querySelectorAll('#cat button').forEach(b=>b.classList.remove('active'));document.querySelector(`#cat button[onclick="setCat('${c}')"]`).classList.add('active');document.getElementById('search').value='';render()}
+function refreshPlayer(){
+    if(curId) {
+        document.getElementById('iframe').src = getUrl(curId);
+        retryCount = 0;
+    }
+}
 
-function search(){const q=document.getElementById('search').value.trim().toLowerCase();if(!q)return render();const f=DB.filter(i=>i.title.toLowerCase().includes(q)||i.type.toLowerCase().includes(q));renderResults(f.length?f:[{title:'Tidak ditemukan',id:null,type:'Error',img:''}])}
+function setCat(c){
+    curCat = c;
+    document.querySelectorAll('#cat button').forEach(b => b.classList.remove('active'));
+    document.querySelector(`#cat button[onclick="setCat('${c}')"]`).classList.add('active');
+    document.getElementById('search').value = '';
+    render();
+}
 
-function render(){let f=DB;if(curCat!=='all'){f=DB.filter(i=>i.type.toLowerCase()===curCat.toLowerCase()||(curCat==='kdrama'&&i.type==='K-Drama')||(curCat==='classic'&&i.type==='Classic')||(curCat==='donghua'&&i.type==='Donghua'))}renderResults(f)}
+function search(){
+    const q = document.getElementById('search').value.trim().toLowerCase();
+    if(!q) return render();
+    const f = DB.filter(i => i.title.toLowerCase().includes(q) || i.type.toLowerCase().includes(q));
+    renderResults(f.length ? f : [{title:'Tidak ditemukan', id:null, type:'Error', img:''}]);
+}
 
-function renderResults(items){const g=document.getElementById('grid');if(!items||!items.length||(items.length===1&&items[0].title==='Tidak ditemukan')){g.innerHTML='<div class="loading">😞 Tidak ada hasil</div>';return}
-g.innerHTML=items.map(i=>`
-<div class="card" onclick="${i.id?`play('${i.id}','${i.title.replace(/'/g,"\\'")}')`:''}">
-<img src="${i.img||'https://via.placeholder.com/200x300/1a2335/fff?text=No+Image'}" onerror="this.src='https://via.placeholder.com/200x300/1a2335/fff?text=Error'">
-<div class="info"><h4>${i.title}</h4><p>${i.type}</p></div>
-</div>
-`).join('')}
+function render(){
+    let f = DB;
+    if(curCat !== 'all') {
+        f = DB.filter(i => 
+            i.type.toLowerCase() === curCat.toLowerCase() ||
+            (curCat === 'kdrama' && i.type === 'K-Drama') ||
+            (curCat === 'classic' && i.type === 'Classic') ||
+            (curCat === 'donghua' && i.type === 'Donghua')
+        );
+    }
+    renderResults(f);
+}
 
-function play(id,title){curId=id;document.getElementById('ptitle').textContent='🎬 '+title;document.getElementById('iframe').src=getUrl(id);document.getElementById('player').style.display='flex';document.body.style.overflow='hidden'}
+function renderResults(items){
+    const g = document.getElementById('grid');
+    if(!items || !items.length || (items.length === 1 && items[0].title === 'Tidak ditemukan')) {
+        g.innerHTML = '<div class="loading">😞 Tidak ada hasil</div>';
+        return;
+    }
+    g.innerHTML = items.map(i => `
+        <div class="card" onclick="${i.id ? `play('${i.id}','${i.title.replace(/'/g, "\\'")}')` : ''}">
+            <img src="${i.img || 'https://via.placeholder.com/200x300/1a2335/fff?text=No+Image'}" 
+                 onerror="this.src='https://via.placeholder.com/200x300/1a2335/fff?text=Error'">
+            <div class="info">
+                <h4>${i.title}</h4>
+                <p>${i.type}</p>
+            </div>
+        </div>
+    `).join('');
+}
 
-function closePlayer(){document.getElementById('player').style.display='none';document.getElementById('iframe').src='';curId='';document.body.style.overflow='auto'}
+function play(id, title){
+    curId = id;
+    retryCount = 0;
+    document.getElementById('ptitle').textContent = '🎬 ' + title;
+    document.getElementById('iframe').src = getUrl(id);
+    document.getElementById('player').style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+    
+    // Auto-retry if error
+    setTimeout(() => {
+        const iframe = document.getElementById('iframe');
+        // Check if video loaded (can't directly detect, but we can retry if user clicks)
+    }, 3000);
+}
 
-window.onload=()=>{render();document.querySelector('#cat button:first-child').classList.add('active')}
-document.addEventListener('keydown',e=>{if(e.key==='Escape')closePlayer()})
+function closePlayer(){
+    document.getElementById('player').style.display = 'none';
+    document.getElementById('iframe').src = '';
+    curId = '';
+    document.body.style.overflow = 'auto';
+}
+
+// ===== INIT =====
+window.onload = () => {
+    render();
+    document.querySelector('#cat button:first-child')?.classList.add('active');
+};
+
+document.addEventListener('keydown', e => {
+    if(e.key === 'Escape') closePlayer();
+});
 </script>
 </body>
 </html>
