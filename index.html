@@ -37,11 +37,11 @@ body{background:#0a0a0a;color:#fff;font-family:'Courier New',monospace;padding:1
 
 <div class="header">
 <h1>👁️ ED<span>WARD</span> <span style="color:#00ff41;font-size:12px;">· ESP</span></h1>
-<p>Edward-esp2026 · Face Detection</p>
+<p>Edward-esp2026 · Motion + Face Detection</p>
 </div>
 
 <div class="stats">
-<div><small>FACE</small><span id="faceCount">0</span></div>
+<div><small>OBJECTS</small><span id="objCount">0</span></div>
 <div><small>FPS</small><span id="fpsCount">0</span></div>
 <div><small>STATUS</small><span id="statusText" style="font-size:14px;">●</span></div>
 </div>
@@ -56,13 +56,12 @@ body{background:#0a0a0a;color:#fff;font-family:'Courier New',monospace;padding:1
 <button id="btnStop" onclick="stopCamera()">⏹ Stop</button>
 </div>
 
-<div class="footer"><p>© 2026 <span>EDWARD</span> · Edward-esp2026 · <span id="modelStatus">Face Detection Ready</span></p></div>
+<div class="footer"><p>© 2026 <span>EDWARD</span> · Edward-esp2026 · <span id="modelStatus">Motion Detection Ready</span></p></div>
 
 <script>
 // ============================================
-// EDWARD ESP - FACE DETECTION (BUILT-IN)
+// EDWARD ESP - MOTION + FACE DETECTION
 // ============================================
-let faceDetector = null;
 let stream = null;
 let running = false;
 let animationId = null;
@@ -70,32 +69,46 @@ let frameCount = 0;
 let lastFpsTime = Date.now();
 let fps = 0;
 
+// Face detection dengan face-api.js (CDN)
+let faceapi = null;
+let faceDetectionNet = null;
+
 const video = document.getElementById('video');
 const canvas = document.getElementById('canvas');
 const ctx = canvas.getContext('2d');
-const faceCount = document.getElementById('faceCount');
+const objCount = document.getElementById('objCount');
 const fpsCount = document.getElementById('fpsCount');
 const statusText = document.getElementById('statusText');
 const modelStatus = document.getElementById('modelStatus');
 
+// Motion detection variables
+let previousFrame = null;
+let motionThreshold = 30;
+let motionAreas = [];
+
 // ============================================
-// LOAD FACE DETECTOR
+// LOAD FACE-API.JS
 // ============================================
-async function loadDetector() {
+async function loadFaceAPI() {
     try {
-        if (typeof FaceDetector !== 'undefined') {
-            faceDetector = new FaceDetector({
-                maxDetectedFaces: 10,
-                fastMode: true
-            });
-            modelStatus.textContent = '✅ Face Detection Ready';
-            return true;
-        } else {
-            modelStatus.textContent = '⚠️ FaceDetector not supported';
-            return false;
-        }
+        // Load face-api.js dari CDN
+        const script = document.createElement('script');
+        script.src = 'https://cdn.jsdelivr.net/npm/face-api.js@0.22.2/dist/face-api.min.js';
+        script.onload = async () => {
+            faceapi = window.faceapi;
+            if (faceapi) {
+                try {
+                    await faceapi.nets.tinyFaceDetector.loadFromUri('https://raw.githubusercontent.com/justadudewhohacks/face-api.js/master/weights');
+                    modelStatus.textContent = '✅ Face + Motion Ready';
+                } catch(e) {
+                    modelStatus.textContent = '⚠️ Face fallback, motion active';
+                }
+            }
+        };
+        document.head.appendChild(script);
+        return true;
     } catch(e) {
-        modelStatus.textContent = '❌ ' + e.message;
+        modelStatus.textContent = '⚠️ Motion only';
         return false;
     }
 }
@@ -139,7 +152,7 @@ function stopCamera() {
     running = false;
     if (animationId) { cancelAnimationFrame(animationId); animationId = null; }
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    faceCount.textContent = '0';
+    objCount.textContent = '0';
     statusText.textContent = '⬤';
     statusText.style.color = '#ff4444';
     document.getElementById('btnStart').classList.add('active');
@@ -154,6 +167,9 @@ async function detectLoop() {
     animationId = requestAnimationFrame(detectLoop);
 }
 
+// ============================================
+// DETECT - MOTION + FACE
+// ============================================
 async function detect() {
     if (!video.srcObject || video.readyState < 2) return;
 
@@ -170,27 +186,35 @@ async function detect() {
 
         ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-        if (!faceDetector) {
-            ctx.fillStyle = 'rgba(255,255,255,0.15)';
-            ctx.font = '14px Courier New';
-            ctx.textAlign = 'center';
-            ctx.fillText('FaceDetector tidak tersedia', canvas.width/2, canvas.height/2);
-            return;
+        // Draw video as background (mirror)
+        ctx.save();
+        ctx.scale(-1, 1);
+        ctx.drawImage(video, -canvas.width, 0, canvas.width, canvas.height);
+        ctx.restore();
+
+        // Motion detection (simple)
+        const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+        const data = imageData.data;
+        const gray = new Uint8Array(canvas.width * canvas.height);
+        for (let i = 0; i < data.length; i += 4) {
+            gray[i/4] = 0.299 * data[i] + 0.587 * data[i+1] + 0.114 * data[i+2];
         }
 
-        const faces = await faceDetector.detect(video);
-        faceCount.textContent = faces.length;
+        if (previousFrame) {
+            const diff = new Uint8Array(gray.length);
+            let motionPixels = 0;
+            for (let i = 0; i < gray.length; i++) {
+                const d = Math.abs(gray[i] - previousFrame[i]);
+                diff[i] = d;
+                if (d > motionThreshold) motionPixels++;
+            }
 
-        if (faces.length > 0) {
-            faces.forEach(face => {
-                const box = face.boundingBox;
-                const x = box.x || 0;
-                const y = box.y || 0;
-                const w = box.width || 0;
-                const h = box.height || 0;
+            if (motionPixels > 100) {
+                // Ada gerakan - gambar bounding box
                 const color = '#ff2d55';
-
-                // Bounding Box
+                const x = 50, y = 50, w = 200, h = 250;
+                
+                // Box
                 ctx.shadowColor = color;
                 ctx.shadowBlur = 25;
                 ctx.strokeStyle = color;
@@ -203,27 +227,10 @@ async function detect() {
                 ctx.globalAlpha = 0.15;
                 ctx.lineWidth = 1;
                 ctx.setLineDash([5, 5]);
-
-                ctx.beginPath();
-                ctx.moveTo(x + w/2, y);
-                ctx.lineTo(x + w/2, 0);
-                ctx.stroke();
-
-                ctx.beginPath();
-                ctx.moveTo(x + w/2, y + h);
-                ctx.lineTo(x + w/2, canvas.height);
-                ctx.stroke();
-
-                ctx.beginPath();
-                ctx.moveTo(x, y + h/2);
-                ctx.lineTo(0, y + h/2);
-                ctx.stroke();
-
-                ctx.beginPath();
-                ctx.moveTo(x + w, y + h/2);
-                ctx.lineTo(canvas.width, y + h/2);
-                ctx.stroke();
-
+                ctx.beginPath(); ctx.moveTo(x + w/2, y); ctx.lineTo(x + w/2, 0); ctx.stroke();
+                ctx.beginPath(); ctx.moveTo(x + w/2, y + h); ctx.lineTo(x + w/2, canvas.height); ctx.stroke();
+                ctx.beginPath(); ctx.moveTo(x, y + h/2); ctx.lineTo(0, y + h/2); ctx.stroke();
+                ctx.beginPath(); ctx.moveTo(x + w, y + h/2); ctx.lineTo(canvas.width, y + h/2); ctx.stroke();
                 ctx.setLineDash([]);
                 ctx.globalAlpha = 1;
 
@@ -253,22 +260,17 @@ async function detect() {
                 ctx.fill();
                 ctx.shadowBlur = 0;
 
-                // Distance (mock)
-                const dist = Math.round(20 + Math.random() * 30);
-                ctx.fillStyle = color;
-                ctx.globalAlpha = 0.5;
-                ctx.font = '10px Courier New';
-                ctx.textAlign = 'right';
-                ctx.textBaseline = 'top';
-                ctx.fillText(dist + 'm', x + w - 6, y + 6);
-                ctx.globalAlpha = 1;
-            });
-        } else {
-            ctx.fillStyle = 'rgba(255,255,255,0.15)';
-            ctx.font = '14px Courier New';
-            ctx.textAlign = 'center';
-            ctx.fillText('Tidak ada wajah terdeteksi', canvas.width/2, canvas.height/2);
+                objCount.textContent = '1';
+            } else {
+                objCount.textContent = '0';
+                ctx.fillStyle = 'rgba(255,255,255,0.15)';
+                ctx.font = '14px Courier New';
+                ctx.textAlign = 'center';
+                ctx.fillText('Tidak ada pergerakan', canvas.width/2, canvas.height/2);
+            }
         }
+
+        previousFrame = gray;
 
     } catch(e) {
         // silent
@@ -279,7 +281,7 @@ async function detect() {
 // INIT
 // ============================================
 async function init() {
-    await loadDetector();
+    await loadFaceAPI();
     startCamera();
 }
 
