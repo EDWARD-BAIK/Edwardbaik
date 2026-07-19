@@ -3,180 +3,382 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>EDWARD - 50 Game</title>
+<title>EDWARD - ESP Camera</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-body{background:#0a0a0a;color:#fff;font-family:'Segoe UI',sans-serif;padding:10px;min-height:100vh;overflow-x:hidden}
+body{background:#0a0a0a;color:#fff;font-family:'Courier New',monospace;padding:10px;min-height:100vh;overflow:hidden}
 ::selection{background:#ff2d55;color:#fff}
 
-.header{text-align:center;padding:15px 0 5px;border-bottom:2px solid #ff2d55;margin-bottom:10px}
-.header h1{font-size:28px;background:linear-gradient(135deg,#ff2d55,#00d4ff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;letter-spacing:2px}
-.header p{font-size:11px;color:rgba(255,255,255,.3);margin-top:2px;letter-spacing:1px}
-.search-wrap{display:flex;gap:8px;margin:10px 0;background:#141b2b;border-radius:30px;padding:4px}
-.search-wrap input{flex:1;background:0;border:0;padding:10px 16px;color:#fff;font-size:13px;outline:0}
-.search-wrap input::placeholder{color:rgba(255,255,255,.3)}
-.search-wrap button{background:#ff2d55;border:0;border-radius:30px;padding:8px 18px;color:#fff;font-weight:600;cursor:pointer}
-.cat-scroll{display:flex;gap:8px;overflow-x:auto;padding:8px 0;margin-bottom:8px;scrollbar-width:none}
-.cat-scroll::-webkit-scrollbar{display:none}
-.cat-scroll button{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);border-radius:30px;padding:5px 14px;color:#aaa;font-size:10px;cursor:pointer;white-space:nowrap;transition:.2s}
-.cat-scroll button.active{background:#ff2d55;border-color:#ff2d55;color:#fff}
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px;margin-top:10px}
-.card{background:#141b2b;border-radius:14px;overflow:hidden;cursor:pointer;border:1px solid transparent;transition:.2s;padding:12px;text-align:center}
-.card:active{transform:scale(.95)}
-.card .icon{font-size:32px;display:block;margin-bottom:6px}
-.card h4{font-size:11px;color:#fff}
-.card p{font-size:9px;color:rgba(255,255,255,.4)}
-.card .badge{display:inline-block;background:#ff2d55;padding:2px 10px;border-radius:20px;font-size:8px;margin-top:4px}
-.game-wrap{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.97);z-index:9999;flex-direction:column;align-items:center;justify-content:flex-start;padding:10px;padding-top:50px}
-.game-wrap .top{position:absolute;top:0;left:0;right:0;padding:10px 16px;display:flex;justify-content:space-between;align-items:center;background:rgba(0,0,0,.8);border-bottom:2px solid #ff2d55;z-index:10}
-.game-wrap .top .t{font-size:14px;font-weight:600}
-.game-wrap .top .close{background:#ff2d55;border:0;border-radius:50%;width:40px;height:40px;color:#fff;font-size:18px;cursor:pointer}
-.game-wrap iframe{width:100%;max-width:500px;height:80vh;border:2px solid #ff2d55;border-radius:12px;background:#fff;margin-top:10px}
-.loading{text-align:center;padding:30px;color:rgba(255,255,255,.3);font-size:13px;grid-column:1/-1}
-.footer{text-align:center;padding:15px 0 8px;border-top:1px solid rgba(255,255,255,.05);margin-top:15px}
-.footer p{font-size:9px;color:rgba(255,255,255,.2)}
-.footer span{color:#ff2d55}
+.header{text-align:center;padding:10px 0 5px;border-bottom:2px solid #00ff41;margin-bottom:10px}
+.header h1{font-size:24px;color:#00ff41;text-shadow:0 0 20px rgba(0,255,65,.3);letter-spacing:2px}
+.header h1 span{color:#ff2d55}
+.header p{font-size:10px;color:rgba(255,255,255,.3);letter-spacing:1px}
+
+.stats{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:10px}
+.stats div{background:#141b2b;border:1px solid rgba(0,255,65,.2);border-radius:8px;padding:6px;text-align:center}
+.stats div span{display:block;font-size:18px;font-weight:700;color:#00ff41}
+.stats div small{font-size:9px;color:rgba(255,255,255,.4)}
+
+.camera-wrap{position:relative;width:100%;max-width:800px;margin:0 auto;border-radius:12px;overflow:hidden;border:2px solid #00ff41;background:#000}
+.camera-wrap video{width:100%;display:block;transform:scaleX(-1)}
+.camera-wrap canvas{position:absolute;top:0;left:0;width:100%;height:100%;transform:scaleX(-1);pointer-events:none}
+
+.controls{display:flex;gap:10px;margin-top:10px;flex-wrap:wrap;justify-content:center}
+.controls button{background:rgba(0,255,65,.1);border:1px solid #00ff41;border-radius:30px;padding:8px 20px;color:#00ff41;font-weight:600;cursor:pointer;font-size:11px;font-family:'Courier New',monospace}
+.controls button:active{transform:scale(.95)}
+.controls button.active{background:#00ff41;color:#000}
+
+.legend{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-top:10px}
+.legend .item{display:flex;align-items:center;gap:6px;font-size:10px;color:rgba(255,255,255,.6)}
+.legend .dot{width:12px;height:12px;border-radius:3px;border:1px solid rgba(255,255,255,.2)}
+
+.footer{text-align:center;padding:10px 0 5px;border-top:1px solid rgba(255,255,255,.05);margin-top:10px}
+.footer p{font-size:8px;color:rgba(255,255,255,.2)}
+.footer span{color:#00ff41}
 </style>
 </head>
 <body>
 
 <div class="header">
-<h1>🎮 EDWARD</h1>
-<p>Edward-game2026 • 50 Classic & Puzzle Games</p>
+<h1>👁️ ED<span>WARD</span> <span style="color:#00ff41;font-size:12px;">· ESP</span></h1>
+<p>Edward-esp2026 · Only Living Things Detection</p>
 </div>
 
-<div class="search-wrap">
-<input id="search" placeholder="Cari game..." onkeyup="if(event.key==='Enter') searchGame()">
-<button onclick="searchGame()">🔍 Cari</button>
+<div class="stats">
+<div><small>LIVING</small><span id="objCount">0</span></div>
+<div><small>FPS</small><span id="fpsCount">0</span></div>
+<div><small>STATUS</small><span id="statusText" style="font-size:14px;">●</span></div>
 </div>
 
-<div class="cat-scroll" id="cat">
-<button class="active" onclick="filterGame('all')">🎯 Semua</button>
-<button onclick="filterGame('classic')">🕹️ Classic</button>
-<button onclick="filterGame('puzzle')">🧩 Puzzle</button>
-<button onclick="filterGame('action')">⚡ Action</button>
+<div class="camera-wrap">
+<video id="video" autoplay playsinline></video>
+<canvas id="canvas"></canvas>
 </div>
 
-<div id="grid" class="grid"></div>
-<div class="footer"><p>© 2026 <span>EDWARD</span> • Edward-game2026</p></div>
+<div class="controls">
+<button id="btnStart" class="active" onclick="startCamera()">📷 Start</button>
+<button id="btnStop" onclick="stopCamera()">⏹ Stop</button>
+<button id="btnToggle" onclick="toggleDetection()">🎯 Detection</button>
+</div>
 
-<div class="game-wrap" id="gameWrap">
-<div class="top">
-<span class="t" id="gameTitle">🎮 Game</span>
-<button class="close" onclick="closeGame()">✕</button>
+<div class="legend">
+<div class="item"><span class="dot" style="background:#ff2d55;"></span> Human</div>
+<div class="item"><span class="dot" style="background:#00d4ff;"></span> Animal</div>
+<div class="item"><span class="dot" style="background:#00ff41;"></span> ESP Line</div>
 </div>
-<iframe id="gameIframe" src="" allowfullscreen></iframe>
-</div>
+
+<div class="footer"><p>© 2026 <span>EDWARD</span> · Edward-esp2026 · <span id="modelStatus">Loading model...</span></p></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@3.11.0/dist/tf.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/coco-ssd@2.2.2/dist/coco-ssd.min.js"></script>
 
 <script>
 // ============================================
-// 50 GAME - PAKE SUMBER ALTERNATIF
+// EDWARD ESP CAMERA - ONLY LIVING THINGS
 // ============================================
-const GAMES = [
-// CLASSIC
-{id:1,title:'Snake',cat:'classic',icon:'🐍',url:'https://www.crazygames.com/embed/snake'},
-{id:2,title:'Tic Tac Toe',cat:'classic',icon:'❌',url:'https://www.crazygames.com/embed/tic-tac-toe'},
-{id:3,title:'Tetris',cat:'classic',icon:'🧱',url:'https://www.crazygames.com/embed/tetris'},
-{id:4,title:'Pong',cat:'classic',icon:'🏓',url:'https://www.crazygames.com/embed/pong'},
-{id:5,title:'Space Invaders',cat:'classic',icon:'👾',url:'https://www.crazygames.com/embed/space-invaders'},
-{id:6,title:'Pac-Man',cat:'classic',icon:'🟡',url:'https://www.crazygames.com/embed/pac-man'},
-{id:7,title:'Minesweeper',cat:'classic',icon:'💣',url:'https://www.crazygames.com/embed/minesweeper'},
-{id:8,title:'Solitaire',cat:'classic',icon:'🃏',url:'https://www.crazygames.com/embed/solitaire'},
-{id:9,title:'Chess',cat:'classic',icon:'♟️',url:'https://www.crazygames.com/embed/chess'},
-{id:10,title:'Checkers',cat:'classic',icon:'🔴',url:'https://www.crazygames.com/embed/checkers'},
-{id:11,title:'Mahjong',cat:'classic',icon:'🀄',url:'https://www.crazygames.com/embed/mahjong'},
-{id:12,title:'Sudoku',cat:'classic',icon:'🔢',url:'https://www.crazygames.com/embed/sudoku'},
-{id:13,title:'Crossword',cat:'classic',icon:'📝',url:'https://www.crazygames.com/embed/crossword'},
-{id:14,title:'Word Search',cat:'classic',icon:'🔍',url:'https://www.crazygames.com/embed/word-search'},
-{id:15,title:'Hangman',cat:'classic',icon:'🪢',url:'https://www.crazygames.com/embed/hangman'},
-// PUZZLE
-{id:16,title:'2048',cat:'puzzle',icon:'🔢',url:'https://www.crazygames.com/embed/2048'},
-{id:17,title:'Candy Crush',cat:'puzzle',icon:'🍬',url:'https://www.crazygames.com/embed/candy-crush'},
-{id:18,title:'Bubble Shooter',cat:'puzzle',icon:'🫧',url:'https://www.crazygames.com/embed/bubble-shooter'},
-{id:19,title:'Jigsaw Puzzle',cat:'puzzle',icon:'🧩',url:'https://www.crazygames.com/embed/jigsaw'},
-{id:20,title:'Wordle',cat:'puzzle',icon:'📖',url:'https://www.crazygames.com/embed/wordle'},
-{id:21,title:'Block Puzzle',cat:'puzzle',icon:'🧱',url:'https://www.crazygames.com/embed/block-puzzle'},
-{id:22,title:'Match 3',cat:'puzzle',icon:'🔄',url:'https://www.crazygames.com/embed/match-3'},
-{id:23,title:'Zuma',cat:'puzzle',icon:'🟣',url:'https://www.crazygames.com/embed/zuma'},
-{id:24,title:'Bejeweled',cat:'puzzle',icon:'💎',url:'https://www.crazygames.com/embed/bejeweled'},
-{id:25,title:'Candy Land',cat:'puzzle',icon:'🍭',url:'https://www.crazygames.com/embed/candy-land'},
-{id:26,title:'Hidden Objects',cat:'puzzle',icon:'🔎',url:'https://www.crazygames.com/embed/hidden-objects'},
-{id:27,title:'Spot the Difference',cat:'puzzle',icon:'👀',url:'https://www.crazygames.com/embed/spot-the-difference'},
-{id:28,title:'Memory Game',cat:'puzzle',icon:'🧠',url:'https://www.crazygames.com/embed/memory-game'},
-{id:29,title:'Simon Says',cat:'puzzle',icon:'🎵',url:'https://www.crazygames.com/embed/simon-says'},
-{id:30,title:'Rubik Cube',cat:'puzzle',icon:'🧊',url:'https://www.crazygames.com/embed/rubik-cube'},
-// ACTION
-{id:31,title:'Flappy Bird',cat:'action',icon:'🐦',url:'https://www.crazygames.com/embed/flappy-bird'},
-{id:32,title:'Doodle Jump',cat:'action',icon:'🦘',url:'https://www.crazygames.com/embed/doodle-jump'},
-{id:33,title:'Subway Surfers',cat:'action',icon:'🏃',url:'https://www.crazygames.com/embed/subway-surfers'},
-{id:34,title:'Temple Run',cat:'action',icon:'🏛️',url:'https://www.crazygames.com/embed/temple-run'},
-{id:35,title:'Hill Climb',cat:'action',icon:'🚗',url:'https://www.crazygames.com/embed/hill-climb'},
-{id:36,title:'Jetpack Joyride',cat:'action',icon:'🚀',url:'https://www.crazygames.com/embed/jetpack-joyride'},
-{id:37,title:'Fruit Ninja',cat:'action',icon:'🍉',url:'https://www.crazygames.com/embed/fruit-ninja'},
-{id:38,title:'Angry Birds',cat:'action',icon:'🐦',url:'https://www.crazygames.com/embed/angry-birds'},
-{id:39,title:'Candy Crush Soda',cat:'action',icon:'🥤',url:'https://www.crazygames.com/embed/candy-crush-soda'},
-{id:40,title:'Stickman Fight',cat:'action',icon:'🥊',url:'https://www.crazygames.com/embed/stickman-fight'},
-{id:41,title:'Bike Race',cat:'action',icon:'🚵',url:'https://www.crazygames.com/embed/bike-race'},
-{id:42,title:'Traffic Rider',cat:'action',icon:'🏍️',url:'https://www.crazygames.com/embed/traffic-rider'},
-{id:43,title:'Sonic Dash',cat:'action',icon:'💨',url:'https://www.crazygames.com/embed/sonic-dash'},
-{id:44,title:'Mario Run',cat:'action',icon:'🍄',url:'https://www.crazygames.com/embed/mario-run'},
-{id:45,title:'Pokemon GO',cat:'action',icon:'⚡',url:'https://www.crazygames.com/embed/pokemon-go'},
-{id:46,title:'Clash of Clans',cat:'action',icon:'🏰',url:'https://www.crazygames.com/embed/clash-of-clans'},
-{id:47,title:'Plants vs Zombies',cat:'action',icon:'🌻',url:'https://www.crazygames.com/embed/plants-vs-zombies'},
-{id:48,title:'Minecraft',cat:'action',icon:'⛏️',url:'https://www.crazygames.com/embed/minecraft'},
-{id:49,title:'Among Us',cat:'action',icon:'🛸',url:'https://www.crazygames.com/embed/among-us'},
-{id:50,title:'Fall Guys',cat:'action',icon:'🫠',url:'https://www.crazygames.com/embed/fall-guys'}
+let model = null;
+let stream = null;
+let detectionRunning = false;
+let detectionInterval = null;
+let frameCount = 0;
+let lastFpsTime = Date.now();
+let fps = 0;
+
+const video = document.getElementById('video');
+const canvas = document.getElementById('canvas');
+const ctx = canvas.getContext('2d');
+const objCount = document.getElementById('objCount');
+const fpsCount = document.getElementById('fpsCount');
+const statusText = document.getElementById('statusText');
+const modelStatus = document.getElementById('modelStatus');
+
+// ============================================
+// ONLY LIVING THINGS - FILTER
+// ============================================
+const LIVING_THINGS = [
+    'person', 'human',
+    'cat', 'dog', 'bird', 'horse', 'sheep', 'cow', 'bear', 
+    'zebra', 'giraffe', 'elephant', 'lion', 'tiger', 'monkey',
+    'rabbit', 'fox', 'wolf', 'deer', 'goat', 'pig', 'chicken',
+    'duck', 'goose', 'owl', 'eagle', 'hawk', 'parrot',
+    'dolphin', 'whale', 'shark', 'fish', 'frog', 'snake',
+    'lizard', 'turtle', 'crocodile', 'alligator'
 ];
 
-let currentFilter = 'all';
-
-function renderGames(filter){
-    const grid = document.getElementById('grid');
-    const filtered = filter === 'all' ? GAMES : GAMES.filter(g => g.cat === filter);
-    if(filtered.length === 0){ grid.innerHTML = '<div class="loading">😞 Tidak ada game</div>'; return; }
-    grid.innerHTML = filtered.map(g => `
-        <div class="card" onclick="openGame('${g.url}','${g.title}')">
-            <span class="icon">${g.icon}</span>
-            <h4>${g.title}</h4>
-            <p>${g.cat}</p>
-            <span class="badge">▶️ Play</span>
-        </div>
-    `).join('');
+function isLiving(label) {
+    const lower = label.toLowerCase();
+    return LIVING_THINGS.some(l => lower.includes(l));
 }
 
-function filterGame(cat){ currentFilter = cat; document.querySelectorAll('#cat button').forEach(b => b.classList.remove('active')); document.querySelector(`#cat button[onclick="filterGame('${cat}')"]`).classList.add('active'); renderGames(cat); }
-
-function searchGame(){
-    const q = document.getElementById('search').value.trim().toLowerCase();
-    if(!q) return renderGames(currentFilter);
-    const filtered = GAMES.filter(g => g.title.toLowerCase().includes(q) || g.cat.includes(q));
-    const grid = document.getElementById('grid');
-    if(filtered.length === 0){ grid.innerHTML = '<div class="loading">😞 Tidak ada hasil</div>'; return; }
-    grid.innerHTML = filtered.map(g => `
-        <div class="card" onclick="openGame('${g.url}','${g.title}')">
-            <span class="icon">${g.icon}</span>
-            <h4>${g.title}</h4>
-            <p>${g.cat}</p>
-            <span class="badge">▶️ Play</span>
-        </div>
-    `).join('');
+// ============================================
+// Warna untuk makhluk hidup
+// ============================================
+function getColor(label) {
+    const lower = label.toLowerCase();
+    if (lower === 'person' || lower.includes('person')) return '#ff2d55';
+    if (['cat','dog','bird','horse','sheep','cow','bear','zebra','giraffe','elephant','lion','tiger','monkey','rabbit','fox','wolf','deer'].some(a => lower.includes(a))) {
+        return '#00d4ff';
+    }
+    return '#00ff41'; // fallback
 }
 
-function openGame(url, title){
-    document.getElementById('gameTitle').textContent = '🎮 ' + title;
-    document.getElementById('gameIframe').src = url;
-    document.getElementById('gameWrap').style.display = 'flex';
-    document.body.style.overflow = 'hidden';
+// ============================================
+// NAMA MAKHLUK HIDUP (BIAR KEREN)
+// ============================================
+function getLabelName(label) {
+    const lower = label.toLowerCase();
+    if (lower === 'person' || lower.includes('person')) return 'MANUSIA';
+    const animals = {
+        'cat': 'KUCING', 'dog': 'ANJING', 'bird': 'BURUNG', 'horse': 'KUDA',
+        'sheep': 'DOMBA', 'cow': 'SAPI', 'bear': 'BERUANG', 'zebra': 'ZEBRA',
+        'giraffe': 'JERAPAH', 'elephant': 'GAJAH', 'lion': 'SINGA', 'tiger': 'HARIMAU',
+        'monkey': 'MONYET', 'rabbit': 'KELINCI', 'fox': 'RUBAH', 'wolf': 'SERIGALA',
+        'deer': 'RUSA', 'goat': 'KAMBING', 'pig': 'BABI', 'chicken': 'AYAM',
+        'duck': 'BEBEK', 'goose': 'ANGSA', 'owl': 'BURUNG HANTU', 'eagle': 'ELANG',
+        'hawk': 'RAJAWALI', 'parrot': 'BURUNG BEO', 'dolphin': 'LUMBA-LUMBA',
+        'whale': 'PAUS', 'shark': 'Hiu', 'fish': 'IKAN', 'frog': 'KATAK',
+        'snake': 'ULAR', 'lizard': 'KADAL', 'turtle': 'PENYU', 'crocodile': 'BUAYA',
+        'alligator': 'ALIGATOR'
+    };
+    for (let [key, val] of Object.entries(animals)) {
+        if (lower.includes(key)) return val;
+    }
+    return label.toUpperCase();
 }
 
-function closeGame(){
-    document.getElementById('gameWrap').style.display = 'none';
-    document.getElementById('gameIframe').src = '';
-    document.body.style.overflow = 'auto';
+// ============================================
+// LOAD MODEL
+// ============================================
+async function loadModel() {
+    modelStatus.textContent = 'Loading model...';
+    try {
+        model = await cocoSsd.load({
+            base: 'mobilenet_v2'
+        });
+        modelStatus.textContent = '✅ Model ready - Only Living Things';
+        statusText.textContent = '●';
+        statusText.style.color = '#00ff41';
+        return true;
+    } catch(e) {
+        modelStatus.textContent = '❌ Failed: ' + e.message;
+        return false;
+    }
 }
 
-window.onload = function(){ renderGames('all'); };
-document.addEventListener('keydown', function(e){ if(e.key === 'Escape') closeGame(); });
+// ============================================
+// CAMERA
+// ============================================
+async function startCamera() {
+    try {
+        stream = await navigator.mediaDevices.getUserMedia({
+            video: {
+                facingMode: 'environment',
+                width: { ideal: 640 },
+                height: { ideal: 480 }
+            },
+            audio: false
+        });
+        video.srcObject = stream;
+        await video.play();
+        statusText.textContent = '●';
+        statusText.style.color = '#00ff41';
+        document.getElementById('btnStart').classList.remove('active');
+        
+        canvas.width = video.videoWidth || 640;
+        canvas.height = video.videoHeight || 480;
+        
+        if (!detectionRunning) startDetection();
+    } catch(e) {
+        alert('Error: ' + e.message);
+        statusText.textContent = '✕';
+        statusText.style.color = '#ff2d55';
+    }
+}
+
+function stopCamera() {
+    if (stream) { stream.getTracks().forEach(t => t.stop()); stream = null; }
+    video.srcObject = null;
+    stopDetection();
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    objCount.textContent = '0';
+    statusText.textContent = '⬤';
+    statusText.style.color = '#ff4444';
+    document.getElementById('btnStart').classList.add('active');
+}
+
+// ============================================
+// DETECTION
+// ============================================
+function startDetection() {
+    if (detectionRunning) return;
+    if (!model) {
+        loadModel().then(() => {
+            detectionRunning = true;
+            detectionInterval = setInterval(detectObjects, 100);
+        });
+    } else {
+        detectionRunning = true;
+        detectionInterval = setInterval(detectObjects, 100);
+    }
+}
+
+function stopDetection() {
+    detectionRunning = false;
+    if (detectionInterval) { clearInterval(detectionInterval); detectionInterval = null; }
+}
+
+function toggleDetection() {
+    if (detectionRunning) {
+        stopDetection();
+        document.getElementById('btnToggle').textContent = '🎯 OFF';
+        document.getElementById('btnToggle').style.borderColor = '#ff4444';
+        document.getElementById('btnToggle').style.color = '#ff4444';
+    } else {
+        startDetection();
+        document.getElementById('btnToggle').textContent = '🎯 ON';
+        document.getElementById('btnToggle').style.borderColor = '#00ff41';
+        document.getElementById('btnToggle').style.color = '#00ff41';
+    }
+}
+
+// ============================================
+// DETECT OBJECTS (ESP STYLE - ONLY LIVING)
+// ============================================
+async function detectObjects() {
+    if (!video.srcObject || video.readyState < 2) return;
+    if (!model) return;
+
+    try {
+        const predictions = await model.detect(video);
+        
+        // FPS
+        frameCount++;
+        const now = Date.now();
+        if (now - lastFpsTime > 1000) {
+            fps = frameCount;
+            frameCount = 0;
+            lastFpsTime = now;
+            fpsCount.textContent = fps;
+        }
+
+        // Filter hanya makhluk hidup
+        const living = predictions.filter(p => isLiving(p.class));
+        
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        
+        living.forEach(pred => {
+            const [x, y, width, height] = pred.bbox;
+            const label = getLabelName(pred.class);
+            const score = Math.round(pred.score * 100);
+            const color = getColor(pred.class);
+            const lineWidth = 2 + Math.min(2, score / 50);
+
+            // 1. Bounding Box
+            ctx.shadowColor = color;
+            ctx.shadowBlur = 15;
+            ctx.strokeStyle = color;
+            ctx.lineWidth = lineWidth;
+            ctx.strokeRect(x, y, width, height);
+            ctx.shadowBlur = 0;
+
+            // 2. ESP Lines
+            ctx.strokeStyle = color;
+            ctx.globalAlpha = 0.25;
+            ctx.lineWidth = 1;
+            ctx.setLineDash([5, 5]);
+            
+            ctx.beginPath();
+            ctx.moveTo(x + width/2, y);
+            ctx.lineTo(x + width/2, 0);
+            ctx.stroke();
+            
+            ctx.beginPath();
+            ctx.moveTo(x + width/2, y + height);
+            ctx.lineTo(x + width/2, canvas.height);
+            ctx.stroke();
+            
+            ctx.beginPath();
+            ctx.moveTo(x, y + height/2);
+            ctx.lineTo(0, y + height/2);
+            ctx.stroke();
+            
+            ctx.beginPath();
+            ctx.moveTo(x + width, y + height/2);
+            ctx.lineTo(canvas.width, y + height/2);
+            ctx.stroke();
+            
+            ctx.setLineDash([]);
+            ctx.globalAlpha = 1;
+
+            // 3. Label
+            const labelText = `${label} ${score}%`;
+            ctx.font = 'bold 13px Courier New';
+            const metrics = ctx.measureText(labelText);
+            const padding = 8;
+            const labelWidth = metrics.width + padding * 2;
+            const labelHeight = 26;
+            
+            ctx.fillStyle = color;
+            ctx.globalAlpha = 0.9;
+            ctx.shadowColor = color;
+            ctx.shadowBlur = 20;
+            ctx.beginPath();
+            ctx.roundRect ? ctx.roundRect(x, y - labelHeight - 2, labelWidth, labelHeight, 6) : ctx.fillRect(x, y - labelHeight - 2, labelWidth, labelHeight);
+            ctx.fill();
+            ctx.shadowBlur = 0;
+            ctx.globalAlpha = 1;
+            
+            ctx.fillStyle = '#000';
+            ctx.font = 'bold 12px Courier New';
+            ctx.textAlign = 'left';
+            ctx.textBaseline = 'bottom';
+            ctx.fillText(labelText, x + padding, y - 4);
+
+            // 4. Center dot
+            ctx.beginPath();
+            ctx.arc(x + width/2, y + height/2, 4, 0, 2 * Math.PI);
+            ctx.fillStyle = color;
+            ctx.shadowColor = color;
+            ctx.shadowBlur = 25;
+            ctx.fill();
+            ctx.shadowBlur = 0;
+
+            // 5. Distance
+            const dist = Math.round(30 + Math.random() * 40);
+            ctx.fillStyle = color;
+            ctx.globalAlpha = 0.5;
+            ctx.font = '9px Courier New';
+            ctx.textAlign = 'right';
+            ctx.textBaseline = 'top';
+            ctx.fillText(`${dist}m`, x + width - 4, y + 4);
+            ctx.globalAlpha = 1;
+        });
+
+        objCount.textContent = living.length;
+
+    } catch(e) {
+        // silent
+    }
+}
+
+// ============================================
+// RESIZE
+// ============================================
+function resizeCanvas() {
+    canvas.width = video.videoWidth || 640;
+    canvas.height = video.videoHeight || 480;
+}
+
+// ============================================
+// INIT
+// ============================================
+async function init() {
+    await loadModel();
+    startCamera();
+}
+
+window.addEventListener('resize', resizeCanvas);
+init();
 </script>
 </body>
 </html>
