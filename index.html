@@ -40,20 +40,20 @@ body{background:#0a0e17;color:#fff;font-family:'Segoe UI',sans-serif;padding:10p
 .card .info p{font-size:10px;color:rgba(255,255,255,.4);margin-top:2px}
 
 /* PLAYER */
-.player-wrap{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.97);z-index:9999;flex-direction:column;align-items:center;justify-content:center;padding:10px}
+.player-wrap{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.97);z-index:9999;flex-direction:column;align-items:center;justify-content:flex-start;padding:10px;padding-top:60px}
 .player-wrap .top{position:absolute;top:0;left:0;right:0;padding:12px 16px;display:flex;justify-content:space-between;align-items:center;background:rgba(0,0,0,.8);border-bottom:2px solid #ff2d55;flex-wrap:wrap;gap:8px;z-index:10}
 .player-wrap .top .t{font-size:14px;font-weight:600;max-width:60%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .player-wrap .top .actions{display:flex;gap:6px;flex-wrap:wrap}
 .player-wrap .top .actions button{background:#ff2d55;border:0;border-radius:30px;padding:6px 14px;color:#fff;font-weight:600;font-size:11px;cursor:pointer}
 .player-wrap .top .actions button:active{transform:scale(.95)}
 .player-wrap .top .close{background:#ff2d55}
-.player-wrap iframe{width:100%;max-width:1100px;height:70vh;border-radius:12px;border:2px solid #ff2d55;background:#000}
+.player-wrap iframe{width:100%;max-width:1100px;height:65vh;border-radius:12px;border:2px solid #ff2d55;background:#000;flex-shrink:0}
 
 /* GARIS MERAH PEMISAH */
-.player-wrap .server-divider{position:absolute;bottom:75px;left:5%;right:5%;height:2px;background:linear-gradient(90deg,transparent,#ff2d55,transparent);z-index:10;opacity:.6}
+.player-wrap .server-divider{width:80%;max-width:800px;height:2px;background:linear-gradient(90deg,transparent,#ff2d55,transparent);margin:10px 0 8px 0;opacity:.6;flex-shrink:0}
 
-/* SERVER AREA - GRID RAPI 4 KOLOM */
-.player-wrap .server-area{position:absolute;bottom:15px;left:50%;transform:translateX(-50%);display:grid;grid-template-columns:repeat(4,1fr);gap:8px;background:rgba(0,0,0,.7);padding:10px 16px;border-radius:30px;backdrop-filter:blur(8px);z-index:10;max-width:95%;border:1px solid rgba(255,45,85,.2);min-width:280px}
+/* SERVER AREA - DI BAWAH VIDEO */
+.player-wrap .server-area{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;background:rgba(0,0,0,.7);padding:10px 16px;border-radius:30px;backdrop-filter:blur(8px);z-index:10;max-width:95%;border:1px solid rgba(255,45,85,.2);min-width:280px;flex-shrink:0}
 .player-wrap .server-area button{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);border-radius:30px;padding:8px 12px;color:#fff;font-size:11px;cursor:pointer;transition:.2s;font-weight:500;text-align:center;min-width:50px}
 .player-wrap .server-area button.active{background:#ff2d55;border-color:#ff2d55;box-shadow:0 0 20px rgba(255,45,85,.3)}
 .player-wrap .server-area button:active{transform:scale(.95)}
@@ -133,15 +133,15 @@ const FILMS = [
 {title:'The Dark Knight',id:'tt0468569',type:'Classic'}
 ];
 
-// ===== 8 SERVER WORK TERBARU =====
+// ===== 8 SERVER WORK TERBARU (GANTI TOTAL) =====
 const SERVERS = [
-    id => `https://vidsrc.net/embed/movie/${id}`,
-    id => `https://vidsrc.to/embed/movie/${id}`,
-    id => `https://vidsrc.in/embed/movie/${id}`,
-    id => `https://www.2embed.cc/embed/${id}`,
-    id => `https://embed.su/embed/${id}`,
-    id => `https://multiembed.mov/?video_id=${id}&tmdb=1`,
+    id => `https://vidsrc.xyz/embed/movie/${id}`,
+    id => `https://vidsrc.pro/embed/movie/${id}`,
     id => `https://vidsrc.pm/embed/movie/${id}`,
+    id => `https://embed.su/embed/${id}`,
+    id => `https://www.2embed.cc/embed/${id}`,
+    id => `https://multiembed.mov/?video_id=${id}&tmdb=1`,
+    id => `https://vidsrc.cc/v2/embed/movie/${id}`,
     id => `https://vidembed.cc/embed/movie/${id}`
 ];
 const SERVER_NAMES = ['S1', 'S2', 'S3', 'S4', 'S5', 'S6', 'S7', 'S8'];
