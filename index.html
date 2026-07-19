@@ -6,7 +6,7 @@
 <title>EDWARD - Fishing</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-html,body{width:100%;height:100%;overflow:hidden;background:#0a1628;touch-action:none;user-select:none;-webkit-user-select:none}
+html,body{width:100%;height:100%;overflow:hidden;background:#0a1628;touch-action:none;user-select:none}
 body{display:flex;align-items:center;justify-content:center;font-family:'Segoe UI',sans-serif}
 
 #loadingScreen{position:fixed;top:0;left:0;width:100%;height:100%;background:#0a1628;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:100;transition:opacity .8s}
@@ -26,7 +26,6 @@ body{display:flex;align-items:center;justify-content:center;font-family:'Segoe U
 #loginScreen .input-group input:focus{border-color:#00d4ff;box-shadow:0 0 30px rgba(0,212,255,.1)}
 #loginScreen .input-group input::placeholder{color:rgba(255,255,255,.2)}
 #loginScreen .play-btn{margin-top:20px;padding:14px 50px;background:linear-gradient(135deg,#00d4ff,#0090ff);border:0;border-radius:30px;color:#fff;font-size:clamp(16px,2vw,24px);font-weight:700;cursor:pointer;transition:.3s;position:relative;overflow:hidden;box-shadow:0 0 40px rgba(0,212,255,.2)}
-#loginScreen .play-btn:hover{transform:scale(1.05);box-shadow:0 0 60px rgba(0,212,255,.4)}
 #loginScreen .play-btn:active{transform:scale(.95)}
 #loginScreen .play-btn .shine{position:absolute;top:-50%;left:-50%;width:200%;height:200%;background:linear-gradient(45deg,transparent,transparent,transparent,rgba(255,255,255,.1),transparent,transparent,transparent);animation:shine 2s infinite}
 @keyframes shine{0%{transform:translateX(-100%) rotate(45deg)}100%{transform:translateX(100%) rotate(45deg)}}
@@ -57,7 +56,6 @@ canvas.show{display:block}
 </head>
 <body>
 
-<!-- LOADING -->
 <div id="loadingScreen">
 <div class="logo">⚓ EDWARD-Fishing</div>
 <div class="sub">Loading Game...</div>
@@ -65,7 +63,6 @@ canvas.show{display:block}
 <div class="progress-text" id="progressText">0%</div>
 </div>
 
-<!-- LOGIN -->
 <div id="loginScreen">
 <div class="title">⚓ EDWARD-Fishing</div>
 <div class="sub">~ Petualangan Laut Lepas ~</div>
@@ -79,8 +76,8 @@ canvas.show{display:block}
 </button>
 </div>
 
-<!-- GAME -->
 <canvas id="gameCanvas"></canvas>
+
 <div id="gameUI">
 <div class="top-left">⚓ EDWARD-<span>Fishing</span></div>
 <div class="top-right">
@@ -98,10 +95,8 @@ canvas.show{display:block}
 
 <script>
 // ============================================
-// LOADING + LOGIN
+// LOADING
 // ============================================
-let playerName = '';
-
 function simulateLoading() {
     const bar = document.getElementById('progressBar');
     const text = document.getElementById('progressText');
@@ -121,6 +116,11 @@ function simulateLoading() {
         }
     }, 80);
 }
+
+// ============================================
+// LOGIN
+// ============================================
+let playerName = '';
 
 function login() {
     const input = document.getElementById('nameInput');
@@ -143,7 +143,7 @@ function login() {
     initGame();
     showToast('🐟 Selamat datang, ' + playerName + '!', true);
 }
-
+EOFcat >> index.html << 'EOF'
 // ============================================
 // GAME ENGINE
 // ============================================
@@ -176,17 +176,15 @@ function showToast(text, isGood = true) {
 }
 
 // ============================================
-// GAME STATE
+// STATE & FISH
 // ============================================
 const state = {
     coins: 0, fishCaught: 0, casts: 0, depth: 0,
     autoCast: false, isCasting: false, castTimer: 0,
-    fishOnLine: null, fishTimer: 0,
-    boatX: 0, boatY: 0,
+    fishOnLine: null, boatX: 0, boatY: 0,
     waves: [], fish: [], particles: [],
     bobberX: 0, bobberY: 0, bobberActive: false,
-    lineAngle: 0, lineLength: 0,
-    caughtFish: null, catchProgress: 0, reeling: false,
+    lineAngle: 0, lineLength: 0, catchProgress: 0, reeling: false,
 };
 
 const FISH_SPECIES = [
@@ -205,7 +203,7 @@ const FISH_SPECIES = [
 ];
 
 // ============================================
-// INIT GAME
+// INIT
 // ============================================
 function initGame() {
     state.waves = [];
@@ -252,7 +250,7 @@ function initGame() {
     if (animFrame) cancelAnimationFrame(animFrame);
     gameLoop();
 }
-EOFcat >> index.html << 'EOF'
+
 function updateUI() {
     coinDisplay.textContent = state.coins;
     fishDisplay.textContent = state.fishCaught;
@@ -260,6 +258,9 @@ function updateUI() {
     depthDisplay.textContent = Math.round(state.depth);
 }
 
+// ============================================
+// CAST & AUTO
+// ============================================
 function castLine() {
     if (state.isCasting || state.bobberActive) return;
     state.isCasting = true;
@@ -282,6 +283,9 @@ function toggleAuto() {
     if (state.autoCast && !state.isCasting && !state.bobberActive) castLine();
 }
 
+// ============================================
+// GAME LOOP
+// ============================================
 function gameLoop() {
     if (!gameRunning) return;
     update();
@@ -295,11 +299,13 @@ function update() {
     if (state.depth > 50) state.depth = 0;
     state.boatX = w * 0.25 + Math.sin(Date.now() / 3000) * 20;
     state.boatY = h * 0.7 + Math.sin(Date.now() / 2000 + 1) * 8;
+    
     state.waves.forEach(wave => {
         wave.x += wave.speed;
         if (wave.x > w + wave.w) wave.x = -wave.w;
         wave.y = h * 0.45 + Math.sin(Date.now() / 2000 + wave.phase) * 20 + Math.sin(Date.now() / 3000 + wave.phase * 2) * 10;
     });
+    
     state.fish.forEach(fish => {
         if (fish.caught) return;
         fish.wobble += 0.02;
@@ -314,6 +320,7 @@ function update() {
         fish.vy = Math.max(-0.5, Math.min(0.5, fish.vy));
         if (Math.random() < 0.001) { fish.targetX = Math.random() * w; fish.targetY = h * 0.25 + Math.random() * h * 0.55; }
     });
+    
     if (state.isCasting) {
         state.castTimer += 0.02;
         state.lineLength = Math.min(200, state.castTimer * 200);
@@ -337,6 +344,7 @@ function update() {
             }
         }
     }
+    
     if (state.reeling && state.fishOnLine) {
         state.catchProgress += 0.02;
         state.bobberX += (state.boatX - state.bobberX) * 0.02;
@@ -373,9 +381,11 @@ function update() {
             if (state.autoCast) setTimeout(castLine, 500);
         }
     }
+    
     if (state.autoCast && !state.isCasting && !state.bobberActive && !state.fishOnLine) {
         if (!state._autoTimer) { state._autoTimer = setTimeout(() => { castLine(); state._autoTimer = null; }, 1000); }
     }
+    
     if (state.fishOnLine) speciesName.textContent = state.fishOnLine.species.name;
     else if (state.depth < 10) speciesName.textContent = '🌊 Laut Dangkal';
     else if (state.depth < 25) speciesName.textContent = '🌊 Laut Tengah';
@@ -383,12 +393,16 @@ function update() {
     updateUI();
 }
 
+// ============================================
+// DRAW
+// ============================================
 function draw() {
     const w = canvas.width, h = canvas.height;
     const grad = ctx.createLinearGradient(0, 0, 0, h);
     grad.addColorStop(0, '#0a1628'); grad.addColorStop(0.2, '#0d2847');
     grad.addColorStop(0.5, '#1a4a7a'); grad.addColorStop(0.8, '#0d2847'); grad.addColorStop(1, '#06101f');
     ctx.fillStyle = grad; ctx.fillRect(0, 0, w, h);
+    
     ctx.globalAlpha = 0.03;
     for (let i = 0; i < 8; i++) {
         ctx.beginPath();
@@ -399,6 +413,7 @@ function draw() {
         ctx.stroke();
     }
     ctx.globalAlpha = 1;
+    
     state.waves.forEach(wave => {
         ctx.beginPath();
         ctx.moveTo(wave.x - wave.w/2, wave.y);
@@ -407,6 +422,7 @@ function draw() {
         ctx.lineWidth = 1.5;
         ctx.stroke();
     });
+    
     for (let i = 0; i < 6; i++) {
         const x = (i * 0.17 + Math.sin(Date.now() / 4000 + i) * 0.05) * w;
         const y = h * 0.3 + Math.sin(Date.now() / 3000 + i * 1.5) * 20;
@@ -415,6 +431,7 @@ function draw() {
         ctx.fillStyle = 'rgba(255,255,255,0.05)';
         ctx.fill();
     }
+    
     state.fish.forEach(fish => {
         if (fish.caught) return;
         const x = fish.x, y = fish.y, size = fish.size, color = fish.color;
@@ -445,6 +462,7 @@ function draw() {
         ctx.fill();
         ctx.restore();
     });
+    
     ctx.save();
     ctx.translate(state.boatX, state.boatY);
     ctx.beginPath();
@@ -479,6 +497,7 @@ function draw() {
     ctx.closePath();
     ctx.fill();
     ctx.restore();
+    
     if (state.bobberActive) {
         const bx = state.bobberX, by = state.bobberY;
         ctx.beginPath();
@@ -513,6 +532,7 @@ function draw() {
             ctx.fillRect(bx - 30, by + 25, 60 * state.catchProgress, 4);
         }
     }
+    
     if (Math.random() < 0.1) {
         state.particles.push({
             x: Math.random() * w, y: h,
@@ -531,6 +551,7 @@ function draw() {
         ctx.lineWidth = 0.5;
         ctx.stroke();
     });
+    
     if (state.fishOnLine) {
         const fish = state.fishOnLine;
         ctx.fillStyle = 'rgba(0,0,0,0.4)';
@@ -545,6 +566,9 @@ function draw() {
     }
 }
 
+// ============================================
+// START
+// ============================================
 simulateLoading();
 </script>
 </body>
