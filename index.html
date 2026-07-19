@@ -42,7 +42,7 @@ body{background:#0a0e17;color:#fff;font-family:'Segoe UI',sans-serif;padding:10p
 .player-wrap .top .actions button{background:#ff2d55;border:0;border-radius:30px;padding:6px 14px;color:#fff;font-weight:600;font-size:11px;cursor:pointer}
 .player-wrap .top .actions button:active{transform:scale(.95)}
 .player-wrap .top .close{background:#ff2d55}
-.player-wrap iframe{width:100%;max-width:1100px;height:65vh;border-radius:12px;border:2px solid #ff2d55;background:#000;flex-shrink:0}
+.player-wrap iframe{width:100%;max-width:1100px;height:65vh;border-radius:12px;border:2px solid #ff2d55;background:#000;flex-shrink:0;display:block}
 
 .player-wrap .server-divider{width:80%;max-width:800px;height:2px;background:linear-gradient(90deg,transparent,#ff2d55,transparent);margin:10px 0 8px 0;opacity:.6;flex-shrink:0}
 
@@ -92,7 +92,7 @@ body{background:#0a0e17;color:#fff;font-family:'Segoe UI',sans-serif;padding:10p
 <button class="close" onclick="closePlayer()">✕</button>
 </div>
 </div>
-<iframe id="iframe" src="" allowfullscreen></iframe>
+<iframe id="iframe" src="" allowfullscreen sandbox="allow-scripts allow-same-origin allow-forms allow-modals" loading="lazy"></iframe>
 <div class="server-divider"></div>
 <div class="server-area" id="sv"></div>
 </div>
@@ -126,7 +126,7 @@ const FILMS = [
 {title:'The Dark Knight',id:'tt0468569',type:'Classic'}
 ];
 
-// ===== 6 SERVER PALING WORK =====
+// ===== 6 SERVER ANTI IKLAN =====
 const SERVERS = [
     id => `https://vidsrc.to/embed/movie/${id}`,
     id => `https://vidsrc.net/embed/movie/${id}`,
