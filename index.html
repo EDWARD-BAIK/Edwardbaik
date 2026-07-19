@@ -18,7 +18,7 @@ body{background:#141414;color:#fff;font-family:'Segoe UI',sans-serif;padding:0;m
 .navbar .menu a:hover{color:#fff}
 .navbar .menu .free-badge{background:#e50914;padding:4px 12px;border-radius:20px;font-size:10px;font-weight:700;color:#fff}
 
-.hero{height:70vh;display:flex;align-items:center;padding:0 30px;margin-top:60px;position:relative;background:linear-gradient(135deg,#0a0a0a 50%,transparent),url('https://image.tmdb.org/t/p/original/8Bd0r4A2M5vLxGfN6vF1jU9yWpI.jpg') center/cover no-repeat}
+.hero{height:70vh;display:flex;align-items:center;padding:0 30px;margin-top:60px;position:relative;background:linear-gradient(135deg,#0a0a0a 50%,transparent),url('https://image.tmdb.org/t/p/original/8Bd0r4A2M5vLxGfN6vF1jU9yWpI.jpg') center/cover no-repeat;transition:background .5s}
 .hero::after{content:'';position:absolute;bottom:0;left:0;right:0;height:120px;background:linear-gradient(0deg,#141414,transparent)}
 .hero .content{position:relative;z-index:1;max-width:550px}
 .hero .content .badge{background:#e50914;padding:4px 12px;border-radius:4px;font-size:11px;font-weight:700;display:inline-block;margin-bottom:8px}
@@ -89,7 +89,7 @@ body{background:#141414;color:#fff;font-family:'Segoe UI',sans-serif;padding:0;m
 <div class="badge" id="heroBadge">🔥 TRENDING</div>
 <h1 id="heroTitle">EDWARD</h1>
 <p id="heroDesc">Nonton semua film & anime gratis. Tanpa batas. Tanpa iklan.</p>
-<button class="btn" id="heroBtn" onclick="play('tt2560140','Attack on Titan','Anime')">▶️ Putar Sekarang</button>
+<button class="btn" id="heroBtn" onclick="playHero()">▶️ Putar Sekarang</button>
 </div>
 </div>
 
@@ -124,8 +124,14 @@ body{background:#141414;color:#fff;font-family:'Segoe UI',sans-serif;padding:0;m
 </div>
 
 <script>
-// ===== API PROXY (BIAR BISA AKSES TMDB) =====
-const PROXY = 'https://corsproxy.io/?';
+// ===== PROXY + API =====
+const PROXIES = [
+    'https://api.allorigins.win/raw?url=',
+    'https://corsproxy.io/?',
+    'https://thingproxy.freeboard.io/fetch/'
+];
+let proxyIndex = 0;
+
 const TMDB_KEY = 'e5b9a63f3b5d8450a9d923a2b72a8e9a';
 const TMDB_URL = 'https://api.themoviedb.org/3';
 
@@ -136,7 +142,7 @@ const SERVERS = [
 ];
 const SERVER_NAMES = ['S1', 'S2'];
 
-let curSvr = 0, curId = '', curCat = 'all', currentTitle = '';
+let curSvr = 0, curId = '', curCat = 'all', heroData = null;
 
 function getUrl(id){ return SERVERS[curSvr](id); }
 
@@ -162,14 +168,21 @@ function renderServers(){
     ).join('');
 }
 
-// ===== FETCH DENGAN PROXY =====
+// ===== FETCH DENGAN MULTI PROXY =====
 async function fetchTMDB(url){
-    try {
-        const response = await fetch(PROXY + encodeURIComponent(url));
-        return await response.json();
-    } catch(e){
-        throw new Error('Gagal fetch data');
+    for(let i = 0; i < PROXIES.length; i++){
+        try {
+            const proxy = PROXIES[(proxyIndex + i) % PROXIES.length];
+            const response = await fetch(proxy + encodeURIComponent(url));
+            if(response.ok){
+                proxyIndex = (proxyIndex + i) % PROXIES.length;
+                return await response.json();
+            }
+        } catch(e) {
+            continue;
+        }
     }
+    throw new Error('Semua proxy gagal');
 }
 
 // ===== LOAD TRENDING =====
@@ -183,12 +196,16 @@ async function loadTrending(){
         
         if(data.results && data.results.length > 0){
             renderResults(data.results);
-            updateHero(data.results[0]);
+            heroData = data.results[0];
+            updateHero(heroData);
         } else {
             grid.innerHTML = '<div class="loading">😞 Gagal memuat data</div>';
         }
     } catch(e){
         grid.innerHTML = '<div class="loading">⚠️ Error: ' + e.message + '</div>';
+        // Fallback hero
+        heroData = {title:'EDWARD', id:'tt2560140', type:'Movie', overview:'Nonton semua film & anime gratis.'};
+        updateHero(heroData);
     }
 }
 
@@ -211,7 +228,8 @@ async function search(){
             }
             if(results.length > 0){
                 renderResults(results);
-                updateHero(results[0]);
+                heroData = results[0];
+                updateHero(heroData);
             } else {
                 grid.innerHTML = '<div class="loading">😞 Tidak ada hasil</div>';
             }
@@ -253,6 +271,7 @@ function renderResults(items){
 
 // ===== UPDATE HERO =====
 function updateHero(item){
+    if(!item) return;
     const title = item.title || item.name || 'EDWARD';
     const desc = item.overview || 'Nonton semua film & anime gratis. Tanpa batas. Tanpa iklan.';
     const poster = item.backdrop_path ? `https://image.tmdb.org/t/p/original${item.backdrop_path}` : 'https://image.tmdb.org/t/p/original/8Bd0r4A2M5vLxGfN6vF1jU9yWpI.jpg';
@@ -264,6 +283,14 @@ function updateHero(item){
     document.getElementById('heroBadge').textContent = '🔥 ' + type.toUpperCase();
     document.getElementById('hero').style.background = `linear-gradient(135deg, #0a0a0a 50%, transparent), url(${poster}) center/cover no-repeat`;
     document.getElementById('heroBtn').setAttribute('onclick', `play('${id}','${title.replace(/'/g,"\\'")}','${type}')`);
+}
+
+function playHero(){
+    if(heroData){
+        const title = heroData.title || heroData.name || 'EDWARD';
+        const type = heroData.media_type || 'Movie';
+        play(heroData.id, title, type);
+    }
 }
 
 // ===== SET CATEGORY =====
@@ -279,7 +306,6 @@ function setCat(c){
 // ===== PLAY =====
 function play(id, title, type){
     curId = id;
-    currentTitle = title;
     document.getElementById('ptitle').textContent = '🎬 ' + title;
     document.getElementById('iframe').src = getUrl(id);
     document.getElementById('player').style.display = 'flex';
