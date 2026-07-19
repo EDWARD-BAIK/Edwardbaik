@@ -98,18 +98,14 @@ body{background:#0a0e17;color:#fff;font-family:'Segoe UI',sans-serif;padding:10p
 </div>
 
 <script>
-// ===== DATA FILM =====
+// ===== DATA FILM (NARUTO TETAP ADA) =====
 const FILMS = [
 {title:'Attack on Titan',id:'tt2560140',type:'Anime'},
 {title:'Demon Slayer',id:'tt9335498',type:'Anime'},
 {title:'One Piece',id:'tt0388629',type:'Anime'},
 {title:'Jujutsu Kaisen',id:'tt12343534',type:'Anime'},
-{title:'Solo Leveling',id:'tt26635464',type:'Anime'},
 {title:'Naruto',id:'tt0988824',type:'Anime'},
 {title:'Bleach',id:'tt0434665',type:'Anime'},
-{title:'Chainsaw Man',id:'tt11737520',type:'Anime'},
-{title:'Soul Land',id:'tt10544940',type:'Donghua'},
-{title:'Battle Through Heavens',id:'tt10544942',type:'Donghua'},
 {title:'Final Destination 1',id:'tt0195714',type:'Movie'},
 {title:'Final Destination 2',id:'tt0309593',type:'Movie'},
 {title:'Final Destination 3',id:'tt0414982',type:'Movie'},
@@ -164,8 +160,7 @@ function render(){
         items = FILMS.filter(i => 
             i.type.toLowerCase() === curCat.toLowerCase() ||
             (curCat === 'kdrama' && i.type === 'K-Drama') ||
-            (curCat === 'classic' && i.type === 'Classic') ||
-            (curCat === 'donghua' && i.type === 'Donghua')
+            (curCat === 'classic' && i.type === 'Classic')
         );
     }
     const grid = document.getElementById('grid');
