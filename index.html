@@ -6,61 +6,77 @@
 <title>EDWARD - Nonton Gratis</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-body{background:#141414;color:#fff;font-family:'Segoe UI',sans-serif;overflow-x:hidden}
+body{background:#141414;color:#fff;font-family:'Segoe UI',sans-serif;padding:0;min-height:100vh;overflow-x:hidden}
 ::selection{background:#e50914;color:#fff}
 
-.navbar{position:fixed;top:0;left:0;right:0;padding:15px 30px;display:flex;justify-content:space-between;align-items:center;background:linear-gradient(180deg,#141414 0%,transparent 100%);z-index:100;transition:.3s}
+/* NAVBAR */
+.navbar{position:fixed;top:0;left:0;right:0;padding:12px 30px;display:flex;justify-content:space-between;align-items:center;background:linear-gradient(180deg,#141414 0%,transparent 100%);z-index:100;transition:.3s}
 .navbar.scrolled{background:#141414;box-shadow:0 2px 10px rgba(0,0,0,.5)}
-.navbar .logo{font-size:28px;font-weight:900;color:#e50914;letter-spacing:-1px}
+.navbar .logo{font-size:24px;font-weight:900;color:#e50914;letter-spacing:-1px}
 .navbar .logo span{color:#fff;font-weight:300}
 .navbar .menu{display:flex;gap:20px;align-items:center;flex-wrap:wrap}
-.navbar .menu a{color:#e5e5e5;text-decoration:none;font-size:14px;font-weight:500;cursor:pointer;transition:.2s}
+.navbar .menu a{color:#e5e5e5;text-decoration:none;font-size:13px;font-weight:500;cursor:pointer;transition:.2s}
 .navbar .menu a:hover{color:#fff}
-.navbar .menu .free-badge{background:#e50914;padding:4px 12px;border-radius:20px;font-size:11px;font-weight:700;color:#fff;animation:pulse 2s infinite}
-@keyframes pulse{0%,100%{opacity:1}50%{opacity:.6}}
+.navbar .menu .free-badge{background:#e50914;padding:4px 12px;border-radius:20px;font-size:10px;font-weight:700;color:#fff}
 
-.hero{height:70vh;display:flex;align-items:flex-end;padding:0 30px 60px;margin-top:60px;position:relative;background:linear-gradient(135deg,#0a0a0a 30%,transparent)}
-.hero::after{content:'';position:absolute;bottom:0;left:0;right:0;height:150px;background:linear-gradient(0deg,#141414,transparent)}
-.hero .content{position:relative;z-index:1;max-width:600px}
-.hero .content h1{font-size:48px;font-weight:900;text-shadow:0 2px 20px rgba(0,0,0,.8);margin-bottom:10px}
-.hero .content p{font-size:16px;color:rgba(255,255,255,.8);line-height:1.6;text-shadow:0 2px 10px rgba(0,0,0,.8)}
-.hero .content .btn{display:inline-block;padding:12px 30px;border-radius:6px;border:0;font-size:16px;font-weight:600;cursor:pointer;transition:.2s;background:#fff;color:#000;text-decoration:none;margin-top:15px}
+/* HERO */
+.hero{height:75vh;display:flex;align-items:center;padding:0 30px;margin-top:60px;position:relative;background:linear-gradient(135deg,#0a0a0a 50%,transparent),url('https://image.tmdb.org/t/p/original/8Bd0r4A2M5vLxGfN6vF1jU9yWpI.jpg') center/cover no-repeat}
+.hero::after{content:'';position:absolute;bottom:0;left:0;right:0;height:120px;background:linear-gradient(0deg,#141414,transparent)}
+.hero .content{position:relative;z-index:1;max-width:550px}
+.hero .content .badge{background:#e50914;padding:4px 12px;border-radius:4px;font-size:11px;font-weight:700;display:inline-block;margin-bottom:8px}
+.hero .content h1{font-size:44px;font-weight:900;text-shadow:0 2px 20px rgba(0,0,0,.8);margin-bottom:8px}
+.hero .content p{font-size:14px;color:rgba(255,255,255,.7);line-height:1.6;margin-bottom:16px}
+.hero .content .btn{display:inline-flex;align-items:center;gap:8px;padding:10px 28px;border-radius:6px;border:0;font-size:15px;font-weight:600;cursor:pointer;transition:.2s;background:#fff;color:#000;text-decoration:none}
 .hero .content .btn:hover{background:rgba(255,255,255,.75)}
 
-.search-section{padding:20px 30px}
-.search-section .search-wrap{display:flex;gap:12px;max-width:600px;margin:0 auto}
-.search-section .search-wrap input{flex:1;padding:14px 20px;border-radius:30px;border:0;background:#2a2a2a;color:#fff;font-size:16px;outline:0}
-.search-section .search-wrap input::placeholder{color:#777}
-.search-section .search-wrap button{padding:14px 30px;border-radius:30px;border:0;background:#e50914;color:#fff;font-weight:700;font-size:16px;cursor:pointer}
-.search-section .search-wrap button:active{transform:scale(.95)}
+/* SEARCH */
+.search-wrap{position:relative;z-index:1;margin:20px 30px;display:flex;gap:10px;background:rgba(255,255,255,.05);border-radius:30px;padding:4px;border:1px solid rgba(255,255,255,.1)}
+.search-wrap input{flex:1;background:0;border:0;padding:12px 18px;color:#fff;font-size:14px;outline:0}
+.search-wrap input::placeholder{color:rgba(255,255,255,.4)}
+.search-wrap button{background:#e50914;border:0;border-radius:30px;padding:10px 24px;color:#fff;font-weight:600;cursor:pointer;font-size:13px}
+.search-wrap button:active{transform:scale(.95)}
 
-.row{margin:20px 0 10px 30px}
-.row .row-header{display:flex;justify-content:space-between;align-items:center;padding-right:30px;margin-bottom:10px}
-.row .row-header h2{font-size:20px;font-weight:700}
-.row .row-scroll{display:flex;gap:8px;overflow-x:auto;padding:10px 0 20px 0;scrollbar-width:none}
-.row .row-scroll::-webkit-scrollbar{display:none}
-.row .card{min-width:180px;max-width:180px;border-radius:8px;overflow:hidden;cursor:pointer;transition:.3s;flex-shrink:0;position:relative}
-.row .card:hover{transform:scale(1.05);z-index:10;box-shadow:0 10px 30px rgba(0,0,0,.8)}
-.row .card img{width:100%;aspect-ratio:2/3;object-fit:cover;background:#1a1a1a}
-.row .card .overlay{position:absolute;bottom:0;left:0;right:0;padding:20px 10px 10px;background:linear-gradient(0deg,rgba(0,0,0,.9),transparent);opacity:0;transition:.3s}
-.row .card:hover .overlay{opacity:1}
-.row .card .overlay h4{font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.row .card .overlay p{font-size:10px;color:rgba(255,255,255,.6)}
+/* CATEGORY */
+.cat-scroll{display:flex;gap:8px;overflow-x:auto;padding:0 30px 10px;scrollbar-width:none;position:relative;z-index:1}
+.cat-scroll::-webkit-scrollbar{display:none}
+.cat-scroll button{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);border-radius:30px;padding:6px 18px;color:#aaa;font-size:12px;cursor:pointer;white-space:nowrap;transition:.2s}
+.cat-scroll button.active{background:#e50914;border-color:#e50914;color:#fff}
+.cat-scroll button:active{transform:scale(.95)}
 
+/* GRID */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:15px;padding:10px 30px 30px;position:relative;z-index:1}
+.card{background:#1a1a1a;border-radius:10px;overflow:hidden;cursor:pointer;transition:.3s;border:1px solid transparent}
+.card:hover{transform:scale(1.05);border-color:#e50914;z-index:5;box-shadow:0 10px 30px rgba(0,0,0,.8)}
+.card .poster{width:100%;aspect-ratio:2/3;display:flex;align-items:center;justify-content:center;text-align:center;padding:10px;font-size:12px;font-weight:700;color:#fff;position:relative;background:#1a2335}
+.card .poster img{width:100%;height:100%;object-fit:cover;position:absolute;top:0;left:0}
+.card .poster span{position:relative;z-index:1;text-shadow:0 2px 10px rgba(0,0,0,.8);padding:4px}
+.card .poster .label{position:absolute;bottom:6px;left:6px;right:6px;background:rgba(0,0,0,.8);padding:4px 8px;border-radius:6px;font-size:9px;font-weight:400;z-index:1}
+.card .info{padding:10px 12px}
+.card .info h4{font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.card .info p{font-size:10px;color:rgba(255,255,255,.4);margin-top:2px}
+
+.loading{text-align:center;padding:40px;color:rgba(255,255,255,.4);font-size:14px;grid-column:1/-1}
+.loading::after{content:'...';animation:dot 1.5s steps(4) infinite}
+@keyframes dot{0%{content:''}25%{content:'.'}50%{content:'..'}75%{content:'...'}}
+
+/* PLAYER */
 .player-wrap{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.98);z-index:9999;flex-direction:column;align-items:center;justify-content:flex-start;padding:10px;padding-top:60px}
-.player-wrap .top{position:absolute;top:0;left:0;right:0;padding:12px 16px;display:flex;justify-content:space-between;align-items:center;background:rgba(0,0,0,.8);border-bottom:2px solid #e50914;flex-wrap:wrap;gap:8px;z-index:10}
-.player-wrap .top .t{font-size:14px;font-weight:600;max-width:60%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.player-wrap .top .actions{display:flex;gap:6px;flex-wrap:wrap}
-.player-wrap .top .actions button{background:#e50914;border:0;border-radius:30px;padding:6px 14px;color:#fff;font-weight:600;font-size:11px;cursor:pointer}
+.player-wrap .top{position:absolute;top:0;left:0;right:0;padding:10px 16px;display:flex;justify-content:space-between;align-items:center;background:rgba(0,0,0,.9);border-bottom:2px solid #e50914;flex-wrap:wrap;gap:6px;z-index:10}
+.player-wrap .top .t{font-size:13px;font-weight:600;max-width:50%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.player-wrap .top .actions{display:flex;gap:5px;flex-wrap:wrap}
+.player-wrap .top .actions button{background:#e50914;border:0;border-radius:20px;padding:5px 12px;color:#fff;font-weight:600;font-size:10px;cursor:pointer}
+.player-wrap .top .actions button:active{transform:scale(.95)}
 .player-wrap .top .close{background:#e50914}
 .player-wrap iframe{width:100%;max-width:1100px;height:65vh;border-radius:12px;border:2px solid #e50914;background:#000;flex-shrink:0;border:none;outline:none}
-.player-wrap .server-divider{width:80%;max-width:800px;height:2px;background:linear-gradient(90deg,transparent,#e50914,transparent);margin:10px 0 8px 0;opacity:.6;flex-shrink:0}
-.player-wrap .server-area{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;background:rgba(0,0,0,.7);padding:10px 16px;border-radius:30px;backdrop-filter:blur(8px);z-index:10;max-width:95%;border:1px solid rgba(229,9,20,.2);min-width:150px;flex-shrink:0}
-.player-wrap .server-area button{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);border-radius:30px;padding:8px 12px;color:#fff;font-size:11px;cursor:pointer;transition:.2s;font-weight:500;text-align:center}
+.player-wrap .server-divider{width:80%;max-width:800px;height:2px;background:linear-gradient(90deg,transparent,#e50914,transparent);margin:8px 0;opacity:.6;flex-shrink:0}
+.player-wrap .server-area{display:grid;grid-template-columns:repeat(2,1fr);gap:6px;background:rgba(0,0,0,.7);padding:8px 14px;border-radius:30px;backdrop-filter:blur(8px);z-index:10;max-width:95%;border:1px solid rgba(229,9,20,.2);min-width:120px;flex-shrink:0}
+.player-wrap .server-area button{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);border-radius:30px;padding:6px 10px;color:#fff;font-size:10px;cursor:pointer;transition:.2s;font-weight:500;text-align:center}
 .player-wrap .server-area button.active{background:#e50914;border-color:#e50914;box-shadow:0 0 20px rgba(229,9,20,.3)}
-.loading{text-align:center;padding:40px;color:rgba(255,255,255,.3);font-size:14px}
-.footer{text-align:center;padding:20px 0 8px;border-top:1px solid rgba(255,255,255,.05);margin-top:15px}
-.footer p{font-size:10px;color:rgba(255,255,255,.2)}
+.player-wrap .server-area button:active{transform:scale(.95)}
+.player-wrap .server-area button:hover{background:rgba(229,9,20,.2)}
+
+.footer{text-align:center;padding:15px 0 8px;border-top:1px solid rgba(255,255,255,.05);position:relative;z-index:1}
+.footer p{font-size:9px;color:rgba(255,255,255,.2)}
 .footer span{color:#e50914}
 </style>
 </head>
@@ -71,35 +87,40 @@ body{background:#141414;color:#fff;font-family:'Segoe UI',sans-serif;overflow-x:
 <div class="logo">ED<span>WARD</span></div>
 <div class="menu">
 <a onclick="loadTrending()">🔥 Trending</a>
-<a onclick="loadMovies()">🎬 Movie</a>
-<a onclick="loadAnime()">🎌 Anime</a>
+<a onclick="setCat('movie')">🎬 Movie</a>
+<a onclick="setCat('anime')">🎌 Anime</a>
 <a class="free-badge">100% GRATIS</a>
 </div>
 </div>
 
 <!-- ===== HERO ===== -->
-<div class="hero" id="hero">
+<div class="hero">
 <div class="content">
-<h1 id="heroTitle">EDWARD</h1>
-<p id="heroDesc">Nonton semua film & anime gratis. Tanpa batas. Tanpa iklan.</p>
-<button class="btn" onclick="loadTrending()">Mulai Nonton</button>
+<div class="badge">🔥 TRENDING</div>
+<h1 id="heroTitle">Attack on Titan</h1>
+<p id="heroDesc">Di dunia yang dikepung Titan raksasa, Eren Yeager bersumpah untuk membalas dendam dan membebaskan umat manusia.</p>
+<button class="btn" onclick="playRandom()">▶️ Putar Sekarang</button>
 </div>
 </div>
 
 <!-- ===== SEARCH ===== -->
-<div class="search-section">
 <div class="search-wrap">
-<input id="searchInput" placeholder="Cari film, anime, atau series..." onkeyup="if(event.key==='Enter') searchMovies()">
-<button onclick="searchMovies()">🔍 Cari</button>
-</div>
-</div>
-
-<!-- ===== RESULT ===== -->
-<div class="row">
-<div class="row-header"><h2 id="rowTitle">🔥 Trending Hari Ini</h2></div>
-<div class="row-scroll" id="rowResult"></div>
+<input id="search" placeholder="Cari film, anime, atau series..." onkeyup="if(event.key==='Enter') search()">
+<button onclick="search()">🔍 Cari</button>
 </div>
 
+<!-- ===== CATEGORY ===== -->
+<div class="cat-scroll" id="cat">
+<button class="active" onclick="setCat('all')">🔥 Semua</button>
+<button onclick="setCat('movie')">🎬 Movie</button>
+<button onclick="setCat('anime')">🎌 Anime</button>
+<button onclick="setCat('tv')">📺 TV</button>
+</div>
+
+<!-- ===== GRID ===== -->
+<div id="grid" class="grid"><div class="loading">🔥 Trending minggu ini</div></div>
+
+<!-- ===== FOOTER ===== -->
 <div class="footer"><p>© 2026 <span>EDWARD</span> • 100% GRATIS • Powered by TMDB</p></div>
 
 <!-- ===== PLAYER ===== -->
@@ -119,8 +140,8 @@ body{background:#141414;color:#fff;font-family:'Segoe UI',sans-serif;overflow-x:
 
 <script>
 // ===== TMDB API =====
-const TMDB_KEY = 'YOUR_TMDB_API_KEY'; // GANTI PUNYA LU BOS!
-const TMDB_IMG = 'https://image.tmdb.org/t/p/w500';
+const TMDB_KEY = 'e5b9a63f3b5d8450a9d923a2b72a8e9a';
+const TMDB_URL = 'https://api.themoviedb.org/3';
 
 // ===== 2 SERVER =====
 const SERVERS = [
@@ -129,7 +150,7 @@ const SERVERS = [
 ];
 const SERVER_NAMES = ['S1', 'S2'];
 
-let curSvr = 0, curId = '', curTitle = '';
+let curSvr = 0, curId = '', curCat = 'all', currentTitle = '';
 
 function getUrl(id){ return SERVERS[curSvr](id); }
 
@@ -155,70 +176,103 @@ function renderServers(){
     ).join('');
 }
 
-// ===== AMBIL DATA DARI TMDB =====
-async function fetchTMDB(endpoint){
+// ===== LOAD TRENDING =====
+async function loadTrending(){
+    const grid = document.getElementById('grid');
+    grid.innerHTML = '<div class="loading">Loading...</div>';
+    
     try {
-        const res = await fetch(`https://api.themoviedb.org/3/${endpoint}?api_key=${TMDB_KEY}&language=id-ID`);
-        const data = await res.json();
-        return data.results || [];
-    } catch(e) {
-        console.log('Gagal fetch TMDB:', e);
-        return [];
+        const url = `${TMDB_URL}/trending/all/week?api_key=${TMDB_KEY}`;
+        const resp = await fetch(url);
+        const data = await resp.json();
+        renderResults(data.results || []);
+    } catch(e){
+        grid.innerHTML = '<div class="loading">⚠️ Gagal load. Coba lagi.</div>';
     }
 }
 
-// ===== RENDER =====
-function renderResults(items, title = 'Hasil Pencarian'){
-    const container = document.getElementById('rowResult');
-    const titleEl = document.getElementById('rowTitle');
-    titleEl.textContent = title;
-    if(!items || !items.length){
-        container.innerHTML = '<div class="loading">😞 Tidak ada hasil</div>';
+// ===== SEARCH =====
+async function search(){
+    const q = document.getElementById('search').value.trim();
+    if(!q) return loadTrending();
+    
+    const grid = document.getElementById('grid');
+    grid.innerHTML = '<div class="loading">Mencari...</div>';
+    
+    try {
+        const url = `${TMDB_URL}/search/multi?api_key=${TMDB_KEY}&query=${encodeURIComponent(q)}`;
+        const resp = await fetch(url);
+        const data = await resp.json();
+        
+        if(!data.results || data.results.length === 0){
+            grid.innerHTML = '<div class="loading">😞 Tidak ada hasil</div>';
+            return;
+        }
+        
+        let results = data.results.filter(i => i.media_type !== 'person');
+        if(curCat !== 'all' && curCat !== 'anime'){
+            results = results.filter(i => i.media_type === curCat);
+        }
+        renderResults(results);
+    } catch(e){
+        grid.innerHTML = '<div class="loading">⚠️ Error: ' + e.message + '</div>';
+    }
+}
+
+// ===== RENDER RESULTS =====
+function renderResults(items){
+    const grid = document.getElementById('grid');
+    if(!items || items.length === 0){
+        grid.innerHTML = '<div class="loading">😞 Tidak ada hasil</div>';
         return;
     }
-    container.innerHTML = items.map(item => {
-        const poster = item.poster_path ? TMDB_IMG + item.poster_path : '';
-        const name = item.title || item.name || 'Unknown';
-        const id = item.id;
-        const type = item.media_type || 'movie';
-        return `<div class="card" onclick="playMedia(${id}, '${name.replace(/'/g,"\\'")}', '${type}')">
-            <img src="${poster}" onerror="this.src='https://via.placeholder.com/180x270/141414/fff?text=${encodeURIComponent(name)}'">
-            <div class="overlay"><h4>${name}</h4><p>${type}</p></div>
+    
+    grid.innerHTML = items.map(i => {
+        const title = i.title || i.name || 'Unknown';
+        const poster = i.poster_path ? `https://image.tmdb.org/t/p/w500${i.poster_path}` : null;
+        const type = i.media_type || 'Movie';
+        const id = i.id || '';
+        const year = i.release_date || i.first_air_date || '';
+        const yearStr = year ? year.substring(0,4) : '';
+        const img = poster || 'https://via.placeholder.com/200x300/1a2335/fff?text=' + encodeURIComponent(title);
+        
+        return `<div class="card" onclick="play('${id}','${title.replace(/'/g,"\\'")}','${type}')">
+            <div class="poster">
+                <img src="${img}" onerror="this.src='https://via.placeholder.com/200x300/1a2335/fff?text=${encodeURIComponent(title)}'">
+                <span>${title}</span>
+                <div class="label">${type} ${yearStr ? '• '+yearStr : ''}</div>
+            </div>
+            <div class="info"><h4>${title}</h4><p>${type}</p></div>
         </div>`;
     }).join('');
 }
 
-// ===== FUNGSI =====
-async function loadTrending(){
-    const data = await fetchTMDB('trending/all/week');
-    renderResults(data, '🔥 Trending Hari Ini');
+// ===== SET CATEGORY =====
+function setCat(c){
+    curCat = c;
+    document.querySelectorAll('#cat button').forEach(b => b.classList.remove('active'));
+    document.querySelector(`#cat button[onclick="setCat('${c}')"]`).classList.add('active');
+    
+    const q = document.getElementById('search').value.trim();
+    if(q) search();
+    else loadTrending();
 }
 
-async function loadMovies(){
-    const data = await fetchTMDB('movie/popular');
-    renderResults(data, '🎬 Movie Populer');
-}
-
-async function loadAnime(){
-    const data = await fetchTMDB('tv/popular?with_genres=16');
-    renderResults(data, '🎌 Anime Populer');
-}
-
-async function searchMovies(){
-    const q = document.getElementById('searchInput').value.trim();
-    if(!q) return loadTrending();
-    const data = await fetchTMDB(`search/multi?query=${encodeURIComponent(q)}`);
-    renderResults(data, `🔍 Hasil: "${q}"`);
-}
-
-function playMedia(id, title, type){
+// ===== PLAY =====
+function play(id, title, type){
     curId = id;
-    curTitle = title;
+    currentTitle = title;
+    
     document.getElementById('ptitle').textContent = '🎬 ' + title;
     document.getElementById('iframe').src = getUrl(id);
     document.getElementById('player').style.display = 'flex';
     document.body.style.overflow = 'hidden';
     renderServers();
+}
+
+function playRandom(){
+    const title = document.getElementById('heroTitle').textContent;
+    play('tt2560140', title, 'Anime');
 }
 
 function closePlayer(){
