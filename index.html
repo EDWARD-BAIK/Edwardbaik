@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>EDWARD - ESP Live</title>
+<title>EDWARD - ESP</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 body{background:#0a0a0a;color:#fff;font-family:'Courier New',monospace;padding:10px;min-height:100vh;overflow:hidden}
@@ -14,10 +14,10 @@ body{background:#0a0a0a;color:#fff;font-family:'Courier New',monospace;padding:1
 .header h1 span{color:#ff2d55}
 .header p{font-size:10px;color:rgba(255,255,255,.3);letter-spacing:1px}
 
-.stats{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:8px;margin-bottom:10px}
+.stats{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:10px}
 .stats div{background:#141b2b;border:1px solid rgba(0,255,65,.2);border-radius:8px;padding:6px;text-align:center}
-.stats div span{display:block;font-size:18px;font-weight:700;color:#00ff41}
-.stats div small{font-size:8px;color:rgba(255,255,255,.4)}
+.stats div span{display:block;font-size:20px;font-weight:700;color:#00ff41}
+.stats div small{font-size:9px;color:rgba(255,255,255,.4)}
 
 .camera-wrap{position:relative;width:100%;max-width:800px;margin:0 auto;border-radius:12px;overflow:hidden;border:2px solid #00ff41;background:#000}
 .camera-wrap video{width:100%;display:block}
@@ -36,12 +36,12 @@ body{background:#0a0a0a;color:#fff;font-family:'Courier New',monospace;padding:1
 <body>
 
 <div class="header">
-<h1>👁️ ED<span>WARD</span> <span style="color:#00ff41;font-size:12px;">· ESP LIVE</span></h1>
-<p>Edward-esp2026 · Real-time Object Detection</p>
+<h1>👁️ ED<span>WARD</span> <span style="color:#00ff41;font-size:12px;">· ESP</span></h1>
+<p>Edward-esp2026 · Face Detection</p>
 </div>
 
 <div class="stats">
-<div><small>OBJECTS</small><span id="objCount">0</span></div>
+<div><small>FACE</small><span id="faceCount">0</span></div>
 <div><small>FPS</small><span id="fpsCount">0</span></div>
 <div><small>STATUS</small><span id="statusText" style="font-size:14px;">●</span></div>
 </div>
@@ -56,16 +56,15 @@ body{background:#0a0a0a;color:#fff;font-family:'Courier New',monospace;padding:1
 <button id="btnStop" onclick="stopCamera()">⏹ Stop</button>
 </div>
 
-<div class="footer"><p>© 2026 <span>EDWARD</span> · Edward-esp2026 · <span id="modelStatus">Loading...</span></p></div>
+<div class="footer"><p>© 2026 <span>EDWARD</span> · Edward-esp2026 · <span id="modelStatus">Loading MediaPipe...</span></p></div>
 
-<script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@3.11.0/dist/tf.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/coco-ssd@2.2.2/dist/coco-ssd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.3/wasm/mediapipe_vision.js"></script>
 
 <script>
 // ============================================
-// EDWARD ESP LIVE - OBJECT DETECTION
+// EDWARD ESP - MEDIAPIPE FACE DETECTION
 // ============================================
-let model = null;
+let detector = null;
 let stream = null;
 let running = false;
 let animationId = null;
@@ -76,71 +75,35 @@ let fps = 0;
 const video = document.getElementById('video');
 const canvas = document.getElementById('canvas');
 const ctx = canvas.getContext('2d');
-const objCount = document.getElementById('objCount');
+const faceCount = document.getElementById('faceCount');
 const fpsCount = document.getElementById('fpsCount');
 const statusText = document.getElementById('statusText');
 const modelStatus = document.getElementById('modelStatus');
 
 // ============================================
-// MAKHLUK HIDUP + BENDA
+// LOAD MEDIAPIPE FACE DETECTOR
 // ============================================
-const LIVING = ['person','human','cat','dog','bird','horse','sheep','cow','bear','zebra','giraffe','elephant','lion','tiger','monkey','rabbit','fox','wolf','deer'];
-const OBJECTS = ['car','bus','truck','bicycle','motorcycle','chair','table','book','phone','laptop','tv','remote','keyboard','mouse','bottle','cup','plate','knife','fork','spoon'];
-
-function isLiving(label) {
-    const l = label.toLowerCase();
-    return LIVING.some(w => l.includes(w));
-}
-
-function isObject(label) {
-    const l = label.toLowerCase();
-    return OBJECTS.some(w => l.includes(w));
-}
-
-function getLabel(label) {
-    const l = label.toLowerCase();
-    if (l === 'person' || l.includes('person')) return '👤 MANUSIA';
-    const animals = {
-        'cat':'🐱 KUCING','dog':'🐶 ANJING','bird':'🐦 BURUNG','horse':'🐴 KUDA',
-        'sheep':'🐑 DOMBA','cow':'🐄 SAPI','bear':'🐻 BERUANG','zebra':'🦓 ZEBRA',
-        'giraffe':'🦒 JERAPAH','elephant':'🐘 GAJAH','lion':'🦁 SINGA','tiger':'🐯 HARIMAU',
-        'monkey':'🐒 MONYET','rabbit':'🐰 KELINCI','fox':'🦊 RUBAH','wolf':'🐺 SERIGALA',
-        'deer':'🦌 RUSA'
-    };
-    for (let [key, val] of Object.entries(animals)) {
-        if (l.includes(key)) return val;
-    }
-    const objects = {
-        'car':'🚗 MOBIL','bus':'🚌 BUS','truck':'🚚 TRUK','bicycle':'🚲 SEPEDA',
-        'motorcycle':'🏍️ MOTOR','chair':'🪑 KURSI','table':'🪑 MEJA','book':'📖 BUKU',
-        'phone':'📱 HP','laptop':'💻 LAPTOP','tv':'📺 TV','remote':'📟 REMOTE'
-    };
-    for (let [key, val] of Object.entries(objects)) {
-        if (l.includes(key)) return val;
-    }
-    return label.toUpperCase();
-}
-
-function getColor(label) {
-    const l = label.toLowerCase();
-    if (isLiving(l)) return '#ff2d55';
-    if (isObject(l)) return '#00d4ff';
-    return '#00ff41';
-}
-
-// ============================================
-// LOAD MODEL
-// ============================================
-async function loadModel() {
-    modelStatus.textContent = 'Loading TensorFlow...';
+async function loadDetector() {
+    modelStatus.textContent = 'Loading MediaPipe...';
     try {
-        model = await cocoSsd.load({ base: 'mobilenet_v2' });
-        modelStatus.textContent = '✅ Model Ready';
+        const vision = await FilesetResolver.forVisionTasks(
+            'https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.3/wasm'
+        );
+        
+        detector = await FaceDetector.createFromOptions(vision, {
+            baseOptions: {
+                modelAssetPath: 'https://storage.googleapis.com/mediapipe-models/face_detector/blaze_face_short_range/float16/1/blaze_face_short_range.tflite'
+            },
+            runningMode: 'VIDEO',
+            minDetectionConfidence: 0.5
+        });
+        
+        modelStatus.textContent = '✅ Ready';
         statusText.textContent = '●';
         statusText.style.color = '#00ff41';
         return true;
     } catch(e) {
-        modelStatus.textContent = '❌ Error: ' + e.message;
+        modelStatus.textContent = '❌ ' + e.message;
         return false;
     }
 }
@@ -151,7 +114,11 @@ async function loadModel() {
 async function startCamera() {
     try {
         stream = await navigator.mediaDevices.getUserMedia({
-            video: { facingMode: 'environment', width: { ideal: 640 }, height: { ideal: 480 } },
+            video: {
+                facingMode: 'environment',
+                width: { ideal: 640 },
+                height: { ideal: 480 }
+            },
             audio: false
         });
         video.srcObject = stream;
@@ -163,7 +130,10 @@ async function startCamera() {
         canvas.width = video.videoWidth || 640;
         canvas.height = video.videoHeight || 480;
 
-        if (!running) { running = true; detectLoop(); }
+        if (!running) {
+            running = true;
+            detectLoop();
+        }
     } catch(e) {
         alert('Error: ' + e.message);
         statusText.textContent = '✕';
@@ -177,7 +147,7 @@ function stopCamera() {
     running = false;
     if (animationId) { cancelAnimationFrame(animationId); animationId = null; }
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    objCount.textContent = '0';
+    faceCount.textContent = '0';
     statusText.textContent = '⬤';
     statusText.style.color = '#ff4444';
     document.getElementById('btnStart').classList.add('active');
@@ -193,11 +163,11 @@ async function detectLoop() {
 }
 
 async function detect() {
-    if (!video.srcObject || video.readyState < 2 || !model) return;
+    if (!video.srcObject || video.readyState < 2 || !detector) return;
 
     try {
-        const predictions = await model.detect(video);
-
+        const result = await detector.detect(video);
+        
         frameCount++;
         const now = Date.now();
         if (now - lastFpsTime > 1000) {
@@ -209,79 +179,110 @@ async function detect() {
 
         ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-        // Filter: hanya living + objects
-        const filtered = predictions.filter(p => isLiving(p.class) || isObject(p.class));
-
-        filtered.forEach(pred => {
-            const [x, y, w, h] = pred.bbox;
-            const label = getLabel(pred.class);
-            const score = Math.round(pred.score * 100);
-            const color = getColor(pred.class);
-
-            // Box
-            ctx.shadowColor = color;
-            ctx.shadowBlur = 20;
-            ctx.strokeStyle = color;
-            ctx.lineWidth = 2;
-            ctx.strokeRect(x, y, w, h);
-            ctx.shadowBlur = 0;
-
-            // ESP Lines
-            ctx.strokeStyle = color;
-            ctx.globalAlpha = 0.15;
-            ctx.lineWidth = 1;
-            ctx.setLineDash([4, 6]);
-            ctx.beginPath(); ctx.moveTo(x + w/2, y); ctx.lineTo(x + w/2, 0); ctx.stroke();
-            ctx.beginPath(); ctx.moveTo(x + w/2, y + h); ctx.lineTo(x + w/2, canvas.height); ctx.stroke();
-            ctx.beginPath(); ctx.moveTo(x, y + h/2); ctx.lineTo(0, y + h/2); ctx.stroke();
-            ctx.beginPath(); ctx.moveTo(x + w, y + h/2); ctx.lineTo(canvas.width, y + h/2); ctx.stroke();
-            ctx.setLineDash([]);
-            ctx.globalAlpha = 1;
-
-            // Label
-            const txt = `${label} ${score}%`;
-            ctx.fillStyle = color;
-            ctx.globalAlpha = 0.9;
-            ctx.shadowColor = color;
-            ctx.shadowBlur = 20;
-            ctx.beginPath();
-            ctx.roundRect ? ctx.roundRect(x, y - 26, 120, 24, 6) : ctx.fillRect(x, y - 26, 120, 24);
-            ctx.fill();
-            ctx.shadowBlur = 0;
-            ctx.globalAlpha = 1;
-            ctx.fillStyle = '#000';
-            ctx.font = 'bold 11px Courier New';
-            ctx.textAlign = 'left';
-            ctx.textBaseline = 'bottom';
-            ctx.fillText(txt, x + 6, y - 4);
-
-            // Center dot
-            ctx.beginPath();
-            ctx.arc(x + w/2, y + h/2, 4, 0, 2 * Math.PI);
-            ctx.fillStyle = color;
-            ctx.shadowColor = color;
-            ctx.shadowBlur = 25;
-            ctx.fill();
-            ctx.shadowBlur = 0;
-        });
-
-        objCount.textContent = filtered.length;
-
-        if (filtered.length === 0) {
+        if (result.detections && result.detections.length > 0) {
+            faceCount.textContent = result.detections.length;
+            
+            result.detections.forEach(face => {
+                const bbox = face.boundingBox;
+                if (!bbox) return;
+                
+                const x = bbox.originX || 0;
+                const y = bbox.originY || 0;
+                const w = bbox.width || 0;
+                const h = bbox.height || 0;
+                const color = '#ff2d55';
+                
+                // Bounding box
+                ctx.shadowColor = color;
+                ctx.shadowBlur = 25;
+                ctx.strokeStyle = color;
+                ctx.lineWidth = 3;
+                ctx.strokeRect(x, y, w, h);
+                ctx.shadowBlur = 0;
+                
+                // ESP Lines
+                ctx.strokeStyle = color;
+                ctx.globalAlpha = 0.2;
+                ctx.lineWidth = 1;
+                ctx.setLineDash([5, 5]);
+                
+                ctx.beginPath();
+                ctx.moveTo(x + w/2, y);
+                ctx.lineTo(x + w/2, 0);
+                ctx.stroke();
+                
+                ctx.beginPath();
+                ctx.moveTo(x + w/2, y + h);
+                ctx.lineTo(x + w/2, canvas.height);
+                ctx.stroke();
+                
+                ctx.beginPath();
+                ctx.moveTo(x, y + h/2);
+                ctx.lineTo(0, y + h/2);
+                ctx.stroke();
+                
+                ctx.beginPath();
+                ctx.moveTo(x + w, y + h/2);
+                ctx.lineTo(canvas.width, y + h/2);
+                ctx.stroke();
+                
+                ctx.setLineDash([]);
+                ctx.globalAlpha = 1;
+                
+                // Label
+                const label = '👤 MANUSIA';
+                ctx.fillStyle = color;
+                ctx.globalAlpha = 0.9;
+                ctx.shadowColor = color;
+                ctx.shadowBlur = 20;
+                ctx.beginPath();
+                ctx.roundRect ? ctx.roundRect(x, y - 28, 130, 26, 8) : ctx.fillRect(x, y - 28, 130, 26);
+                ctx.fill();
+                ctx.shadowBlur = 0;
+                ctx.globalAlpha = 1;
+                ctx.fillStyle = '#000';
+                ctx.font = 'bold 13px Courier New';
+                ctx.textAlign = 'left';
+                ctx.textBaseline = 'bottom';
+                ctx.fillText(label, x + 8, y - 6);
+                
+                // Center dot
+                ctx.beginPath();
+                ctx.arc(x + w/2, y + h/2, 5, 0, 2 * Math.PI);
+                ctx.fillStyle = color;
+                ctx.shadowColor = color;
+                ctx.shadowBlur = 30;
+                ctx.fill();
+                ctx.shadowBlur = 0;
+                
+                // Distance (mock)
+                const dist = Math.round(20 + Math.random() * 30);
+                ctx.fillStyle = color;
+                ctx.globalAlpha = 0.5;
+                ctx.font = '10px Courier New';
+                ctx.textAlign = 'right';
+                ctx.textBaseline = 'top';
+                ctx.fillText(dist + 'm', x + w - 6, y + 6);
+                ctx.globalAlpha = 1;
+            });
+        } else {
+            faceCount.textContent = '0';
             ctx.fillStyle = 'rgba(255,255,255,0.15)';
             ctx.font = '14px Courier New';
             ctx.textAlign = 'center';
-            ctx.fillText('Tidak ada objek terdeteksi', canvas.width/2, canvas.height/2);
+            ctx.fillText('Tidak ada wajah terdeteksi', canvas.width/2, canvas.height/2);
         }
-
-    } catch(e) {}
+        
+    } catch(e) {
+        // silent
+    }
 }
 
 // ============================================
 // INIT
 // ============================================
 async function init() {
-    await loadModel();
+    await loadDetector();
     startCamera();
 }
 
