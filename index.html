@@ -35,13 +35,18 @@ body{background:#0a0e17;color:#fff;font-family:'Segoe UI',sans-serif;padding:15p
 .player-wrap .top .actions button{background:var(--p);border:0;color:#fff;padding:8px 16px;border-radius:30px;cursor:pointer;font-weight:700;font-size:12px}
 .player-wrap .top .close{background:var(--p);border:0;color:#fff;width:44px;height:44px;border-radius:50%;font-size:20px;cursor:pointer}
 .player-wrap iframe{width:100%;max-width:1100px;height:75vh;border-radius:16px;border:2px solid var(--p);background:#000}
-.player-wrap .servers{position:absolute;bottom:30px;display:flex;gap:10px;flex-wrap:wrap;justify-content:center;background:rgba(0,0,0,.6);padding:12px 20px;border-radius:50px}
-.player-wrap .servers button{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);border-radius:30px;padding:8px 18px;color:#fff;cursor:pointer;font-size:11px}
+.player-wrap .servers{position:absolute;bottom:30px;display:flex;gap:8px;flex-wrap:wrap;justify-content:center;background:rgba(0,0,0,.6);padding:12px 20px;border-radius:50px;max-width:95%}
+.player-wrap .servers button{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);border-radius:30px;padding:6px 14px;color:#fff;cursor:pointer;font-size:10px;transition:.2s}
 .player-wrap .servers button.active{background:var(--p);border-color:var(--p)}
+.player-wrap .servers button:hover{background:rgba(255,255,255,.2)}
 .loading{text-align:center;padding:40px;color:rgba(255,255,255,.3)}
 .footer{text-align:center;padding:30px 0 10px;border-top:1px solid rgba(255,255,255,.05);margin-top:20px}
 .footer p{font-size:11px;color:rgba(255,255,255,.2)}
 .footer span{color:var(--p)}
+.custom-link-wrap{display:flex;gap:10px;margin-top:10px;padding:10px;background:rgba(255,255,255,.05);border-radius:16px;flex-wrap:wrap;width:95%;max-width:1100px;justify-content:center}
+.custom-link-wrap input{flex:1;background:rgba(0,0,0,.5);border:1px solid rgba(255,255,255,.1);border-radius:30px;padding:10px 16px;color:#fff;font-size:12px;outline:0;min-width:200px}
+.custom-link-wrap input::placeholder{color:rgba(255,255,255,.3)}
+.custom-link-wrap button{background:var(--p);border:0;border-radius:30px;padding:10px 20px;color:#fff;font-weight:700;cursor:pointer;font-size:12px}
 </style>
 </head>
 <body>
@@ -74,21 +79,91 @@ body{background:#0a0e17;color:#fff;font-family:'Segoe UI',sans-serif;padding:15p
 <span class="t" id="ptitle">🎬 Now Playing</span>
 <div class="actions">
 <button onclick="refreshPlayer()">🔄 Refresh</button>
+<button onclick="autoSwitch()">⏭ Next Server</button>
 <button class="close" onclick="closePlayer()">✕</button>
 </div>
 </div>
 <iframe id="iframe" src="" allowfullscreen></iframe>
-<div class="servers" id="sv">
-<button class="active" onclick="switchSvr(0)">Server 1</button>
-<button onclick="switchSvr(1)">Server 2</button>
-<button onclick="switchSvr(2)">Server 3</button>
-<button onclick="switchSvr(3)">Server 4</button>
-<button onclick="switchSvr(4)">Server 5</button>
+<div class="servers" id="sv"></div>
+<div class="custom-link-wrap">
+<input id="customLink" placeholder="Masukkan link streaming alternatif (opsional)...">
+<button onclick="playCustomLink()">▶️ Putar</button>
 </div>
 </div>
 
 <script>
-// ===== WARNA RANDOM BUAT POSTER =====
+// ============================================
+// 10 SERVER PLAYER (EMBED + DIRECT + ALTERNATIF)
+// ============================================
+const SVR = [
+    // Server 1-5: Embed standar
+    id => `https://multiembed.mov/?video_id=${id}&tmdb=1`,
+    id => `https://vidsrc.me/embed/${id}`,
+    id => `https://www.2embed.cc/embed/${id}`,
+    id => `https://vidsrc.to/embed/movie/${id}`,
+    id => `https://embed.su/embed/${id}`,
+    // Server 6-8: Alternatif embed
+    id => `https://vidsrc.cc/v2/embed/movie/${id}`,
+    id => `https://vidembed.cc/embed/movie/${id}`,
+    id => `https://movie-web.app/embed/movie/${id}`,
+    // Server 9-10: Direct link (fallback)
+    id => `https://vidsrc.xyz/embed/movie/${id}`,
+    id => `https://stream.embed/embed/movie/${id}`
+];
+
+// Nama server buat tombol
+const SVR_NAMES = ['Server 1','Server 2','Server 3','Server 4','Server 5','Server 6','Server 7','Server 8','Server 9','Server 10'];
+
+let curSvr = 0, curId = '', curCat = 'all', customUrl = '';
+let retryCount = 0;
+
+function getUrl(id){ 
+    if (customUrl) return customUrl;
+    if (id && SVR[curSvr]) return SVR[curSvr](id);
+    return 'about:blank';
+}
+
+function switchSvr(i){
+    curSvr = i;
+    customUrl = '';
+    document.querySelectorAll('#sv button').forEach((b,j) => b.classList.toggle('active', j === i));
+    if(curId) {
+        document.getElementById('iframe').src = getUrl(curId);
+        retryCount = 0;
+    }
+}
+
+function autoSwitch(){
+    if (curSvr < SVR.length - 1) {
+        switchSvr(curSvr + 1);
+    } else {
+        curSvr = 0;
+        switchSvr(0);
+    }
+}
+
+function refreshPlayer(){
+    if(curId) {
+        document.getElementById('iframe').src = getUrl(curId);
+    } else if (customUrl) {
+        document.getElementById('iframe').src = customUrl;
+    }
+}
+
+function playCustomLink(){
+    const link = document.getElementById('customLink').value.trim();
+    if (!link) return alert('Masukkan link streaming dulu bos!');
+    customUrl = link;
+    document.getElementById('iframe').src = link;
+    document.getElementById('player').style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+    document.getElementById('ptitle').textContent = '🎬 Custom Link';
+    document.querySelectorAll('#sv button').forEach(b => b.classList.remove('active'));
+}
+
+// ============================================
+// POSTER
+// ============================================
 const COLORS = ['#ff2d55','#00d4ff','#ff6b35','#ffd700','#7b2ffc','#00e676','#ff4081','#40c4ff','#ffab00','#e040fb','#00bcd4','#ff5722'];
 
 function getColor(title) {
@@ -99,7 +174,6 @@ function getColor(title) {
     return COLORS[Math.abs(hash) % COLORS.length];
 }
 
-// ===== POSTER BAWAAN (HARDCODE) =====
 const POSTERS = {
     'tt0195714': 'https://m.media-amazon.com/images/M/MV5BMTc5OTU2OTM0M15BMl5BanBnXkFtZTYwMTM1ODg5._V1_.jpg',
     'tt0309593': 'https://m.media-amazon.com/images/M/MV5BMTc5OTU2OTM0M15BMl5BanBnXkFtZTYwMTM1ODg5._V1_.jpg',
@@ -125,12 +199,13 @@ const POSTERS = {
 
 function getPoster(id, title) {
     if (id && POSTERS[id]) return POSTERS[id];
-    return null; // akan pake warna + teks
+    return null;
 }
 
-// ===== DATABASE =====
+// ============================================
+// DATABASE
+// ============================================
 const DB = [
-// ANIME
 {title:'Attack on Titan Final',id:'tt2560140',type:'Anime'},
 {title:'Demon Slayer S4',id:'tt9335498',type:'Anime'},
 {title:'One Piece (Latest)',id:'tt0388629',type:'Anime'},
@@ -141,16 +216,12 @@ const DB = [
 {title:'Chainsaw Man',id:'tt11737520',type:'Anime'},
 {title:'My Hero Academia S7',id:'tt10839590',type:'Anime'},
 {title:'Tokyo Revengers S3',id:'tt15340256',type:'Anime'},
-
-// DONGHUA
 {title:'Soul Land',id:'tt10544940',type:'Donghua'},
 {title:'Battle Through Heavens',id:'tt10544942',type:'Donghua'},
 {title:'The King\'s Avatar',id:'tt10544944',type:'Donghua'},
 {title:'Scissor Seven',id:'tt10544946',type:'Donghua'},
 {title:'Mo Dao Zu Shi',id:'tt10544950',type:'Donghua'},
 {title:'Tian Guan Ci Fu',id:'tt10544952',type:'Donghua'},
-
-// MOVIE
 {title:'Final Destination 1',id:'tt0195714',type:'Movie'},
 {title:'Final Destination 2',id:'tt0309593',type:'Movie'},
 {title:'Final Destination 3',id:'tt0414982',type:'Movie'},
@@ -166,42 +237,28 @@ const DB = [
 {title:'The Batman 2',id:'tt20118904',type:'Movie'},
 {title:'Joker 2',id:'tt14858048',type:'Movie'},
 {title:'Gladiator 2',id:'tt10366206',type:'Movie'},
-
-// K-DRAMA
 {title:'Squid Game S3',id:'tt19463462',type:'K-Drama'},
 {title:'All of Us Are Dead S2',id:'tt23898882',type:'K-Drama'},
 {title:'The Glory S2',id:'tt20859782',type:'K-Drama'},
 {title:'My Name',id:'tt15553894',type:'K-Drama'},
-
-// CLASSIC
 {title:'The Godfather',id:'tt0068646',type:'Classic'},
 {title:'Shawshank Redemption',id:'tt0111161',type:'Classic'},
 {title:'The Dark Knight',id:'tt0468569',type:'Classic'}
 ];
 
-// ===== PLAYER SERVERS =====
-const SVR = [
-    id => `https://multiembed.mov/?video_id=${id}&tmdb=1`,
-    id => `https://vidsrc.me/embed/${id}`,
-    id => `https://www.2embed.cc/embed/${id}`,
-    id => `https://vidsrc.to/embed/movie/${id}`,
-    id => `https://embed.su/embed/${id}`
-];
-
-let curSvr = 0, curId = '', curCat = 'all';
-
-function getUrl(id){ return SVR[curSvr](id) }
-
-function switchSvr(i){
-    curSvr = i;
-    document.querySelectorAll('#sv button').forEach((b,j) => b.classList.toggle('active', j === i));
-    if(curId) document.getElementById('iframe').src = getUrl(curId);
+// ============================================
+// RENDER SERVER BUTTON
+// ============================================
+function renderServerButtons() {
+    const container = document.getElementById('sv');
+    container.innerHTML = SVR.map((_, i) => 
+        `<button class="${i === curSvr ? 'active' : ''}" onclick="switchSvr(${i})">${SVR_NAMES[i]}</button>`
+    ).join('');
 }
 
-function refreshPlayer(){
-    if(curId) document.getElementById('iframe').src = getUrl(curId);
-}
-
+// ============================================
+// FUNGSI UTAMA
+// ============================================
 function setCat(c){
     curCat = c;
     document.querySelectorAll('#cat button').forEach(b => b.classList.remove('active'));
@@ -256,23 +313,31 @@ function renderResults(items){
 
 function play(id, title){
     curId = id;
+    customUrl = '';
     document.getElementById('ptitle').textContent = '🎬 ' + title;
     document.getElementById('iframe').src = getUrl(id);
     document.getElementById('player').style.display = 'flex';
     document.body.style.overflow = 'hidden';
+    document.getElementById('customLink').value = '';
+    renderServerButtons();
 }
 
 function closePlayer(){
     document.getElementById('player').style.display = 'none';
     document.getElementById('iframe').src = '';
     curId = '';
+    customUrl = '';
     document.body.style.overflow = 'auto';
+    document.getElementById('customLink').value = '';
 }
 
-// ===== INIT =====
+// ============================================
+// INIT
+// ============================================
 window.onload = () => {
     render();
     document.querySelector('#cat button:first-child')?.classList.add('active');
+    renderServerButtons();
 };
 
 document.addEventListener('keydown', e => {
