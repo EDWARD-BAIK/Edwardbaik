@@ -106,8 +106,7 @@
         }, 1500);
 
         function clearConsole() {
-            const consoleBox = document.getElementById('atkConsole');
-            consoleBox.innerHTML = "";
+            document.getElementById('atkConsole').innerHTML = "";
             document.getElementById('scanResult').style.display = "none";
             document.getElementById('phishLink').value = "";
             document.getElementById('site').value = "";
@@ -137,51 +136,28 @@
         function scanPhishing() {
             const rawInput = document.getElementById('phishLink').value.trim().toLowerCase();
             const resultDiv = document.getElementById('scanResult');
-            
-            if(!rawInput) {
-                resultDiv.style.display = "none";
-                return;
-            }
-
+            if(!rawInput) { resultDiv.style.display = "none"; return; }
             resultDiv.style.display = "block";
-            let isPhish = false;
-            let reason = "";
-
+            let isPhish = false, reason = "";
             const normalizedDash = rawInput.replace(/\s+/g, '-');
             const normalizedClean = rawInput.replace(/\s+/g, '');
-
-            const targetKeywords = [
-                'login', 'verification', 'verifikasi', 'dana-kaget', 'danakaget', 'giveaway', 'undian',
-                'free-diamonds', 'hadiah', 'update-akun', 'roblox-gift', 'claim', 'bonus', 'top', 'topup',
-                'pulsa-gratis', 'akun-suspend', 'bantuan-sosial', 'event-gratis', 'spin-hadiah', 'voucher'
-            ];
-
+            const targetKeywords = ['login', 'verification', 'verifikasi', 'dana-kaget', 'danakaget', 'giveaway', 'undian', 'free-diamonds', 'hadiah', 'update-akun', 'roblox-gift', 'claim', 'bonus', 'top', 'topup', 'pulsa-gratis', 'akun-suspend', 'bantuan-sosial', 'event-gratis', 'spin-hadiah', 'voucher'];
             const shorteners = ['bit.ly', 'tinyurl.com', 'cutt.ly', 't.co', 'rb.gy', 'is.gd', 'shorturl.at', 's.id'];
             const validTLDs = ['.com', '.net', '.org', '.id', '.co.id', '.xyz', '.info', '.biz', '.me', '.online', '.site', '.live'];
-
-            let matchesKeyword = targetKeywords.some(keyword => 
-                rawInput.includes(keyword) || normalizedDash.includes(keyword) || normalizedClean.includes(keyword)
-            );
+            let matchesKeyword = targetKeywords.some(keyword => rawInput.includes(keyword) || normalizedDash.includes(keyword) || normalizedClean.includes(keyword));
             let matchesShortener = shorteners.some(srv => rawInput.includes(srv));
             let matchesValidTLD = validTLDs.some(tld => rawInput.includes(tld));
-
             if (rawInput.startsWith('http://') && !rawInput.includes('localhost') && !rawInput.includes('192.168.')) {
-                isPhish = true;
-                reason = "🚨 UNSAFE PROTOCOL (HTTP) DETECTED";
+                isPhish = true; reason = "🚨 UNSAFE PROTOCOL (HTTP) DETECTED";
             } else if (matchesKeyword) {
-                isPhish = true;
-                reason = "🚨 SUSPICIOUS CONTEXTUAL PATTERN DETECTED";
+                isPhish = true; reason = "🚨 SUSPICIOUS CONTEXTUAL PATTERN DETECTED";
             } else if (matchesShortener) {
-                isPhish = true;
-                reason = "🚨 WARNING: OBSCURED/SHORTENED LINK PATTERN";
+                isPhish = true; reason = "🚨 WARNING: OBSCURED/SHORTENED LINK PATTERN";
             } else if ((rawInput.includes('.com-') || rawInput.includes('.net-') || rawInput.includes('.id-')) && !rawInput.includes('/')) {
-                isPhish = true;
-                reason = "🚨 INVALID SUBDOMAIN TYPOSQUATTING PATTERN";
+                isPhish = true; reason = "🚨 INVALID SUBDOMAIN TYPOSQUATTING PATTERN";
             } else if (!matchesValidTLD && !rawInput.includes('localhost') && !rawInput.includes('192.168.') && rawInput !== 'https' && rawInput !== 'https://') {
-                isPhish = true;
-                reason = "🚨 UNRECOGNIZED RAW TEXT / INVALID URL PATTERN";
+                isPhish = true; reason = "🚨 UNRECOGNIZED RAW TEXT / INVALID URL PATTERN";
             }
-
             if(isPhish) {
                 resultDiv.innerText = reason;
                 resultDiv.className = "phish-alert";
@@ -227,9 +203,7 @@
             const t = document.getElementById('atk').value.trim();
             const consoleBox = document.getElementById('atkConsole');
             const btn = document.getElementById('abtn');
-
             if(!t) return;
-
             if(isAtk) {
                 isAtk = false;
                 clearInterval(atkInterval);
@@ -241,7 +215,6 @@
                 btn.innerText = "STOP";
                 consoleBox.style.display = "block";
                 consoleBox.innerHTML = "> Interface connecting...<br>";
-
                 atkInterval = setInterval(() => {
                     if(isAtk) {
                         const randParam = Math.random();
