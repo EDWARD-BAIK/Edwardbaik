@@ -3,46 +3,48 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>EDWARD - Nonton Gratis</title>
+<title>EDWARD - Musik Gratis</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-body{background:#141414;color:#fff;font-family:'Segoe UI',sans-serif;padding:0;min-height:100vh;overflow-x:hidden}
-::selection{background:#e50914;color:#fff}
+body{background:#121212;color:#fff;font-family:'Segoe UI',sans-serif;padding:0;min-height:100vh;overflow-x:hidden}
+::selection{background:#1db954;color:#fff}
 
-.navbar{position:fixed;top:0;left:0;right:0;padding:12px 30px;display:flex;justify-content:space-between;align-items:center;background:linear-gradient(180deg,#141414 0%,transparent 100%);z-index:100;transition:.3s}
-.navbar.scrolled{background:#141414;box-shadow:0 2px 10px rgba(0,0,0,.5)}
-.navbar .logo{font-size:24px;font-weight:900;color:#e50914;letter-spacing:-1px}
+.navbar{position:fixed;top:0;left:0;right:0;padding:12px 30px;display:flex;justify-content:space-between;align-items:center;background:linear-gradient(180deg,#121212 0%,transparent 100%);z-index:100;transition:.3s}
+.navbar.scrolled{background:#121212;box-shadow:0 2px 10px rgba(0,0,0,.5)}
+.navbar .logo{font-size:28px;font-weight:900;color:#1db954;letter-spacing:-1px}
 .navbar .logo span{color:#fff;font-weight:300}
+.navbar .sub{font-size:9px;color:rgba(255,255,255,.3);letter-spacing:2px;margin-left:5px}
 .navbar .menu{display:flex;gap:20px;align-items:center;flex-wrap:wrap}
 .navbar .menu a{color:#e5e5e5;text-decoration:none;font-size:13px;font-weight:500;cursor:pointer;transition:.2s}
 .navbar .menu a:hover{color:#fff}
-.navbar .menu .free-badge{background:#e50914;padding:4px 12px;border-radius:20px;font-size:10px;font-weight:700;color:#fff}
+.navbar .menu .free-badge{background:#1db954;padding:4px 12px;border-radius:20px;font-size:10px;font-weight:700;color:#121212}
 
-.hero{height:70vh;display:flex;align-items:center;padding:0 30px;margin-top:60px;position:relative;background:linear-gradient(135deg,#0a0a0a 50%,transparent),url('https://image.tmdb.org/t/p/original/8Bd0r4A2M5vLxGfN6vF1jU9yWpI.jpg') center/cover no-repeat;transition:background .5s}
-.hero::after{content:'';position:absolute;bottom:0;left:0;right:0;height:120px;background:linear-gradient(0deg,#141414,transparent)}
+.hero{height:55vh;display:flex;align-items:center;padding:0 30px;margin-top:60px;position:relative;background:linear-gradient(135deg,#121212 50%,transparent),url('https://i.scdn.co/image/ab67616d0000b2738863bc11d2aa12b54f5aeb36') center/cover no-repeat;transition:background .5s}
+.hero::after{content:'';position:absolute;bottom:0;left:0;right:0;height:120px;background:linear-gradient(0deg,#121212,transparent)}
 .hero .content{position:relative;z-index:1;max-width:550px}
-.hero .content .badge{background:#e50914;padding:4px 12px;border-radius:4px;font-size:11px;font-weight:700;display:inline-block;margin-bottom:8px}
-.hero .content h1{font-size:42px;font-weight:900;text-shadow:0 2px 20px rgba(0,0,0,.8);margin-bottom:8px}
+.hero .content .badge{background:#1db954;padding:4px 12px;border-radius:4px;font-size:11px;font-weight:700;display:inline-block;margin-bottom:8px;color:#121212}
+.hero .content h1{font-size:42px;font-weight:900;text-shadow:0 2px 20px rgba(0,0,0,.8);margin-bottom:4px}
+.hero .content .subtitle{font-size:12px;color:rgba(255,255,255,.3);letter-spacing:3px;margin-bottom:16px}
 .hero .content p{font-size:14px;color:rgba(255,255,255,.7);line-height:1.6;margin-bottom:16px}
-.hero .content .btn{display:inline-flex;align-items:center;gap:8px;padding:10px 28px;border-radius:6px;border:0;font-size:15px;font-weight:600;cursor:pointer;transition:.2s;background:#fff;color:#000;text-decoration:none}
-.hero .content .btn:hover{background:rgba(255,255,255,.75)}
+.hero .content .btn{display:inline-flex;align-items:center;gap:8px;padding:10px 28px;border-radius:30px;border:0;font-size:15px;font-weight:600;cursor:pointer;transition:.2s;background:#1db954;color:#121212;text-decoration:none}
+.hero .content .btn:hover{background:rgba(29,185,84,.75)}
 
 .search-wrap{position:relative;z-index:1;margin:15px 30px;display:flex;gap:10px;background:rgba(255,255,255,.05);border-radius:30px;padding:4px;border:1px solid rgba(255,255,255,.1)}
 .search-wrap input{flex:1;background:0;border:0;padding:12px 18px;color:#fff;font-size:14px;outline:0}
 .search-wrap input::placeholder{color:rgba(255,255,255,.4)}
-.search-wrap button{background:#e50914;border:0;border-radius:30px;padding:10px 24px;color:#fff;font-weight:600;cursor:pointer;font-size:13px}
+.search-wrap button{background:#1db954;border:0;border-radius:30px;padding:10px 24px;color:#121212;font-weight:600;cursor:pointer;font-size:13px}
 .search-wrap button:active{transform:scale(.95)}
 
 .cat-scroll{display:flex;gap:8px;overflow-x:auto;padding:0 30px 10px;scrollbar-width:none;position:relative;z-index:1}
 .cat-scroll::-webkit-scrollbar{display:none}
 .cat-scroll button{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);border-radius:30px;padding:6px 18px;color:#aaa;font-size:12px;cursor:pointer;white-space:nowrap;transition:.2s}
-.cat-scroll button.active{background:#e50914;border-color:#e50914;color:#fff}
+.cat-scroll button.active{background:#1db954;border-color:#1db954;color:#121212}
 .cat-scroll button:active{transform:scale(.95)}
 
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:15px;padding:10px 30px 30px;position:relative;z-index:1}
-.card{background:#1a1a1a;border-radius:10px;overflow:hidden;cursor:pointer;transition:.3s;border:1px solid transparent}
-.card:hover{transform:scale(1.05);border-color:#e50914;z-index:5;box-shadow:0 10px 30px rgba(0,0,0,.8)}
-.card .poster{width:100%;aspect-ratio:2/3;display:flex;align-items:center;justify-content:center;text-align:center;padding:10px;font-size:12px;font-weight:700;color:#fff;position:relative;background:#1a2335}
+.card{background:#181818;border-radius:10px;overflow:hidden;cursor:pointer;transition:.3s;border:1px solid transparent;padding-bottom:10px}
+.card:hover{transform:scale(1.05);border-color:#1db954;z-index:5;box-shadow:0 10px 30px rgba(0,0,0,.8)}
+.card .poster{width:100%;aspect-ratio:1;display:flex;align-items:center;justify-content:center;text-align:center;padding:10px;font-size:12px;font-weight:700;color:#fff;position:relative;background:#1a2335}
 .card .poster img{width:100%;height:100%;object-fit:cover;position:absolute;top:0;left:0}
 .card .poster span{position:relative;z-index:1;text-shadow:0 2px 10px rgba(0,0,0,.8);padding:4px}
 .card .poster .label{position:absolute;bottom:6px;left:6px;right:6px;background:rgba(0,0,0,.8);padding:4px 8px;border-radius:6px;font-size:9px;font-weight:400;z-index:1}
@@ -52,24 +54,24 @@ body{background:#141414;color:#fff;font-family:'Segoe UI',sans-serif;padding:0;m
 
 .loading{text-align:center;padding:40px;color:rgba(255,255,255,.4);font-size:14px;grid-column:1/-1}
 
-.player-wrap{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.98);z-index:9999;flex-direction:column;align-items:center;justify-content:flex-start;padding:10px;padding-top:60px}
-.player-wrap .top{position:absolute;top:0;left:0;right:0;padding:10px 16px;display:flex;justify-content:space-between;align-items:center;background:rgba(0,0,0,.9);border-bottom:2px solid #e50914;flex-wrap:wrap;gap:6px;z-index:10}
-.player-wrap .top .t{font-size:13px;font-weight:600;max-width:50%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.player-wrap .top .actions{display:flex;gap:5px;flex-wrap:wrap}
-.player-wrap .top .actions button{background:#e50914;border:0;border-radius:20px;padding:5px 12px;color:#fff;font-weight:600;font-size:10px;cursor:pointer}
+.player-wrap{display:none;position:fixed;bottom:0;left:0;right:0;background:rgba(0,0,0,.95);z-index:9999;padding:15px 20px;border-top:2px solid #1db954}
+.player-wrap .top{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px}
+.player-wrap .top .t{font-size:14px;font-weight:600;max-width:50%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.player-wrap .top .actions{display:flex;gap:10px;align-items:center}
+.player-wrap .top .actions button{background:#1db954;border:0;border-radius:30px;padding:8px 16px;color:#121212;font-weight:600;cursor:pointer;font-size:11px}
 .player-wrap .top .actions button:active{transform:scale(.95)}
-.player-wrap .top .close{background:#e50914}
-.player-wrap iframe{width:100%;max-width:1100px;height:65vh;border-radius:12px;border:2px solid #e50914;background:#000;flex-shrink:0;border:none;outline:none}
-.player-wrap .server-divider{width:80%;max-width:800px;height:2px;background:linear-gradient(90deg,transparent,#e50914,transparent);margin:8px 0;opacity:.6;flex-shrink:0}
-.player-wrap .server-area{display:grid;grid-template-columns:repeat(2,1fr);gap:6px;background:rgba(0,0,0,.7);padding:8px 14px;border-radius:30px;backdrop-filter:blur(8px);z-index:10;max-width:95%;border:1px solid rgba(229,9,20,.2);min-width:120px;flex-shrink:0}
+.player-wrap .top .close{background:#ff4444;color:#fff}
+.player-wrap iframe{width:100%;max-width:1100px;height:60vh;border-radius:12px;border:2px solid #1db954;background:#000;flex-shrink:0;border:none;outline:none;margin-top:10px}
+.player-wrap .server-divider{width:80%;max-width:800px;height:2px;background:linear-gradient(90deg,transparent,#1db954,transparent);margin:8px 0;opacity:.6;flex-shrink:0}
+.player-wrap .server-area{display:grid;grid-template-columns:repeat(2,1fr);gap:6px;background:rgba(0,0,0,.7);padding:8px 14px;border-radius:30px;backdrop-filter:blur(8px);z-index:10;max-width:95%;border:1px solid rgba(29,185,84,.2);min-width:120px;flex-shrink:0}
 .player-wrap .server-area button{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);border-radius:30px;padding:6px 10px;color:#fff;font-size:10px;cursor:pointer;transition:.2s;font-weight:500;text-align:center}
-.player-wrap .server-area button.active{background:#e50914;border-color:#e50914;box-shadow:0 0 20px rgba(229,9,20,.3)}
+.player-wrap .server-area button.active{background:#1db954;border-color:#1db954;color:#121212;box-shadow:0 0 20px rgba(29,185,84,.3)}
 .player-wrap .server-area button:active{transform:scale(.95)}
-.player-wrap .server-area button:hover{background:rgba(229,9,20,.2)}
+.player-wrap .server-area button:hover{background:rgba(29,185,84,.2)}
 
 .footer{text-align:center;padding:15px 0 8px;border-top:1px solid rgba(255,255,255,.05);position:relative;z-index:1}
 .footer p{font-size:9px;color:rgba(255,255,255,.2)}
-.footer span{color:#e50914}
+.footer span{color:#1db954}
 </style>
 </head>
 <body>
@@ -78,40 +80,39 @@ body{background:#141414;color:#fff;font-family:'Segoe UI',sans-serif;padding:0;m
 <div class="logo">ED<span>WARD</span></div>
 <div class="menu">
 <a onclick="loadTrending()">🔥 Trending</a>
-<a onclick="setCat('movie')">🎬 Movie</a>
-<a onclick="setCat('anime')">🎌 Anime</a>
-<a class="free-badge">100% GRATIS</a>
+<a onclick="loadCharts()">🎵 Charts</a>
+<a class="free-badge">GRATIS</a>
 </div>
 </div>
 
 <div class="hero" id="hero">
 <div class="content">
-<div class="badge" id="heroBadge">🔥 TRENDING</div>
+<div class="badge">🎵 TRENDING</div>
 <h1 id="heroTitle">EDWARD</h1>
-<p id="heroDesc">Nonton semua film & anime gratis. Tanpa batas. Tanpa iklan.</p>
+<div class="subtitle">Edward's 2026 artificial code</div>
+<p id="heroDesc">Dengarkan semua musik gratis. Tanpa batas. Tanpa iklan.</p>
 <button class="btn" id="heroBtn" onclick="playHero()">▶️ Putar Sekarang</button>
 </div>
 </div>
 
 <div class="search-wrap">
-<input id="search" placeholder="Cari film, anime, atau series..." onkeyup="if(event.key==='Enter') search()">
+<input id="search" placeholder="Cari lagu, artis, atau album..." onkeyup="if(event.key==='Enter') search()">
 <button onclick="search()">🔍 Cari</button>
 </div>
 
 <div class="cat-scroll" id="cat">
-<button class="active" onclick="setCat('all')">🔥 Semua</button>
-<button onclick="setCat('movie')">🎬 Movie</button>
-<button onclick="setCat('anime')">🎌 Anime</button>
-<button onclick="setCat('tv')">📺 TV</button>
+<button class="active" onclick="loadTrending()">🔥 Trending</button>
+<button onclick="loadCharts()">📊 Charts</button>
+<button onclick="loadRandom()">🎲 Random</button>
 </div>
 
-<div id="grid" class="grid"><div class="loading">🔥 Memuat daftar film...</div></div>
+<div id="grid" class="grid"><div class="loading">🔥 Memuat daftar lagu...</div></div>
 
-<div class="footer"><p>© 2026 <span>EDWARD</span> • 100% GRATIS</p></div>
+<div class="footer"><p>© 2026 <span>EDWARD</span> • Edward's 2026 artificial code</p></div>
 
 <div class="player-wrap" id="player">
 <div class="top">
-<span class="t" id="ptitle">🎬 Now Playing</span>
+<span class="t" id="ptitle">🎵 Now Playing</span>
 <div class="actions">
 <button onclick="refreshPlayer()">🔄 Refresh</button>
 <button onclick="nextServer()">⏭ Next</button>
@@ -125,18 +126,19 @@ body{background:#141414;color:#fff;font-family:'Segoe UI',sans-serif;padding:0;m
 
 <script>
 // ============================================
-// CONSUMET API - GA PAKE PROXY!
+// SPOTIFY API - REAL (PAKE CLIENT DEMO)
 // ============================================
-const CONSUMET = 'https://api.consumet.org';
+const SPOTIFY_CLIENT = '2b5b3b3b3b3b3b3b3b3b3b3b3b3b3b3b';
+const SPOTIFY_SECRET = '9a3a5b3b3b3b3b3b3b3b3b3b3b3b3b3b';
 
 // ============================================
 // SERVER PLAYER
 // ============================================
 const SERVERS = [
-    id => `https://vidsrc.in/embed/movie/${id}`,
-    id => `https://vidsrc.me/embed/${id}`
+    id => `https://open.spotify.com/embed/track/${id}`,
+    id => `https://open.spotify.com/embed/track/${id}`
 ];
-const SERVER_NAMES = ['S1', 'S2'];
+const SERVER_NAMES = ['🎵 Spotify', '🎵 Spotify 2'];
 
 let curSvr = 0, curId = '', curCat = 'all', heroData = null;
 
@@ -165,25 +167,49 @@ function renderServers(){
 }
 
 // ============================================
-// LOAD TRENDING
+// GET SPOTIFY TOKEN
+// ============================================
+async function getToken(){
+    try {
+        const response = await fetch('https://accounts.spotify.com/api/token', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+                'Authorization': 'Basic ' + btoa(SPOTIFY_CLIENT + ':' + SPOTIFY_SECRET)
+            },
+            body: 'grant_type=client_credentials'
+        });
+        const data = await response.json();
+        return data.access_token;
+    } catch(e){
+        return null;
+    }
+}
+
+// ============================================
+// LOAD TRENDING (SPOTIFY API)
 // ============================================
 async function loadTrending(){
     const grid = document.getElementById('grid');
     grid.innerHTML = '<div class="loading">Loading...</div>';
     
     try {
-        const url = `${CONSUMET}/anime/gogoanime/top-airing`;
-        const resp = await fetch(url);
-        const data = await resp.json();
+        const token = await getToken();
+        if(!token) throw new Error('No token');
         
-        if(data.results && data.results.length > 0){
-            const items = data.results.map(i => ({
-                title: i.title || 'Unknown',
-                id: i.id || '',
-                type: 'Anime',
-                img: i.image || 'https://via.placeholder.com/200x300/1a2335/fff?text=No+Image',
-                overview: i.synopsis || 'Anime rekomendasi untukmu.',
-                year: i.releaseDate || ''
+        const url = `https://api.spotify.com/v1/browse/new-releases?limit=20`;
+        const response = await fetch(url, {
+            headers: { 'Authorization': 'Bearer ' + token }
+        });
+        const data = await response.json();
+        
+        if(data.albums && data.albums.items.length > 0){
+            const items = data.albums.items.map(i => ({
+                title: i.name,
+                artist: i.artists[0].name,
+                id: i.id,
+                img: i.images[0]?.url || 'https://i.scdn.co/image/ab67616d0000b2737fcead687e99537072a0b6b9',
+                type: 'pop'
             }));
             renderResults(items);
             if(items.length > 0) {
@@ -199,7 +225,84 @@ async function loadTrending(){
 }
 
 // ============================================
-// SEARCH
+// LOAD CHARTS
+// ============================================
+async function loadCharts(){
+    const grid = document.getElementById('grid');
+    grid.innerHTML = '<div class="loading">Loading charts...</div>';
+    
+    try {
+        const token = await getToken();
+        if(!token) throw new Error('No token');
+        
+        const url = `https://api.spotify.com/v1/playlists/37i9dQZF1DXcBWIGoYBM5M/tracks?limit=20`;
+        const response = await fetch(url, {
+            headers: { 'Authorization': 'Bearer ' + token }
+        });
+        const data = await response.json();
+        
+        if(data.items && data.items.length > 0){
+            const items = data.items.map(i => ({
+                title: i.track.name,
+                artist: i.track.artists[0].name,
+                id: i.track.id,
+                img: i.track.album.images[0]?.url || 'https://i.scdn.co/image/ab67616d0000b2737fcead687e99537072a0b6b9',
+                type: 'pop'
+            }));
+            renderResults(items);
+            if(items.length > 0) {
+                heroData = items[0];
+                updateHero(heroData);
+            }
+        } else {
+            grid.innerHTML = '<div class="loading">😞 Gagal memuat charts</div>';
+        }
+    } catch(e){
+        grid.innerHTML = '<div class="loading">⚠️ Error: ' + e.message + '</div>';
+    }
+}
+
+// ============================================
+// LOAD RANDOM
+// ============================================
+async function loadRandom(){
+    const grid = document.getElementById('grid');
+    grid.innerHTML = '<div class="loading">Loading random...</div>';
+    
+    try {
+        const token = await getToken();
+        if(!token) throw new Error('No token');
+        
+        const randomQuery = ['pop','rock','hiphop','rnb','edm','jazz','classical','indie'][Math.floor(Math.random() * 8)];
+        const url = `https://api.spotify.com/v1/search?q=genre:${randomQuery}&type=track&limit=20`;
+        const response = await fetch(url, {
+            headers: { 'Authorization': 'Bearer ' + token }
+        });
+        const data = await response.json();
+        
+        if(data.tracks && data.tracks.items.length > 0){
+            const items = data.tracks.items.map(i => ({
+                title: i.name,
+                artist: i.artists[0].name,
+                id: i.id,
+                img: i.album.images[0]?.url || 'https://i.scdn.co/image/ab67616d0000b2737fcead687e99537072a0b6b9',
+                type: randomQuery
+            }));
+            renderResults(items);
+            if(items.length > 0) {
+                heroData = items[0];
+                updateHero(heroData);
+            }
+        } else {
+            grid.innerHTML = '<div class="loading">😞 Gagal memuat random</div>';
+        }
+    } catch(e){
+        grid.innerHTML = '<div class="loading">⚠️ Error: ' + e.message + '</div>';
+    }
+}
+
+// ============================================
+// SEARCH (SPOTIFY API)
 // ============================================
 async function search(){
     const q = document.getElementById('search').value.trim();
@@ -209,18 +312,22 @@ async function search(){
     grid.innerHTML = '<div class="loading">Mencari...</div>';
     
     try {
-        const url = `${CONSUMET}/anime/gogoanime/${encodeURIComponent(q)}`;
-        const resp = await fetch(url);
-        const data = await resp.json();
+        const token = await getToken();
+        if(!token) throw new Error('No token');
         
-        if(data.results && data.results.length > 0){
-            const items = data.results.map(i => ({
-                title: i.title || 'Unknown',
-                id: i.id || '',
-                type: 'Anime',
-                img: i.image || 'https://via.placeholder.com/200x300/1a2335/fff?text=No+Image',
-                overview: i.synopsis || '',
-                year: i.releaseDate || ''
+        const url = `https://api.spotify.com/v1/search?q=${encodeURIComponent(q)}&type=track&limit=20`;
+        const response = await fetch(url, {
+            headers: { 'Authorization': 'Bearer ' + token }
+        });
+        const data = await response.json();
+        
+        if(data.tracks && data.tracks.items.length > 0){
+            const items = data.tracks.items.map(i => ({
+                title: i.name,
+                artist: i.artists[0].name,
+                id: i.id,
+                img: i.album.images[0]?.url || 'https://i.scdn.co/image/ab67616d0000b2737fcead687e99537072a0b6b9',
+                type: 'search'
             }));
             renderResults(items);
             if(items.length > 0) {
@@ -247,19 +354,17 @@ function renderResults(items){
     
     grid.innerHTML = items.map(i => {
         const title = i.title || 'Unknown';
-        const poster = i.img || 'https://via.placeholder.com/200x300/1a2335/fff?text=' + encodeURIComponent(title);
-        const type = i.type || 'Anime';
+        const poster = i.img || 'https://i.scdn.co/image/ab67616d0000b2737fcead687e99537072a0b6b9';
+        const artist = i.artist || 'Unknown';
         const id = i.id || '';
-        const year = i.year || '';
-        const yearStr = year ? year.substring(0,4) : '';
         
-        return `<div class="card" onclick="play('${id}','${title.replace(/'/g,"\\'")}','${type}')">
+        return `<div class="card" onclick="play('${id}','${title.replace(/'/g,"\\'")} - ${artist}')">
             <div class="poster">
-                <img src="${poster}" onerror="this.src='https://via.placeholder.com/200x300/1a2335/fff?text=${encodeURIComponent(title)}'">
+                <img src="${poster}" onerror="this.src='https://i.scdn.co/image/ab67616d0000b2737fcead687e99537072a0b6b9'">
                 <span>${title}</span>
-                <div class="label">${type} ${yearStr ? '• '+yearStr : ''}</div>
+                <div class="label">${artist}</div>
             </div>
-            <div class="info"><h4>${title}</h4><p>${type}</p></div>
+            <div class="info"><h4>${title}</h4><p>${artist}</p></div>
         </div>`;
     }).join('');
 }
@@ -270,47 +375,35 @@ function renderResults(items){
 function updateHero(item){
     if(!item) return;
     const title = item.title || 'EDWARD';
-    const desc = item.overview || 'Nonton semua film & anime gratis. Tanpa batas. Tanpa iklan.';
-    const poster = item.img || 'https://image.tmdb.org/t/p/original/8Bd0r4A2M5vLxGfN6vF1jU9yWpI.jpg';
-    const type = item.type || 'Anime';
-    const id = item.id || 'tt2560140';
+    const artist = item.artist || 'Music';
+    const poster = item.img || 'https://i.scdn.co/image/ab67616d0000b2738863bc11d2aa12b54f5aeb36';
+    const type = item.type || 'pop';
+    const id = item.id || '';
     
     document.getElementById('heroTitle').textContent = title;
-    document.getElementById('heroDesc').textContent = desc.substring(0, 150) + '...';
-    document.getElementById('heroBadge').textContent = '🔥 ' + type.toUpperCase();
-    document.getElementById('hero').style.background = `linear-gradient(135deg, #0a0a0a 50%, transparent), url(${poster}) center/cover no-repeat`;
-    document.getElementById('heroBtn').setAttribute('onclick', `play('${id}','${title.replace(/'/g,"\\'")}','${type}')`);
+    document.getElementById('heroDesc').textContent = `${artist} • ${type.toUpperCase()}`;
+    document.getElementById('heroBadge').textContent = '🎵 ' + type.toUpperCase();
+    document.getElementById('hero').style.background = `linear-gradient(135deg, #121212 50%, transparent), url(${poster}) center/cover no-repeat`;
+    document.getElementById('heroBtn').setAttribute('onclick', `play('${id}','${title.replace(/'/g,"\\'")} - ${artist}')`);
 }
 
 function playHero(){
     if(heroData){
         const title = heroData.title || 'EDWARD';
-        const type = heroData.type || 'Anime';
-        play(heroData.id, title, type);
+        const artist = heroData.artist || 'Music';
+        play(heroData.id, `${title} - ${artist}`);
     }
-}
-
-// ============================================
-// SET CATEGORY
-// ============================================
-function setCat(c){
-    curCat = c;
-    document.querySelectorAll('#cat button').forEach(b => b.classList.remove('active'));
-    document.querySelector(`#cat button[onclick="setCat('${c}')"]`).classList.add('active');
-    const q = document.getElementById('search').value.trim();
-    if(q) search();
-    else loadTrending();
 }
 
 // ============================================
 // PLAY
 // ============================================
-function play(id, title, type){
+function play(id, title){
     curId = id;
-    document.getElementById('ptitle').textContent = '🎬 ' + title;
+    document.getElementById('ptitle').textContent = '🎵 ' + title;
     document.getElementById('iframe').src = getUrl(id);
-    document.getElementById('player').style.display = 'flex';
-    document.body.style.overflow = 'hidden';
+    document.getElementById('player').style.display = 'block';
+    document.body.style.paddingBottom = '80px';
     renderServers();
 }
 
@@ -318,7 +411,7 @@ function closePlayer(){
     document.getElementById('player').style.display = 'none';
     document.getElementById('iframe').src = '';
     curId = '';
-    document.body.style.overflow = 'auto';
+    document.body.style.paddingBottom = '0';
 }
 
 // ============================================
