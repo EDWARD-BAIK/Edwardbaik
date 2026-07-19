@@ -30,11 +30,8 @@ body{background:#1a1a1a;color:#fff;font-family:'Courier New',monospace;padding:1
 .player-wrap .top .close{background:#f44336}
 .player-wrap iframe{width:100%;max-width:1100px;height:70vh;border:4px solid #4caf50;background:#000}
 .player-wrap .servers{position:absolute;bottom:20px;display:flex;gap:8px;flex-wrap:wrap;justify-content:center;background:rgba(0,0,0,.8);padding:10px 16px;border:4px solid #555}
-.player-wrap .servers button{background:#c6c6c6;border:4px solid #8b8b8b;padding:6px 14px;cursor:pointer}
+.player-wrap .servers button{background:#c6c6c6;border:4px solid #8b8b8b;padding:6px 14px;cursor:pointer;font-weight:bold}
 .player-wrap .servers button.active{background:#4caf50;color:#fff}
-.custom-link-wrap{display:flex;gap:8px;margin-top:10px;padding:8px;background:rgba(0,0,0,.5);border:4px solid #555;flex-wrap:wrap;width:95%;max-width:1100px;justify-content:center}
-.custom-link-wrap input{flex:1;padding:8px 14px;background:#c6c6c6;border:4px solid #555;color:#000;outline:0;min-width:150px}
-.custom-link-wrap button{background:#4caf50;border:4px solid #8b8b8b;padding:8px 18px;color:#fff;cursor:pointer}
 .loading{text-align:center;padding:30px;color:#aaa;font-size:14px}
 .footer{text-align:center;padding:20px 0 10px;border-top:4px solid #555;margin-top:15px}
 .footer p{font-size:8px;color:#aaa}
@@ -80,10 +77,8 @@ body{background:#1a1a1a;color:#fff;font-family:'Courier New',monospace;padding:1
 <button class="active" onclick="switchSvr(0)">Server 1</button>
 <button onclick="switchSvr(1)">Server 2</button>
 <button onclick="switchSvr(2)">Server 3</button>
-</div>
-<div class="custom-link-wrap">
-<input id="customLink" placeholder="Link alternatif...">
-<button onclick="playCustomLink()">▶️ Putar</button>
+<button onclick="switchSvr(3)">Server 4</button>
+<button onclick="switchSvr(4)">Server 5</button>
 </div>
 </div>
 
@@ -116,24 +111,24 @@ const FILMS = [
 {title:'The Dark Knight',id:'tt0468569',type:'Classic'}
 ];
 
-// ===== SERVER =====
+// ===== 5 SERVER (GANTI YANG ONLINE) =====
 const SERVERS = [
     id => `https://vidsrc.to/embed/movie/${id}`,
     id => `https://embed.su/embed/${id}`,
-    id => `https://vidsrc.cc/v2/embed/movie/${id}`
+    id => `https://vidsrc.cc/v2/embed/movie/${id}`,
+    id => `https://multiembed.mov/?video_id=${id}&tmdb=1`,
+    id => `https://www.2embed.cc/embed/${id}`
 ];
 
-let curSvr = 0, curId = '', curCat = 'all', customUrl = '';
+let curSvr = 0, curId = '', curCat = 'all';
 
-function getUrl(id){ return customUrl || SERVERS[curSvr](id); }
+function getUrl(id){ return SERVERS[curSvr](id); }
 
 function switchSvr(i){ curSvr=i; document.querySelectorAll('#sv button').forEach((b,j)=>b.classList.toggle('active',j==i)); if(curId) document.getElementById('iframe').src=getUrl(curId); }
 
 function nextServer(){ switchSvr((curSvr+1)%SERVERS.length); }
 
 function refreshPlayer(){ if(curId) document.getElementById('iframe').src=getUrl(curId); }
-
-function playCustomLink(){ const l=document.getElementById('customLink').value.trim(); if(!l) return alert('Masukkan link!'); customUrl=l; document.getElementById('iframe').src=l; document.getElementById('player').style.display='flex'; document.body.style.overflow='hidden'; document.getElementById('ptitle').textContent='🎬 Custom Link'; }
 
 // ===== RENDER =====
 function render(){
@@ -183,18 +178,17 @@ function search(){
 function setCat(c){ curCat=c; document.querySelectorAll('#cat button').forEach(b=>b.classList.remove('active')); document.querySelector(`#cat button[onclick="setCat('${c}')"]`).classList.add('active'); document.getElementById('search').value=''; render(); }
 
 function play(id, title){
-    curId=id; customUrl='';
+    curId=id;
     document.getElementById('ptitle').textContent='🎬 '+title;
     document.getElementById('iframe').src=getUrl(id);
     document.getElementById('player').style.display='flex';
     document.body.style.overflow='hidden';
-    document.getElementById('customLink').value='';
 }
 
 function closePlayer(){
     document.getElementById('player').style.display='none';
     document.getElementById('iframe').src='';
-    curId=''; customUrl='';
+    curId='';
     document.body.style.overflow='auto';
 }
 
