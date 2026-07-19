@@ -2,285 +2,550 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>EDWARD - ESP</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<title>EDWARD - Fishing</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-body{background:#0a0a0a;color:#fff;font-family:'Courier New',monospace;padding:10px;min-height:100vh}
-::selection{background:#ff2d55;color:#fff}
-.header{text-align:center;padding:10px 0 5px;border-bottom:2px solid #00ff41;margin-bottom:10px}
-.header h1{font-size:24px;color:#00ff41;text-shadow:0 0 20px rgba(0,255,65,.3);letter-spacing:2px}
-.header h1 span{color:#ff2d55}
-.header p{font-size:10px;color:rgba(255,255,255,.3);letter-spacing:1px}
-.stats{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:10px}
-.stats div{background:#141b2b;border:1px solid rgba(0,255,65,.2);border-radius:8px;padding:6px;text-align:center}
-.stats div span{display:block;font-size:20px;font-weight:700;color:#00ff41}
-.stats div small{font-size:9px;color:rgba(255,255,255,.4)}
-.camera-wrap{position:relative;width:100%;max-width:800px;margin:0 auto;border-radius:12px;overflow:hidden;border:2px solid #00ff41;background:#000}
-.camera-wrap video{width:100%;display:block}
-.camera-wrap canvas{position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none}
-.controls{display:flex;gap:10px;margin-top:10px;flex-wrap:wrap;justify-content:center}
-.controls button{background:rgba(0,255,65,.1);border:1px solid #00ff41;border-radius:30px;padding:8px 20px;color:#00ff41;font-weight:600;cursor:pointer;font-size:11px;font-family:'Courier New',monospace}
-.controls button:active{transform:scale(.95)}
-.controls button.active{background:#00ff41;color:#000}
-.controls button.full{background:rgba(255,215,0,.1);border-color:#ffd700;color:#ffd700}
-.footer{text-align:center;padding:10px 0 5px;border-top:1px solid rgba(255,255,255,.05);margin-top:10px}
-.footer p{font-size:8px;color:rgba(255,255,255,.2)}
-.footer span{color:#00ff41}
+html,body{width:100%;height:100%;overflow:hidden;background:#0a1628;touch-action:none;user-select:none;-webkit-user-select:none}
+body{display:flex;align-items:center;justify-content:center;font-family:'Segoe UI',sans-serif}
+
+#loadingScreen{position:fixed;top:0;left:0;width:100%;height:100%;background:#0a1628;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:100;transition:opacity .8s}
+#loadingScreen.hidden{opacity:0;pointer-events:none}
+#loadingScreen .logo{font-size:clamp(32px,6vw,64px);font-weight:900;background:linear-gradient(135deg,#00d4ff,#ffd700);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:10px}
+#loadingScreen .sub{color:rgba(255,255,255,.3);font-size:clamp(12px,1.5vw,18px);letter-spacing:3px;margin-bottom:30px}
+#loadingScreen .progress-wrap{width:clamp(200px,40vw,400px);height:6px;background:rgba(255,255,255,.05);border-radius:10px;overflow:hidden}
+#loadingScreen .progress-bar{height:100%;width:0%;background:linear-gradient(90deg,#00d4ff,#ffd700);border-radius:10px;transition:width .3s}
+#loadingScreen .progress-text{color:rgba(255,255,255,.3);font-size:clamp(10px,1vw,14px);margin-top:10px}
+
+#loginScreen{position:fixed;top:0;left:0;width:100%;height:100%;background:linear-gradient(180deg,#0a1628,#0d2847);display:none;flex-direction:column;align-items:center;justify-content:center;z-index:90;padding:20px}
+#loginScreen.show{display:flex}
+#loginScreen .title{font-size:clamp(28px,5vw,56px);font-weight:900;background:linear-gradient(135deg,#00d4ff,#ffd700);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:5px}
+#loginScreen .sub{color:rgba(255,255,255,.2);font-size:clamp(10px,1.2vw,14px);letter-spacing:3px;margin-bottom:30px}
+#loginScreen .input-group{width:clamp(250px,40vw,350px)}
+#loginScreen .input-group input{width:100%;padding:14px 20px;background:rgba(255,255,255,.05);border:2px solid rgba(0,212,255,.2);border-radius:30px;color:#fff;font-size:clamp(14px,1.5vw,18px);text-align:center;outline:0;transition:.3s}
+#loginScreen .input-group input:focus{border-color:#00d4ff;box-shadow:0 0 30px rgba(0,212,255,.1)}
+#loginScreen .input-group input::placeholder{color:rgba(255,255,255,.2)}
+#loginScreen .play-btn{margin-top:20px;padding:14px 50px;background:linear-gradient(135deg,#00d4ff,#0090ff);border:0;border-radius:30px;color:#fff;font-size:clamp(16px,2vw,24px);font-weight:700;cursor:pointer;transition:.3s;position:relative;overflow:hidden;box-shadow:0 0 40px rgba(0,212,255,.2)}
+#loginScreen .play-btn:hover{transform:scale(1.05);box-shadow:0 0 60px rgba(0,212,255,.4)}
+#loginScreen .play-btn:active{transform:scale(.95)}
+#loginScreen .play-btn .shine{position:absolute;top:-50%;left:-50%;width:200%;height:200%;background:linear-gradient(45deg,transparent,transparent,transparent,rgba(255,255,255,.1),transparent,transparent,transparent);animation:shine 2s infinite}
+@keyframes shine{0%{transform:translateX(-100%) rotate(45deg)}100%{transform:translateX(100%) rotate(45deg)}}
+#loginScreen .error{color:#ff6b6b;font-size:clamp(11px,1vw,14px);margin-top:12px;opacity:0;transition:.3s}
+#loginScreen .error.show{opacity:1}
+
+#gameUI{position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;display:none}
+#gameUI.show{display:block}
+#gameUI .top-left{position:absolute;top:12px;left:16px;color:#00d4ff;font-size:clamp(14px,2.5vw,28px);font-weight:900;text-shadow:0 0 20px rgba(0,212,255,.3),0 2px 10px rgba(0,0,0,.8)}
+#gameUI .top-left span{color:#ffd700}
+#gameUI .top-right{position:absolute;top:12px;right:16px;display:flex;gap:clamp(8px,1.5vw,20px);color:#fff;font-size:clamp(11px,1.8vw,20px);font-weight:700;text-shadow:0 2px 10px rgba(0,0,0,.8)}
+#gameUI .top-right .s{display:flex;align-items:center;gap:4px}
+#gameUI .top-right .s .ico{font-size:clamp(14px,2vw,24px)}
+#gameUI .top-right .s .val{color:#ffd700}
+#gameUI .bottom-info{position:absolute;bottom:20px;left:50%;transform:translateX(-50%);color:rgba(255,255,255,.5);font-size:clamp(10px,1.2vw,14px);text-shadow:0 2px 10px rgba(0,0,0,.8);text-align:center;white-space:nowrap}
+#gameUI .bottom-info span{color:#00d4ff}
+#gameUI .controls{position:absolute;bottom:20px;right:20px;display:flex;gap:10px;pointer-events:auto}
+#gameUI .controls button{background:rgba(0,212,255,.15);border:2px solid rgba(0,212,255,.3);border-radius:50%;width:clamp(44px,6vw,70px);height:clamp(44px,6vw,70px);color:#fff;font-size:clamp(18px,2.5vw,30px);cursor:pointer;backdrop-filter:blur(10px);transition:.2s;touch-action:manipulation;display:flex;align-items:center;justify-content:center}
+#gameUI .controls button:active{transform:scale(.85);background:rgba(0,212,255,.3)}
+#gameUI .controls button.cast{background:rgba(255,215,0,.2);border-color:#ffd700}
+#gameUI .controls button.cast:active{background:rgba(255,215,0,.4)}
+#gameUI .toast{position:absolute;bottom:80px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,.8);padding:8px 20px;border-radius:30px;color:#ffd700;font-size:clamp(12px,1.5vw,18px);font-weight:700;opacity:0;transition:opacity .5s;pointer-events:none;border:1px solid rgba(255,215,0,.2);white-space:nowrap}
+#gameUI .toast.show{opacity:1}
+
+canvas{display:block;width:100%;height:100%;background:linear-gradient(180deg,#0a1628,#0d2847,#1a4a7a,#0d2847);image-rendering:auto;display:none}
+canvas.show{display:block}
 </style>
 </head>
 <body>
 
-<div class="header">
-<h1>👁️ ED<span>WARD</span> <span style="color:#00ff41;font-size:12px;">· ESP</span></h1>
-<p>Edward-esp2026 · Real Face Detection</p>
+<!-- LOADING -->
+<div id="loadingScreen">
+<div class="logo">⚓ EDWARD-Fishing</div>
+<div class="sub">Loading Game...</div>
+<div class="progress-wrap"><div class="progress-bar" id="progressBar"></div></div>
+<div class="progress-text" id="progressText">0%</div>
 </div>
 
-<div class="stats">
-<div><small>FACE</small><span id="objCount">0</span></div>
-<div><small>FPS</small><span id="fpsCount">0</span></div>
-<div><small>STATUS</small><span id="statusText" style="font-size:14px;">●</span></div>
+<!-- LOGIN -->
+<div id="loginScreen">
+<div class="title">⚓ EDWARD-Fishing</div>
+<div class="sub">~ Petualangan Laut Lepas ~</div>
+<div class="input-group">
+<input id="nameInput" type="text" placeholder="Masukkan nama pemain..." maxlength="15" autocomplete="off">
+</div>
+<div id="loginError" class="error">⚠️ Nama tidak boleh kosong!</div>
+<button class="play-btn" onclick="login()">
+<span class="shine"></span>
+▶ PLAY
+</button>
 </div>
 
-<div class="camera-wrap" id="cameraWrap">
-<video id="video" autoplay playsinline muted></video>
-<canvas id="canvas"></canvas>
+<!-- GAME -->
+<canvas id="gameCanvas"></canvas>
+<div id="gameUI">
+<div class="top-left">⚓ EDWARD-<span>Fishing</span></div>
+<div class="top-right">
+<div class="s"><span class="ico">🪙</span><span class="val" id="coinDisplay">0</span></div>
+<div class="s"><span class="ico">🐟</span><span class="val" id="fishDisplay">0</span></div>
+<div class="s"><span class="ico">🎣</span><span class="val" id="castDisplay">0</span></div>
 </div>
-
+<div class="bottom-info">🌊 <span id="speciesName">Laut Lepas</span> • <span id="depthDisplay">0</span>m • 👤 <span id="playerNameDisplay">-</span></div>
 <div class="controls">
-<button id="btnStart" class="active" onclick="startCamera()">📷 Start</button>
-<button id="btnStop" onclick="stopCamera()">⏹ Stop</button>
-<button class="full" onclick="toggleFullscreen()">⛶ Full</button>
+<button id="castBtn" class="cast" onclick="castLine()">🎣</button>
+<button onclick="toggleAuto()" id="autoBtn">⏸</button>
 </div>
-
-<div class="footer"><p>© 2026 <span>EDWARD</span> · Edward-esp2026 · <span id="modelStatus">Loading MediaPipe...</span></p></div>
-
-<script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js" crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/@mediapipe/face_detection/face_detection.js" crossorigin="anonymous"></script>
+<div class="toast" id="toastMsg">🐟 Ikan Tertangkap!</div>
+</div>
 
 <script>
 // ============================================
-// REAL FACE DETECTION - MEDIAPIPE
+// LOADING + LOGIN
 // ============================================
-let camera = null;
-let running = false;
-let animationId = null;
-let frameCount = 0;
-let lastFpsTime = Date.now();
-let fps = 0;
-let faceDetector = null;
+let playerName = '';
 
-const video = document.getElementById('video');
-const canvas = document.getElementById('canvas');
-const ctx = canvas.getContext('2d');
-const objCount = document.getElementById('objCount');
-const fpsCount = document.getElementById('fpsCount');
-const statusText = document.getElementById('statusText');
-const modelStatus = document.getElementById('modelStatus');
-const cameraWrap = document.getElementById('cameraWrap');
-
-// ============================================
-// FULLSCREEN
-// ============================================
-function toggleFullscreen() {
-    if (!document.fullscreenElement) {
-        cameraWrap.requestFullscreen().catch(() => {});
-    } else {
-        document.exitFullscreen().catch(() => {});
-    }
+function simulateLoading() {
+    const bar = document.getElementById('progressBar');
+    const text = document.getElementById('progressText');
+    let progress = 0;
+    const interval = setInterval(() => {
+        progress += Math.random() * 5 + 1;
+        if (progress > 100) progress = 100;
+        bar.style.width = progress + '%';
+        text.textContent = Math.round(progress) + '%';
+        if (progress >= 100) {
+            clearInterval(interval);
+            setTimeout(() => {
+                document.getElementById('loadingScreen').classList.add('hidden');
+                document.getElementById('loginScreen').classList.add('show');
+                document.getElementById('nameInput').focus();
+            }, 400);
+        }
+    }, 80);
 }
 
-// ============================================
-// FACE DETECTION CALLBACK
-// ============================================
-function onResults(results) {
-    if (!running) return;
-
-    frameCount++;
-    const now = Date.now();
-    if (now - lastFpsTime > 1000) {
-        fps = frameCount;
-        frameCount = 0;
-        lastFpsTime = now;
-        fpsCount.textContent = fps;
-    }
-
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    
-    // Gambar video mirror
-    ctx.save();
-    ctx.scale(-1, 1);
-    ctx.drawImage(video, -canvas.width, 0, canvas.width, canvas.height);
-    ctx.restore();
-
-    const faces = results.detections || [];
-    objCount.textContent = faces.length;
-
-    if (faces.length === 0) {
-        ctx.fillStyle = 'rgba(255,255,255,0.15)';
-        ctx.font = '13px Courier New';
-        ctx.textAlign = 'center';
-        ctx.fillText('Arahkan ke wajah', canvas.width/2, canvas.height/2);
+function login() {
+    const input = document.getElementById('nameInput');
+    const error = document.getElementById('loginError');
+    const name = input.value.trim();
+    if (name.length === 0) {
+        error.classList.add('show');
+        input.style.borderColor = '#ff6b6b';
+        setTimeout(() => {
+            error.classList.remove('show');
+            input.style.borderColor = 'rgba(0,212,255,.2)';
+        }, 2000);
         return;
     }
+    playerName = name;
+    document.getElementById('playerNameDisplay').textContent = playerName;
+    document.getElementById('loginScreen').classList.remove('show');
+    document.getElementById('gameUI').classList.add('show');
+    document.getElementById('gameCanvas').classList.add('show');
+    initGame();
+    showToast('🐟 Selamat datang, ' + playerName + '!', true);
+}
 
-    const colors = ['#ff2d55','#00d4ff','#ffd700','#00ff41','#ff6b35','#7b2ffc'];
+// ============================================
+// GAME ENGINE
+// ============================================
+const canvas = document.getElementById('gameCanvas');
+const ctx = canvas.getContext('2d');
+let gameRunning = false;
+let animFrame = null;
 
-    faces.forEach((face, idx) => {
-        const bbox = face.boundingBox;
-        if (!bbox) return;
-        
-        const x = bbox.originX || 0;
-        const y = bbox.originY || 0;
-        const w = bbox.width || 0;
-        const h = bbox.height || 0;
-        const color = colors[idx % colors.length];
+function resize() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+}
+window.addEventListener('resize', resize);
+resize();
 
-        // Tali/garis ESP
-        ctx.strokeStyle = color;
-        ctx.globalAlpha = 0.2;
-        ctx.lineWidth = 1.5;
-        ctx.setLineDash([6, 8]);
-        
-        ctx.beginPath();
-        ctx.moveTo(x + w/2, y);
-        ctx.lineTo(x + w/2, 0);
-        ctx.stroke();
-        
-        ctx.beginPath();
-        ctx.moveTo(x + w/2, y + h);
-        ctx.lineTo(x + w/2, canvas.height);
-        ctx.stroke();
-        
-        ctx.beginPath();
-        ctx.moveTo(x, y + h/2);
-        ctx.lineTo(0, y + h/2);
-        ctx.stroke();
-        
-        ctx.beginPath();
-        ctx.moveTo(x + w, y + h/2);
-        ctx.lineTo(canvas.width, y + h/2);
-        ctx.stroke();
-        
-        ctx.setLineDash([]);
-        ctx.globalAlpha = 1;
+const coinDisplay = document.getElementById('coinDisplay');
+const fishDisplay = document.getElementById('fishDisplay');
+const castDisplay = document.getElementById('castDisplay');
+const speciesName = document.getElementById('speciesName');
+const depthDisplay = document.getElementById('depthDisplay');
+const toastMsg = document.getElementById('toastMsg');
 
-        // Bounding Box
-        ctx.shadowColor = color;
-        ctx.shadowBlur = 25;
-        ctx.strokeStyle = color;
-        ctx.lineWidth = 2.5;
-        ctx.strokeRect(x, y, w, h);
-        ctx.shadowBlur = 0;
+let toastTimer = null;
+function showToast(text, isGood = true) {
+    toastMsg.textContent = text;
+    toastMsg.style.color = isGood ? '#ffd700' : '#ff6b6b';
+    toastMsg.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => toastMsg.classList.remove('show'), 2000);
+}
 
-        // Center cross
-        ctx.strokeStyle = color;
-        ctx.globalAlpha = 0.5;
-        ctx.lineWidth = 1;
-        const cx = x + w/2;
-        const cy = y + h/2;
-        const size = 10;
-        ctx.beginPath();
-        ctx.moveTo(cx - size, cy);
-        ctx.lineTo(cx + size, cy);
-        ctx.moveTo(cx, cy - size);
-        ctx.lineTo(cx, cy + size);
-        ctx.stroke();
-        ctx.globalAlpha = 1;
+// ============================================
+// GAME STATE
+// ============================================
+const state = {
+    coins: 0, fishCaught: 0, casts: 0, depth: 0,
+    autoCast: false, isCasting: false, castTimer: 0,
+    fishOnLine: null, fishTimer: 0,
+    boatX: 0, boatY: 0,
+    waves: [], fish: [], particles: [],
+    bobberX: 0, bobberY: 0, bobberActive: false,
+    lineAngle: 0, lineLength: 0,
+    caughtFish: null, catchProgress: 0, reeling: false,
+};
 
-        // Jarak (estimasi berdasarkan ukuran)
-        const dist = Math.round(50 - (w * h) / 2500);
-        ctx.fillStyle = color;
-        ctx.globalAlpha = 0.6;
-        ctx.font = '10px Courier New';
-        ctx.textAlign = 'right';
-        ctx.textBaseline = 'top';
-        ctx.fillText(Math.max(2, dist) + 'm', x + w - 6, y + 6);
-        ctx.globalAlpha = 1;
+const FISH_SPECIES = [
+    {name:'🐠 Ikan Badut',minSize:15,maxSize:25,value:5,speed:0.5,color:'#ff6b35',depth:5},
+    {name:'🐟 Ikan Mas',minSize:20,maxSize:35,value:8,speed:0.4,color:'#ffd700',depth:8},
+    {name:'🦈 Hiu',minSize:50,maxSize:80,value:50,speed:0.8,color:'#4a6fa5',depth:20},
+    {name:'🐡 Buntal',minSize:18,maxSize:28,value:12,speed:0.3,color:'#ff6b6b',depth:10},
+    {name:'🐙 Gurita',minSize:22,maxSize:38,value:15,speed:0.6,color:'#9b59b6',depth:15},
+    {name:'🐳 Paus',minSize:80,maxSize:120,value:100,speed:0.2,color:'#2c3e50',depth:30},
+    {name:'🐋 Lumba-lumba',minSize:40,maxSize:60,value:35,speed:0.7,color:'#3498db',depth:18},
+    {name:'🦐 Udang',minSize:10,maxSize:18,value:3,speed:0.6,color:'#e74c3c',depth:4},
+    {name:'🐚 Kerang',minSize:12,maxSize:20,value:4,speed:0.1,color:'#f39c12',depth:6},
+    {name:'🐉 Ikan Naga',minSize:30,maxSize:50,value:25,speed:0.5,color:'#e74c8b',depth:12},
+    {name:'⭐ Ikan Bintang',minSize:14,maxSize:22,value:7,speed:0.4,color:'#f1c40f',depth:7},
+    {name:'🌊 Ikan Pari',minSize:35,maxSize:55,value:30,speed:0.3,color:'#5d6d7e',depth:22},
+];
 
-        // Label
-        ctx.fillStyle = color;
-        ctx.globalAlpha = 0.4;
-        ctx.font = '9px Courier New';
-        ctx.textAlign = 'left';
-        ctx.textBaseline = 'bottom';
-        ctx.fillText('#' + (idx + 1), x + 6, y + h + 16);
-        ctx.globalAlpha = 1;
+// ============================================
+// INIT GAME
+// ============================================
+function initGame() {
+    state.waves = [];
+    for (let i = 0; i < 15; i++) {
+        state.waves.push({
+            x: Math.random() * canvas.width,
+            y: canvas.height * 0.4 + Math.random() * canvas.height * 0.3,
+            w: 60 + Math.random() * 100,
+            h: 3 + Math.random() * 6,
+            speed: 0.3 + Math.random() * 0.5,
+            phase: Math.random() * Math.PI * 2
+        });
+    }
+    state.fish = [];
+    for (let i = 0; i < 35; i++) {
+        const species = FISH_SPECIES[Math.floor(Math.random() * FISH_SPECIES.length)];
+        const size = species.minSize + Math.random() * (species.maxSize - species.minSize);
+        state.fish.push({
+            x: Math.random() * canvas.width,
+            y: canvas.height * 0.25 + Math.random() * canvas.height * 0.55,
+            vx: (Math.random() - 0.5) * 0.6,
+            vy: (Math.random() - 0.5) * 0.3,
+            size: size,
+            species: species,
+            color: species.color,
+            speed: species.speed * (0.5 + Math.random()),
+            targetX: Math.random() * canvas.width,
+            targetY: canvas.height * 0.25 + Math.random() * canvas.height * 0.55,
+            caught: false,
+            wobble: Math.random() * Math.PI * 2,
+            flip: Math.random() > 0.5
+        });
+    }
+    state.boatX = canvas.width * 0.3;
+    state.boatY = canvas.height * 0.7;
+    state.coins = 0;
+    state.fishCaught = 0;
+    state.casts = 0;
+    state.isCasting = false;
+    state.bobberActive = false;
+    state.fishOnLine = null;
+    updateUI();
+    gameRunning = true;
+    if (animFrame) cancelAnimationFrame(animFrame);
+    gameLoop();
+}
+EOFcat >> index.html << 'EOF'
+function updateUI() {
+    coinDisplay.textContent = state.coins;
+    fishDisplay.textContent = state.fishCaught;
+    castDisplay.textContent = state.casts;
+    depthDisplay.textContent = Math.round(state.depth);
+}
+
+function castLine() {
+    if (state.isCasting || state.bobberActive) return;
+    state.isCasting = true;
+    state.casts++;
+    state.castTimer = 0;
+    state.bobberActive = true;
+    state.bobberX = state.boatX + 40;
+    state.bobberY = state.boatY - 20;
+    state.lineLength = 0;
+    state.lineAngle = -Math.PI / 4;
+    state.fishOnLine = null;
+    state.catchProgress = 0;
+    updateUI();
+    showToast('🎣 Casting line...', true);
+}
+
+function toggleAuto() {
+    state.autoCast = !state.autoCast;
+    document.getElementById('autoBtn').textContent = state.autoCast ? '▶' : '⏸';
+    if (state.autoCast && !state.isCasting && !state.bobberActive) castLine();
+}
+
+function gameLoop() {
+    if (!gameRunning) return;
+    update();
+    draw();
+    animFrame = requestAnimationFrame(gameLoop);
+}
+
+function update() {
+    const w = canvas.width, h = canvas.height;
+    state.depth += 0.02;
+    if (state.depth > 50) state.depth = 0;
+    state.boatX = w * 0.25 + Math.sin(Date.now() / 3000) * 20;
+    state.boatY = h * 0.7 + Math.sin(Date.now() / 2000 + 1) * 8;
+    state.waves.forEach(wave => {
+        wave.x += wave.speed;
+        if (wave.x > w + wave.w) wave.x = -wave.w;
+        wave.y = h * 0.45 + Math.sin(Date.now() / 2000 + wave.phase) * 20 + Math.sin(Date.now() / 3000 + wave.phase * 2) * 10;
     });
-}
-
-// ============================================
-// START CAMERA
-// ============================================
-async function startCamera() {
-    try {
-        if (camera) {
-            camera.stop();
-            camera = null;
-        }
-
-        faceDetector = new FaceDetection({
-            locateFile: (file) => {
-                return `https://cdn.jsdelivr.net/npm/@mediapipe/face_detection/${file}`;
+    state.fish.forEach(fish => {
+        if (fish.caught) return;
+        fish.wobble += 0.02;
+        fish.x += fish.vx + Math.sin(fish.wobble) * 0.2;
+        fish.y += fish.vy + Math.cos(fish.wobble * 0.7) * 0.15;
+        if (fish.x < 0 || fish.x > w) fish.vx *= -1;
+        if (fish.y < h * 0.2 || fish.y > h * 0.85) fish.vy *= -1;
+        if (Math.random() < 0.002) { fish.targetX = Math.random() * w; fish.targetY = h * 0.25 + Math.random() * h * 0.55; }
+        fish.vx += (fish.targetX - fish.x) * 0.0005;
+        fish.vy += (fish.targetY - fish.y) * 0.0005;
+        fish.vx = Math.max(-1, Math.min(1, fish.vx));
+        fish.vy = Math.max(-0.5, Math.min(0.5, fish.vy));
+        if (Math.random() < 0.001) { fish.targetX = Math.random() * w; fish.targetY = h * 0.25 + Math.random() * h * 0.55; }
+    });
+    if (state.isCasting) {
+        state.castTimer += 0.02;
+        state.lineLength = Math.min(200, state.castTimer * 200);
+        state.bobberX = state.boatX + 40 + Math.sin(state.lineAngle) * state.lineLength;
+        state.bobberY = state.boatY - 20 + Math.cos(state.lineAngle) * state.lineLength * 0.5;
+        if (state.castTimer > 1.5) {
+            state.isCasting = false;
+            state.fish.forEach(fish => {
+                if (fish.caught) return;
+                const dx = fish.x - state.bobberX, dy = fish.y - state.bobberY;
+                if (Math.sqrt(dx*dx + dy*dy) < 60 && Math.random() < 0.3) {
+                    state.fishOnLine = fish;
+                    fish.caught = true;
+                    state.catchProgress = 0;
+                    state.reeling = true;
+                    showToast('🐟 Ada yang menggigit!', true);
+                }
+            });
+            if (!state.fishOnLine) {
+                setTimeout(() => { state.bobberActive = false; if (state.autoCast) setTimeout(castLine, 500); }, 800);
             }
+        }
+    }
+    if (state.reeling && state.fishOnLine) {
+        state.catchProgress += 0.02;
+        state.bobberX += (state.boatX - state.bobberX) * 0.02;
+        state.bobberY += (state.boatY - state.bobberY) * 0.02;
+        if (state.catchProgress > 1) {
+            const fish = state.fishOnLine;
+            state.coins += fish.species.value;
+            state.fishCaught++;
+            showToast('🐟 ' + fish.species.name + ' +' + fish.species.value + '🪙', true);
+            state.fishOnLine = null;
+            state.reeling = false;
+            state.bobberActive = false;
+            const newSpecies = FISH_SPECIES[Math.floor(Math.random() * FISH_SPECIES.length)];
+            const newSize = newSpecies.minSize + Math.random() * (newSpecies.maxSize - newSpecies.minSize);
+            const idx = state.fish.indexOf(fish);
+            if (idx > -1) {
+                state.fish[idx] = {
+                    x: Math.random() * canvas.width,
+                    y: canvas.height * 0.25 + Math.random() * canvas.height * 0.55,
+                    vx: (Math.random() - 0.5) * 0.6,
+                    vy: (Math.random() - 0.5) * 0.3,
+                    size: newSize,
+                    species: newSpecies,
+                    color: newSpecies.color,
+                    speed: newSpecies.speed * (0.5 + Math.random()),
+                    targetX: Math.random() * canvas.width,
+                    targetY: canvas.height * 0.25 + Math.random() * canvas.height * 0.55,
+                    caught: false,
+                    wobble: Math.random() * Math.PI * 2,
+                    flip: Math.random() > 0.5
+                };
+            }
+            updateUI();
+            if (state.autoCast) setTimeout(castLine, 500);
+        }
+    }
+    if (state.autoCast && !state.isCasting && !state.bobberActive && !state.fishOnLine) {
+        if (!state._autoTimer) { state._autoTimer = setTimeout(() => { castLine(); state._autoTimer = null; }, 1000); }
+    }
+    if (state.fishOnLine) speciesName.textContent = state.fishOnLine.species.name;
+    else if (state.depth < 10) speciesName.textContent = '🌊 Laut Dangkal';
+    else if (state.depth < 25) speciesName.textContent = '🌊 Laut Tengah';
+    else speciesName.textContent = '🌊 Laut Dalam';
+    updateUI();
+}
+
+function draw() {
+    const w = canvas.width, h = canvas.height;
+    const grad = ctx.createLinearGradient(0, 0, 0, h);
+    grad.addColorStop(0, '#0a1628'); grad.addColorStop(0.2, '#0d2847');
+    grad.addColorStop(0.5, '#1a4a7a'); grad.addColorStop(0.8, '#0d2847'); grad.addColorStop(1, '#06101f');
+    ctx.fillStyle = grad; ctx.fillRect(0, 0, w, h);
+    ctx.globalAlpha = 0.03;
+    for (let i = 0; i < 8; i++) {
+        ctx.beginPath();
+        ctx.moveTo(w * 0.2 + Math.sin(i) * 100, -50);
+        ctx.lineTo(w * 0.2 + Math.sin(i + 0.3) * 100 + 200, h + 50);
+        ctx.strokeStyle = '#fff';
+        ctx.lineWidth = 30 + Math.sin(i + Date.now() / 5000) * 10;
+        ctx.stroke();
+    }
+    ctx.globalAlpha = 1;
+    state.waves.forEach(wave => {
+        ctx.beginPath();
+        ctx.moveTo(wave.x - wave.w/2, wave.y);
+        ctx.quadraticCurveTo(wave.x, wave.y - wave.h, wave.x + wave.w/2, wave.y);
+        ctx.strokeStyle = 'rgba(0,212,255,0.08)';
+        ctx.lineWidth = 1.5;
+        ctx.stroke();
+    });
+    for (let i = 0; i < 6; i++) {
+        const x = (i * 0.17 + Math.sin(Date.now() / 4000 + i) * 0.05) * w;
+        const y = h * 0.3 + Math.sin(Date.now() / 3000 + i * 1.5) * 20;
+        ctx.beginPath();
+        ctx.arc(x, y, 3 + Math.sin(Date.now() / 2000 + i) * 1, 0, Math.PI * 2);
+        ctx.fillStyle = 'rgba(255,255,255,0.05)';
+        ctx.fill();
+    }
+    state.fish.forEach(fish => {
+        if (fish.caught) return;
+        const x = fish.x, y = fish.y, size = fish.size, color = fish.color;
+        ctx.save();
+        ctx.translate(x, y);
+        if (fish.vx < 0) ctx.scale(-1, 1);
+        ctx.beginPath();
+        ctx.ellipse(0, 0, size, size * 0.6, 0, 0, Math.PI * 2);
+        ctx.fillStyle = color;
+        ctx.shadowColor = color;
+        ctx.shadowBlur = 10;
+        ctx.fill();
+        ctx.shadowBlur = 0;
+        ctx.beginPath();
+        ctx.moveTo(-size * 0.8, 0);
+        ctx.lineTo(-size * 1.3, -size * 0.5);
+        ctx.lineTo(-size * 1.3, size * 0.5);
+        ctx.closePath();
+        ctx.fillStyle = color;
+        ctx.fill();
+        ctx.beginPath();
+        ctx.arc(size * 0.35, -size * 0.1, size * 0.15, 0, Math.PI * 2);
+        ctx.fillStyle = '#fff';
+        ctx.fill();
+        ctx.beginPath();
+        ctx.arc(size * 0.4, -size * 0.1, size * 0.07, 0, Math.PI * 2);
+        ctx.fillStyle = '#000';
+        ctx.fill();
+        ctx.restore();
+    });
+    ctx.save();
+    ctx.translate(state.boatX, state.boatY);
+    ctx.beginPath();
+    ctx.moveTo(-30, 0);
+    ctx.quadraticCurveTo(-40, 12, -20, 18);
+    ctx.quadraticCurveTo(0, 22, 20, 18);
+    ctx.quadraticCurveTo(40, 12, 30, 0);
+    ctx.closePath();
+    ctx.fillStyle = '#2c3e50';
+    ctx.shadowColor = 'rgba(0,0,0,0.5)';
+    ctx.shadowBlur = 15;
+    ctx.fill();
+    ctx.shadowBlur = 0;
+    ctx.fillStyle = '#34495e';
+    ctx.fillRect(-25, -5, 50, 5);
+    ctx.fillStyle = '#2c3e50';
+    ctx.fillRect(-5, -25, 15, 20);
+    ctx.fillStyle = '#3498db';
+    ctx.fillRect(-3, -22, 4, 8);
+    ctx.fillRect(6, -22, 4, 8);
+    ctx.strokeStyle = '#5d6d7e';
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(5, -25);
+    ctx.lineTo(5, -60);
+    ctx.stroke();
+    ctx.fillStyle = '#ff2d55';
+    ctx.beginPath();
+    ctx.moveTo(5, -60);
+    ctx.lineTo(25, -53);
+    ctx.lineTo(5, -46);
+    ctx.closePath();
+    ctx.fill();
+    ctx.restore();
+    if (state.bobberActive) {
+        const bx = state.bobberX, by = state.bobberY;
+        ctx.beginPath();
+        ctx.moveTo(state.boatX + 30, state.boatY - 10);
+        ctx.lineTo(bx, by);
+        ctx.strokeStyle = 'rgba(255,255,255,0.3)';
+        ctx.lineWidth = 1.5;
+        ctx.setLineDash([4, 4]);
+        ctx.stroke();
+        ctx.setLineDash([]);
+        const bobSize = 8 + Math.sin(Date.now() / 300) * 2;
+        ctx.beginPath();
+        ctx.arc(bx, by, bobSize, 0, Math.PI * 2);
+        const bobColor = state.fishOnLine ? '#ff2d55' : '#ffd700';
+        ctx.fillStyle = bobColor;
+        ctx.shadowColor = bobColor;
+        ctx.shadowBlur = 20;
+        ctx.fill();
+        ctx.shadowBlur = 0;
+        for (let i = 0; i < 3; i++) {
+            const r = bobSize + 10 + i * 12 + Math.sin(Date.now() / 500 + i) * 3;
+            ctx.beginPath();
+            ctx.arc(bx, by, r, 0, Math.PI * 2);
+            ctx.strokeStyle = `rgba(255,255,255,${0.08 - i * 0.02})`;
+            ctx.lineWidth = 1;
+            ctx.stroke();
+        }
+        if (state.reeling) {
+            ctx.fillStyle = 'rgba(255,215,0,0.3)';
+            ctx.fillRect(bx - 30, by + 25, 60 * state.catchProgress, 4);
+            ctx.fillStyle = 'rgba(255,215,0,0.6)';
+            ctx.fillRect(bx - 30, by + 25, 60 * state.catchProgress, 4);
+        }
+    }
+    if (Math.random() < 0.1) {
+        state.particles.push({
+            x: Math.random() * w, y: h,
+            r: 2 + Math.random() * 4,
+            speed: 0.5 + Math.random() * 1.5,
+            opacity: 0.1 + Math.random() * 0.2
         });
-
-        faceDetector.setOptions({
-            model: 'short',
-            minDetectionConfidence: 0.5,
-        });
-
-        faceDetector.onResults(onResults);
-
-        const videoElement = document.getElementById('video');
-        
-        camera = new Camera(videoElement, {
-            onFrame: async () => {
-                await faceDetector.send({image: videoElement});
-            },
-            width: 640,
-            height: 480
-        });
-
-        await camera.start();
-        
-        canvas.width = 640;
-        canvas.height = 480;
-        
-        statusText.textContent = '●';
-        statusText.style.color = '#00ff41';
-        modelStatus.textContent = '✅ Face Detection Active';
-        running = true;
-        
-        document.getElementById('btnStart').classList.remove('active');
-        
-    } catch(e) {
-        alert('Error: ' + e.message);
-        statusText.textContent = '✕';
-        statusText.style.color = '#ff2d55';
-        modelStatus.textContent = '❌ ' + e.message;
+    }
+    state.particles = state.particles.filter(p => { p.y -= p.speed; p.opacity -= 0.003; return p.opacity > 0 && p.y > 0; });
+    state.particles.forEach(p => {
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(255,255,255,${p.opacity})`;
+        ctx.fill();
+        ctx.strokeStyle = `rgba(255,255,255,${p.opacity * 0.3})`;
+        ctx.lineWidth = 0.5;
+        ctx.stroke();
+    });
+    if (state.fishOnLine) {
+        const fish = state.fishOnLine;
+        ctx.fillStyle = 'rgba(0,0,0,0.4)';
+        if (ctx.roundRect) ctx.roundRect(w/2 - 60, 20, 120, 30, 10);
+        else ctx.fillRect(w/2 - 60, 20, 120, 30);
+        ctx.fill();
+        ctx.fillStyle = '#ffd700';
+        ctx.font = 'clamp(12px,1.5vw,18px)';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText('🎣 ' + fish.species.name, w/2, 35);
     }
 }
 
-function stopCamera() {
-    running = false;
-    if (camera) {
-        camera.stop();
-        camera = null;
-    }
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    objCount.textContent = '0';
-    statusText.textContent = '⬤';
-    statusText.style.color = '#ff4444';
-    document.getElementById('btnStart').classList.add('active');
-}
-
-// ============================================
-// INIT
-// ============================================
-setTimeout(() => {
-    startCamera();
-}, 1000);
+simulateLoading();
 </script>
 </body>
 </html>
