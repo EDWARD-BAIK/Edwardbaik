@@ -9,7 +9,6 @@
 body{background:#141414;color:#fff;font-family:'Segoe UI',sans-serif;padding:0;min-height:100vh;overflow-x:hidden}
 ::selection{background:#e50914;color:#fff}
 
-/* NAVBAR */
 .navbar{position:fixed;top:0;left:0;right:0;padding:12px 30px;display:flex;justify-content:space-between;align-items:center;background:linear-gradient(180deg,#141414 0%,transparent 100%);z-index:100;transition:.3s}
 .navbar.scrolled{background:#141414;box-shadow:0 2px 10px rgba(0,0,0,.5)}
 .navbar .logo{font-size:24px;font-weight:900;color:#e50914;letter-spacing:-1px}
@@ -19,31 +18,27 @@ body{background:#141414;color:#fff;font-family:'Segoe UI',sans-serif;padding:0;m
 .navbar .menu a:hover{color:#fff}
 .navbar .menu .free-badge{background:#e50914;padding:4px 12px;border-radius:20px;font-size:10px;font-weight:700;color:#fff}
 
-/* HERO */
-.hero{height:75vh;display:flex;align-items:center;padding:0 30px;margin-top:60px;position:relative;background:linear-gradient(135deg,#0a0a0a 50%,transparent),url('https://image.tmdb.org/t/p/original/8Bd0r4A2M5vLxGfN6vF1jU9yWpI.jpg') center/cover no-repeat}
+.hero{height:70vh;display:flex;align-items:center;padding:0 30px;margin-top:60px;position:relative;background:linear-gradient(135deg,#0a0a0a 50%,transparent),url('https://image.tmdb.org/t/p/original/8Bd0r4A2M5vLxGfN6vF1jU9yWpI.jpg') center/cover no-repeat;transition:background 1s}
 .hero::after{content:'';position:absolute;bottom:0;left:0;right:0;height:120px;background:linear-gradient(0deg,#141414,transparent)}
 .hero .content{position:relative;z-index:1;max-width:550px}
 .hero .content .badge{background:#e50914;padding:4px 12px;border-radius:4px;font-size:11px;font-weight:700;display:inline-block;margin-bottom:8px}
-.hero .content h1{font-size:44px;font-weight:900;text-shadow:0 2px 20px rgba(0,0,0,.8);margin-bottom:8px}
+.hero .content h1{font-size:42px;font-weight:900;text-shadow:0 2px 20px rgba(0,0,0,.8);margin-bottom:8px}
 .hero .content p{font-size:14px;color:rgba(255,255,255,.7);line-height:1.6;margin-bottom:16px}
 .hero .content .btn{display:inline-flex;align-items:center;gap:8px;padding:10px 28px;border-radius:6px;border:0;font-size:15px;font-weight:600;cursor:pointer;transition:.2s;background:#fff;color:#000;text-decoration:none}
 .hero .content .btn:hover{background:rgba(255,255,255,.75)}
 
-/* SEARCH */
-.search-wrap{position:relative;z-index:1;margin:20px 30px;display:flex;gap:10px;background:rgba(255,255,255,.05);border-radius:30px;padding:4px;border:1px solid rgba(255,255,255,.1)}
+.search-wrap{position:relative;z-index:1;margin:15px 30px;display:flex;gap:10px;background:rgba(255,255,255,.05);border-radius:30px;padding:4px;border:1px solid rgba(255,255,255,.1)}
 .search-wrap input{flex:1;background:0;border:0;padding:12px 18px;color:#fff;font-size:14px;outline:0}
 .search-wrap input::placeholder{color:rgba(255,255,255,.4)}
 .search-wrap button{background:#e50914;border:0;border-radius:30px;padding:10px 24px;color:#fff;font-weight:600;cursor:pointer;font-size:13px}
 .search-wrap button:active{transform:scale(.95)}
 
-/* CATEGORY */
 .cat-scroll{display:flex;gap:8px;overflow-x:auto;padding:0 30px 10px;scrollbar-width:none;position:relative;z-index:1}
 .cat-scroll::-webkit-scrollbar{display:none}
 .cat-scroll button{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);border-radius:30px;padding:6px 18px;color:#aaa;font-size:12px;cursor:pointer;white-space:nowrap;transition:.2s}
 .cat-scroll button.active{background:#e50914;border-color:#e50914;color:#fff}
 .cat-scroll button:active{transform:scale(.95)}
 
-/* GRID */
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:15px;padding:10px 30px 30px;position:relative;z-index:1}
 .card{background:#1a1a1a;border-radius:10px;overflow:hidden;cursor:pointer;transition:.3s;border:1px solid transparent}
 .card:hover{transform:scale(1.05);border-color:#e50914;z-index:5;box-shadow:0 10px 30px rgba(0,0,0,.8)}
@@ -59,7 +54,6 @@ body{background:#141414;color:#fff;font-family:'Segoe UI',sans-serif;padding:0;m
 .loading::after{content:'...';animation:dot 1.5s steps(4) infinite}
 @keyframes dot{0%{content:''}25%{content:'.'}50%{content:'..'}75%{content:'...'}}
 
-/* PLAYER */
 .player-wrap{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.98);z-index:9999;flex-direction:column;align-items:center;justify-content:flex-start;padding:10px;padding-top:60px}
 .player-wrap .top{position:absolute;top:0;left:0;right:0;padding:10px 16px;display:flex;justify-content:space-between;align-items:center;background:rgba(0,0,0,.9);border-bottom:2px solid #e50914;flex-wrap:wrap;gap:6px;z-index:10}
 .player-wrap .top .t{font-size:13px;font-weight:600;max-width:50%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
@@ -82,7 +76,6 @@ body{background:#141414;color:#fff;font-family:'Segoe UI',sans-serif;padding:0;m
 </head>
 <body>
 
-<!-- ===== NAVBAR ===== -->
 <div class="navbar" id="navbar">
 <div class="logo">ED<span>WARD</span></div>
 <div class="menu">
@@ -93,23 +86,20 @@ body{background:#141414;color:#fff;font-family:'Segoe UI',sans-serif;padding:0;m
 </div>
 </div>
 
-<!-- ===== HERO ===== -->
-<div class="hero">
+<div class="hero" id="hero">
 <div class="content">
-<div class="badge">🔥 TRENDING</div>
-<h1 id="heroTitle">Attack on Titan</h1>
-<p id="heroDesc">Di dunia yang dikepung Titan raksasa, Eren Yeager bersumpah untuk membalas dendam dan membebaskan umat manusia.</p>
-<button class="btn" onclick="playRandom()">▶️ Putar Sekarang</button>
+<div class="badge" id="heroBadge">🔥 TRENDING</div>
+<h1 id="heroTitle">Loading...</h1>
+<p id="heroDesc">Memuat rekomendasi film terbaik...</p>
+<button class="btn" id="heroBtn" onclick="playHero()">▶️ Putar Sekarang</button>
 </div>
 </div>
 
-<!-- ===== SEARCH ===== -->
 <div class="search-wrap">
 <input id="search" placeholder="Cari film, anime, atau series..." onkeyup="if(event.key==='Enter') search()">
 <button onclick="search()">🔍 Cari</button>
 </div>
 
-<!-- ===== CATEGORY ===== -->
 <div class="cat-scroll" id="cat">
 <button class="active" onclick="setCat('all')">🔥 Semua</button>
 <button onclick="setCat('movie')">🎬 Movie</button>
@@ -117,13 +107,10 @@ body{background:#141414;color:#fff;font-family:'Segoe UI',sans-serif;padding:0;m
 <button onclick="setCat('tv')">📺 TV</button>
 </div>
 
-<!-- ===== GRID ===== -->
 <div id="grid" class="grid"><div class="loading">🔥 Trending minggu ini</div></div>
 
-<!-- ===== FOOTER ===== -->
 <div class="footer"><p>© 2026 <span>EDWARD</span> • 100% GRATIS • Powered by TMDB</p></div>
 
-<!-- ===== PLAYER ===== -->
 <div class="player-wrap" id="player">
 <div class="top">
 <span class="t" id="ptitle">🎬 Now Playing</span>
@@ -139,11 +126,9 @@ body{background:#141414;color:#fff;font-family:'Segoe UI',sans-serif;padding:0;m
 </div>
 
 <script>
-// ===== TMDB API =====
 const TMDB_KEY = 'e5b9a63f3b5d8450a9d923a2b72a8e9a';
 const TMDB_URL = 'https://api.themoviedb.org/3';
 
-// ===== 2 SERVER =====
 const SERVERS = [
     id => `https://vidsrc.in/embed/movie/${id}`,
     id => `https://vidsrc.me/embed/${id}`
@@ -151,6 +136,7 @@ const SERVERS = [
 const SERVER_NAMES = ['S1', 'S2'];
 
 let curSvr = 0, curId = '', curCat = 'all', currentTitle = '';
+let heroData = null;
 
 function getUrl(id){ return SERVERS[curSvr](id); }
 
@@ -176,57 +162,68 @@ function renderServers(){
     ).join('');
 }
 
-// ===== LOAD TRENDING =====
 async function loadTrending(){
     const grid = document.getElementById('grid');
     grid.innerHTML = '<div class="loading">Loading...</div>';
-    
     try {
         const url = `${TMDB_URL}/trending/all/week?api_key=${TMDB_KEY}`;
         const resp = await fetch(url);
         const data = await resp.json();
-        renderResults(data.results || []);
+        const results = data.results || [];
+        renderResults(results);
+        if(results.length > 0) updateHero(results[0]);
     } catch(e){
         grid.innerHTML = '<div class="loading">⚠️ Gagal load. Coba lagi.</div>';
     }
 }
 
-// ===== SEARCH =====
+function updateHero(item){
+    heroData = item;
+    const title = item.title || item.name || 'Unknown';
+    const desc = item.overview || 'Film rekomendasi untukmu.';
+    const poster = item.backdrop_path ? `https://image.tmdb.org/t/p/original${item.backdrop_path}` : 'https://image.tmdb.org/t/p/original/8Bd0r4A2M5vLxGfN6vF1jU9yWpI.jpg';
+    const type = item.media_type || 'Movie';
+    document.getElementById('heroTitle').textContent = title;
+    document.getElementById('heroDesc').textContent = desc.substring(0, 150) + '...';
+    document.getElementById('heroBadge').textContent = '🔥 ' + type.toUpperCase();
+    document.getElementById('hero').style.background = `linear-gradient(135deg, #0a0a0a 50%, transparent), url(${poster}) center/cover no-repeat`;
+    document.getElementById('heroBtn').setAttribute('onclick', `play('${item.id}','${title.replace(/'/g,"\\'")}','${type}')`);
+}
+
+function playHero(){
+    if(heroData) play(heroData.id, heroData.title || heroData.name || 'Unknown', heroData.media_type || 'Movie');
+}
+
 async function search(){
     const q = document.getElementById('search').value.trim();
     if(!q) return loadTrending();
-    
     const grid = document.getElementById('grid');
     grid.innerHTML = '<div class="loading">Mencari...</div>';
-    
     try {
         const url = `${TMDB_URL}/search/multi?api_key=${TMDB_KEY}&query=${encodeURIComponent(q)}`;
         const resp = await fetch(url);
         const data = await resp.json();
-        
         if(!data.results || data.results.length === 0){
             grid.innerHTML = '<div class="loading">😞 Tidak ada hasil</div>';
             return;
         }
-        
         let results = data.results.filter(i => i.media_type !== 'person');
         if(curCat !== 'all' && curCat !== 'anime'){
             results = results.filter(i => i.media_type === curCat);
         }
         renderResults(results);
+        if(results.length > 0) updateHero(results[0]);
     } catch(e){
         grid.innerHTML = '<div class="loading">⚠️ Error: ' + e.message + '</div>';
     }
 }
 
-// ===== RENDER RESULTS =====
 function renderResults(items){
     const grid = document.getElementById('grid');
     if(!items || items.length === 0){
         grid.innerHTML = '<div class="loading">😞 Tidak ada hasil</div>';
         return;
     }
-    
     grid.innerHTML = items.map(i => {
         const title = i.title || i.name || 'Unknown';
         const poster = i.poster_path ? `https://image.tmdb.org/t/p/w500${i.poster_path}` : null;
@@ -235,7 +232,6 @@ function renderResults(items){
         const year = i.release_date || i.first_air_date || '';
         const yearStr = year ? year.substring(0,4) : '';
         const img = poster || 'https://via.placeholder.com/200x300/1a2335/fff?text=' + encodeURIComponent(title);
-        
         return `<div class="card" onclick="play('${id}','${title.replace(/'/g,"\\'")}','${type}')">
             <div class="poster">
                 <img src="${img}" onerror="this.src='https://via.placeholder.com/200x300/1a2335/fff?text=${encodeURIComponent(title)}'">
@@ -247,32 +243,23 @@ function renderResults(items){
     }).join('');
 }
 
-// ===== SET CATEGORY =====
 function setCat(c){
     curCat = c;
     document.querySelectorAll('#cat button').forEach(b => b.classList.remove('active'));
     document.querySelector(`#cat button[onclick="setCat('${c}')"]`).classList.add('active');
-    
     const q = document.getElementById('search').value.trim();
     if(q) search();
     else loadTrending();
 }
 
-// ===== PLAY =====
 function play(id, title, type){
     curId = id;
     currentTitle = title;
-    
     document.getElementById('ptitle').textContent = '🎬 ' + title;
     document.getElementById('iframe').src = getUrl(id);
     document.getElementById('player').style.display = 'flex';
     document.body.style.overflow = 'hidden';
     renderServers();
-}
-
-function playRandom(){
-    const title = document.getElementById('heroTitle').textContent;
-    play('tt2560140', title, 'Anime');
 }
 
 function closePlayer(){
@@ -282,17 +269,12 @@ function closePlayer(){
     document.body.style.overflow = 'auto';
 }
 
-// ===== NAVBAR SCROLL =====
 window.addEventListener('scroll', function(){
     const navbar = document.getElementById('navbar');
-    if(window.scrollY > 50){
-        navbar.classList.add('scrolled');
-    } else {
-        navbar.classList.remove('scrolled');
-    }
+    if(window.scrollY > 50) navbar.classList.add('scrolled');
+    else navbar.classList.remove('scrolled');
 });
 
-// ===== INIT =====
 window.onload = function(){ 
     loadTrending(); 
     renderServers();
