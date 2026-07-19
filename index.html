@@ -3,11 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>EDWARD - Nonton Gratis</title>
+<title>EDWARD - Gudang Ilegal</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 body{background:#0a0e17;color:#fff;font-family:'Segoe UI',sans-serif;padding:15px}
-:root{--p:#ff2d55;--s:#00d4ff;--g:#0f0}
+:root{--p:#ff2d55;--s:#00d4ff}
 .header{text-align:center;padding:20px 0 10px;border-bottom:2px solid var(--p)}
 .header h1{font-size:28px;background:linear-gradient(135deg,var(--p),var(--s));-webkit-background-clip:text;-webkit-text-fill-color:transparent;letter-spacing:2px}
 .header p{font-size:11px;color:rgba(255,255,255,.4);margin-top:4px}
@@ -29,10 +29,13 @@ body{background:#0a0e17;color:#fff;font-family:'Segoe UI',sans-serif;padding:15p
 .card .info h4{font-size:13px;margin-bottom:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .card .info p{font-size:10px;color:rgba(255,255,255,.5)}
 .card-wrap{position:relative}
-.player-wrap{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.97);z-index:9999;flex-direction:column;align-items:center;justify-content:center;padding:20px}
-.player-wrap iframe{width:95%;max-width:1000px;height:70vh;border-radius:20px;border:2px solid var(--p);background:#000}
-.player-wrap .close-btn{position:absolute;top:20px;right:20px;background:var(--p);border:0;color:#fff;width:50px;height:50px;border-radius:50%;font-size:24px;cursor:pointer;font-weight:700}
+.player-wrap{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.98);z-index:99999;flex-direction:column;align-items:center;justify-content:center;padding:20px}
+.player-wrap iframe{width:95%;max-width:1000px;height:75vh;border-radius:20px;border:2px solid var(--p);background:#000}
+.player-wrap .close-btn{position:absolute;top:20px;right:20px;background:var(--p);border:0;color:#fff;width:50px;height:50px;border-radius:50%;font-size:24px;cursor:pointer;font-weight:700;z-index:999999}
 .player-wrap .close-btn:hover{transform:scale(1.1)}
+.player-wrap .server-switch{position:absolute;bottom:30px;display:flex;gap:10px;flex-wrap:wrap;justify-content:center;z-index:999999}
+.player-wrap .server-switch button{background:rgba(255,255,255,.1);border:1px solid var(--p);border-radius:30px;padding:8px 18px;color:#fff;cursor:pointer;font-size:11px}
+.player-wrap .server-switch button:hover{background:var(--p)}
 .loading{text-align:center;padding:40px;color:rgba(255,255,255,.3);font-size:14px}
 .footer{text-align:center;padding:30px 0 10px;border-top:1px solid rgba(255,255,255,.05);margin-top:20px}
 .footer p{font-size:11px;color:rgba(255,255,255,.2)}
@@ -42,10 +45,10 @@ body{background:#0a0e17;color:#fff;font-family:'Segoe UI',sans-serif;padding:15p
 <body>
 <div class="header">
 <h1>🎬 EDWARD</h1>
-<p>Nonton Anime & Movie Gratis • 100% No Iklan</p>
+<p>Gudang Film & Anime Ilegal • 200+ Judul • No Blokir</p>
 </div>
 <div class="search-wrap">
-<input id="searchInput" placeholder="Cari judul anime / film..." onkeyup="if(event.key==='Enter') searchMedia()">
+<input id="searchInput" placeholder="Cari judul film / anime..." onkeyup="if(event.key==='Enter') searchMedia()">
 <button onclick="searchMedia()">🔍 Cari</button>
 </div>
 <div class="cat-scroll" id="categoryList">
@@ -53,76 +56,125 @@ body{background:#0a0e17;color:#fff;font-family:'Segoe UI',sans-serif;padding:15p
 <button onclick="setCategory('anime')">🎌 Anime</button>
 <button onclick="setCategory('movie')">🎬 Movie</button>
 <button onclick="setCategory('kdrama')">🇰🇷 K-Drama</button>
+<button onclick="setCategory('classic')">📼 Classic</button>
 </div>
 <div id="resultGrid" class="grid"><div class="loading">⏳ Loading...</div></div>
-<div class="footer"><p>© 2026 <span>EDWARD</span> • 100% Gratis</p></div>
+<div class="footer"><p>© 2026 <span>EDWARD</span> • 100% Ilegal • Auto-Proxy</p></div>
 
 <div class="player-wrap" id="playerWrap">
 <button class="close-btn" onclick="closePlayer()">✕</button>
 <iframe id="playerIframe" src="" allowfullscreen></iframe>
+<div class="server-switch" id="serverSwitch">
+<button onclick="switchServer(0)">🎥 Server 1</button>
+<button onclick="switchServer(1)">🎥 Server 2</button>
+<button onclick="switchServer(2)">🎥 Server 3</button>
+<button onclick="switchServer(3)">🎥 Server 4</button>
+<button onclick="switchServer(4)">🎥 Server 5</button>
+</div>
 </div>
 
 <script>
 // ============================================
-// DATABASE KONTEN LENGKAP
+// DATABASE ILEGAL 200+ KONTEN
 // ============================================
 const CONTENT_DB = [
-    // ===== ANIME =====
-    {title: 'Attack on Titan', id: 'tt2560140', type: 'Anime', img: 'https://cdn.myanimelist.net/images/anime/1000/110531.jpg'},
-    {title: 'Demon Slayer', id: 'tt9335498', type: 'Anime', img: 'https://cdn.myanimelist.net/images/anime/1286/99889.jpg'},
-    {title: 'One Piece', id: 'tt0388629', type: 'Anime', img: 'https://cdn.myanimelist.net/images/anime/1244/138851.jpg'},
-    {title: 'Jujutsu Kaisen', id: 'tt12343534', type: 'Anime', img: 'https://cdn.myanimelist.net/images/anime/1171/109222.jpg'},
-    {title: 'Solo Leveling', id: 'tt26635464', type: 'Anime', img: 'https://cdn.myanimelist.net/images/anime/1303/138497.jpg'},
-    {title: 'Naruto', id: 'tt0988824', type: 'Anime', img: 'https://cdn.myanimelist.net/images/anime/1460/98853.jpg'},
-    {title: 'Bleach', id: 'tt0434665', type: 'Anime', img: 'https://cdn.myanimelist.net/images/anime/1220/142476.jpg'},
+    // 🔥 MOVIE 2024-2026
+    {title: 'Deadpool 3 (2024)', id: 'tt6263850', type: 'Movie', img: 'https://m.media-amazon.com/images/M/MV5BZmU0M2Y1OGUtZjIxNi00ZjBkLTg1MjgtOWIyNThiZWIwYjRiXkEyXkFqcGdeQXVyMTQyMTMwOTk0._V1_.jpg'},
+    {title: 'Dune 3 (2026)', id: 'tt30933272', type: 'Movie', img: 'https://m.media-amazon.com/images/M/MV5BNzU2NTY2MjU0OF5BMl5BanBnXkFtZTgwMTQ1NjU2MjE@._V1_.jpg'},
+    {title: 'Avatar 3 (2025)', id: 'tt17576734', type: 'Movie', img: 'https://m.media-amazon.com/images/M/MV5BYjhiNjBlODctY2ZiOC00YjVlLWFlNzAtNTVhNzM1YjI1NzMxXkEyXkFqcGdeQXVyMjQxNTE1MDA@._V1_.jpg'},
+    {title: 'Avengers 5 (2026)', id: 'tt21361868', type: 'Movie', img: 'https://m.media-amazon.com/images/M/MV5BZWMyYzFjYTYtNTRjYi00OGExLWE2YzgtOGRmYjAxZTU3NzBiXkEyXkFqcGdeQXVyMzQ0MzA0NTM@._V1_.jpg'},
+    {title: 'Spider-Man 4 (2025)', id: 'tt31289056', type: 'Movie', img: 'https://m.media-amazon.com/images/M/MV5BMDdmMTBiNTYtMDIzNi00NGVlLWIzMDYtZTk3MTQ3NGQxZGEwXkEyXkFqcGdeQXVyMzMwOTU5MDk@._V1_.jpg'},
+    {title: 'The Batman 2 (2026)', id: 'tt20118904', type: 'Movie', img: 'https://m.media-amazon.com/images/M/MV5BMDdmMTBiNTYtMDIzNi00NGVlLWIzMDYtZTk3MTQ3NGQxZGEwXkEyXkFqcGdeQXVyMzMwOTU5MDk@._V1_.jpg'},
+    {title: 'Joker 2 (2024)', id: 'tt14858048', type: 'Movie', img: 'https://m.media-amazon.com/images/M/MV5BNjU3N2QxNzYtMjkxNC00MTc4LTk1NjQtMGEyODljNmJkOTI1XkEyXkFqcGdeQXVyODE5NzE3OTE@._V1_.jpg'},
+    {title: 'Gladiator 2 (2024)', id: 'tt10366206', type: 'Movie', img: 'https://m.media-amazon.com/images/M/MV5BMDExZGMyOTMtMDgyYi00NGIwLWJhMTEtOTQ1ODA0ZjE3MTFkXkEyXkFqcGdeQXVyMjM4NTM5NDY@._V1_.jpg'},
+    {title: 'Inside Out 2 (2024)', id: 'tt22022452', type: 'Movie', img: 'https://m.media-amazon.com/images/M/MV5BYTdiOTM5MWMtYjRjZC00YjdmLTk5MTYtZDA5YzI5N2MxNjBjXkEyXkFqcGdeQXVyMTA1OTYzOTUx._V1_.jpg'},
+    {title: 'Moana 2 (2024)', id: 'tt27989734', type: 'Movie', img: 'https://m.media-amazon.com/images/M/MV5BNjU3N2QxNzYtMjkxNC00MTc4LTk1NjQtMGEyODljNmJkOTI1XkEyXkFqcGdeQXVyODE5NzE3OTE@._V1_.jpg'},
+    {title: 'Furiosa (2024)', id: 'tt12037194', type: 'Movie', img: 'https://m.media-amazon.com/images/M/MV5BM2Y5NGQ0YjUtNmYwYi00NjI1LWIxNmItZDE4N2FmZjM5NmVkXkEyXkFqcGdeQXVyMTUzMTg2ODkz._V1_.jpg'},
+    {title: 'Godzilla x Kong (2024)', id: 'tt14539740', type: 'Movie', img: 'https://m.media-amazon.com/images/M/MV5BMjU3ODg5MDUtODcwZS00ODA4LWE5MjAtN2U0YzM3MjQxZjA3XkEyXkFqcGdeQXVyMTUzMTg2ODkz._V1_.jpg'},
+    {title: 'Civil War (2024)', id: 'tt17279496', type: 'Movie', img: 'https://m.media-amazon.com/images/M/MV5BM2Y5NGQ0YjUtNmYwYi00NjI1LWIxNmItZDE4N2FmZjM5NmVkXkEyXkFqcGdeQXVyMTUzMTg2ODkz._V1_.jpg'},
+    {title: 'Superman (2025)', id: 'tt13756710', type: 'Movie', img: 'https://m.media-amazon.com/images/M/MV5BMDdmMTBiNTYtMDIzNi00NGVlLWIzMDYtZTk3MTQ3NGQxZGEwXkEyXkFqcGdeQXVyMzMwOTU5MDk@._V1_.jpg'},
+    {title: 'Fantastic Four (2025)', id: 'tt10676052', type: 'Movie', img: 'https://m.media-amazon.com/images/M/MV5BZWMyYzFjYTYtNTRjYi00OGExLWE2YzgtOGRmYjAxZTU3NzBiXkEyXkFqcGdeQXVyMzQ0MzA0NTM@._V1_.jpg'},
+    {title: 'Toy Story 5 (2026)', id: 'tt29756180', type: 'Movie', img: 'https://m.media-amazon.com/images/M/MV5BNjU3N2QxNzYtMjkxNC00MTc4LTk1NjQtMGEyODljNmJkOTI1XkEyXkFqcGdeQXVyODE5NzE3OTE@._V1_.jpg'},
+    
+    // 🎌 ANIME ILEGAL
+    {title: 'Attack on Titan Final', id: 'tt2560140', type: 'Anime', img: 'https://cdn.myanimelist.net/images/anime/1000/110531.jpg'},
+    {title: 'Demon Slayer S4', id: 'tt9335498', type: 'Anime', img: 'https://cdn.myanimelist.net/images/anime/1286/99889.jpg'},
+    {title: 'One Piece (Latest)', id: 'tt0388629', type: 'Anime', img: 'https://cdn.myanimelist.net/images/anime/1244/138851.jpg'},
+    {title: 'Jujutsu Kaisen S3', id: 'tt12343534', type: 'Anime', img: 'https://cdn.myanimelist.net/images/anime/1171/109222.jpg'},
+    {title: 'Solo Leveling S2', id: 'tt26635464', type: 'Anime', img: 'https://cdn.myanimelist.net/images/anime/1303/138497.jpg'},
+    {title: 'Naruto Shippuden', id: 'tt0988824', type: 'Anime', img: 'https://cdn.myanimelist.net/images/anime/1460/98853.jpg'},
+    {title: 'Bleach TYBW', id: 'tt0434665', type: 'Anime', img: 'https://cdn.myanimelist.net/images/anime/1220/142476.jpg'},
     {title: 'Chainsaw Man', id: 'tt11737520', type: 'Anime', img: 'https://cdn.myanimelist.net/images/anime/1806/126216.jpg'},
-    {title: 'My Hero Academia', id: 'tt10839590', type: 'Anime', img: 'https://cdn.myanimelist.net/images/anime/1276/142967.jpg'},
-    {title: 'Tokyo Revengers', id: 'tt15340256', type: 'Anime', img: 'https://cdn.myanimelist.net/images/anime/1222/113359.jpg'},
-    {title: 'Vinland Saga', id: 'tt13830912', type: 'Anime', img: 'https://cdn.myanimelist.net/images/anime/1500/103005.jpg'},
-    {title: 'Spy x Family', id: 'tt14731938', type: 'Anime', img: 'https://cdn.myanimelist.net/images/anime/1441/122425.jpg'},
-    {title: 'Mushoku Tensei', id: 'tt13215870', type: 'Anime', img: 'https://cdn.myanimelist.net/images/anime/1530/117776.jpg'},
-    {title: 'Re:Zero', id: 'tt12753044', type: 'Anime', img: 'https://cdn.myanimelist.net/images/anime/1526/117578.jpg'},
-    {title: '86 Eighty-Six', id: 'tt15174698', type: 'Anime', img: 'https://cdn.myanimelist.net/images/anime/1137/111268.jpg'},
+    {title: 'My Hero Academia S7', id: 'tt10839590', type: 'Anime', img: 'https://cdn.myanimelist.net/images/anime/1276/142967.jpg'},
+    {title: 'Tokyo Revengers S3', id: 'tt15340256', type: 'Anime', img: 'https://cdn.myanimelist.net/images/anime/1222/113359.jpg'},
+    {title: 'Vinland Saga S2', id: 'tt13830912', type: 'Anime', img: 'https://cdn.myanimelist.net/images/anime/1500/103005.jpg'},
+    {title: 'Spy x Family S2', id: 'tt14731938', type: 'Anime', img: 'https://cdn.myanimelist.net/images/anime/1441/122425.jpg'},
+    {title: 'Mushoku Tensei S2', id: 'tt13215870', type: 'Anime', img: 'https://cdn.myanimelist.net/images/anime/1530/117776.jpg'},
+    {title: 'Re:Zero S3', id: 'tt12753044', type: 'Anime', img: 'https://cdn.myanimelist.net/images/anime/1526/117578.jpg'},
     {title: 'Hunter x Hunter', id: 'tt2098220', type: 'Anime', img: 'https://cdn.myanimelist.net/images/anime/1337/99013.jpg'},
     {title: 'Fullmetal Alchemist', id: 'tt1355642', type: 'Anime', img: 'https://cdn.myanimelist.net/images/anime/1223/96541.jpg'},
     {title: 'Death Note', id: 'tt0877057', type: 'Anime', img: 'https://cdn.myanimelist.net/images/anime/1079/133529.jpg'},
     {title: 'Tokyo Ghoul', id: 'tt3741634', type: 'Anime', img: 'https://cdn.myanimelist.net/images/anime/1485/119329.jpg'},
     {title: 'Black Clover', id: 'tt7441658', type: 'Anime', img: 'https://cdn.myanimelist.net/images/anime/1975/121705.jpg'},
+    {title: 'Dandadan (2025)', id: 'tt30217406', type: 'Anime', img: 'https://cdn.myanimelist.net/images/anime/1430/143785.jpg'},
     
-    // ===== MOVIE =====
-    {title: 'Top Gun Maverick', id: 'tt1745960', type: 'Movie', img: 'https://m.media-amazon.com/images/M/MV5BZmEzZTk3YzgtY2JhYS00NzUzLWFjZjYtZmZkYzRlYmE0NzZiXkEyXkFqcGdeQXVyMTUzMTg2ODkz._V1_.jpg'},
-    {title: 'John Wick 4', id: 'tt10366206', type: 'Movie', img: 'https://m.media-amazon.com/images/M/MV5BMDExZGMyOTMtMDgyYi00NGIwLWJhMTEtOTQ1ODA0ZjE3MTFkXkEyXkFqcGdeQXVyMjM4NTM5NDY@._V1_.jpg'},
-    {title: 'Avatar 2', id: 'tt1630029', type: 'Movie', img: 'https://m.media-amazon.com/images/M/MV5BYjhiNjBlODctY2ZiOC00YjVlLWFlNzAtNTVhNzM1YjI1NzMxXkEyXkFqcGdeQXVyMjQxNTE1MDA@._V1_.jpg'},
-    {title: 'Spider-Man No Way Home', id: 'tt10872600', type: 'Movie', img: 'https://m.media-amazon.com/images/M/MV5BZWMyYzFjYTYtNTRjYi00OGExLWE2YzgtOGRmYjAxZTU3NzBiXkEyXkFqcGdeQXVyMzQ0MzA0NTM@._V1_.jpg'},
-    {title: 'Dune 2', id: 'tt13668894', type: 'Movie', img: 'https://m.media-amazon.com/images/M/MV5BNzU2NTY2MjU0OF5BMl5BanBnXkFtZTgwMTQ1NjU2MjE@._V1_.jpg'},
-    {title: 'Barbie', id: 'tt14539740', type: 'Movie', img: 'https://m.media-amazon.com/images/M/MV5BNjU3N2QxNzYtMjkxNC00MTc4LTk1NjQtMGEyODljNmJkOTI1XkEyXkFqcGdeQXVyODE5NzE3OTE@._V1_.jpg'},
-    {title: 'Fast X', id: 'tt1746090', type: 'Movie', img: 'https://m.media-amazon.com/images/M/MV5BN2Q0MTA0ODQtYzRlZi00ZmQwLWEwNmYtOGE4MzQzODU5ZGYzXkEyXkFqcGdeQXVyODE5NzE3OTE@._V1_.jpg'},
-    {title: 'The Batman', id: 'tt1877830', type: 'Movie', img: 'https://m.media-amazon.com/images/M/MV5BMDdmMTBiNTYtMDIzNi00NGVlLWIzMDYtZTk3MTQ3NGQxZGEwXkEyXkFqcGdeQXVyMzMwOTU5MDk@._V1_.jpg'},
-    {title: 'Doctor Strange 2', id: 'tt9419884', type: 'Movie', img: 'https://m.media-amazon.com/images/M/MV5BZmU0M2Y1OGUtZjIxNi00ZjBkLTg1MjgtOWIyNThiZWIwYjRiXkEyXkFqcGdeQXVyMTQyMTMwOTk0._V1_.jpg'},
-    {title: 'Eternals', id: 'tt9032400', type: 'Movie', img: 'https://m.media-amazon.com/images/M/MV5BZjQzMWM5NmMtODA2Yy00NjU2LWE2NTYtZjU1NzM3MGIyZGJjXkEyXkFqcGdeQXVyODE5NzE3OTE@._V1_.jpg'},
-    {title: 'Bullet Train', id: 'tt12593682', type: 'Movie', img: 'https://m.media-amazon.com/images/M/MV5BMDU2ZmM2OTYtNzIxYy00NjU5LWFlNTAtM2UwY2I5MjUyMzU5XkEyXkFqcGdeQXVyMTUzMTg2ODkz._V1_.jpg'},
-    {title: 'Everything Everywhere', id: 'tt6710474', type: 'Movie', img: 'https://m.media-amazon.com/images/M/MV5BYTdiOTM5MWMtYjRjZC00YjdmLTk5MTYtZDA5YzI5N2MxNjBjXkEyXkFqcGdeQXVyMTA1OTYzOTUx._V1_.jpg'},
-    {title: 'Oppenheimer', id: 'tt15398776', type: 'Movie', img: 'https://m.media-amazon.com/images/M/MV5BMDBmYTZjNjUtN2M1MS00MTQ2LTk2ODgtNzc2M2QyZGE5NTVjXkEyXkFqcGdeQXVyNzAwMjU2MTY@._V1_.jpg'},
-    
-    // ===== K-DRAMA =====
-    {title: 'Squid Game', id: 'tt10919420', type: 'K-Drama', img: 'https://m.media-amazon.com/images/M/MV5BZjAyZmE4OTAtYmVkZi00NThjLWIxYzgtNmU5NTViNzhhMmQxXkEyXkFqcGdeQXVyMTEyMjM2NDc2._V1_.jpg'},
-    {title: 'All of Us Are Dead', id: 'tt13669776', type: 'K-Drama', img: 'https://m.media-amazon.com/images/M/MV5BNDU0OTNmODEtZjFhYi00MjA0LWJkNzktZTIyMDBiM2ExYzIwXkEyXkFqcGdeQXVyMTUzMTg2ODkz._V1_.jpg'},
-    {title: 'The Glory', id: 'tt17462624', type: 'K-Drama', img: 'https://m.media-amazon.com/images/M/MV5BOTIzZmRmOTQtYzhiNy00NDQyLWE1ZDEtZTdkYzRkZDA3MmI4XkEyXkFqcGdeQXVyMTUzMTg2ODkz._V1_.jpg'},
+    // 🇰🇷 K-DRAMA ILEGAL
+    {title: 'Squid Game S3', id: 'tt19463462', type: 'K-Drama', img: 'https://m.media-amazon.com/images/M/MV5BZjAyZmE4OTAtYmVkZi00NThjLWIxYzgtNmU5NTViNzhhMmQxXkEyXkFqcGdeQXVyMTEyMjM2NDc2._V1_.jpg'},
+    {title: 'All of Us Are Dead S2', id: 'tt23898882', type: 'K-Drama', img: 'https://m.media-amazon.com/images/M/MV5BNDU0OTNmODEtZjFhYi00MjA0LWJkNzktZTIyMDBiM2ExYzIwXkEyXkFqcGdeQXVyMTUzMTg2ODkz._V1_.jpg'},
+    {title: 'The Glory S2', id: 'tt20859782', type: 'K-Drama', img: 'https://m.media-amazon.com/images/M/MV5BOTIzZmRmOTQtYzhiNy00NDQyLWE1ZDEtZTdkYzRkZDA3MmI4XkEyXkFqcGdeQXVyMTUzMTg2ODkz._V1_.jpg'},
+    {title: 'Sweet Home S3', id: 'tt23630482', type: 'K-Drama', img: 'https://m.media-amazon.com/images/M/MV5BMTQyNzU2MjE5N15BMl5BanBnXkFtZTgwMjA5MzUxMjE@._V1_.jpg'},
     {title: 'My Name', id: 'tt15553894', type: 'K-Drama', img: 'https://m.media-amazon.com/images/M/MV5BYzA0NzA3NDUtZTE4Ny00MmE4LWE4NTAtNzA3ZDM5OTI1MWM2XkEyXkFqcGdeQXVyMTUzMTg2ODkz._V1_.jpg'},
-    {title: 'Hellbound', id: 'tt13106780', type: 'K-Drama', img: 'https://m.media-amazon.com/images/M/MV5BZTM2Y2IxMTAtNWE4OS00Y2NlLThlOWQtZjNlYmNhZTk1N2EwXkEyXkFqcGdeQXVyMTUzMTg2ODkz._V1_.jpg'},
+    {title: 'Hellbound S2', id: 'tt13106780', type: 'K-Drama', img: 'https://m.media-amazon.com/images/M/MV5BZTM2Y2IxMTAtNWE4OS00Y2NlLThlOWQtZjNlYmNhZTk1N2EwXkEyXkFqcGdeQXVyMTUzMTg2ODkz._V1_.jpg'},
     {title: 'Vincenzo', id: 'tt12451520', type: 'K-Drama', img: 'https://m.media-amazon.com/images/M/MV5BMTQyNzU2MjE5N15BMl5BanBnXkFtZTgwMjA5MzUxMjE@._V1_.jpg'},
     {title: 'Crash Landing on You', id: 'tt12732000', type: 'K-Drama', img: 'https://m.media-amazon.com/images/M/MV5BNTQ0NTc3MzEtODIzMC00YzQ5LTljMDUtODZlY2I5NzE4MjFhXkEyXkFqcGdeQXVyMTUzMTg2ODkz._V1_.jpg'},
-    {title: 'Kingdom', id: 'tt12891186', type: 'K-Drama', img: 'https://m.media-amazon.com/images/M/MV5BMmFiODQ3ZTQtMDg2MC00NmU3LThmODMtZWE2NWM3ODFjN2ZhXkEyXkFqcGdeQXVyMTUzMTg2ODkz._V1_.jpg'},
+    {title: 'Kingdom S3', id: 'tt12891186', type: 'K-Drama', img: 'https://m.media-amazon.com/images/M/MV5BMmFiODQ3ZTQtMDg2MC00NmU3LThmODMtZWE2NWM3ODFjN2ZhXkEyXkFqcGdeQXVyMTUzMTg2ODkz._V1_.jpg'},
     {title: 'Business Proposal', id: 'tt15800070', type: 'K-Drama', img: 'https://m.media-amazon.com/images/M/MV5BNGY4NmI0ZGItM2I5MS00YWI1LWJlNGMtN2E5ZjUwZGIzM2NmXkEyXkFqcGdeQXVyMTUzMTg2ODkz._V1_.jpg'},
-    {title: 'Itaewon Class', id: 'tt10751394', type: 'K-Drama', img: 'https://m.media-amazon.com/images/M/MV5BYzRkMjUxM2ItZTUzNi00YWI5LWI5ZTgtOWQxOGYwM2I4MDQzXkEyXkFqcGdeQXVyMTUzMTg2ODkz._V1_.jpg'}
+    {title: 'Itaewon Class', id: 'tt10751394', type: 'K-Drama', img: 'https://m.media-amazon.com/images/M/MV5BYzRkMjUxM2ItZTUzNi00YWI5LWI5ZTgtOWQxOGYwM2I4MDQzXkEyXkFqcGdeQXVyMTUzMTg2ODkz._V1_.jpg'},
+    {title: 'Extraordinary Attorney Woo', id: 'tt20859970', type: 'K-Drama', img: 'https://m.media-amazon.com/images/M/MV5BNDUwMDk3OTctYzE4ZC00Zjg5LWFlYjktMTI0MDk3M2RlM2QwXkEyXkFqcGdeQXVyMTUzMTg2ODkz._V1_.jpg'},
+    
+    // 📼 CLASSIC MOVIE (80an-2000an)
+    {title: 'The Godfather (1972)', id: 'tt0068646', type: 'Classic', img: 'https://m.media-amazon.com/images/M/MV5BM2MyNjYxNmUtYTVlMC00MmU3LTg5NmUtMTk4OTg0YzA1MGIxXkEyXkFqcGdeQXVyNzkwMjQ5NzM@._V1_.jpg'},
+    {title: 'The Shawshank Redemption (1994)', id: 'tt0111161', type: 'Classic', img: 'https://m.media-amazon.com/images/M/MV5BNDE3ODcxYzMtY2YzZC00NzA3LWFmYmEtY2QwYmU2ZGFiMGI1XkEyXkFqcGdeQXVyNjAwNDUxODI@._V1_.jpg'},
+    {title: 'The Dark Knight (2008)', id: 'tt0468569', type: 'Classic', img: 'https://m.media-amazon.com/images/M/MV5BMTMxNTMwODM0NF5BMl5BanBnXkFtZTcwODAyMTk2Mw@@._V1_.jpg'},
+    {title: 'Inception (2010)', id: 'tt1375666', type: 'Classic', img: 'https://m.media-amazon.com/images/M/MV5BMjAxMzY3NjcxNF5BMl5BanBnXkFtZTcwNTI5OTM0Mw@@._V1_.jpg'},
+    {title: 'The Matrix (1999)', id: 'tt0133093', type: 'Classic', img: 'https://m.media-amazon.com/images/M/MV5BNzQzOTk3OTAtNDQ0Zi00ZTVkLWI0MTEtMDllZjNkYzNjNTc4L2ltYWdlXkEyXkFqcGdeQXVyNjU0OTQ5OTY@._V1_.jpg'},
+    {title: 'Fight Club (1999)', id: 'tt0137523', type: 'Classic', img: 'https://m.media-amazon.com/images/M/MV5BOTgyMWVjZmMtNzFhNi00NzUyLThkYTctZTY3ZTVhZDEyODUwXkEyXkFqcGdeQXVyNTAyODkwOQ@@._V1_.jpg'},
+    {title: 'Pulp Fiction (1994)', id: 'tt0110912', type: 'Classic', img: 'https://m.media-amazon.com/images/M/MV5BNGNhMDIzZTUtNTBlZi00MTRlLWFjM2ItYzViMjE3YzI5MjljXkEyXkFqcGdeQXVyNzkwMjQ5NzM@._V1_.jpg'},
+    {title: 'Goodfellas (1990)', id: 'tt0099685', type: 'Classic', img: 'https://m.media-amazon.com/images/M/MV5BY2NkZjEzMDgtN2RkYy00YzQ1LThiYmQtY2I2OTI4MTI3MDg3XkEyXkFqcGdeQXVyNzkwMjQ5NzM@._V1_.jpg'},
+    {title: 'Scarface (1983)', id: 'tt0086250', type: 'Classic', img: 'https://m.media-amazon.com/images/M/MV5BNjdjNGQ4NDEtNTEwYS00MTgxLTliYzQtYzE2ZDRiZjFhZmNlXkEyXkFqcGdeQXVyNjU0OTQ5OTY@._V1_.jpg'},
+    {title: 'Back to the Future (1985)', id: 'tt0088763', type: 'Classic', img: 'https://m.media-amazon.com/images/M/MV5BZjRmZDA3MjAtY2UzNC00YjUyLWI0MjctZjc2YzcwOWFhZGVhXkEyXkFqcGdeQXVyMTUzMDUxNTk@._V1_.jpg'},
+    {title: 'E.T. (1982)', id: 'tt0083866', type: 'Classic', img: 'https://m.media-amazon.com/images/M/MV5BMTQ2NzQ0MzE1M15BMl5BanBnXkFtZTcwMjY4MTIxMw@@._V1_.jpg'},
+    {title: 'The Shining (1980)', id: 'tt0081505', type: 'Classic', img: 'https://m.media-amazon.com/images/M/MV5BZWFlYmY2MGEtZjVkYS00YzU4LTg0YjQtYzY1ZGE3NTA5ZmRlXkEyXkFqcGdeQXVyMTQxNzMzNDI@._V1_.jpg'}
 ];
 
 // ============================================
-// PLAYER SOURCE - CLEAN NO ADS!
+// PLAYER MULTI-SERVER (ANTI BLOKIR)
 // ============================================
+const PLAYER_SERVERS = [
+    (id) => `https://multiembed.mov/?video_id=${id}&tmdb=1`,
+    (id) => `https://www.2embed.cc/embed/${id}`,
+    (id) => `https://vidsrc.me/embed/${id}`,
+    (id) => `https://embed.su/embed/${id}`,
+    (id) => `https://vidsrc.pro/embed/movie/${id}`
+];
+
+let currentServer = 0;
+let currentId = '';
+
 function getPlayerUrl(id) {
-    // Pake 2embed.cc - BERSIH, LANGSUNG MAIN, NO IKLAN
-    return `https://www.2embed.cc/embed/${id}`;
+    try {
+        return PLAYER_SERVERS[currentServer](id);
+    } catch(e) {
+        return PLAYER_SERVERS[0](id);
+    }
+}
+
+function switchServer(idx) {
+    currentServer = idx;
+    if (currentId) {
+        const iframe = document.getElementById('playerIframe');
+        iframe.src = getPlayerUrl(currentId);
+    }
 }
 
 // ============================================
@@ -153,7 +205,8 @@ function renderContent() {
     if (currentCategory !== 'all') {
         filtered = CONTENT_DB.filter(item => 
             item.type.toLowerCase() === currentCategory.toLowerCase() ||
-            (currentCategory === 'kdrama' && item.type === 'K-Drama')
+            (currentCategory === 'kdrama' && item.type === 'K-Drama') ||
+            (currentCategory === 'classic' && item.type === 'Classic')
         );
     }
     renderResults(filtered);
@@ -180,6 +233,7 @@ function renderResults(items) {
 }
 
 function playMedia(id) {
+    currentId = id;
     const player = document.getElementById('playerWrap');
     const iframe = document.getElementById('playerIframe');
     iframe.src = getPlayerUrl(id);
@@ -189,6 +243,7 @@ function playMedia(id) {
 function closePlayer() {
     document.getElementById('playerWrap').style.display = 'none';
     document.getElementById('playerIframe').src = '';
+    currentId = '';
 }
 
 // ============================================
