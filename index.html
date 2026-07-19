@@ -23,6 +23,7 @@ body{background:#0a0a0a;color:#fff;font-family:'Courier New',monospace;padding:1
 .controls button{background:rgba(0,255,65,.1);border:1px solid #00ff41;border-radius:30px;padding:8px 20px;color:#00ff41;font-weight:600;cursor:pointer;font-size:11px;font-family:'Courier New',monospace}
 .controls button:active{transform:scale(.95)}
 .controls button.active{background:#00ff41;color:#000}
+.controls button.full{background:rgba(255,215,0,.1);border-color:#ffd700;color:#ffd700}
 .footer{text-align:center;padding:10px 0 5px;border-top:1px solid rgba(255,255,255,.05);margin-top:10px}
 .footer p{font-size:8px;color:rgba(255,255,255,.2)}
 .footer span{color:#00ff41}
@@ -32,16 +33,16 @@ body{background:#0a0a0a;color:#fff;font-family:'Courier New',monospace;padding:1
 
 <div class="header">
 <h1>👁️ ED<span>WARD</span> <span style="color:#00ff41;font-size:12px;">· ESP</span></h1>
-<p>Edward-esp2026 · ESP Tracker</p>
+<p>Edward-esp2026 · Multi Target Tracker</p>
 </div>
 
 <div class="stats">
-<div><small>TARGET</small><span id="objCount">0</span></div>
+<div><small>TARGETS</small><span id="objCount">0</span></div>
 <div><small>FPS</small><span id="fpsCount">0</span></div>
 <div><small>STATUS</small><span id="statusText" style="font-size:14px;">●</span></div>
 </div>
 
-<div class="camera-wrap">
+<div class="camera-wrap" id="cameraWrap">
 <video id="video" autoplay playsinline muted></video>
 <canvas id="canvas"></canvas>
 </div>
@@ -50,9 +51,10 @@ body{background:#0a0a0a;color:#fff;font-family:'Courier New',monospace;padding:1
 <button id="btnStart" class="active" onclick="startCamera()">📷 Start</button>
 <button id="btnStop" onclick="stopCamera()">⏹ Stop</button>
 <button id="btnReset" onclick="resetTracker()">🔄 Reset</button>
+<button class="full" onclick="toggleFullscreen()">⛶ Full</button>
 </div>
 
-<div class="footer"><p>© 2026 <span>EDWARD</span> · Edward-esp2026 · <span id="modelStatus">ESP Active</span></p></div>
+<div class="footer"><p>© 2026 <span>EDWARD</span> · Edward-esp2026 · <span id="modelStatus">Multi ESP Active</span></p></div>
 
 <script>
 let stream = null;
@@ -69,14 +71,36 @@ const objCount = document.getElementById('objCount');
 const fpsCount = document.getElementById('fpsCount');
 const statusText = document.getElementById('statusText');
 const modelStatus = document.getElementById('modelStatus');
+const cameraWrap = document.getElementById('cameraWrap');
 
 let previousGray = null;
-let target = null;
-let targetHistory = [];
+let targets = [];
 let trackingId = 0;
 const motionThreshold = 20;
-const minMotionPixels = 10;
+const minMotionPixels = 8;
+const targetTimeout = 30; // frame
 
+// Warna untuk tiap target
+const COLORS = ['#ff2d55','#00d4ff','#ffd700','#00ff41','#ff6b35','#7b2ffc','#ff4081','#40c4ff'];
+
+function getColor(id) {
+    return COLORS[id % COLORS.length];
+}
+
+// ============================================
+// FULLSCREEN
+// ============================================
+function toggleFullscreen() {
+    if (!document.fullscreenElement) {
+        cameraWrap.requestFullscreen().catch(() => {});
+    } else {
+        document.exitFullscreen().catch(() => {});
+    }
+}
+
+// ============================================
+// CAMERA
+// ============================================
 async function startCamera() {
     try {
         if (stream) { stream.getTracks().forEach(t => t.stop()); stream = null; }
@@ -84,8 +108,8 @@ async function startCamera() {
         stream = await navigator.mediaDevices.getUserMedia({
             video: {
                 facingMode: 'environment',
-                width: { ideal: 480 },
-                height: { ideal: 360 }
+                width: { ideal: 640 },
+                height: { ideal: 480 }
             },
             audio: false
         });
@@ -104,8 +128,8 @@ async function startCamera() {
         statusText.style.color = '#00ff41';
         document.getElementById('btnStart').classList.remove('active');
 
-        canvas.width = video.videoWidth || 480;
-        canvas.height = video.videoHeight || 360;
+        canvas.width = video.videoWidth || 640;
+        canvas.height = video.videoHeight || 480;
 
         if (!running) {
             running = true;
@@ -125,7 +149,7 @@ function stopCamera() {
     if (animationId) { cancelAnimationFrame(animationId); animationId = null; }
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     objCount.textContent = '0';
-    target = null;
+    targets = [];
     previousGray = null;
     statusText.textContent = '⬤';
     statusText.style.color = '#ff4444';
@@ -133,12 +157,14 @@ function stopCamera() {
 }
 
 function resetTracker() {
-    target = null;
-    targetHistory = [];
+    targets = [];
     previousGray = null;
     objCount.textContent = '0';
 }
 
+// ============================================
+// DETECTION LOOP
+// ============================================
 async function detectLoop() {
     if (!running) return;
     await detect();
@@ -158,6 +184,7 @@ function detect() {
             fpsCount.textContent = fps;
         }
 
+        // Ambil frame
         ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
         const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
         const data = imageData.data;
@@ -167,9 +194,9 @@ function detect() {
             gray[i/4] = 0.299 * data[i] + 0.587 * data[i+1] + 0.114 * data[i+2];
         }
 
-        let foundTarget = false;
-        let minX = canvas.width, maxX = 0, minY = canvas.height, maxY = 0;
-        let motionPixels = 0;
+        // Deteksi motion
+        let motionClusters = [];
+        let foundMotion = false;
 
         if (previousGray) {
             const diff = new Uint8Array(gray.length);
@@ -183,8 +210,15 @@ function detect() {
             const cols = Math.floor(w / gridSize);
             const rows = Math.floor(h / gridSize);
 
+            // Cari cluster motion
+            const visited = new Set();
+            const clusters = [];
+
             for (let r = 0; r < rows; r++) {
                 for (let c = 0; c < cols; c++) {
+                    const key = r * cols + c;
+                    if (visited.has(key)) continue;
+                    
                     let sum = 0, count = 0;
                     for (let dy = 0; dy < gridSize; dy++) {
                         for (let dx = 0; dx < gridSize; dx++) {
@@ -196,39 +230,160 @@ function detect() {
                         }
                     }
                     const avg = count > 0 ? sum / count : 0;
+                    
                     if (avg > motionThreshold) {
-                        const cx = c * gridSize + gridSize/2;
-                        const cy = r * gridSize + gridSize/2;
-                        motionPixels++;
-                        if (cx < minX) minX = cx;
-                        if (cx > maxX) maxX = cx;
-                        if (cy < minY) minY = cy;
-                        if (cy > maxY) maxY = cy;
-                        foundTarget = true;
+                        // Flood fill cluster
+                        const cluster = [];
+                        const queue = [{r, c}];
+                        visited.add(key);
+                        let minX = c * gridSize, maxX = c * gridSize + gridSize;
+                        let minY = r * gridSize, maxY = r * gridSize + gridSize;
+                        let totalPixels = 0;
+
+                        while (queue.length > 0) {
+                            const curr = queue.shift();
+                            const ck = curr.r * cols + curr.c;
+                            if (visited.has(ck)) continue;
+                            visited.add(ck);
+                            
+                            cluster.push(curr);
+                            totalPixels++;
+                            
+                            minX = Math.min(minX, curr.c * gridSize);
+                            maxX = Math.max(maxX, curr.c * gridSize + gridSize);
+                            minY = Math.min(minY, curr.r * gridSize);
+                            maxY = Math.max(maxY, curr.r * gridSize + gridSize);
+
+                            // Cek tetangga
+                            const neighbors = [
+                                {r: curr.r-1, c: curr.c}, {r: curr.r+1, c: curr.c},
+                                {r: curr.r, c: curr.c-1}, {r: curr.r, c: curr.c+1}
+                            ];
+                            for (let n of neighbors) {
+                                if (n.r >= 0 && n.r < rows && n.c >= 0 && n.c < cols) {
+                                    const nk = n.r * cols + n.c;
+                                    if (visited.has(nk)) continue;
+                                    let nSum = 0, nCount = 0;
+                                    for (let dy = 0; dy < gridSize; dy++) {
+                                        for (let dx = 0; dx < gridSize; dx++) {
+                                            const idx = (n.r * gridSize + dy) * w + (n.c * gridSize + dx);
+                                            if (idx < diff.length) {
+                                                nSum += diff[idx];
+                                                nCount++;
+                                            }
+                                        }
+                                    }
+                                    const nAvg = nCount > 0 ? nSum / nCount : 0;
+                                    if (nAvg > motionThreshold) {
+                                        queue.push(n);
+                                    }
+                                }
+                            }
+                        }
+
+                        if (totalPixels > minMotionPixels) {
+                            clusters.push({
+                                x: minX, y: minY, 
+                                w: maxX - minX, 
+                                h: maxY - minY,
+                                pixels: totalPixels,
+                                cx: (minX + maxX) / 2,
+                                cy: (minY + maxY) / 2
+                            });
+                        }
                     }
                 }
             }
+
+            // Gabungkan cluster yang berdekatan
+            const merged = [];
+            for (let c of clusters) {
+                let found = false;
+                for (let m of merged) {
+                    const dx = Math.abs(c.cx - m.cx);
+                    const dy = Math.abs(c.cy - m.cy);
+                    if (dx < 50 && dy < 50) {
+                        m.x = Math.min(m.x, c.x);
+                        m.y = Math.min(m.y, c.y);
+                        m.w = Math.max(m.x + m.w, c.x + c.w) - m.x;
+                        m.h = Math.max(m.y + m.h, c.y + c.h) - m.y;
+                        m.pixels += c.pixels;
+                        m.cx = m.x + m.w/2;
+                        m.cy = m.y + m.h/2;
+                        found = true;
+                        break;
+                    }
+                }
+                if (!found) merged.push({...c});
+            }
+
+            motionClusters = merged;
+            if (motionClusters.length > 0) foundMotion = true;
         }
 
         previousGray = gray;
 
-        if (foundTarget && motionPixels > minMotionPixels) {
-            const padding = 25;
-            let x = Math.max(0, minX - padding);
-            let y = Math.max(0, minY - padding);
-            let w = Math.min(canvas.width - x, maxX - minX + padding * 2);
-            let h = Math.min(canvas.height - y, maxY - minY + padding * 2);
+        // Update targets
+        const newTargets = [];
+        const usedIds = new Set();
 
-            if (!target) {
-                target = {x, y, w, h, id: ++trackingId};
+        for (let cluster of motionClusters) {
+            const padding = Math.max(15, Math.min(35, 35 - cluster.pixels / 30));
+            let x = Math.max(0, cluster.x - padding);
+            let y = Math.max(0, cluster.y - padding);
+            let w = Math.min(canvas.width - x, cluster.w + padding * 2);
+            let h = Math.min(canvas.height - y, cluster.h + padding * 2);
+
+            // Cari target yang cocok (berdasarkan jarak)
+            let matched = null;
+            let minDist = Infinity;
+            const cx = x + w/2;
+            const cy = y + h/2;
+
+            for (let t of targets) {
+                if (usedIds.has(t.id)) continue;
+                const dist = Math.hypot(t.cx - cx, t.cy - cy);
+                if (dist < 80 && dist < minDist) {
+                    minDist = dist;
+                    matched = t;
+                }
+            }
+
+            if (matched) {
+                const smooth = 0.7;
+                matched.x = matched.x * smooth + x * (1 - smooth);
+                matched.y = matched.y * smooth + y * (1 - smooth);
+                matched.w = matched.w * smooth + w * (1 - smooth);
+                matched.h = matched.h * smooth + h * (1 - smooth);
+                matched.cx = matched.x + matched.w/2;
+                matched.cy = matched.y + matched.h/2;
+                matched.frameCount = 0;
+                usedIds.add(matched.id);
+                newTargets.push(matched);
             } else {
-                const smooth = 0.65;
-                target.x = target.x * smooth + x * (1 - smooth);
-                target.y = target.y * smooth + y * (1 - smooth);
-                target.w = target.w * smooth + w * (1 - smooth);
-                target.h = target.h * smooth + h * (1 - smooth);
+                // Target baru
+                const newTarget = {
+                    id: ++trackingId,
+                    x, y, w, h,
+                    cx: x + w/2,
+                    cy: y + h/2,
+                    frameCount: 0
+                };
+                newTargets.push(newTarget);
             }
         }
+
+        // Hapus target yang hilang
+        for (let t of targets) {
+            if (!usedIds.has(t.id)) {
+                t.frameCount++;
+                if (t.frameCount < targetTimeout) {
+                    newTargets.push(t);
+                }
+            }
+        }
+
+        targets = newTargets;
 
         // ============================================
         // GAMBAR ESP
@@ -240,40 +395,40 @@ function detect() {
         ctx.drawImage(video, -canvas.width, 0, canvas.width, canvas.height);
         ctx.restore();
 
-        const color = '#ff2d55';
-        objCount.textContent = target ? 1 : 0;
+        objCount.textContent = targets.length;
 
-        if (target) {
-            const x = target.x;
-            const y = target.y;
-            const w = target.w;
-            const h = target.h;
+        // Gambar setiap target
+        targets.forEach((t, idx) => {
+            const color = getColor(t.id);
+            const x = t.x;
+            const y = t.y;
+            const w = t.w;
+            const h = t.h;
+            const alpha = Math.min(1, 1 - t.frameCount / targetTimeout);
 
-            // ===== TALI/GARIS DARI ATAS KOTAK =====
+            ctx.globalAlpha = alpha;
+
+            // Tali/garis ESP
             ctx.strokeStyle = color;
-            ctx.globalAlpha = 0.35;
+            ctx.globalAlpha = alpha * 0.3;
             ctx.lineWidth = 1.5;
             ctx.setLineDash([6, 8]);
             
-            // Garis vertikal dari atas kotak ke atas layar
             ctx.beginPath();
             ctx.moveTo(x + w/2, y);
             ctx.lineTo(x + w/2, 0);
             ctx.stroke();
             
-            // Garis vertikal dari bawah kotak ke bawah layar
             ctx.beginPath();
             ctx.moveTo(x + w/2, y + h);
             ctx.lineTo(x + w/2, canvas.height);
             ctx.stroke();
             
-            // Garis horizontal dari kiri kotak ke kiri layar
             ctx.beginPath();
             ctx.moveTo(x, y + h/2);
             ctx.lineTo(0, y + h/2);
             ctx.stroke();
             
-            // Garis horizontal dari kanan kotak ke kanan layar
             ctx.beginPath();
             ctx.moveTo(x + w, y + h/2);
             ctx.lineTo(canvas.width, y + h/2);
@@ -282,21 +437,21 @@ function detect() {
             ctx.setLineDash([]);
             ctx.globalAlpha = 1;
 
-            // ===== BOUNDING BOX =====
+            // Bounding Box
             ctx.shadowColor = color;
-            ctx.shadowBlur = 30;
+            ctx.shadowBlur = 20;
             ctx.strokeStyle = color;
-            ctx.lineWidth = 2.5;
+            ctx.lineWidth = 2;
             ctx.strokeRect(x, y, w, h);
             ctx.shadowBlur = 0;
 
-            // ===== CENTER CROSS =====
+            // Center cross
             ctx.strokeStyle = color;
-            ctx.globalAlpha = 0.5;
+            ctx.globalAlpha = alpha * 0.5;
             ctx.lineWidth = 1;
             const cx = x + w/2;
             const cy = y + h/2;
-            const size = 12;
+            const size = 10;
             ctx.beginPath();
             ctx.moveTo(cx - size, cy);
             ctx.lineTo(cx + size, cy);
@@ -305,26 +460,43 @@ function detect() {
             ctx.stroke();
             ctx.globalAlpha = 1;
 
-            // ===== JARAK =====
-            const dist = Math.round(50 - (w * h) / 1500);
+            // Jarak (berdasarkan ukuran)
+            const dist = Math.round(50 - (w * h) / 2000);
             ctx.fillStyle = color;
-            ctx.globalAlpha = 0.6;
+            ctx.globalAlpha = alpha * 0.6;
             ctx.font = '10px Courier New';
             ctx.textAlign = 'right';
             ctx.textBaseline = 'top';
             ctx.fillText(Math.max(3, dist) + 'm', x + w - 6, y + 6);
             ctx.globalAlpha = 1;
 
-        } else {
+            // Label ID
+            ctx.fillStyle = color;
+            ctx.globalAlpha = alpha * 0.4;
+            ctx.font = '9px Courier New';
+            ctx.textAlign = 'left';
+            ctx.textBaseline = 'bottom';
+            ctx.fillText('#' + t.id, x + 6, y + h + 16);
+            ctx.globalAlpha = 1;
+
+            ctx.globalAlpha = 1;
+        });
+
+        if (targets.length === 0) {
             ctx.fillStyle = 'rgba(255,255,255,0.15)';
             ctx.font = '13px Courier New';
             ctx.textAlign = 'center';
             ctx.fillText('Gerakkan target di depan kamera', canvas.width/2, canvas.height/2);
         }
 
-    } catch(e) {}
+    } catch(e) {
+        // silent
+    }
 }
 
+// ============================================
+// INIT
+// ============================================
 setTimeout(() => {
     startCamera();
 }, 500);
