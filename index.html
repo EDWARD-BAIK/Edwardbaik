@@ -124,18 +124,20 @@ body{background:#141414;color:#fff;font-family:'Segoe UI',sans-serif;padding:0;m
 </div>
 
 <script>
-// ===== PROXY + API =====
+// ============================================
+// PROXY PALING GACOR
+// ============================================
 const PROXIES = [
     'https://api.allorigins.win/raw?url=',
-    'https://corsproxy.io/?',
-    'https://thingproxy.freeboard.io/fetch/'
+    'https://corsproxy.io/?'
 ];
-let proxyIndex = 0;
 
 const TMDB_KEY = 'e5b9a63f3b5d8450a9d923a2b72a8e9a';
 const TMDB_URL = 'https://api.themoviedb.org/3';
 
-// ===== SERVER PLAYER =====
+// ============================================
+// SERVER PLAYER
+// ============================================
 const SERVERS = [
     id => `https://vidsrc.in/embed/movie/${id}`,
     id => `https://vidsrc.me/embed/${id}`
@@ -168,24 +170,26 @@ function renderServers(){
     ).join('');
 }
 
-// ===== FETCH DENGAN MULTI PROXY =====
+// ============================================
+// FETCH TMDB PAKE PROXY
+// ============================================
 async function fetchTMDB(url){
     for(let i = 0; i < PROXIES.length; i++){
         try {
-            const proxy = PROXIES[(proxyIndex + i) % PROXIES.length];
-            const response = await fetch(proxy + encodeURIComponent(url));
+            const response = await fetch(PROXIES[i] + encodeURIComponent(url));
             if(response.ok){
-                proxyIndex = (proxyIndex + i) % PROXIES.length;
                 return await response.json();
             }
         } catch(e) {
-            continue;
+            console.warn('Proxy ' + i + ' error:', e);
         }
     }
     throw new Error('Semua proxy gagal');
 }
 
-// ===== LOAD TRENDING =====
+// ============================================
+// LOAD TRENDING
+// ============================================
 async function loadTrending(){
     const grid = document.getElementById('grid');
     grid.innerHTML = '<div class="loading">Loading...</div>';
@@ -202,14 +206,13 @@ async function loadTrending(){
             grid.innerHTML = '<div class="loading">😞 Gagal memuat data</div>';
         }
     } catch(e){
-        grid.innerHTML = '<div class="loading">⚠️ Error: ' + e.message + '</div>';
-        // Fallback hero
-        heroData = {title:'EDWARD', id:'tt2560140', type:'Movie', overview:'Nonton semua film & anime gratis.'};
-        updateHero(heroData);
+        grid.innerHTML = '<div class="loading">⚠️ Proxy error: ' + e.message + '</div>';
     }
 }
 
-// ===== SEARCH =====
+// ============================================
+// SEARCH
+// ============================================
 async function search(){
     const q = document.getElementById('search').value.trim();
     if(!q) return loadTrending();
@@ -237,11 +240,13 @@ async function search(){
             grid.innerHTML = '<div class="loading">😞 Tidak ada hasil</div>';
         }
     } catch(e){
-        grid.innerHTML = '<div class="loading">⚠️ Error: ' + e.message + '</div>';
+        grid.innerHTML = '<div class="loading">⚠️ Proxy error: ' + e.message + '</div>';
     }
 }
 
-// ===== RENDER =====
+// ============================================
+// RENDER
+// ============================================
 function renderResults(items){
     const grid = document.getElementById('grid');
     if(!items || items.length === 0){
@@ -269,7 +274,9 @@ function renderResults(items){
     }).join('');
 }
 
-// ===== UPDATE HERO =====
+// ============================================
+// UPDATE HERO
+// ============================================
 function updateHero(item){
     if(!item) return;
     const title = item.title || item.name || 'EDWARD';
@@ -293,7 +300,9 @@ function playHero(){
     }
 }
 
-// ===== SET CATEGORY =====
+// ============================================
+// SET CATEGORY
+// ============================================
 function setCat(c){
     curCat = c;
     document.querySelectorAll('#cat button').forEach(b => b.classList.remove('active'));
@@ -303,7 +312,9 @@ function setCat(c){
     else loadTrending();
 }
 
-// ===== PLAY =====
+// ============================================
+// PLAY
+// ============================================
 function play(id, title, type){
     curId = id;
     document.getElementById('ptitle').textContent = '🎬 ' + title;
@@ -320,14 +331,18 @@ function closePlayer(){
     document.body.style.overflow = 'auto';
 }
 
-// ===== SCROLL =====
+// ============================================
+// SCROLL
+// ============================================
 window.addEventListener('scroll', function(){
     const navbar = document.getElementById('navbar');
     if(window.scrollY > 50) navbar.classList.add('scrolled');
     else navbar.classList.remove('scrolled');
 });
 
-// ===== INIT =====
+// ============================================
+// INIT
+// ============================================
 window.onload = function(){ 
     loadTrending(); 
     renderServers();
