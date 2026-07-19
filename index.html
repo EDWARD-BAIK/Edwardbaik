@@ -30,7 +30,7 @@ body{background:#0a0e17;color:#fff;font-family:'Segoe UI',sans-serif;padding:15p
 .card .info p{font-size:10px;color:rgba(255,255,255,.5)}
 .card-wrap{position:relative}
 .player-wrap{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.97);z-index:9999;flex-direction:column;align-items:center;justify-content:center;padding:20px}
-.player-wrap iframe{width:95%;max-width:1000px;height:70vh;border-radius:20px;border:2px solid var(--p)}
+.player-wrap iframe{width:95%;max-width:1000px;height:70vh;border-radius:20px;border:2px solid var(--p);background:#000}
 .player-wrap .close-btn{position:absolute;top:20px;right:20px;background:var(--p);border:0;color:#fff;width:50px;height:50px;border-radius:50%;font-size:24px;cursor:pointer;font-weight:700}
 .player-wrap .close-btn:hover{transform:scale(1.1)}
 .loading{text-align:center;padding:40px;color:rgba(255,255,255,.3);font-size:14px}
@@ -64,7 +64,7 @@ body{background:#0a0e17;color:#fff;font-family:'Segoe UI',sans-serif;padding:15p
 
 <script>
 // ============================================
-// DATABASE KONTEN LENGKAP (NO API, FULL OFFLINE)
+// DATABASE KONTEN LENGKAP
 // ============================================
 const CONTENT_DB = [
     // ===== ANIME =====
@@ -102,9 +102,7 @@ const CONTENT_DB = [
     {title: 'Eternals', id: 'tt9032400', type: 'Movie', img: 'https://m.media-amazon.com/images/M/MV5BZjQzMWM5NmMtODA2Yy00NjU2LWE2NTYtZjU1NzM3MGIyZGJjXkEyXkFqcGdeQXVyODE5NzE3OTE@._V1_.jpg'},
     {title: 'Bullet Train', id: 'tt12593682', type: 'Movie', img: 'https://m.media-amazon.com/images/M/MV5BMDU2ZmM2OTYtNzIxYy00NjU5LWFlNTAtM2UwY2I5MjUyMzU5XkEyXkFqcGdeQXVyMTUzMTg2ODkz._V1_.jpg'},
     {title: 'Everything Everywhere', id: 'tt6710474', type: 'Movie', img: 'https://m.media-amazon.com/images/M/MV5BYTdiOTM5MWMtYjRjZC00YjdmLTk5MTYtZDA5YzI5N2MxNjBjXkEyXkFqcGdeQXVyMTA1OTYzOTUx._V1_.jpg'},
-    {title: 'The Flash', id: 'tt0439572', type: 'Movie', img: 'https://m.media-amazon.com/images/M/MV5BOTk2NzUyOTctZDdlMS00MDJlLTgzNTEtNzQzYjFhNjA0YjJkXkEyXkFqcGdeQXVyMjkwOTAyMDU@._V1_.jpg'},
     {title: 'Oppenheimer', id: 'tt15398776', type: 'Movie', img: 'https://m.media-amazon.com/images/M/MV5BMDBmYTZjNjUtN2M1MS00MTQ2LTk2ODgtNzc2M2QyZGE5NTVjXkEyXkFqcGdeQXVyNzAwMjU2MTY@._V1_.jpg'},
-    {title: 'The Meg 2', id: 'tt9224104', type: 'Movie', img: 'https://m.media-amazon.com/images/M/MV5BNjQ3NWM3ZjAtMTQ2NC00MjU4LTg2MzUtNzQ4MGM5NjI5N2RiXkEyXkFqcGdeQXVyMTUzMTg2ODkz._V1_.jpg'},
     
     // ===== K-DRAMA =====
     {title: 'Squid Game', id: 'tt10919420', type: 'K-Drama', img: 'https://m.media-amazon.com/images/M/MV5BZjAyZmE4OTAtYmVkZi00NThjLWIxYzgtNmU5NTViNzhhMmQxXkEyXkFqcGdeQXVyMTEyMjM2NDc2._V1_.jpg'},
@@ -116,15 +114,15 @@ const CONTENT_DB = [
     {title: 'Crash Landing on You', id: 'tt12732000', type: 'K-Drama', img: 'https://m.media-amazon.com/images/M/MV5BNTQ0NTc3MzEtODIzMC00YzQ5LTljMDUtODZlY2I5NzE4MjFhXkEyXkFqcGdeQXVyMTUzMTg2ODkz._V1_.jpg'},
     {title: 'Kingdom', id: 'tt12891186', type: 'K-Drama', img: 'https://m.media-amazon.com/images/M/MV5BMmFiODQ3ZTQtMDg2MC00NmU3LThmODMtZWE2NWM3ODFjN2ZhXkEyXkFqcGdeQXVyMTUzMTg2ODkz._V1_.jpg'},
     {title: 'Business Proposal', id: 'tt15800070', type: 'K-Drama', img: 'https://m.media-amazon.com/images/M/MV5BNGY4NmI0ZGItM2I5MS00YWI1LWJlNGMtN2E5ZjUwZGIzM2NmXkEyXkFqcGdeQXVyMTUzMTg2ODkz._V1_.jpg'},
-    {title: 'Itaewon Class', id: 'tt10751394', type: 'K-Drama', img: 'https://m.media-amazon.com/images/M/MV5BYzRkMjUxM2ItZTUzNi00YWI5LWI5ZTgtOWQxOGYwM2I4MDQzXkEyXkFqcGdeQXVyMTUzMTg2ODkz._V1_.jpg'},
-    {title: 'Extraordinary Attorney Woo', id: 'tt20859970', type: 'K-Drama', img: 'https://m.media-amazon.com/images/M/MV5BNDUwMDk3OTctYzE4ZC00Zjg5LWFlYjktMTI0MDk3M2RlM2QwXkEyXkFqcGdeQXVyMTUzMTg2ODkz._V1_.jpg'}
+    {title: 'Itaewon Class', id: 'tt10751394', type: 'K-Drama', img: 'https://m.media-amazon.com/images/M/MV5BYzRkMjUxM2ItZTUzNi00YWI5LWI5ZTgtOWQxOGYwM2I4MDQzXkEyXkFqcGdeQXVyMTUzMTg2ODkz._V1_.jpg'}
 ];
 
 // ============================================
-// PLAYER SOURCE (NO GIMMICK)
+// PLAYER SOURCE - CLEAN NO ADS!
 // ============================================
 function getPlayerUrl(id) {
-    return `https://vidsrc.to/embed/movie/${id}`;
+    // Pake 2embed.cc - BERSIH, LANGSUNG MAIN, NO IKLAN
+    return `https://www.2embed.cc/embed/${id}`;
 }
 
 // ============================================
@@ -143,7 +141,6 @@ function setCategory(cat) {
 function searchMedia() {
     const q = document.getElementById('searchInput').value.trim().toLowerCase();
     if (!q) return renderContent();
-    
     const filtered = CONTENT_DB.filter(item => 
         item.title.toLowerCase().includes(q) || 
         item.type.toLowerCase().includes(q)
@@ -168,7 +165,6 @@ function renderResults(items) {
         grid.innerHTML = '<div class="loading">😞 Tidak ada hasil</div>';
         return;
     }
-    
     grid.innerHTML = items.map(item => `
         <div class="card-wrap">
             <div class="card" onclick="${item.id ? `playMedia('${item.id}')` : 'alert(\'ID tidak valid\')'}">
@@ -196,7 +192,7 @@ function closePlayer() {
 }
 
 // ============================================
-// INIT & EVENT
+// INIT
 // ============================================
 window.onload = () => {
     renderContent();
