@@ -107,7 +107,7 @@ body{background:#141414;color:#fff;font-family:'Segoe UI',sans-serif;padding:0;m
 
 <div id="grid" class="grid"><div class="loading">🔥 Memuat daftar film...</div></div>
 
-<div class="footer"><p>© 2026 <span>EDWARD</span> • 100% GRATIS • Powered by TMDB</p></div>
+<div class="footer"><p>© 2026 <span>EDWARD</span> • 100% GRATIS</p></div>
 
 <div class="player-wrap" id="player">
 <div class="top">
@@ -124,9 +124,12 @@ body{background:#141414;color:#fff;font-family:'Segoe UI',sans-serif;padding:0;m
 </div>
 
 <script>
+// ===== API PROXY (BIAR BISA AKSES TMDB) =====
+const PROXY = 'https://corsproxy.io/?';
 const TMDB_KEY = 'e5b9a63f3b5d8450a9d923a2b72a8e9a';
 const TMDB_URL = 'https://api.themoviedb.org/3';
 
+// ===== SERVER PLAYER =====
 const SERVERS = [
     id => `https://vidsrc.in/embed/movie/${id}`,
     id => `https://vidsrc.me/embed/${id}`
@@ -159,92 +162,37 @@ function renderServers(){
     ).join('');
 }
 
-// ===== FALLBACK MANUAL (BUAT TETEP KELIHATAN) =====
-const FALLBACK_MOVIES = [
-{title:'Attack on Titan',id:'tt2560140',type:'Anime',img:'https://m.media-amazon.com/images/M/MV5BNDFjYTI4MjctNjExMS00MjBjLWJhMzYtYzUyMTE4MzQ4NjgxXkEyXkFqcGc@._V1_.jpg'},
-{title:'Demon Slayer',id:'tt9335498',type:'Anime',img:'https://m.media-amazon.com/images/M/MV5BZjZjNzI5MDctY2Y4YS00NmM4LTljMmItZTFkOTExNGI3ODRhXkEyXkFqcGc@._V1_.jpg'},
-{title:'One Piece',id:'tt0388629',type:'Anime',img:'https://m.media-amazon.com/images/M/MV5BODcwNWE3OTMtMDc3MS00NDFjLWE3OTctNDU3NjI3NjBmMWQyXkEyXkFqcGc@._V1_.jpg'},
-{title:'Jujutsu Kaisen',id:'tt12343534',type:'Anime',img:'https://m.media-amazon.com/images/M/MV5BZDg4YjRlMTAtNzY1Ny00NzA5LWEyNDYtZjk3ZThiYzA0ZDkzXkEyXkFqcGc@._V1_.jpg'},
-{title:'Naruto',id:'tt0988824',type:'Anime',img:'https://m.media-amazon.com/images/M/MV5BZmQ5NGFiNWEtMmMyMC00MDdiLTg4YjktOGY5Yzc2MDUxMTE1XkEyXkFqcGc@._V1_.jpg'},
-{title:'Bleach',id:'tt0434665',type:'Anime',img:'https://m.media-amazon.com/images/M/MV5BZjE0YjVjODQtZGY2NS00MDcyLThhMDAtZGQwMTZiOWNmNjRiXkEyXkFqcGc@._V1_.jpg'},
-{title:'Final Destination 1',id:'tt0195714',type:'Movie',img:'https://m.media-amazon.com/images/M/MV5BMTc5OTU2OTM0M15BMl5BanBnXkFtZTYwMTM1ODg5._V1_.jpg'},
-{title:'Final Destination 2',id:'tt0309593',type:'Movie',img:'https://m.media-amazon.com/images/M/MV5BMTc5OTU2OTM0M15BMl5BanBnXkFtZTYwMTM1ODg5._V1_.jpg'},
-{title:'Final Destination 3',id:'tt0414982',type:'Movie',img:'https://m.media-amazon.com/images/M/MV5BMTc5OTU2OTM0M15BMl5BanBnXkFtZTYwMTM1ODg5._V1_.jpg'},
-{title:'Final Destination 4',id:'tt1144884',type:'Movie',img:'https://m.media-amazon.com/images/M/MV5BMTc5OTU2OTM0M15BMl5BanBnXkFtZTYwMTM1ODg5._V1_.jpg'},
-{title:'Final Destination 5',id:'tt1622979',type:'Movie',img:'https://m.media-amazon.com/images/M/MV5BMTc5OTU2OTM0M15BMl5BanBnXkFtZTYwMTM1ODg5._V1_.jpg'},
-{title:'Deadpool 3',id:'tt6263850',type:'Movie',img:'https://m.media-amazon.com/images/M/MV5BZmU0M2Y1OGUtZjIxNi00ZjBkLTg1MjgtOWIyNThiZWIwYjRiXkEyXkFqcGc@._V1_.jpg'},
-{title:'The Godfather',id:'tt0068646',type:'Classic',img:'https://m.media-amazon.com/images/M/MV5BM2MyNjYxNmUtYTVlMC00MmU3LTg5NmUtMTk4OTg0YzA1MGIxXkEyXkFqcGc@._V1_.jpg'},
-{title:'The Dark Knight',id:'tt0468569',type:'Classic',img:'https://m.media-amazon.com/images/M/MV5BMTMxNTMwODM0NF5BMl5BanBnXkFtZTcwODAyMTk2Mw@@._V1_.jpg'}
-];
+// ===== FETCH DENGAN PROXY =====
+async function fetchTMDB(url){
+    try {
+        const response = await fetch(PROXY + encodeURIComponent(url));
+        return await response.json();
+    } catch(e){
+        throw new Error('Gagal fetch data');
+    }
+}
 
-// ===== LOAD DATA =====
+// ===== LOAD TRENDING =====
 async function loadTrending(){
     const grid = document.getElementById('grid');
     grid.innerHTML = '<div class="loading">Loading...</div>';
     
     try {
         const url = `${TMDB_URL}/trending/all/week?api_key=${TMDB_KEY}`;
-        const resp = await fetch(url);
-        const data = await resp.json();
+        const data = await fetchTMDB(url);
         
         if(data.results && data.results.length > 0){
             renderResults(data.results);
             updateHero(data.results[0]);
         } else {
-            renderFallback();
+            grid.innerHTML = '<div class="loading">😞 Gagal memuat data</div>';
         }
     } catch(e){
-        renderFallback();
+        grid.innerHTML = '<div class="loading">⚠️ Error: ' + e.message + '</div>';
     }
 }
 
-function renderFallback(){
-    renderResults(FALLBACK_MOVIES);
-    updateHero(FALLBACK_MOVIES[0]);
-}
-
-function updateHero(item){
-    const title = item.title || item.name || 'EDWARD';
-    const desc = item.overview || 'Nonton semua film & anime gratis. Tanpa batas. Tanpa iklan.';
-    const poster = item.backdrop_path ? `https://image.tmdb.org/t/p/original${item.backdrop_path}` : 
-                   item.img || 'https://image.tmdb.org/t/p/original/8Bd0r4A2M5vLxGfN6vF1jU9yWpI.jpg';
-    const type = item.media_type || item.type || 'Movie';
-    const id = item.id || 'tt2560140';
-    
-    document.getElementById('heroTitle').textContent = title;
-    document.getElementById('heroDesc').textContent = desc.substring(0, 150) + '...';
-    document.getElementById('heroBadge').textContent = '🔥 ' + type.toUpperCase();
-    document.getElementById('hero').style.background = `linear-gradient(135deg, #0a0a0a 50%, transparent), url(${poster}) center/cover no-repeat`;
-    document.getElementById('heroBtn').setAttribute('onclick', `play('${id}','${title.replace(/'/g,"\\'")}','${type}')`);
-}
-
-function renderResults(items){
-    const grid = document.getElementById('grid');
-    if(!items || items.length === 0){
-        grid.innerHTML = '<div class="loading">😞 Tidak ada hasil</div>';
-        return;
-    }
-    
-    grid.innerHTML = items.map(i => {
-        const title = i.title || i.name || 'Unknown';
-        const poster = i.poster_path ? `https://image.tmdb.org/t/p/w500${i.poster_path}` : 
-                       i.img || 'https://via.placeholder.com/200x300/1a2335/fff?text=' + encodeURIComponent(title);
-        const type = i.media_type || i.type || 'Movie';
-        const id = i.id || '';
-        const year = i.release_date || i.first_air_date || '';
-        const yearStr = year ? year.substring(0,4) : '';
-        
-        return `<div class="card" onclick="play('${id}','${title.replace(/'/g,"\\'")}','${type}')">
-            <div class="poster">
-                <img src="${poster}" onerror="this.src='https://via.placeholder.com/200x300/1a2335/fff?text=${encodeURIComponent(title)}'">
-                <span>${title}</span>
-                <div class="label">${type} ${yearStr ? '• '+yearStr : ''}</div>
-            </div>
-            <div class="info"><h4>${title}</h4><p>${type}</p></div>
-        </div>`;
-    }).join('');
-}
-
+// ===== SEARCH =====
 async function search(){
     const q = document.getElementById('search').value.trim();
     if(!q) return loadTrending();
@@ -254,8 +202,7 @@ async function search(){
     
     try {
         const url = `${TMDB_URL}/search/multi?api_key=${TMDB_KEY}&query=${encodeURIComponent(q)}`;
-        const resp = await fetch(url);
-        const data = await resp.json();
+        const data = await fetchTMDB(url);
         
         if(data.results && data.results.length > 0){
             let results = data.results.filter(i => i.media_type !== 'person');
@@ -266,42 +213,60 @@ async function search(){
                 renderResults(results);
                 updateHero(results[0]);
             } else {
-                // Cari di fallback
-                const f = FALLBACK_MOVIES.filter(i => 
-                    i.title.toLowerCase().includes(q.toLowerCase())
-                );
-                if(f.length > 0){
-                    renderResults(f);
-                    updateHero(f[0]);
-                } else {
-                    grid.innerHTML = '<div class="loading">😞 Tidak ada hasil</div>';
-                }
-            }
-        } else {
-            // Cari di fallback
-            const f = FALLBACK_MOVIES.filter(i => 
-                i.title.toLowerCase().includes(q.toLowerCase())
-            );
-            if(f.length > 0){
-                renderResults(f);
-                updateHero(f[0]);
-            } else {
                 grid.innerHTML = '<div class="loading">😞 Tidak ada hasil</div>';
             }
+        } else {
+            grid.innerHTML = '<div class="loading">😞 Tidak ada hasil</div>';
         }
     } catch(e){
-        const f = FALLBACK_MOVIES.filter(i => 
-            i.title.toLowerCase().includes(q.toLowerCase())
-        );
-        if(f.length > 0){
-            renderResults(f);
-            updateHero(f[0]);
-        } else {
-            grid.innerHTML = '<div class="loading">⚠️ Error: ' + e.message + '</div>';
-        }
+        grid.innerHTML = '<div class="loading">⚠️ Error: ' + e.message + '</div>';
     }
 }
 
+// ===== RENDER =====
+function renderResults(items){
+    const grid = document.getElementById('grid');
+    if(!items || items.length === 0){
+        grid.innerHTML = '<div class="loading">😞 Tidak ada hasil</div>';
+        return;
+    }
+    
+    grid.innerHTML = items.map(i => {
+        const title = i.title || i.name || 'Unknown';
+        const poster = i.poster_path ? `https://image.tmdb.org/t/p/w500${i.poster_path}` : null;
+        const type = i.media_type || 'Movie';
+        const id = i.id || '';
+        const year = i.release_date || i.first_air_date || '';
+        const yearStr = year ? year.substring(0,4) : '';
+        const img = poster || 'https://via.placeholder.com/200x300/1a2335/fff?text=' + encodeURIComponent(title);
+        
+        return `<div class="card" onclick="play('${id}','${title.replace(/'/g,"\\'")}','${type}')">
+            <div class="poster">
+                <img src="${img}" onerror="this.src='https://via.placeholder.com/200x300/1a2335/fff?text=${encodeURIComponent(title)}'">
+                <span>${title}</span>
+                <div class="label">${type} ${yearStr ? '• '+yearStr : ''}</div>
+            </div>
+            <div class="info"><h4>${title}</h4><p>${type}</p></div>
+        </div>`;
+    }).join('');
+}
+
+// ===== UPDATE HERO =====
+function updateHero(item){
+    const title = item.title || item.name || 'EDWARD';
+    const desc = item.overview || 'Nonton semua film & anime gratis. Tanpa batas. Tanpa iklan.';
+    const poster = item.backdrop_path ? `https://image.tmdb.org/t/p/original${item.backdrop_path}` : 'https://image.tmdb.org/t/p/original/8Bd0r4A2M5vLxGfN6vF1jU9yWpI.jpg';
+    const type = item.media_type || 'Movie';
+    const id = item.id || 'tt2560140';
+    
+    document.getElementById('heroTitle').textContent = title;
+    document.getElementById('heroDesc').textContent = desc.substring(0, 150) + '...';
+    document.getElementById('heroBadge').textContent = '🔥 ' + type.toUpperCase();
+    document.getElementById('hero').style.background = `linear-gradient(135deg, #0a0a0a 50%, transparent), url(${poster}) center/cover no-repeat`;
+    document.getElementById('heroBtn').setAttribute('onclick', `play('${id}','${title.replace(/'/g,"\\'")}','${type}')`);
+}
+
+// ===== SET CATEGORY =====
 function setCat(c){
     curCat = c;
     document.querySelectorAll('#cat button').forEach(b => b.classList.remove('active'));
@@ -311,6 +276,7 @@ function setCat(c){
     else loadTrending();
 }
 
+// ===== PLAY =====
 function play(id, title, type){
     curId = id;
     currentTitle = title;
@@ -328,12 +294,14 @@ function closePlayer(){
     document.body.style.overflow = 'auto';
 }
 
+// ===== SCROLL =====
 window.addEventListener('scroll', function(){
     const navbar = document.getElementById('navbar');
     if(window.scrollY > 50) navbar.classList.add('scrolled');
     else navbar.classList.remove('scrolled');
 });
 
+// ===== INIT =====
 window.onload = function(){ 
     loadTrending(); 
     renderServers();
