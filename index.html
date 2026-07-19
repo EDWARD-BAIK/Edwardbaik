@@ -20,17 +20,19 @@ body{background:#1a1a1a;color:#fff;font-family:'Courier New',monospace;padding:1
 .card{background:#8b8b8b;border:4px solid #555;cursor:pointer;overflow:hidden}
 .card .poster{width:100%;aspect-ratio:2/3;display:flex;align-items:center;justify-content:center;background:#3a3a3a;color:#fff;text-align:center;padding:10px;font-size:10px;position:relative}
 .card .poster span{position:relative;z-index:1;text-shadow:2px 2px 0 #000;padding:5px}
+.card .poster .label{position:absolute;bottom:6px;left:4px;right:4px;background:rgba(0,0,0,.7);padding:4px;font-size:8px}
 .card .info{padding:8px 10px;background:#c6c6c6}
 .card .info h4{font-size:10px;color:#000}
 .card .info p{font-size:8px;color:#555}
 .player-wrap{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.95);z-index:9999;flex-direction:column;align-items:center;justify-content:center;padding:10px}
-.player-wrap .top{position:absolute;top:0;width:100%;padding:12px 16px;display:flex;justify-content:space-between;background:#1a1a1a;border-bottom:4px solid #4caf50;align-items:center}
+.player-wrap .top{position:absolute;top:0;left:0;right:0;padding:12px 16px;display:flex;justify-content:space-between;background:#1a1a1a;border-bottom:4px solid #4caf50;align-items:center;flex-wrap:wrap;gap:8px}
 .player-wrap .top .t{font-size:14px;font-weight:bold}
-.player-wrap .top button{background:#4caf50;border:4px solid #8b8b8b;padding:6px 14px;color:#fff;cursor:pointer}
+.player-wrap .top .actions{display:flex;gap:6px;flex-wrap:wrap}
+.player-wrap .top button{background:#4caf50;border:4px solid #8b8b8b;padding:6px 14px;color:#fff;cursor:pointer;font-weight:bold}
 .player-wrap .top .close{background:#f44336}
 .player-wrap iframe{width:100%;max-width:1100px;height:70vh;border:4px solid #4caf50;background:#000}
-.player-wrap .servers{position:absolute;bottom:20px;display:flex;gap:8px;flex-wrap:wrap;justify-content:center;background:rgba(0,0,0,.8);padding:10px 16px;border:4px solid #555}
-.player-wrap .servers button{background:#c6c6c6;border:4px solid #8b8b8b;padding:6px 14px;cursor:pointer;font-weight:bold}
+.player-wrap .servers{position:absolute;bottom:20px;left:50%;transform:translateX(-50%);display:flex;gap:8px;flex-wrap:wrap;justify-content:center;background:rgba(0,0,0,.8);padding:10px 16px;border:4px solid #555;border-radius:4px;max-width:95%}
+.player-wrap .servers button{background:#c6c6c6;border:4px solid #8b8b8b;padding:6px 14px;cursor:pointer;font-weight:bold;font-size:11px}
 .player-wrap .servers button.active{background:#4caf50;color:#fff}
 .loading{text-align:center;padding:30px;color:#aaa;font-size:14px}
 .footer{text-align:center;padding:20px 0 10px;border-top:4px solid #555;margin-top:15px}
@@ -66,20 +68,14 @@ body{background:#1a1a1a;color:#fff;font-family:'Courier New',monospace;padding:1
 <div class="player-wrap" id="player">
 <div class="top">
 <span class="t" id="ptitle">🎬 Now Playing</span>
-<div>
+<div class="actions">
 <button onclick="refreshPlayer()">🔄 Refresh</button>
 <button onclick="nextServer()">⏭ Next</button>
 <button class="close" onclick="closePlayer()">✕</button>
 </div>
 </div>
 <iframe id="iframe" src="" allowfullscreen></iframe>
-<div class="servers" id="sv">
-<button class="active" onclick="switchSvr(0)">Server 1</button>
-<button onclick="switchSvr(1)">Server 2</button>
-<button onclick="switchSvr(2)">Server 3</button>
-<button onclick="switchSvr(3)">Server 4</button>
-<button onclick="switchSvr(4)">Server 5</button>
-</div>
+<div class="servers" id="sv"></div>
 </div>
 
 <script>
@@ -111,14 +107,15 @@ const FILMS = [
 {title:'The Dark Knight',id:'tt0468569',type:'Classic'}
 ];
 
-// ===== 5 SERVER (GANTI YANG ONLINE) =====
+// ===== 5 SERVER YANG PALING STABIL =====
 const SERVERS = [
+    id => `https://vidsrc.in/embed/movie/${id}`,
+    id => `https://vidsrc.net/embed/movie/${id}`,
     id => `https://vidsrc.to/embed/movie/${id}`,
-    id => `https://embed.su/embed/${id}`,
-    id => `https://vidsrc.cc/v2/embed/movie/${id}`,
-    id => `https://multiembed.mov/?video_id=${id}&tmdb=1`,
+    id => `https://player.series9.co/embed/movie/${id}`,
     id => `https://www.2embed.cc/embed/${id}`
 ];
+const SERVER_NAMES = ['🎯 Server 1', '⚡ Server 2', '🔥 Server 3', '💎 Server 4', '🚀 Server 5'];
 
 let curSvr = 0, curId = '', curCat = 'all';
 
@@ -130,7 +127,15 @@ function nextServer(){ switchSvr((curSvr+1)%SERVERS.length); }
 
 function refreshPlayer(){ if(curId) document.getElementById('iframe').src=getUrl(curId); }
 
-// ===== RENDER =====
+// ===== RENDER SERVER BUTTON =====
+function renderServers(){
+    const container = document.getElementById('sv');
+    container.innerHTML = SERVERS.map((_, i) => 
+        `<button class="${i === curSvr ? 'active' : ''}" onclick="switchSvr(${i})">${SERVER_NAMES[i]}</button>`
+    ).join('');
+}
+
+// ===== RENDER FILM =====
 function render(){
     let items = FILMS;
     if(curCat !== 'all'){
@@ -149,7 +154,7 @@ function render(){
         return `<div class="card" onclick="play('${i.id}','${i.title.replace(/'/g,"\\'")}')">
             <div class="poster" style="background:${color};">
                 <span>${i.title}</span>
-                <div style="position:absolute;bottom:6px;left:4px;right:4px;background:rgba(0,0,0,.7);padding:4px;font-size:8px;">${i.type}</div>
+                <div class="label">${i.type}</div>
             </div>
             <div class="info"><h4>${i.title}</h4><p>${i.type}</p></div>
         </div>`;
@@ -168,7 +173,7 @@ function search(){
         return `<div class="card" onclick="play('${i.id}','${i.title.replace(/'/g,"\\'")}')">
             <div class="poster" style="background:${color};">
                 <span>${i.title}</span>
-                <div style="position:absolute;bottom:6px;left:4px;right:4px;background:rgba(0,0,0,.7);padding:4px;font-size:8px;">${i.type}</div>
+                <div class="label">${i.type}</div>
             </div>
             <div class="info"><h4>${i.title}</h4><p>${i.type}</p></div>
         </div>`;
@@ -183,6 +188,7 @@ function play(id, title){
     document.getElementById('iframe').src=getUrl(id);
     document.getElementById('player').style.display='flex';
     document.body.style.overflow='hidden';
+    renderServers();
 }
 
 function closePlayer(){
@@ -193,7 +199,7 @@ function closePlayer(){
 }
 
 // ===== START =====
-window.onload = function(){ render(); };
+window.onload = function(){ render(); renderServers(); };
 document.addEventListener('keydown', function(e){ if(e.key==='Escape') closePlayer(); });
 </script>
 </body>
