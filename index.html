@@ -65,7 +65,7 @@ body{background:#0a0e17;color:#e0e0e0;font-family:'Inter','Segoe UI',sans-serif;
 
 <div class="header">
 <h1>⚡ EDWARD</h1>
-<div class="sub">Technical deep dives • Auto-update from NewsAPI</div>
+<div class="sub">Technical deep dives • Powered by NewsAPI</div>
 </div>
 
 <div id="grid" class="grid"><div class="loading">⏳ Loading...</div></div>
@@ -82,20 +82,19 @@ body{background:#0a0e17;color:#e0e0e0;font-family:'Inter','Segoe UI',sans-serif;
 
 <script>
 // ============================================
-// NEWSAPI - DENGAN API KEY LU
+// NEWSAPI + CORS PROXY
 // ============================================
-const NEWS_API_KEY = '983c54c1664d4761b19b6440ca5619f1';
-const NEWS_API = `https://newsapi.org/v2/top-headlines?category=technology&language=en&apiKey=${NEWS_API_KEY}`;
+const API_KEY = '983c54c1664d4761b19b6440ca5619f1';
+const PROXY = 'https://corsproxy.io/?';
+const NEWS_API = `https://newsapi.org/v2/top-headlines?category=technology&language=en&apiKey=${API_KEY}`;
 
-// ============================================
-// FETCH DARI NEWSAPI
-// ============================================
 async function fetchArticles() {
     const grid = document.getElementById('grid');
     grid.innerHTML = '<div class="loading">⏳ Loading...</div>';
     
     try {
-        const response = await fetch(NEWS_API);
+        // Pake proxy buat tembus CORS
+        const response = await fetch(PROXY + encodeURIComponent(NEWS_API));
         if (!response.ok) throw new Error('Gagal fetch data');
         const data = await response.json();
         
@@ -155,9 +154,6 @@ function renderArticles(articles) {
     window._articles = articles;
 }
 
-// ============================================
-// MODAL - FULL KONTEN
-// ============================================
 function openModal(index) {
     const articles = window._articles || [];
     const a = articles[index];
@@ -191,9 +187,6 @@ document.addEventListener('keydown', e => {
     if (e.key === 'Escape') closeModal();
 });
 
-// ============================================
-// START
-// ============================================
 fetchArticles();
 </script>
 </body>
