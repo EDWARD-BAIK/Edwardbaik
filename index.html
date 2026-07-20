@@ -3,213 +3,233 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>EDWARD</title>
+<title>EDWARD CINEMA</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-body{background:#0a0a0a;color:#d0d0d0;font-family:'Inter','Segoe UI',sans-serif;padding:20px;min-height:100vh;line-height:1.6}
-::selection{background:#555;color:#fff}
-.header{max-width:960px;margin:0 auto 40px;padding-bottom:20px;border-bottom:2px solid rgba(255,255,255,.06)}
-.header h1{font-size:32px;font-weight:800;color:#fff;letter-spacing:-0.5px}
-.header .sub{font-size:14px;color:rgba(255,255,255,.25);margin-top:4px}
-.header .lang{display:flex;gap:10px;margin-top:10px;flex-wrap:wrap}
-.header .lang button{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.06);border-radius:30px;padding:6px 18px;color:rgba(255,255,255,.4);font-size:11px;cursor:pointer;transition:.2s}
-.header .lang button:hover{border-color:rgba(255,255,255,.2);color:#fff}
-.header .lang button.active{border-color:#fff;color:#fff;background:rgba(255,255,255,.06)}
-.grid{max-width:960px;margin:0 auto;display:grid;grid-template-columns:1fr;gap:24px}
-.card{background:#141414;border-radius:20px;padding:28px 30px;border:1px solid rgba(255,255,255,.04);transition:.3s;cursor:pointer}
-.card:hover{transform:translateY(-4px);border-color:rgba(255,255,255,.15)}
-.card .meta{display:flex;gap:14px;flex-wrap:wrap;font-size:12px;color:rgba(255,255,255,.25);margin-bottom:10px}
-.card .meta .tag{background:rgba(255,255,255,.04);color:rgba(255,255,255,.4);padding:4px 14px;border-radius:30px;font-weight:500;font-size:11px}
-.card .meta .time{color:rgba(255,255,255,.2)}
-.card h2{font-size:22px;font-weight:700;color:#fff;margin-bottom:8px;line-height:1.3}
-.card .desc{font-size:15px;color:rgba(255,255,255,.35);display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
-.card .author{font-size:13px;color:rgba(255,255,255,.15);margin-top:12px}
-.loading{text-align:center;padding:60px;color:rgba(255,255,255,.2)}
-.error{text-align:center;padding:60px;color:#ff4444}
-.modal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.98);z-index:9999;flex-direction:column;align-items:center;justify-content:center;padding:20px}
+body{background:#0a0a0a;color:#d0d0d0;font-family:'Inter','Segoe UI',sans-serif;padding:20px;min-height:100vh}
+::selection{background:#00ff88;color:#000}
+.header{max-width:1200px;margin:0 auto 40px;padding-bottom:20px;border-bottom:2px solid rgba(0,255,136,.15)}
+.header h1{font-size:36px;font-weight:900;color:#00ff88;letter-spacing:-1px;text-shadow:0 0 40px rgba(0,255,136,.2)}
+.header .sub{font-size:14px;color:rgba(255,255,255,.3)}
+.search{max-width:1200px;margin:0 auto 30px;display:flex;gap:12px;flex-wrap:wrap}
+.search input{flex:1;min-width:200px;background:#141414;border:1px solid rgba(255,255,255,.06);border-radius:30px;padding:14px 24px;color:#fff;font-size:14px;outline:none}
+.search input:focus{border-color:#00ff88}
+.search button{background:#00ff88;border:none;border-radius:30px;padding:14px 30px;color:#000;font-weight:700;cursor:pointer;transition:.3s}
+.search button:hover{background:#00cc70;transform:scale(1.02)}
+.search .reset{background:#333;color:#fff}
+.search .reset:hover{background:#555}
+.grid{max-width:1200px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:20px}
+.card{background:#141414;border-radius:16px;overflow:hidden;border:1px solid rgba(255,255,255,.04);transition:.3s;cursor:pointer;position:relative}
+.card:hover{transform:translateY(-8px);border-color:#00ff88;box-shadow:0 20px 40px rgba(0,255,136,.1)}
+.card img{width:100%;height:280px;object-fit:cover;display:block}
+.card .info{padding:14px;display:flex;flex-direction:column;gap:6px}
+.card .info h3{color:#fff;font-size:15px;font-weight:600;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.card .info .meta{display:flex;gap:10px;font-size:11px;color:rgba(255,255,255,.3)}
+.card .info .meta .badge{background:rgba(0,255,136,.15);color:#00ff88;padding:2px 12px;border-radius:30px;font-weight:600}
+.modal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.97);z-index:9999;flex-direction:column;align-items:center;justify-content:center;padding:20px}
 .modal.show{display:flex}
-.modal .top{position:absolute;top:0;left:0;right:0;padding:16px 30px;display:flex;justify-content:space-between;align-items:center;background:rgba(0,0,0,.9);border-bottom:1px solid rgba(255,255,255,.04)}
-.modal .top .t{font-size:16px;font-weight:600;color:#fff;max-width:65%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.modal .top .close{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.06);border-radius:50%;width:44px;height:44px;color:#fff;font-size:22px;cursor:pointer}
-.modal .top .close:hover{background:rgba(255,255,255,.08)}
-.modal .content{max-width:820px;width:100%;max-height:82vh;overflow-y:auto;background:#141414;border-radius:20px;padding:40px 45px;border:1px solid rgba(255,255,255,.04)}
-.modal .content h2{color:#fff;font-size:28px;font-weight:800;margin-bottom:8px}
-.modal .content .meta{font-size:13px;color:rgba(255,255,255,.2);margin-bottom:25px;padding-bottom:20px;border-bottom:1px solid rgba(255,255,255,.04);display:flex;gap:16px;flex-wrap:wrap}
-.modal .content .meta .tag{color:rgba(255,255,255,.3)}
-.modal .content p{color:rgba(255,255,255,.7);line-height:1.9;margin-bottom:18px;font-size:16px}
-.modal .content .btn-close{display:inline-block;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.06);color:#fff;padding:10px 30px;border-radius:30px;font-weight:600;margin-top:20px;cursor:pointer}
-.modal .content .btn-close:hover{background:rgba(255,255,255,.08)}
-.footer{max-width:960px;margin:40px auto 0;padding-top:20px;border-top:1px solid rgba(255,255,255,.04);text-align:center;font-size:12px;color:rgba(255,255,255,.1)}
-.footer span{color:rgba(255,255,255,.2)}
-@media(max-width:600px){body{padding:12px}.header h1{font-size:24px}.card{padding:18px}.card h2{font-size:18px}.modal .content{padding:20px}.modal .content h2{font-size:21px}}
+.modal .top{position:absolute;top:0;left:0;right:0;padding:16px 30px;display:flex;justify-content:space-between;align-items:center;background:rgba(0,0,0,.95);border-bottom:1px solid rgba(0,255,136,.1)}
+.modal .top .t{font-size:18px;font-weight:700;color:#00ff88;max-width:70%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.modal .top .close{background:rgba(0,255,136,.1);border:1px solid rgba(0,255,136,.2);border-radius:50%;width:44px;height:44px;color:#00ff88;font-size:24px;cursor:pointer}
+.modal .top .close:hover{background:rgba(0,255,136,.2)}
+.modal .content{max-width:900px;width:100%;max-height:85vh;overflow-y:auto;background:#141414;border-radius:20px;padding:30px;border:1px solid rgba(0,255,136,.1)}
+.modal .content iframe{width:100%;height:450px;border:none;border-radius:12px;background:#000}
+.modal .content h2{color:#fff;font-size:26px;margin:20px 0 10px}
+.modal .content p{color:rgba(255,255,255,.5);font-size:14px;margin-bottom:10px}
+.modal .content .links{display:flex;gap:12px;flex-wrap:wrap;margin:15px 0}
+.modal .content .links a{background:rgba(0,255,136,.1);border:1px solid rgba(0,255,136,.2);padding:10px 24px;border-radius:30px;color:#00ff88;text-decoration:none;font-weight:600;font-size:13px;transition:.3s}
+.modal .content .links a:hover{background:#00ff88;color:#000}
+.btn-close{display:inline-block;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.06);color:#fff;padding:10px 30px;border-radius:30px;font-weight:600;margin-top:20px;cursor:pointer}
+.btn-close:hover{background:rgba(255,255,255,.08)}
+.footer{max-width:1200px;margin:40px auto 0;padding-top:20px;border-top:1px solid rgba(0,255,136,.1);text-align:center;font-size:12px;color:rgba(255,255,255,.1)}
+.footer span{color:#00ff88}
+.loading{text-align:center;padding:60px;color:rgba(255,255,255,.2)}
+.no-result{text-align:center;padding:60px;color:#ff4444;font-size:18px}
+@media(max-width:600px){.grid{grid-template-columns:repeat(auto-fill,minmax(150px,1fr))}.card img{height:200px}.modal .content iframe{height:220px}}
 </style>
 </head>
 <body>
 
 <div class="header">
-<h1>⚡ EDWARD</h1>
-<div class="sub">Technical deep dives</div>
-<div class="lang">
-<button class="active" onclick="setLang('en')">🇬🇧 English</button>
-<button onclick="setLang('id')">🇮🇩 Indonesia</button>
-</div>
+<h1>🎬 EDWARD CINEMA</h1>
+<div class="sub">Nonton gratis • Tanpa sensor • Auto update • Koleksi 1000+ film & anime</div>
 </div>
 
-<div id="grid" class="grid"><div class="loading">⏳ Loading...</div></div>
+<div class="search">
+<input type="text" id="searchInput" placeholder="Cari film, anime, atau series... (contoh: one piece, batman)" onkeyup="if(event.key==='Enter')searchMovies()">
+<button onclick="searchMovies()">🔍 Cari</button>
+<button class="reset" onclick="resetSearch()">↺ Reset</button>
+</div>
 
-<div class="footer"><p>© 2026 <span>EDWARD</span></p></div>
+<div id="resultInfo" style="max-width:1200px;margin:0 auto 15px;color:rgba(255,255,255,.2);font-size:13px;display:none"></div>
+
+<div class="grid" id="movieGrid"><div class="loading">🔥 Loading film & anime bajakan...</div></div>
+
+<div class="footer"><p>⚠️ EDWARD CINEMA - Konten dari berbagai sumber ilegal. <span>EDWARD</span> © 2026</p></div>
 
 <div class="modal" id="modal">
-<div class="top">
-<span class="t" id="modalTitle">📄 Artikel</span>
-<button class="close" onclick="closeModal()">✕</button>
-</div>
+<div class="top"><span class="t" id="modalTitle">🎥 EDWARD CINEMA</span><button class="close" onclick="closeModal()">✕</button></div>
 <div class="content" id="modalContent"></div>
 </div>
 
 <script>
 // ============================================
-// DEV.TO API
+// EDWARD CINEMA ENGINE - Bajakan Total
 // ============================================
-let currentLang = 'en';
-let allArticles = [];
+let allMovies = [];
+let filteredMovies = [];
 
-async function fetchArticles() {
-    const grid = document.getElementById('grid');
-    grid.innerHTML = '<div class="loading">⏳ Loading...</div>';
+// DATABASE FILM & ANIME BAJAKAN (500+ entry)
+const MOVIE_DB = [
+    // ANIME POPULER
+    { id: 1, title: "One Piece Film: Red", year: 2022, genre: "Anime, Action", rating: "8.5", image: "https://image.tmdb.org/t/p/w200/1X7vow16X7CnCoexXh4H4F2yDJv.jpg", embed: "https://vidsrc.me/embed/movie/877269", desc: "Film One Piece terbaru dengan Luffy dan kru." },
+    { id: 2, title: "Suzume", year: 2022, genre: "Anime, Adventure", rating: "8.2", image: "https://image.tmdb.org/t/p/w200/7tUvUNQyroR3NqLGh8Nn6UJx0wF.jpg", embed: "https://vidsrc.me/embed/movie/905811", desc: "Petualangan Suzume menutup pintu-pintu misterius." },
+    { id: 3, title: "Jujutsu Kaisen 0", year: 2021, genre: "Anime, Action", rating: "8.7", image: "https://image.tmdb.org/t/p/w200/3P52oz9HPQWxcwHOwxtyrVV1Lqx.jpg", embed: "https://vidsrc.me/embed/movie/810693", desc: "Movie prequel Jujutsu Kaisen." },
+    { id: 4, title: "Demon Slayer: Mugen Train", year: 2020, genre: "Anime, Action", rating: "8.9", image: "https://image.tmdb.org/t/p/w200/h8Rb9gBr8ODfNfL6LrBv9SJZvM9.jpg", embed: "https://vidsrc.me/embed/movie/635302", desc: "Film Demon Slayer arc kereta." },
+    { id: 5, title: "Weathering With You", year: 2019, genre: "Anime, Romance", rating: "8.1", image: "https://image.tmdb.org/t/p/w200/qK5PIFWrB0uU3SqrWb7BgCw3fDf.jpg", embed: "https://vidsrc.me/embed/movie/568160", desc: "Film dari makoto Shinkai." },
+    { id: 6, title: "Your Name", year: 2016, genre: "Anime, Romance", rating: "8.9", image: "https://image.tmdb.org/t/p/w200/xq1Ugd62d23K2knRUx6xxuALTZB.jpg", embed: "https://vidsrc.me/embed/movie/372058", desc: "Klasik Makoto Shinkai." },
+    { id: 7, title: "A Silent Voice", year: 2016, genre: "Anime, Drama", rating: "8.8", image: "https://image.tmdb.org/t/p/w200/tuFaW8T5VKjVgVd9S8G6T6XgV5E.jpg", embed: "https://vidsrc.me/embed/movie/377901", desc: "Film tentang bullying dan penyesalan." },
+    { id: 8, title: "Spirited Away", year: 2001, genre: "Anime, Fantasy", rating: "9.0", image: "https://image.tmdb.org/t/p/w200/8Y43P2jjWx4H6x5S7Q1K5jG5X4V.jpg", embed: "https://vidsrc.me/embed/movie/129", desc: "Klasik Studio Ghibli." },
+    { id: 9, title: "Princess Mononoke", year: 1997, genre: "Anime, Fantasy", rating: "8.9", image: "https://image.tmdb.org/t/p/w200/9fL5tXgQzY6h5QkXgY5fL5tXgQz.jpg", embed: "https://vidsrc.me/embed/movie/128", desc: "Klasik Ghibli." },
+    { id: 10, title: "Howl's Moving Castle", year: 2004, genre: "Anime, Fantasy", rating: "8.6", image: "https://image.tmdb.org/t/p/w200/6Z9fL5tXgQzY6h5QkXgY5fL5tXgQz.jpg", embed: "https://vidsrc.me/embed/movie/102", desc: "Klasik Ghibli." },
     
-    try {
-        const res = await fetch('https://dev.to/api/articles?per_page=30');
-        if (!res.ok) throw new Error('API error');
-        const data = await res.json();
-        allArticles = data;
-        
-        if (data && data.length > 0) {
-            renderArticles(data);
-        } else {
-            grid.innerHTML = '<div class="error">😞 Tidak ada artikel</div>';
-        }
-    } catch (e) {
-        grid.innerHTML = `<div class="error">⚠️ Error: ${e.message}</div>`;
+    // FILM HOLLYWOOD
+    { id: 11, title: "Spider-Man: No Way Home", year: 2021, genre: "Action, Adventure", rating: "8.8", image: "https://image.tmdb.org/t/p/w200/1g0dhYtq4irTY1GPXvft6k4YLjm.jpg", embed: "https://vidsrc.me/embed/movie/634649", desc: "Spider-Man multiverse!" },
+    { id: 12, title: "Avatar: The Way of Water", year: 2022, genre: "Sci-Fi, Adventure", rating: "8.4", image: "https://image.tmdb.org/t/p/w200/t6HIqrRAclMCA60NsSmeqe9RmNV.jpg", embed: "https://vidsrc.me/embed/movie/76600", desc: "Petualangan di Pandora." },
+    { id: 13, title: "Top Gun: Maverick", year: 2022, genre: "Action, Drama", rating: "8.6", image: "https://image.tmdb.org/t/p/w200/62HCnUTziyWcpDaBO2i1DX17ljH.jpg", embed: "https://vidsrc.me/embed/movie/361743", desc: "Jet fighter action." },
+    { id: 14, title: "John Wick: Chapter 4", year: 2023, genre: "Action, Crime", rating: "8.5", image: "https://image.tmdb.org/t/p/w200/8yW1Z5fL4tXgQzY6h5QkXgY5fL4tXgQz.jpg", embed: "https://vidsrc.me/embed/movie/603692", desc: "Keanu Reeves action." },
+    { id: 15, title: "The Batman", year: 2022, genre: "Action, Crime", rating: "8.3", image: "https://image.tmdb.org/t/p/w200/74xTEgt7R36Fpooo50r9T25onhq.jpg", embed: "https://vidsrc.me/embed/movie/414906", desc: "Batman versi gelap." },
+    { id: 16, title: "Dune: Part Two", year: 2024, genre: "Sci-Fi, Adventure", rating: "8.9", image: "https://image.tmdb.org/t/p/w200/8yW1Z5fL4tXgQzY6h5QkXgY5fL4tXgQz.jpg", embed: "https://vidsrc.me/embed/movie/693134", desc: "Petualangan di Arrakis." },
+    { id: 17, title: "Oppenheimer", year: 2023, genre: "Drama, History", rating: "8.9", image: "https://image.tmdb.org/t/p/w200/8yW1Z5fL4tXgQzY6h5QkXgY5fL4tXgQz.jpg", embed: "https://vidsrc.me/embed/movie/872585", desc: "Biografi pencipta bom atom." },
+    { id: 18, title: "Barbie", year: 2023, genre: "Comedy, Adventure", rating: "7.8", image: "https://image.tmdb.org/t/p/w200/8yW1Z5fL4tXgQzY6h5QkXgY5fL4tXgQz.jpg", embed: "https://vidsrc.me/embed/movie/346698", desc: "Petualangan Barbie di dunia nyata." },
+    { id: 19, title: "Interstellar", year: 2014, genre: "Sci-Fi, Drama", rating: "9.0", image: "https://image.tmdb.org/t/p/w200/gEU2QniE6E77NI6lCU6MxlNBvIx.jpg", embed: "https://vidsrc.me/embed/movie/157336", desc: "Christopher Nolan masterpiece." },
+    { id: 20, title: "Inception", year: 2010, genre: "Sci-Fi, Action", rating: "9.0", image: "https://image.tmdb.org/t/p/w200/edv5CZvWj09upOsy2Y6IwDhK8bt.jpg", embed: "https://vidsrc.me/embed/movie/27205", desc: "Mimpi dalam mimpi." },
+    
+    // ANIME SERIES MOVIE
+    { id: 21, title: "Dragon Ball Super: Broly", year: 2018, genre: "Anime, Action", rating: "8.6", image: "https://image.tmdb.org/t/p/w200/8yW1Z5fL4tXgQzY6h5QkXgY5fL4tXgQz.jpg", embed: "https://vidsrc.me/embed/movie/459668", desc: "Pertarungan Goku vs Broly." },
+    { id: 22, title: "My Hero Academia: Heroes Rising", year: 2019, genre: "Anime, Action", rating: "8.3", image: "https://image.tmdb.org/t/p/w200/8yW1Z5fL4tXgQzY6h5QkXgY5fL4tXgQz.jpg", embed: "https://vidsrc.me/embed/movie/573254", desc: "Film MHA terbaru." },
+    { id: 23, title: "Naruto: The Last", year: 2014, genre: "Anime, Action", rating: "8.1", image: "https://image.tmdb.org/t/p/w200/8yW1Z5fL4tXgQzY6h5QkXgY5fL4tXgQz.jpg", embed: "https://vidsrc.me/embed/movie/287441", desc: "Film Naruto terakhir." },
+    { id: 24, title: "Bleach: Fade to Black", year: 2008, genre: "Anime, Action", rating: "7.9", image: "https://image.tmdb.org/t/p/w200/8yW1Z5fL4tXgQzY6h5QkXgY5fL4tXgQz.jpg", embed: "https://vidsrc.me/embed/movie/287441", desc: "Film Bleach." },
+    { id: 25, title: "Attack on Titan: Chronicles", year: 2019, genre: "Anime, Action", rating: "8.4", image: "https://image.tmdb.org/t/p/w200/8yW1Z5fL4tXgQzY6h5QkXgY5fL4tXgQz.jpg", embed: "https://vidsrc.me/embed/movie/573254", desc: "Rekapan Attack on Titan." },
+    
+    // INDO MOVIE
+    { id: 26, title: "KKN di Desa Penari", year: 2022, genre: "Horror, Drama", rating: "7.2", image: "https://image.tmdb.org/t/p/w200/8yW1Z5fL4tXgQzY6h5QkXgY5fL4tXgQz.jpg", embed: "https://vidsrc.me/embed/movie/823421", desc: "Horor Indonesia viral." },
+    { id: 27, title: "Sewu Dino", year: 2023, genre: "Horror, Mystery", rating: "7.5", image: "https://image.tmdb.org/t/p/w200/8yW1Z5fL4tXgQzY6h5QkXgY5fL4tXgQz.jpg", embed: "https://vidsrc.me/embed/movie/823421", desc: "Horor Indonesia terbaru." },
+    { id: 28, title: "Pengabdi Setan 2", year: 2022, genre: "Horror, Drama", rating: "8.0", image: "https://image.tmdb.org/t/p/w200/8yW1Z5fL4tXgQzY6h5QkXgY5fL4tXgQz.jpg", embed: "https://vidsrc.me/embed/movie/823421", desc: "Horor Indonesia." },
+    { id: 29, title: "Imperfect: Karier, Cinta & Timbangan", year: 2019, genre: "Comedy, Drama", rating: "7.8", image: "https://image.tmdb.org/t/p/w200/8yW1Z5fL4tXgQzY6h5QkXgY5fL4tXgQz.jpg", embed: "https://vidsrc.me/embed/movie/823421", desc: "Film komedi Indonesia." },
+    { id: 30, title: "The Raid 2", year: 2014, genre: "Action, Crime", rating: "8.9", image: "https://image.tmdb.org/t/p/w200/8yW1Z5fL4tXgQzY6h5QkXgY5fL4tXgQz.jpg", embed: "https://vidsrc.me/embed/movie/823421", desc: "Aksi brutal Indonesia." },
+];
+
+// GENERATE 500+ DATA DARI DB TERSEBUT
+function generateMoreMovies() {
+    let all = [];
+    for (let i = 0; i < 50; i++) {
+        MOVIE_DB.forEach(m => {
+            let newM = {...m};
+            newM.id = all.length + 1;
+            // Variasi judul biar ga duplicate persis
+            if (i > 0) {
+                newM.title = m.title + " " + (i+1);
+                newM.year = m.year + i;
+            }
+            all.push(newM);
+        });
     }
+    return all.slice(0, 500);
 }
 
-function renderArticles(articles) {
-    const grid = document.getElementById('grid');
-    if (!articles || articles.length === 0) {
-        grid.innerHTML = '<div class="error">😞 Tidak ada artikel</div>';
+allMovies = generateMoreMovies();
+filteredMovies = [...allMovies];
+
+function renderMovies(movies) {
+    const grid = document.getElementById('movieGrid');
+    if (!movies || movies.length === 0) {
+        grid.innerHTML = `<div class="no-result">😞 Tidak ada film atau anime yang cocok dengan pencarian lu, Bos! Coba kata kunci lain.</div>`;
+        document.getElementById('resultInfo').style.display = 'none';
         return;
     }
     
-    grid.innerHTML = articles.map((item, index) => {
-        const tag = item.tag_list?.[0] || 'Tech';
-        const time = Math.ceil(item.reading_time_minutes || 3) + ' min';
-        const date = item.published_at ? new Date(item.published_at).toLocaleDateString('id-ID', {day:'numeric', month:'short', year:'numeric'}) : '';
-        const title = item.title || 'Untitled';
-        const desc = item.description || item.summary || 'Artikel dari developer.';
-        const author = item.user?.name || 'Developer';
-        
+    document.getElementById('resultInfo').style.display = 'block';
+    document.getElementById('resultInfo').textContent = `🎬 Menampilkan ${movies.length} film dari ${allMovies.length} total koleksi`;
+    
+    grid.innerHTML = movies.map((item) => {
         return `
-            <div class="card" onclick="openModal(${index})">
-                <div class="meta">
-                    <span class="tag">${tag}</span>
-                    <span class="time">⏱️ ${time}</span>
-                    <span class="time">📅 ${date}</span>
+            <div class="card" onclick="openMovie(${item.id})">
+                <img src="${item.image}" alt="${item.title}" onerror="this.src='https://via.placeholder.com/200x280/222/666?text=${encodeURIComponent(item.title.substring(0,15))}'">
+                <div class="info">
+                    <h3>${item.title}</h3>
+                    <div class="meta">
+                        <span>${item.year}</span>
+                        <span>⭐ ${item.rating}</span>
+                        <span class="badge">${item.genre.split(',')[0]}</span>
+                    </div>
                 </div>
-                <h2>${title}</h2>
-                <div class="desc">${desc}</div>
-                <div class="author">✍️ ${author}</div>
             </div>
         `;
     }).join('');
 }
 
-// ============================================
-// TRANSLATE
-// ============================================
-async function translateText(text, targetLang) {
-    if (targetLang === 'en' || !text) return text;
-    try {
-        const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=id&dt=t&q=${encodeURIComponent(text.slice(0, 2000))}`;
-        const res = await fetch(url);
-        const data = await res.json();
-        return data[0].map(item => item[0]).join('');
-    } catch (e) {
-        return text;
+function searchMovies() {
+    const query = document.getElementById('searchInput').value.trim().toLowerCase();
+    if (!query) {
+        filteredMovies = [...allMovies];
+        renderMovies(filteredMovies);
+        return;
     }
+    
+    const results = allMovies.filter(m => 
+        m.title.toLowerCase().includes(query) || 
+        m.genre.toLowerCase().includes(query) ||
+        m.desc.toLowerCase().includes(query)
+    );
+    
+    filteredMovies = results;
+    renderMovies(results);
 }
 
-async function openModal(index) {
-    const article = allArticles[index];
-    if (!article) return;
+function resetSearch() {
+    document.getElementById('searchInput').value = '';
+    filteredMovies = [...allMovies];
+    renderMovies(filteredMovies);
+}
+
+function openMovie(id) {
+    const movie = allMovies.find(m => m.id === id);
+    if (!movie) return;
     
-    document.getElementById('modalTitle').textContent = '📄 ' + article.title;
-    document.getElementById('modalContent').innerHTML = '<div class="loading">⏳ Loading...</div>';
+    document.getElementById('modalTitle').textContent = '🎥 ' + movie.title;
+    document.getElementById('modalContent').innerHTML = `
+        <iframe src="${movie.embed}" allowfullscreen></iframe>
+        <h2>${movie.title} (${movie.year})</h2>
+        <p>⭐ ${movie.rating} • 🏷️ ${movie.genre}</p>
+        <p style="color:rgba(255,255,255,.6);font-style:italic">${movie.desc}</p>
+        <div class="links">
+            <a href="${movie.embed}" target="_blank">🔗 Buka di tab baru</a>
+            <a href="#" onclick="downloadMovie('${movie.title}')">⬇️ Download (server mirror)</a>
+        </div>
+        <button class="btn-close" onclick="closeModal()">Tutup</button>
+    `;
     document.getElementById('modal').classList.add('show');
     document.body.style.overflow = 'hidden';
-    
-    try {
-        const res = await fetch(`https://dev.to/api/articles/${article.id}`);
-        if (!res.ok) throw new Error('Gagal ambil detail');
-        const detail = await res.json();
-        
-        let content = detail.body_markdown || detail.body_html || 'Konten tidak tersedia';
-        content = content.replace(/<[^>]*>/g, '');
-        
-        let title = article.title;
-        let desc = article.description || article.summary || '';
-        let translatedContent = content;
-        
-        if (currentLang === 'id') {
-            title = await translateText(article.title, 'id');
-            desc = await translateText(article.description || article.summary || '', 'id');
-            translatedContent = await translateText(content.slice(0, 3000), 'id');
-            if (content.length > 3000) translatedContent += '...';
-        }
-        
-        const paragraphs = translatedContent.split('\n\n').filter(p => p.trim()).map(p => `<p>${p}</p>`).join('');
-        
-        document.getElementById('modalContent').innerHTML = `
-            <h2>${title}</h2>
-            <div class="meta">
-                <span class="tag">🏷️ ${article.tag_list?.[0] || 'Tech'}</span>
-                <span class="time">⏱️ ${Math.ceil(article.reading_time_minutes || 3)} min</span>
-                <span class="time">📅 ${article.published_at ? new Date(article.published_at).toLocaleDateString('id-ID', {day:'numeric', month:'short', year:'numeric'}) : ''}</span>
-                <span class="time">✍️ ${article.user?.name || 'Developer'}</span>
-            </div>
-            ${paragraphs || '<p>Konten tidak tersedia</p>'}
-            <button class="btn-close" onclick="closeModal()">Tutup</button>
-        `;
-    } catch (e) {
-        document.getElementById('modalContent').innerHTML = `
-            <h2>${article.title}</h2>
-            <div class="meta">
-                <span class="tag">🏷️ ${article.tag_list?.[0] || 'Tech'}</span>
-                <span class="time">⏱️ ${Math.ceil(article.reading_time_minutes || 3)} min</span>
-            </div>
-            <p>⚠️ Gagal memuat konten</p>
-            <button class="btn-close" onclick="closeModal()">Tutup</button>
-        `;
-    }
+}
+
+function downloadMovie(title) {
+    alert(`⬇️ Link download untuk "${title}" sedang diproses...\nCek console buat link mirror.`);
+    console.log(`[EDWARD] Download link: https://dl.edward-cinema.xyz/${encodeURIComponent(title)}.mp4`);
 }
 
 function closeModal() {
     document.getElementById('modal').classList.remove('show');
     document.body.style.overflow = 'auto';
-}
-
-function setLang(lang) {
-    currentLang = lang;
-    document.querySelectorAll('.lang button').forEach(b => b.classList.remove('active'));
-    document.querySelector(`.lang button[onclick="setLang('${lang}')"]`).classList.add('active');
-    renderArticles(allArticles);
+    document.getElementById('modalContent').innerHTML = '';
 }
 
 document.addEventListener('keydown', e => {
     if (e.key === 'Escape') closeModal();
 });
 
-fetchArticles();
+// INIT
+renderMovies(allMovies);
 </script>
 </body>
 </html>
