@@ -26,6 +26,11 @@ body{background:#0a0a0a;color:#d0d0d0;font-family:'Inter','Segoe UI',sans-serif;
 .card .info h3{color:#fff;font-size:15px;font-weight:600;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
 .card .info .meta{display:flex;gap:10px;font-size:11px;color:rgba(255,255,255,.3)}
 .card .info .meta .badge{background:rgba(0,255,136,.15);color:#00ff88;padding:2px 12px;border-radius:30px;font-weight:600}
+.pagination{max-width:1200px;margin:30px auto;display:flex;justify-content:center;gap:10px;flex-wrap:wrap}
+.pagination button{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.06);color:rgba(255,255,255,.6);padding:10px 20px;border-radius:30px;font-weight:600;cursor:pointer;transition:.3s}
+.pagination button:hover{background:rgba(255,255,255,.1);color:#fff}
+.pagination button.active{background:#00ff88;color:#000;border-color:#00ff88}
+.pagination button:disabled{opacity:.3;cursor:not-allowed}
 .modal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.97);z-index:9999;flex-direction:column;align-items:center;justify-content:center;padding:20px}
 .modal.show{display:flex}
 .modal .top{position:absolute;top:0;left:0;right:0;padding:16px 30px;display:flex;justify-content:space-between;align-items:center;background:rgba(0,0,0,.95);border-bottom:1px solid rgba(0,255,136,.1)}
@@ -51,37 +56,38 @@ body{background:#0a0a0a;color:#d0d0d0;font-family:'Inter','Segoe UI',sans-serif;
 <body>
 
 <div class="header">
-<h1>🎬 EDWARD CINEMA</h1>
-<div class="sub">Nonton gratis • Tanpa sensor • Auto update • Koleksi 1000+ film & anime</div>
+<h1>EDWARD CINEMA</h1>
+<div class="sub">Nonton gratis • Tanpa sensor • Auto update</div>
 </div>
 
 <div class="search">
-<input type="text" id="searchInput" placeholder="Cari film, anime, atau series... (contoh: one piece, batman)" onkeyup="if(event.key==='Enter')searchMovies()">
-<button onclick="searchMovies()">🔍 Cari</button>
-<button class="reset" onclick="resetSearch()">↺ Reset</button>
+<input type="text" id="searchInput" placeholder="Cari film, anime, atau series..." onkeyup="if(event.key==='Enter')searchMovies()">
+<button onclick="searchMovies()">Cari</button>
+<button class="reset" onclick="resetSearch()">Reset</button>
 </div>
 
 <div id="resultInfo" style="max-width:1200px;margin:0 auto 15px;color:rgba(255,255,255,.2);font-size:13px;display:none"></div>
 
-<div class="grid" id="movieGrid"><div class="loading">🔥 Loading film & anime bajakan...</div></div>
+<div class="grid" id="movieGrid"><div class="loading">Loading film & anime...</div></div>
 
-<div class="footer"><p>⚠️ EDWARD CINEMA - Konten dari berbagai sumber ilegal. <span>EDWARD</span> © 2026</p></div>
+<div class="pagination" id="pagination"></div>
+
+<div class="footer"><p> EDWARD CINEMA - Konten dari berbagai sumber. <span>EDWARD</span> 2026</p></div>
 
 <div class="modal" id="modal">
-<div class="top"><span class="t" id="modalTitle">🎥 EDWARD CINEMA</span><button class="close" onclick="closeModal()">✕</button></div>
+<div class="top"><span class="t" id="modalTitle">EDWARD CINEMA</span><button class="close" onclick="closeModal()">✕</button></div>
 <div class="content" id="modalContent"></div>
 </div>
 
 <script>
 // ============================================
-// EDWARD CINEMA ENGINE - Bajakan Total
+// EDWARD CINEMA ENGINE V2 - WITH PAGINATION
 // ============================================
 let allMovies = [];
-let filteredMovies = [];
+let currentPage = 1;
+const PER_PAGE = 15;
 
-// DATABASE FILM & ANIME BAJAKAN (500+ entry)
 const MOVIE_DB = [
-    // ANIME POPULER
     { id: 1, title: "One Piece Film: Red", year: 2022, genre: "Anime, Action", rating: "8.5", image: "https://image.tmdb.org/t/p/w200/1X7vow16X7CnCoexXh4H4F2yDJv.jpg", embed: "https://vidsrc.me/embed/movie/877269", desc: "Film One Piece terbaru dengan Luffy dan kru." },
     { id: 2, title: "Suzume", year: 2022, genre: "Anime, Adventure", rating: "8.2", image: "https://image.tmdb.org/t/p/w200/7tUvUNQyroR3NqLGh8Nn6UJx0wF.jpg", embed: "https://vidsrc.me/embed/movie/905811", desc: "Petualangan Suzume menutup pintu-pintu misterius." },
     { id: 3, title: "Jujutsu Kaisen 0", year: 2021, genre: "Anime, Action", rating: "8.7", image: "https://image.tmdb.org/t/p/w200/3P52oz9HPQWxcwHOwxtyrVV1Lqx.jpg", embed: "https://vidsrc.me/embed/movie/810693", desc: "Movie prequel Jujutsu Kaisen." },
@@ -92,8 +98,6 @@ const MOVIE_DB = [
     { id: 8, title: "Spirited Away", year: 2001, genre: "Anime, Fantasy", rating: "9.0", image: "https://image.tmdb.org/t/p/w200/8Y43P2jjWx4H6x5S7Q1K5jG5X4V.jpg", embed: "https://vidsrc.me/embed/movie/129", desc: "Klasik Studio Ghibli." },
     { id: 9, title: "Princess Mononoke", year: 1997, genre: "Anime, Fantasy", rating: "8.9", image: "https://image.tmdb.org/t/p/w200/9fL5tXgQzY6h5QkXgY5fL5tXgQz.jpg", embed: "https://vidsrc.me/embed/movie/128", desc: "Klasik Ghibli." },
     { id: 10, title: "Howl's Moving Castle", year: 2004, genre: "Anime, Fantasy", rating: "8.6", image: "https://image.tmdb.org/t/p/w200/6Z9fL5tXgQzY6h5QkXgY5fL5tXgQz.jpg", embed: "https://vidsrc.me/embed/movie/102", desc: "Klasik Ghibli." },
-    
-    // FILM HOLLYWOOD
     { id: 11, title: "Spider-Man: No Way Home", year: 2021, genre: "Action, Adventure", rating: "8.8", image: "https://image.tmdb.org/t/p/w200/1g0dhYtq4irTY1GPXvft6k4YLjm.jpg", embed: "https://vidsrc.me/embed/movie/634649", desc: "Spider-Man multiverse!" },
     { id: 12, title: "Avatar: The Way of Water", year: 2022, genre: "Sci-Fi, Adventure", rating: "8.4", image: "https://image.tmdb.org/t/p/w200/t6HIqrRAclMCA60NsSmeqe9RmNV.jpg", embed: "https://vidsrc.me/embed/movie/76600", desc: "Petualangan di Pandora." },
     { id: 13, title: "Top Gun: Maverick", year: 2022, genre: "Action, Drama", rating: "8.6", image: "https://image.tmdb.org/t/p/w200/62HCnUTziyWcpDaBO2i1DX17ljH.jpg", embed: "https://vidsrc.me/embed/movie/361743", desc: "Jet fighter action." },
@@ -104,30 +108,22 @@ const MOVIE_DB = [
     { id: 18, title: "Barbie", year: 2023, genre: "Comedy, Adventure", rating: "7.8", image: "https://image.tmdb.org/t/p/w200/8yW1Z5fL4tXgQzY6h5QkXgY5fL4tXgQz.jpg", embed: "https://vidsrc.me/embed/movie/346698", desc: "Petualangan Barbie di dunia nyata." },
     { id: 19, title: "Interstellar", year: 2014, genre: "Sci-Fi, Drama", rating: "9.0", image: "https://image.tmdb.org/t/p/w200/gEU2QniE6E77NI6lCU6MxlNBvIx.jpg", embed: "https://vidsrc.me/embed/movie/157336", desc: "Christopher Nolan masterpiece." },
     { id: 20, title: "Inception", year: 2010, genre: "Sci-Fi, Action", rating: "9.0", image: "https://image.tmdb.org/t/p/w200/edv5CZvWj09upOsy2Y6IwDhK8bt.jpg", embed: "https://vidsrc.me/embed/movie/27205", desc: "Mimpi dalam mimpi." },
-    
-    // ANIME SERIES MOVIE
     { id: 21, title: "Dragon Ball Super: Broly", year: 2018, genre: "Anime, Action", rating: "8.6", image: "https://image.tmdb.org/t/p/w200/8yW1Z5fL4tXgQzY6h5QkXgY5fL4tXgQz.jpg", embed: "https://vidsrc.me/embed/movie/459668", desc: "Pertarungan Goku vs Broly." },
     { id: 22, title: "My Hero Academia: Heroes Rising", year: 2019, genre: "Anime, Action", rating: "8.3", image: "https://image.tmdb.org/t/p/w200/8yW1Z5fL4tXgQzY6h5QkXgY5fL4tXgQz.jpg", embed: "https://vidsrc.me/embed/movie/573254", desc: "Film MHA terbaru." },
     { id: 23, title: "Naruto: The Last", year: 2014, genre: "Anime, Action", rating: "8.1", image: "https://image.tmdb.org/t/p/w200/8yW1Z5fL4tXgQzY6h5QkXgY5fL4tXgQz.jpg", embed: "https://vidsrc.me/embed/movie/287441", desc: "Film Naruto terakhir." },
-    { id: 24, title: "Bleach: Fade to Black", year: 2008, genre: "Anime, Action", rating: "7.9", image: "https://image.tmdb.org/t/p/w200/8yW1Z5fL4tXgQzY6h5QkXgY5fL4tXgQz.jpg", embed: "https://vidsrc.me/embed/movie/287441", desc: "Film Bleach." },
-    { id: 25, title: "Attack on Titan: Chronicles", year: 2019, genre: "Anime, Action", rating: "8.4", image: "https://image.tmdb.org/t/p/w200/8yW1Z5fL4tXgQzY6h5QkXgY5fL4tXgQz.jpg", embed: "https://vidsrc.me/embed/movie/573254", desc: "Rekapan Attack on Titan." },
-    
-    // INDO MOVIE
-    { id: 26, title: "KKN di Desa Penari", year: 2022, genre: "Horror, Drama", rating: "7.2", image: "https://image.tmdb.org/t/p/w200/8yW1Z5fL4tXgQzY6h5QkXgY5fL4tXgQz.jpg", embed: "https://vidsrc.me/embed/movie/823421", desc: "Horor Indonesia viral." },
-    { id: 27, title: "Sewu Dino", year: 2023, genre: "Horror, Mystery", rating: "7.5", image: "https://image.tmdb.org/t/p/w200/8yW1Z5fL4tXgQzY6h5QkXgY5fL4tXgQz.jpg", embed: "https://vidsrc.me/embed/movie/823421", desc: "Horor Indonesia terbaru." },
-    { id: 28, title: "Pengabdi Setan 2", year: 2022, genre: "Horror, Drama", rating: "8.0", image: "https://image.tmdb.org/t/p/w200/8yW1Z5fL4tXgQzY6h5QkXgY5fL4tXgQz.jpg", embed: "https://vidsrc.me/embed/movie/823421", desc: "Horor Indonesia." },
-    { id: 29, title: "Imperfect: Karier, Cinta & Timbangan", year: 2019, genre: "Comedy, Drama", rating: "7.8", image: "https://image.tmdb.org/t/p/w200/8yW1Z5fL4tXgQzY6h5QkXgY5fL4tXgQz.jpg", embed: "https://vidsrc.me/embed/movie/823421", desc: "Film komedi Indonesia." },
-    { id: 30, title: "The Raid 2", year: 2014, genre: "Action, Crime", rating: "8.9", image: "https://image.tmdb.org/t/p/w200/8yW1Z5fL4tXgQzY6h5QkXgY5fL4tXgQz.jpg", embed: "https://vidsrc.me/embed/movie/823421", desc: "Aksi brutal Indonesia." },
+    { id: 24, title: "KKN di Desa Penari", year: 2022, genre: "Horror, Drama", rating: "7.2", image: "https://image.tmdb.org/t/p/w200/8yW1Z5fL4tXgQzY6h5QkXgY5fL4tXgQz.jpg", embed: "https://vidsrc.me/embed/movie/823421", desc: "Horor Indonesia viral." },
+    { id: 25, title: "Sewu Dino", year: 2023, genre: "Horror, Mystery", rating: "7.5", image: "https://image.tmdb.org/t/p/w200/8yW1Z5fL4tXgQzY6h5QkXgY5fL4tXgQz.jpg", embed: "https://vidsrc.me/embed/movie/823421", desc: "Horor Indonesia terbaru." },
+    { id: 26, title: "Pengabdi Setan 2", year: 2022, genre: "Horror, Drama", rating: "8.0", image: "https://image.tmdb.org/t/p/w200/8yW1Z5fL4tXgQzY6h5QkXgY5fL4tXgQz.jpg", embed: "https://vidsrc.me/embed/movie/823421", desc: "Horor Indonesia." },
+    { id: 27, title: "The Raid 2", year: 2014, genre: "Action, Crime", rating: "8.9", image: "https://image.tmdb.org/t/p/w200/8yW1Z5fL4tXgQzY6h5QkXgY5fL4tXgQz.jpg", embed: "https://vidsrc.me/embed/movie/823421", desc: "Aksi brutal Indonesia." },
+    { id: 28, title: "Imperfect", year: 2019, genre: "Comedy, Drama", rating: "7.8", image: "https://image.tmdb.org/t/p/w200/8yW1Z5fL4tXgQzY6h5QkXgY5fL4tXgQz.jpg", embed: "https://vidsrc.me/embed/movie/823421", desc: "Film komedi Indonesia." },
 ];
 
-// GENERATE 500+ DATA DARI DB TERSEBUT
 function generateMoreMovies() {
     let all = [];
-    for (let i = 0; i < 50; i++) {
+    for (let i = 0; i < 20; i++) {
         MOVIE_DB.forEach(m => {
             let newM = {...m};
             newM.id = all.length + 1;
-            // Variasi judul biar ga duplicate persis
             if (i > 0) {
                 newM.title = m.title + " " + (i+1);
                 newM.year = m.year + i;
@@ -135,24 +131,32 @@ function generateMoreMovies() {
             all.push(newM);
         });
     }
-    return all.slice(0, 500);
+    return all.slice(0, 300);
 }
 
 allMovies = generateMoreMovies();
-filteredMovies = [...allMovies];
+let filteredMovies = [...allMovies];
 
-function renderMovies(movies) {
+function renderMovies(movies, page = 1) {
     const grid = document.getElementById('movieGrid');
+    const pagination = document.getElementById('pagination');
+    
     if (!movies || movies.length === 0) {
-        grid.innerHTML = `<div class="no-result">😞 Tidak ada film atau anime yang cocok dengan pencarian lu, Bos! Coba kata kunci lain.</div>`;
+        grid.innerHTML = '<div class="no-result">Tidak ada film yang cocok dengan pencarian.</div>';
+        pagination.innerHTML = '';
         document.getElementById('resultInfo').style.display = 'none';
         return;
     }
     
-    document.getElementById('resultInfo').style.display = 'block';
-    document.getElementById('resultInfo').textContent = `🎬 Menampilkan ${movies.length} film dari ${allMovies.length} total koleksi`;
+    const totalPages = Math.ceil(movies.length / PER_PAGE);
+    const start = (page - 1) * PER_PAGE;
+    const end = start + PER_PAGE;
+    const pageMovies = movies.slice(start, end);
     
-    grid.innerHTML = movies.map((item) => {
+    document.getElementById('resultInfo').style.display = 'block';
+    document.getElementById('resultInfo').textContent = `Menampilkan ${pageMovies.length} dari ${movies.length} film (Halaman ${page}/${totalPages})`;
+    
+    grid.innerHTML = pageMovies.map((item) => {
         return `
             <div class="card" onclick="openMovie(${item.id})">
                 <img src="${item.image}" alt="${item.title}" onerror="this.src='https://via.placeholder.com/200x280/222/666?text=${encodeURIComponent(item.title.substring(0,15))}'">
@@ -167,45 +171,78 @@ function renderMovies(movies) {
             </div>
         `;
     }).join('');
+    
+    // PAGINATION
+    let paginationHTML = '';
+    if (totalPages > 1) {
+        paginationHTML += `<button onclick="changePage(${page - 1})" ${page === 1 ? 'disabled' : ''}>Previous</button>`;
+        
+        let startPage = Math.max(1, page - 2);
+        let endPage = Math.min(totalPages, page + 2);
+        
+        if (startPage > 1) {
+            paginationHTML += `<button onclick="changePage(1)">1</button>`;
+            if (startPage > 2) paginationHTML += `<span style="color:rgba(255,255,255,.2);padding:0 5px;">...</span>`;
+        }
+        
+        for (let i = startPage; i <= endPage; i++) {
+            paginationHTML += `<button onclick="changePage(${i})" class="${i === page ? 'active' : ''}">${i}</button>`;
+        }
+        
+        if (endPage < totalPages) {
+            if (endPage < totalPages - 1) paginationHTML += `<span style="color:rgba(255,255,255,.2);padding:0 5px;">...</span>`;
+            paginationHTML += `<button onclick="changePage(${totalPages})">${totalPages}</button>`;
+        }
+        
+        paginationHTML += `<button onclick="changePage(${page + 1})" ${page === totalPages ? 'disabled' : ''}>Next</button>`;
+    }
+    pagination.innerHTML = paginationHTML;
+}
+
+function changePage(page) {
+    if (page < 1) return;
+    const totalPages = Math.ceil(filteredMovies.length / PER_PAGE);
+    if (page > totalPages) return;
+    currentPage = page;
+    renderMovies(filteredMovies, page);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
 function searchMovies() {
     const query = document.getElementById('searchInput').value.trim().toLowerCase();
     if (!query) {
         filteredMovies = [...allMovies];
-        renderMovies(filteredMovies);
-        return;
+    } else {
+        filteredMovies = allMovies.filter(m => 
+            m.title.toLowerCase().includes(query) || 
+            m.genre.toLowerCase().includes(query) ||
+            m.desc.toLowerCase().includes(query)
+        );
     }
-    
-    const results = allMovies.filter(m => 
-        m.title.toLowerCase().includes(query) || 
-        m.genre.toLowerCase().includes(query) ||
-        m.desc.toLowerCase().includes(query)
-    );
-    
-    filteredMovies = results;
-    renderMovies(results);
+    currentPage = 1;
+    renderMovies(filteredMovies, 1);
 }
 
 function resetSearch() {
     document.getElementById('searchInput').value = '';
     filteredMovies = [...allMovies];
-    renderMovies(filteredMovies);
+    currentPage = 1;
+    renderMovies(filteredMovies, 1);
 }
 
 function openMovie(id) {
     const movie = allMovies.find(m => m.id === id);
     if (!movie) return;
     
-    document.getElementById('modalTitle').textContent = '🎥 ' + movie.title;
+    document.getElementById('modalTitle').textContent = 'EDWARD CINEMA - ' + movie.title;
     document.getElementById('modalContent').innerHTML = `
         <iframe src="${movie.embed}" allowfullscreen></iframe>
         <h2>${movie.title} (${movie.year})</h2>
         <p>⭐ ${movie.rating} • 🏷️ ${movie.genre}</p>
         <p style="color:rgba(255,255,255,.6);font-style:italic">${movie.desc}</p>
         <div class="links">
-            <a href="${movie.embed}" target="_blank">🔗 Buka di tab baru</a>
-            <a href="#" onclick="downloadMovie('${movie.title}')">⬇️ Download (server mirror)</a>
+            <a href="${movie.embed}" target="_blank">Buka di tab baru</a>
+            <a href="#" onclick="downloadMovie('${movie.title}')">Download</a>
         </div>
         <button class="btn-close" onclick="closeModal()">Tutup</button>
     `;
@@ -214,8 +251,8 @@ function openMovie(id) {
 }
 
 function downloadMovie(title) {
-    alert(`⬇️ Link download untuk "${title}" sedang diproses...\nCek console buat link mirror.`);
-    console.log(`[EDWARD] Download link: https://dl.edward-cinema.xyz/${encodeURIComponent(title)}.mp4`);
+    alert(`Link download untuk "${title}" sedang diproses...`);
+    console.log(`[EDWARD] Download: https://dl.edward-cinema.xyz/${encodeURIComponent(title)}.mp4`);
 }
 
 function closeModal() {
@@ -228,8 +265,7 @@ document.addEventListener('keydown', e => {
     if (e.key === 'Escape') closeModal();
 });
 
-// INIT
-renderMovies(allMovies);
+renderMovies(filteredMovies, 1);
 </script>
 </body>
 </html>
