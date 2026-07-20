@@ -6,7 +6,7 @@
 <title>EDWARD</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-body{background:#0a0a0a;color:#d0d0d0;font-family:'Inter','Segoe UI',sans-serif;padding:20px;min-height:100vh;line-height:1.6;filter:grayscale(1)}
+body{background:#0a0a0a;color:#d0d0d0;font-family:'Inter','Segoe UI',sans-serif;padding:20px;min-height:100vh;line-height:1.6}
 ::selection{background:#555;color:#fff}
 .header{max-width:960px;margin:0 auto 40px;padding-bottom:20px;border-bottom:2px solid rgba(255,255,255,.06)}
 .header h1{font-size:32px;font-weight:800;color:#fff;letter-spacing:-0.5px}
@@ -17,7 +17,7 @@ body{background:#0a0a0a;color:#d0d0d0;font-family:'Inter','Segoe UI',sans-serif;
 .header .lang button.active{border-color:#fff;color:#fff;background:rgba(255,255,255,.06)}
 .grid{max-width:960px;margin:0 auto;display:grid;grid-template-columns:1fr;gap:24px}
 .card{background:#141414;border-radius:20px;padding:28px 30px;border:1px solid rgba(255,255,255,.04);transition:.3s;cursor:pointer}
-.card:hover{transform:translateY(-4px);border-color:rgba(255,255,255,.15);box-shadow:0 20px 60px rgba(0,0,0,.5)}
+.card:hover{transform:translateY(-4px);border-color:rgba(255,255,255,.15)}
 .card .meta{display:flex;gap:14px;flex-wrap:wrap;font-size:12px;color:rgba(255,255,255,.25);margin-bottom:10px}
 .card .meta .tag{background:rgba(255,255,255,.04);color:rgba(255,255,255,.4);padding:4px 14px;border-radius:30px;font-weight:500;font-size:11px}
 .card .meta .time{color:rgba(255,255,255,.2)}
@@ -101,15 +101,13 @@ function renderArticles(articles) {
         return;
     }
     
-    const isId = currentLang === 'id';
-    
     grid.innerHTML = articles.map((item, index) => {
         const tag = item.tag_list?.[0] || 'Tech';
-        const title = item.title;
-        const desc = item.description || item.summary || (isId ? 'Artikel dari developer.' : 'Article from developer.');
-        const author = item.user?.name || 'Developer';
-        const date = item.published_at ? new Date(item.published_at).toLocaleDateString('id-ID', {day:'numeric', month:'short', year:'numeric'}) : '';
         const time = Math.ceil(item.reading_time_minutes || 3) + ' min';
+        const date = item.published_at ? new Date(item.published_at).toLocaleDateString('id-ID', {day:'numeric', month:'short', year:'numeric'}) : '';
+        const title = item.title || 'Untitled';
+        const desc = item.description || item.summary || 'Artikel dari developer.';
+        const author = item.user?.name || 'Developer';
         
         return `
             <div class="card" onclick="openModal(${index})">
@@ -130,9 +128,9 @@ function renderArticles(articles) {
 // TRANSLATE
 // ============================================
 async function translateText(text, targetLang) {
-    if (targetLang === 'en') return text;
+    if (targetLang === 'en' || !text) return text;
     try {
-        const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=id&dt=t&q=${encodeURIComponent(text)}`;
+        const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=id&dt=t&q=${encodeURIComponent(text.slice(0, 2000))}`;
         const res = await fetch(url);
         const data = await res.json();
         return data[0].map(item => item[0]).join('');
@@ -158,14 +156,13 @@ async function openModal(index) {
         let content = detail.body_markdown || detail.body_html || 'Konten tidak tersedia';
         content = content.replace(/<[^>]*>/g, '');
         
-        // Translate if Indonesian
+        let title = article.title;
+        let desc = article.description || article.summary || '';
         let translatedContent = content;
-        let translatedTitle = article.title;
-        let translatedDesc = article.description || article.summary || '';
         
         if (currentLang === 'id') {
-            translatedTitle = await translateText(article.title, 'id');
-            translatedDesc = await translateText(article.description || article.summary || '', 'id');
+            title = await translateText(article.title, 'id');
+            desc = await translateText(article.description || article.summary || '', 'id');
             translatedContent = await translateText(content.slice(0, 3000), 'id');
             if (content.length > 3000) translatedContent += '...';
         }
@@ -173,7 +170,7 @@ async function openModal(index) {
         const paragraphs = translatedContent.split('\n\n').filter(p => p.trim()).map(p => `<p>${p}</p>`).join('');
         
         document.getElementById('modalContent').innerHTML = `
-            <h2>${translatedTitle}</h2>
+            <h2>${title}</h2>
             <div class="meta">
                 <span class="tag">🏷️ ${article.tag_list?.[0] || 'Tech'}</span>
                 <span class="time">⏱️ ${Math.ceil(article.reading_time_minutes || 3)} min</span>
