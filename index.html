@@ -6,235 +6,236 @@
 <title>EDWARD</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-body{background:#0a0e17;color:#fff;font-family:'Segoe UI',sans-serif;padding:10px;min-height:100vh}
+body{background:#0a0e17;color:#e0e0e0;font-family:'Inter','Segoe UI',sans-serif;padding:20px;min-height:100vh;line-height:1.6}
 ::selection{background:#ff2d55;color:#fff}
-.header{text-align:center;padding:20px 0 10px;border-bottom:2px solid #00d4ff;margin-bottom:15px}
-.header h1{font-size:28px;background:linear-gradient(135deg,#00d4ff,#ff2d55);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-.header p{font-size:11px;color:rgba(255,255,255,.3);margin-top:2px}
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:15px;margin-top:10px}
-.card{background:#141b2b;border-radius:16px;padding:20px;border:1px solid rgba(255,255,255,.05);transition:.3s;cursor:pointer}
-.card:hover{transform:translateY(-4px);border-color:#00d4ff}
-.card .icon{font-size:28px;margin-bottom:6px}
-.card h3{font-size:18px;color:#fff;margin-bottom:6px}
-.card p{font-size:13px;color:rgba(255,255,255,.6);line-height:1.6}
-.card .tag{display:inline-block;background:rgba(0,212,255,.15);color:#00d4ff;padding:2px 12px;border-radius:20px;font-size:10px;margin-top:8px}
-.card .btn-read{display:inline-block;margin-top:12px;color:#00d4ff;font-weight:600;font-size:13px}
+
+.header{max-width:900px;margin:0 auto 30px;padding-bottom:20px;border-bottom:2px solid rgba(0,212,255,.1)}
+.header h1{font-size:28px;font-weight:800;background:linear-gradient(135deg,#00d4ff,#ff2d55);-webkit-background-clip:text;-webkit-text-fill-color:transparent;letter-spacing:-0.5px}
+.header .sub{font-size:13px;color:rgba(255,255,255,.3);margin-top:2px}
+
+.grid{max-width:900px;margin:0 auto;display:flex;flex-direction:column;gap:20px}
+.card{background:#141b2b;border-radius:16px;padding:24px;border:1px solid rgba(255,255,255,.05);transition:.3s;cursor:pointer}
+.card:hover{transform:translateY(-3px);border-color:#00d4ff;box-shadow:0 10px 30px rgba(0,212,255,.05)}
+.card .meta{display:flex;gap:12px;flex-wrap:wrap;font-size:11px;color:rgba(255,255,255,.3);margin-bottom:6px}
+.card .meta .tag{background:rgba(0,212,255,.1);color:#00d4ff;padding:2px 10px;border-radius:20px}
+.card .meta .time{color:rgba(255,255,255,.2)}
+.card h2{font-size:20px;font-weight:700;color:#fff;margin-bottom:6px;line-height:1.3}
+.card h2:hover{color:#00d4ff}
+.card p{font-size:14px;color:rgba(255,255,255,.5);line-height:1.7}
+.card .btn-read{display:inline-block;margin-top:14px;color:#00d4ff;font-weight:600;font-size:13px;border-bottom:1px solid transparent;transition:.2s}
+.card .btn-read:hover{border-bottom-color:#00d4ff}
+
+.loading{text-align:center;padding:40px;color:rgba(255,255,255,.3)}
+
 .modal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.97);z-index:9999;flex-direction:column;align-items:center;justify-content:center;padding:20px}
 .modal.show{display:flex}
 .modal .top{position:absolute;top:0;left:0;right:0;padding:12px 20px;display:flex;justify-content:space-between;align-items:center;background:rgba(0,0,0,.8);border-bottom:2px solid #00d4ff}
-.modal .top .t{font-size:18px;font-weight:700;color:#00d4ff}
+.modal .top .t{font-size:17px;font-weight:700;color:#00d4ff}
 .modal .top .close{background:#ff2d55;border:0;border-radius:50%;width:40px;height:40px;color:#fff;font-size:20px;cursor:pointer}
-.modal .content{max-width:700px;width:100%;max-height:80vh;overflow-y:auto;background:#141b2b;border-radius:16px;padding:30px;border:1px solid rgba(0,212,255,.2)}
-.modal .content h2{color:#00d4ff;font-size:24px;margin-bottom:15px}
+.modal .content{max-width:750px;width:100%;max-height:80vh;overflow-y:auto;background:#141b2b;border-radius:16px;padding:30px;border:1px solid rgba(0,212,255,.2)}
+.modal .content h2{color:#00d4ff;font-size:24px;margin-bottom:12px}
+.modal .content .meta{font-size:12px;color:rgba(255,255,255,.3);margin-bottom:15px}
 .modal .content p{color:rgba(255,255,255,.8);line-height:1.8;margin-bottom:12px;font-size:15px}
 .modal .content ul{color:rgba(255,255,255,.8);padding-left:25px;margin:10px 0}
 .modal .content ul li{margin-bottom:8px}
-.modal .content .btn{display:inline-block;background:#00d4ff;color:#000;padding:10px 24px;border-radius:30px;font-weight:700;margin-top:10px;border:0;cursor:pointer}
+.modal .content .btn{display:inline-block;background:#00d4ff;color:#000;padding:10px 24px;border-radius:30px;font-weight:700;margin-top:15px;border:0;cursor:pointer}
 .modal .content pre{background:#0a0e17;padding:15px;border-radius:10px;overflow-x:auto;font-size:13px;color:#00ff88;border:1px solid rgba(0,255,136,.1);margin:10px 0}
 .modal .content .highlight{color:#ffd700;font-weight:600}
-.loading{text-align:center;padding:40px;color:rgba(255,255,255,.3)}
-.footer{text-align:center;padding:15px 0 8px;border-top:1px solid rgba(255,255,255,.05);margin-top:15px}
-.footer p{font-size:9px;color:rgba(255,255,255,.2)}
+
+.footer{max-width:900px;margin:30px auto 0;padding-top:15px;border-top:1px solid rgba(255,255,255,.05);text-align:center;font-size:11px;color:rgba(255,255,255,.2)}
 .footer span{color:#00d4ff}
+
+@media(max-width:600px){
+  body{padding:12px}
+  .header h1{font-size:22px}
+  .card{padding:16px}
+  .card h2{font-size:17px}
+  .modal .content{padding:20px}
+}
 </style>
 </head>
 <body>
 
 <div class="header">
-<h1>📝 EDWARD</h1>
-<p>Artikel Informatika • Cyber Security • Coding • Lengkap & Ringkas</p>
+<h1>⚡ EDWARD</h1>
+<div class="sub">Technical deep dives • Powered by API</div>
 </div>
 
-<div id="grid" class="grid"></div>
+<div id="grid" class="grid"><div class="loading">⏳ Memuat artikel...</div></div>
 
-<div class="footer"><p>© 2026 <span>EDWARD</span></p></div>
+<div class="footer"><p>© 2026 <span>EDWARD</span> • API Powered</p></div>
 
 <div class="modal" id="modal">
 <div class="top">
-<span class="t" id="modalTitle">📖 Artikel</span>
+<span class="t" id="modalTitle">📄 Artikel</span>
 <button class="close" onclick="closeModal()">✕</button>
 </div>
 <div class="content" id="modalContent"></div>
 </div>
 
 <script>
-const ARTICLES = [
-{
-  id:1,
-  icon:'🔐',
-  title:'Apa itu Cyber Security?',
-  tag:'Cyber Security',
-  desc:'Pengertian lengkap keamanan siber, jenis ancaman, dan cara melindungi diri.',
-  content:`
-    <h2>🔐 Apa itu Cyber Security?</h2>
-    <p><span class="highlight">Cyber Security</span> adalah praktik melindungi sistem, jaringan, dan program dari serangan digital. Tujuannya menjaga kerahasiaan, integritas, dan ketersediaan data (CIA Triad).</p>
-    <p><strong>Jenis Ancaman:</strong></p>
-    <ul>
-      <li><strong>Malware</strong> — Program jahat (virus, worm, trojan)</li>
-      <li><strong>Phishing</strong> — Penipuan via email/link palsu</li>
-      <li><strong>Ransomware</strong> — Mengunci data dan minta tebusan</li>
-      <li><strong>DDOS</strong> — Membanjiri server dengan traffic</li>
-      <li><strong>Man-in-the-Middle</strong> — Menyadap komunikasi</li>
-    </ul>
-    <p><strong>Cara Melindungi:</strong> Gunakan antivirus, update sistem, backup data, dan gunakan password kuat.</p>
-  `
-},
-{
-  id:2,
-  icon:'🛡️',
-  title:'Cara Melindungi dari Malware',
-  tag:'Cyber Security',
-  desc:'Panduan lengkap melindungi perangkat dari malware, virus, dan ransomware.',
-  content:`
-    <h2>🛡️ Cara Melindungi dari Malware</h2>
-    <p><span class="highlight">Malware</span> adalah program jahat yang dirancang untuk merusak, mencuri, atau mengganggu sistem.</p>
-    <p><strong>Jenis Malware:</strong></p>
-    <ul>
-      <li><strong>Virus</strong> — Menempel pada file dan menyebar</li>
-      <li><strong>Worm</strong> — Menyebar sendiri tanpa bantuan</li>
-      <li><strong>Trojan</strong> — Menyamar sebagai program berguna</li>
-      <li><strong>Ransomware</strong> — Mengenkripsi data dan minta tebusan</li>
-      <li><strong>Spyware</strong> — Memata-matai aktivitas user</li>
-    </ul>
-    <p><strong>Cara Melindungi:</strong></p>
-    <ul>
-      <li>Gunakan antivirus (Windows Defender, Malwarebytes, Bitdefender)</li>
-      <li>Jangan klik link/attachment mencurigakan</li>
-      <li>Update sistem dan software secara rutin</li>
-      <li>Backup data ke cloud atau harddisk eksternal</li>
-      <li>Gunakan firewall</li>
-    </ul>
-  `
-},
-{
-  id:3,
-  icon:'💻',
-  title:'Apa itu Informatika?',
-  tag:'Informatika',
-  desc:'Penjelasan lengkap tentang informatika, ruang lingkup, dan prospek karir.',
-  content:`
-    <h2>💻 Apa itu Informatika?</h2>
-    <p><span class="highlight">Informatika</span> adalah ilmu yang mempelajari tentang penggunaan komputer untuk mengolah, menyimpan, dan menyebarkan data.</p>
-    <p><strong>Ruang Lingkup Informatika:</strong></p>
-    <ul>
-      <li><strong>Algoritma & Pemrograman</strong> — Dasar coding</li>
-      <li><strong>Jaringan Komputer</strong> — LAN, WAN, Internet</li>
-      <li><strong>Basis Data</strong> — Menyimpan dan mengelola data</li>
-      <li><strong>Kecerdasan Buatan (AI)</strong> — Mesin yang belajar</li>
-      <li><strong>Keamanan Siber</strong> — Melindungi data dari ancaman</li>
-      <li><strong>Pengembangan Web</strong> — Membuat website</li>
-    </ul>
-    <p><strong>Prospek Karir:</strong> Software Engineer, Data Scientist, Cyber Security Analyst, Web Developer, AI Engineer.</p>
-  `
-},
-{
-  id:4,
-  icon:'🌐',
-  title:'Dasar HTML & CSS',
-  tag:'Coding',
-  desc:'Belajar membuat website dari nol dengan HTML dan CSS.',
-  content:`
-    <h2>🌐 Dasar HTML & CSS</h2>
-    <p><span class="highlight">HTML</span> (HyperText Markup Language) adalah bahasa untuk membuat struktur website.</p>
-    <p><strong>Contoh HTML:</strong></p>
-    <pre>&lt;!DOCTYPE html&gt;
-&lt;html&gt;
-&lt;head&gt;
-  &lt;title&gt;Website Pertamaku&lt;/title&gt;
-&lt;/head&gt;
-&lt;body&gt;
-  &lt;h1&gt;Hello World!&lt;/h1&gt;
-  &lt;p&gt;Ini website pertamaku&lt;/p&gt;
-&lt;/body&gt;
-&lt;/html&gt;</pre>
-    <p><span class="highlight">CSS</span> (Cascading Style Sheets) untuk mempercantik tampilan website.</p>
-    <pre>body {
-  background: #0a0e17;
-  color: #fff;
-  font-family: 'Segoe UI', sans-serif;
-}
-h1 {
-  color: #00d4ff;
-}</pre>
-  `
-},
-{
-  id:5,
-  icon:'📱',
-  title:'Cara Bikin APK dari Website',
-  tag:'APK Builder',
-  desc:'Ubah website jadi aplikasi Android dengan 3 cara mudah.',
-  content:`
-    <h2>📱 Cara Bikin APK dari Website</h2>
-    <p><strong>1. PWA Builder (Online - GRATIS)</strong></p>
-    <p>Buka <span class="highlight">pwabuilder.com</span>, masukkan URL, build APK.</p>
-    <p><strong>2. HBuilder (PC)</strong></p>
-    <p>Buat project HTML5 App, copy kode, build Android APK.</p>
-    <p><strong>3. Capacitor (Termux)</strong></p>
-    <pre>npx cap init NamaApp com.nama.app
-npx cap add android
-npx cap copy
-npx cap sync
-npx cap open android</pre>
-  `
-},
-{
-  id:6,
-  icon:'🐍',
-  title:'Python Dasar untuk Pemula',
-  tag:'Coding',
-  desc:'Belajar Python dari nol dengan contoh kode sederhana.',
-  content:`
-    <h2>🐍 Python Dasar</h2>
-    <p><span class="highlight">Python</span> adalah bahasa pemrograman yang mudah dipelajari dan serbaguna.</p>
-    <p><strong>Variabel dan Tipe Data:</strong></p>
-    <pre>nama = "Edward"       # string
-umur = 20             # integer
-tinggi = 175.5        # float
-is_student = True     # boolean</pre>
-    <p><strong>Fungsi:</strong></p>
-    <pre>def sapa(nama):
-    print(f"Halo {nama}!")
+// ============================================
+// API ENDPOINTS
+// ============================================
+const API = {
+    // 1. Dev.to API (Artikel Programming)
+    devto: 'https://dev.to/api/articles?per_page=20',
     
-sapa("Edward")</pre>
-    <p><strong>List dan Perulangan:</strong></p>
-    <pre>buah = ["Apel", "Jeruk", "Mangga"]
-for i in buah:
-    print(i)</pre>
-  `
-}
+    // 2. GitHub API (Readme sebagai artikel)
+    github: 'https://api.github.com/repos/EbookFoundation/free-programming-books/contents/README.md',
+    
+    // 3. HackerNews API (Berita Tech)
+    hackernews: 'https://hacker-news.firebaseio.com/v0/topstories.json'
+};
+
+// ============================================
+// FALLBACK ARTIKEL (KALO API ERROR)
+// ============================================
+const FALLBACK = [
+    {
+        title: 'Kenapa Supabase Makin Populer di 2026?',
+        tag: 'Backend',
+        time: '5 min',
+        desc: 'Kupas tuntas fitur Supabase: database PostgreSQL, RLS, Auth realtime, dan efisiensi untuk proyek modern.',
+        content: '<h2>Kenapa Supabase Makin Populer di 2026?</h2><p>Supabase adalah open-source alternative Firebase yang semakin banyak digunakan karena menawarkan PostgreSQL sebagai database utama.</p>'
+    },
+    {
+        title: 'Row Level Security (RLS) di PostgreSQL',
+        tag: 'Database',
+        time: '4 min',
+        desc: 'Panduan lengkap RLS di PostgreSQL untuk keamanan data di level row.',
+        content: '<h2>Row Level Security (RLS) di PostgreSQL</h2><p>Row Level Security (RLS) adalah fitur PostgreSQL yang membatasi akses data berdasarkan pengguna yang sedang login.</p>'
+    },
+    {
+        title: 'Perbedaan SQL vs NoSQL untuk Pemula',
+        tag: 'Database',
+        time: '6 min',
+        desc: 'Penjelasan lengkap perbedaan SQL dan NoSQL, kapan harus pakai masing-masing.',
+        content: '<h2>Perbedaan SQL vs NoSQL</h2><p>SQL dan NoSQL adalah dua jenis database yang berbeda dengan keunggulan masing-masing.</p>'
+    },
+    {
+        title: 'Cara Kerja JWT (JSON Web Token)',
+        tag: 'Security',
+        time: '5 min',
+        desc: 'Penjelasan detail tentang JWT, cara kerja, dan implementasi di aplikasi web.',
+        content: '<h2>Cara Kerja JWT</h2><p>JWT adalah standar untuk membuat token akses yang aman dan stateless.</p>'
+    },
+    {
+        title: 'Apa itu CORS dan Cara Mengatasinya',
+        tag: 'Web Dev',
+        time: '4 min',
+        desc: 'Penjelasan CORS (Cross-Origin Resource Sharing) dan cara mengatasinya di backend.',
+        content: '<h2>Apa itu CORS?</h2><p>CORS adalah mekanisme keamanan yang memungkinkan server menentukan siapa saja yang boleh mengakses resource-nya.</p>'
+    },
+    {
+        title: 'Mengenal Docker untuk Pemula',
+        tag: 'DevOps',
+        time: '6 min',
+        desc: 'Panduan dasar Docker, container, image, dan cara menjalankan aplikasi di container.',
+        content: '<h2>Mengenal Docker</h2><p>Docker adalah platform untuk mengembangkan, mengirim, dan menjalankan aplikasi di dalam container.</p>'
+    },
+    {
+        title: 'Cara Bikin API dengan Express.js',
+        tag: 'Backend',
+        time: '7 min',
+        desc: 'Tutorial membuat REST API dengan Express.js dan PostgreSQL.',
+        content: '<h2>Membuat API dengan Express.js</h2><p>Express.js adalah framework Node.js yang paling populer untuk membuat REST API.</p>'
+    },
+    {
+        title: 'Apa itu Web3 dan Masa Depan Internet',
+        tag: 'Web3',
+        time: '5 min',
+        desc: 'Penjelasan tentang Web3, blockchain, dan bagaimana internet akan berubah di masa depan.',
+        content: '<h2>Apa itu Web3?</h2><p>Web3 adalah internet versi berikutnya yang desentralisasi, menggunakan blockchain sebagai basisnya.</p>'
+    }
 ];
 
-function render(){
+// ============================================
+// AMBIL DARI API + FALLBACK
+// ============================================
+async function fetchArticles() {
     const grid = document.getElementById('grid');
-    grid.innerHTML = ARTICLES.map(a => `
-        <div class="card" onclick="openModal(${a.id})">
-            <div class="icon">${a.icon}</div>
-            <h3>${a.title}</h3>
-            <p>${a.desc}</p>
-            <span class="tag">${a.tag}</span>
+    grid.innerHTML = '<div class="loading">⏳ Memuat artikel dari API...</div>';
+    
+    try {
+        // Coba ambil dari Dev.to API
+        const response = await fetch(API.devto);
+        if (response.ok) {
+            const data = await response.json();
+            const articles = data.map(item => ({
+                title: item.title,
+                tag: item.tag_list?.[0] || 'Tech',
+                time: Math.ceil(item.reading_time_minutes || 3) + ' min',
+                desc: item.description || item.summary || 'Artikel menarik tentang teknologi.',
+                content: `<h2>${item.title}</h2><p>${item.body_html || item.description || 'Baca selengkapnya di Dev.to'}</p>`
+            }));
+            renderArticles(articles);
+            return;
+        }
+    } catch (e) {
+        console.warn('Dev.to API error, trying fallback...');
+    }
+    
+    // Kalo API gagal, pake FALLBACK
+    renderArticles(FALLBACK);
+}
+
+// ============================================
+// RENDER ARTIKEL
+// ============================================
+function renderArticles(articles) {
+    const grid = document.getElementById('grid');
+    if (!articles || articles.length === 0) {
+        grid.innerHTML = '<div class="loading">😞 Tidak ada artikel</div>';
+        return;
+    }
+    
+    grid.innerHTML = articles.map((a, index) => `
+        <div class="card" onclick="openModal(${index})">
+            <div class="meta">
+                <span class="tag">${a.tag || 'Tech'}</span>
+                <span class="time">${a.time || '3 min'}</span>
+            </div>
+            <h2>${a.title}</h2>
+            <p>${a.desc || 'Artikel menarik tentang teknologi dan pemrograman.'}</p>
             <div class="btn-read">Baca Selengkapnya →</div>
         </div>
     `).join('');
+    
+    // Simpan data ke global
+    window._articles = articles;
 }
 
-function openModal(id){
-    const a = ARTICLES.find(x => x.id === id);
-    if(!a) return;
-    document.getElementById('modalTitle').textContent = a.icon + ' ' + a.title;
-    document.getElementById('modalContent').innerHTML = a.content + `<button class="btn" onclick="closeModal()">Tutup</button>`;
+// ============================================
+// MODAL
+// ============================================
+function openModal(index) {
+    const articles = window._articles || FALLBACK;
+    const a = articles[index];
+    if (!a) return;
+    
+    document.getElementById('modalTitle').textContent = '📄 ' + a.title;
+    document.getElementById('modalContent').innerHTML = `
+        ${a.content || '<p>Konten tidak tersedia</p>'}
+        <button class="btn" onclick="closeModal()">Tutup</button>
+    `;
     document.getElementById('modal').classList.add('show');
     document.body.style.overflow = 'hidden';
 }
 
-function closeModal(){
+function closeModal() {
     document.getElementById('modal').classList.remove('show');
     document.body.style.overflow = 'auto';
 }
 
-document.addEventListener('keydown', e => { if(e.key === 'Escape') closeModal(); });
+document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') closeModal();
+});
 
-render();
+// ============================================
+// START
+// ============================================
+fetchArticles();
 </script>
 </body>
 </html>
