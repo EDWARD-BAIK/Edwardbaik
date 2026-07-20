@@ -44,12 +44,12 @@ body{background:#0a0e17;color:#e0e0e0;font-family:'Inter','Segoe UI',sans-serif;
 
 <div class="header">
 <h1>⚡ EDWARD</h1>
-<div class="sub">Technical deep dives • Dev.to API</div>
+<div class="sub">Technical deep dives • Reddit API (Real-time)</div>
 </div>
 
 <div id="grid" class="grid"><div class="loading">⏳ Loading...</div></div>
 
-<div class="footer"><p>© 2026 <span>EDWARD</span></p></div>
+<div class="footer"><p>© 2026 <span>EDWARD</span> • Reddit API</p></div>
 
 <div class="modal" id="modal">
 <div class="top">
@@ -61,33 +61,52 @@ body{background:#0a0e17;color:#e0e0e0;font-family:'Inter','Segoe UI',sans-serif;
 
 <script>
 // ============================================
-// DEV.TO API - FULL KONTEN
+// REDDIT API - REAL-TIME
 // ============================================
-let allArticles = [];
+const SUBREDDITS = ['programming', 'webdev', 'javascript', 'Python', 'linux', 'cybersecurity', 'MachineLearning', 'reactjs'];
 
 async function fetchArticles() {
     const grid = document.getElementById('grid');
-    grid.innerHTML = '<div class="loading">⏳ Loading...</div>';
+    grid.innerHTML = '<div class="loading">⏳ Loading from Reddit...</div>';
     
     try {
-        const res = await fetch('https://dev.to/api/articles?per_page=30');
-        if (!res.ok) throw new Error('API error');
-        const data = await res.json();
-        allArticles = data;
+        // Ambil dari beberapa subreddit
+        const allPosts = [];
+        for (const sub of SUBREDDITS) {
+            try {
+                const res = await fetch(`https://www.reddit.com/r/${sub}/hot.json?limit=5`);
+                if (res.ok) {
+                    const data = await res.json();
+                    if (data.data?.children) {
+                        data.data.children.forEach(child => {
+                            const post = child.data;
+                            allPosts.push({
+                                title: post.title || 'Untitled',
+                                subreddit: sub,
+                                author: post.author || 'Unknown',
+                                score: post.score || 0,
+                                num_comments: post.num_comments || 0,
+                                created: post.created_utc || Date.now() / 1000,
+                                url: post.url || '',
+                                selftext: post.selftext || '',
+                                permalink: `https://reddit.com${post.permalink}`,
+                                id: post.id
+                            });
+                        });
+                    }
+                }
+            } catch (e) {
+                console.warn('Gagal ambil r/', sub);
+            }
+            // Delay biar gak kena rate limit
+            await new Promise(r => setTimeout(r, 200));
+        }
         
-        if (data && data.length > 0) {
-            grid.innerHTML = data.map((item, index) => `
-                <div class="card" onclick="openModal(${index})">
-                    <div class="meta">
-                        <span class="tag">${item.tag_list?.[0] || 'Tech'}</span>
-                        <span class="time">⏱️ ${Math.ceil(item.reading_time_minutes || 3)} min</span>
-                        <span class="time">📅 ${item.published_at ? new Date(item.published_at).toLocaleDateString('id-ID', {day:'numeric', month:'short', year:'numeric'}) : ''}</span>
-                    </div>
-                    <h2>${item.title}</h2>
-                    <div class="desc">${item.description || item.summary || 'Artikel dari developer.'}</div>
-                    <div class="author">✍️ ${item.user?.name || 'Developer'}</div>
-                </div>
-            `).join('');
+        // Sort by newest
+        allPosts.sort((a, b) => b.created - a.created);
+        
+        if (allPosts.length > 0) {
+            renderArticles(allPosts);
         } else {
             grid.innerHTML = '<div class="error">😞 Tidak ada artikel</div>';
         }
@@ -96,51 +115,64 @@ async function fetchArticles() {
     }
 }
 
-async function openModal(index) {
-    const article = allArticles[index];
+function renderArticles(articles) {
+    const grid = document.getElementById('grid');
+    if (!articles || articles.length === 0) {
+        grid.innerHTML = '<div class="error">😞 Tidak ada artikel</div>';
+        return;
+    }
+    
+    grid.innerHTML = articles.map((item, index) => {
+        const timeAgo = getTimeAgo(item.created);
+        return `
+            <div class="card" onclick="openModal(${index})">
+                <div class="meta">
+                    <span class="tag">r/${item.subreddit}</span>
+                    <span class="time">${timeAgo}</span>
+                    <span class="time">⬆️ ${item.score}</span>
+                </div>
+                <h2>${item.title}</h2>
+                <div class="desc">${item.selftext ? item.selftext.slice(0, 200) + '...' : 'Klik untuk baca selengkapnya'}</div>
+                <div class="author">✍️ u/${item.author}</div>
+            </div>
+        `;
+    }).join('');
+    
+    window._articles = articles;
+}
+
+function getTimeAgo(timestamp) {
+    const seconds = Math.floor((Date.now() / 1000) - timestamp);
+    if (seconds < 60) return seconds + ' detik lalu';
+    const minutes = Math.floor(seconds / 60);
+    if (minutes < 60) return minutes + ' menit lalu';
+    const hours = Math.floor(minutes / 60);
+    if (hours < 24) return hours + ' jam lalu';
+    const days = Math.floor(hours / 24);
+    if (days < 7) return days + ' hari lalu';
+    return new Date(timestamp * 1000).toLocaleDateString('id-ID', {day:'numeric', month:'short', year:'numeric'});
+}
+
+function openModal(index) {
+    const article = window._articles[index];
     if (!article) return;
     
     document.getElementById('modalTitle').textContent = '📄 ' + article.title;
-    document.getElementById('modalContent').innerHTML = '<div class="loading">⏳ Memuat konten...</div>';
+    document.getElementById('modalContent').innerHTML = `
+        <h2>${article.title}</h2>
+        <div class="meta">
+            <span class="tag">r/${article.subreddit}</span>
+            <span class="time">${getTimeAgo(article.created)}</span>
+            <span class="time">⬆️ ${article.score}</span>
+            <span class="time">💬 ${article.num_comments}</span>
+            <span class="time">✍️ u/${article.author}</span>
+        </div>
+        <p>${article.selftext || 'Konten tidak tersedia'}</p>
+        <p><a href="${article.permalink}" target="_blank" style="color:#00d4ff;">🔗 Baca di Reddit</a></p>
+        <button class="btn-close" onclick="closeModal()">Tutup</button>
+    `;
     document.getElementById('modal').classList.add('show');
     document.body.style.overflow = 'hidden';
-    
-    try {
-        // Ambil detail artikel
-        const res = await fetch(`https://dev.to/api/articles/${article.id}`);
-        if (!res.ok) throw new Error('Gagal ambil detail');
-        const detail = await res.json();
-        
-        // Ambil konten dari body_markdown atau body_html
-        let content = detail.body_markdown || detail.body_html || 'Konten tidak tersedia';
-        
-        // Clean HTML
-        content = content.replace(/<[^>]*>/g, '');
-        // Convert markdown ke paragraf
-        const paragraphs = content.split('\n\n').filter(p => p.trim()).map(p => `<p>${p}</p>`).join('');
-        
-        document.getElementById('modalContent').innerHTML = `
-            <h2>${article.title}</h2>
-            <div class="meta">
-                <span class="tag">🏷️ ${article.tag_list?.[0] || 'Tech'}</span>
-                <span class="time">⏱️ ${Math.ceil(article.reading_time_minutes || 3)} min</span>
-                <span class="time">📅 ${article.published_at ? new Date(article.published_at).toLocaleDateString('id-ID', {day:'numeric', month:'short', year:'numeric'}) : ''}</span>
-                <span class="time">✍️ ${article.user?.name || 'Developer'}</span>
-            </div>
-            ${paragraphs || '<p>Konten tidak tersedia</p>'}
-            <button class="btn-close" onclick="closeModal()">Tutup</button>
-        `;
-    } catch (e) {
-        document.getElementById('modalContent').innerHTML = `
-            <h2>${article.title}</h2>
-            <div class="meta">
-                <span class="tag">🏷️ ${article.tag_list?.[0] || 'Tech'}</span>
-                <span class="time">⏱️ ${Math.ceil(article.reading_time_minutes || 3)} min</span>
-            </div>
-            <p>⚠️ Gagal memuat konten</p>
-            <button class="btn-close" onclick="closeModal()">Tutup</button>
-        `;
-    }
 }
 
 function closeModal() {
