@@ -8,18 +8,40 @@
 *{margin:0;padding:0;box-sizing:border-box}
 body{background:#0a0e17;color:#fff;font-family:'Segoe UI',sans-serif;padding:15px;min-height:100vh}
 ::selection{background:#ff2d55;color:#fff}
-.header{text-align:center;padding:20px 0 10px;border-bottom:2px solid #00d4ff;margin-bottom:15px}
+
+/* TOP BAR - JAM & BATRE */
+.top-bar{display:flex;justify-content:space-between;align-items:center;padding:6px 0 10px;border-bottom:1px solid rgba(0,212,255,.1);margin-bottom:5px;flex-wrap:wrap;gap:6px}
+.top-bar .left{font-size:11px;color:rgba(255,255,255,.3);letter-spacing:1px}
+.top-bar .left span{color:#00d4ff}
+.top-bar .right{display:flex;gap:14px;align-items:center;font-size:13px;font-weight:600}
+.top-bar .right .time{color:#00d4ff;font-variant-numeric:tabular-nums;background:rgba(0,212,255,.08);padding:4px 14px;border-radius:20px;border:1px solid rgba(0,212,255,.15)}
+.top-bar .right .battery{display:flex;align-items:center;gap:6px;color:rgba(255,255,255,.7);background:rgba(255,255,255,.04);padding:4px 12px 4px 8px;border-radius:20px;border:1px solid rgba(255,255,255,.06)}
+.top-bar .right .battery .icon{font-size:18px;line-height:1}
+.top-bar .right .battery .level{font-size:12px;font-weight:700;min-width:28px;text-align:right}
+.top-bar .right .battery .level.good{color:#4caf50}
+.top-bar .right .battery .level.medium{color:#ffd700}
+.top-bar .right .battery .level.low{color:#ff6b6b}
+.top-bar .right .battery .bar-wrap{width:28px;height:12px;background:rgba(255,255,255,.08);border-radius:6px;overflow:hidden;border:1px solid rgba(255,255,255,.06);position:relative}
+.top-bar .right .battery .bar-wrap .fill{height:100%;border-radius:4px;transition:width .5s;width:100%}
+.top-bar .right .battery .bar-wrap .fill.good{background:#4caf50}
+.top-bar .right .battery .bar-wrap .fill.medium{background:#ffd700}
+.top-bar .right .battery .bar-wrap .fill.low{background:#ff6b6b}
+
+.header{text-align:center;padding:12px 0 8px;border-bottom:2px solid #00d4ff;margin-bottom:15px}
 .header h1{font-size:32px;background:linear-gradient(135deg,#00d4ff,#ff2d55,#ffd700);-webkit-background-clip:text;-webkit-text-fill-color:transparent;letter-spacing:2px}
 .header p{font-size:12px;color:rgba(255,255,255,.4);margin-top:4px;letter-spacing:1px}
 .header .sub{font-size:10px;color:rgba(255,255,255,.2);margin-top:2px}
+
 .search-wrap{display:flex;gap:8px;margin:10px 0;background:#141b2b;border-radius:30px;padding:4px}
 .search-wrap input{flex:1;background:0;border:0;padding:10px 16px;color:#fff;font-size:13px;outline:0}
 .search-wrap input::placeholder{color:rgba(255,255,255,.3)}
 .search-wrap button{background:#00d4ff;border:0;border-radius:30px;padding:8px 18px;color:#000;font-weight:700;cursor:pointer}
+
 .cat-scroll{display:flex;gap:8px;overflow-x:auto;padding:8px 0;margin-bottom:10px;scrollbar-width:none}
 .cat-scroll::-webkit-scrollbar{display:none}
 .cat-scroll button{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);border-radius:30px;padding:6px 16px;color:#aaa;font-size:11px;cursor:pointer;white-space:nowrap;transition:.2s}
 .cat-scroll button.active{background:#00d4ff;border-color:#00d4ff;color:#000;font-weight:700}
+
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:15px;margin-top:10px}
 .card{background:#141b2b;border-radius:16px;padding:18px;border:1px solid rgba(255,255,255,.05);transition:.3s;cursor:pointer}
 .card:hover{transform:translateY(-4px);border-color:#00d4ff;box-shadow:0 10px 30px rgba(0,212,255,.1)}
@@ -32,6 +54,7 @@ body{background:#0a0e17;color:#fff;font-family:'Segoe UI',sans-serif;padding:15p
 .card .tag.code{background:rgba(0,255,136,.15);color:#00ff88}
 .card .tag.apk{background:rgba(255,107,53,.15);color:#ff6b35}
 .card .tag.informatika{background:rgba(0,212,255,.15);color:#00d4ff}
+
 .modal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.95);z-index:9999;flex-direction:column;align-items:center;justify-content:center;padding:20px}
 .modal.show{display:flex}
 .modal .top{position:absolute;top:0;left:0;right:0;padding:12px 20px;display:flex;justify-content:space-between;align-items:center;background:rgba(0,0,0,.8);border-bottom:2px solid #00d4ff}
@@ -44,6 +67,7 @@ body{background:#0a0e17;color:#fff;font-family:'Segoe UI',sans-serif;padding:15p
 .modal .content .btn{display:inline-block;background:#00d4ff;color:#000;padding:10px 24px;border-radius:30px;text-decoration:none;font-weight:700;margin-top:10px;border:0;cursor:pointer}
 .modal .content ul{color:rgba(255,255,255,.7);padding-left:20px;margin:10px 0}
 .modal .content ul li{margin-bottom:5px}
+
 .loading{text-align:center;padding:40px;color:rgba(255,255,255,.3);grid-column:1/-1}
 .footer{text-align:center;padding:15px 0 8px;border-top:1px solid rgba(255,255,255,.05);margin-top:15px}
 .footer p{font-size:9px;color:rgba(255,255,255,.2)}
@@ -51,6 +75,19 @@ body{background:#0a0e17;color:#fff;font-family:'Segoe UI',sans-serif;padding:15p
 </style>
 </head>
 <body>
+
+<!-- ===== TOP BAR ===== -->
+<div class="top-bar">
+<div class="left">⚡ <span>EDWARD</span> · Online</div>
+<div class="right">
+<div class="time" id="jamDisplay">--:--:--</div>
+<div class="battery">
+<span class="icon">🔋</span>
+<div class="bar-wrap"><div class="fill good" id="batteryFill" style="width:100%"></div></div>
+<span class="level good" id="batteryLevel">100%</span>
+</div>
+</div>
+</div>
 
 <div class="header">
 <h1>🧠 EDWARD CODE LAB</h1>
@@ -85,6 +122,58 @@ body{background:#0a0e17;color:#fff;font-family:'Segoe UI',sans-serif;padding:15p
 </div>
 
 <script>
+// ============================================
+// JAM REAL-TIME
+// ============================================
+function updateJam() {
+    const now = new Date();
+    const jam = String(now.getHours()).padStart(2, '0');
+    const menit = String(now.getMinutes()).padStart(2, '0');
+    const detik = String(now.getSeconds()).padStart(2, '0');
+    document.getElementById('jamDisplay').textContent = jam + ':' + menit + ':' + detik;
+}
+setInterval(updateJam, 1000);
+updateJam();
+
+// ============================================
+// BATRE REAL-TIME (pake Battery API)
+// ============================================
+function updateBaterai() {
+    if (navigator.getBattery) {
+        navigator.getBattery().then(baterai => {
+            const level = Math.round(baterai.level * 100);
+            const fill = document.getElementById('batteryFill');
+            const text = document.getElementById('batteryLevel');
+            
+            fill.style.width = level + '%';
+            text.textContent = level + '%';
+            
+            // Warna berdasarkan level
+            fill.className = 'fill';
+            text.className = 'level';
+            if (level > 50) {
+                fill.classList.add('good');
+                text.classList.add('good');
+            } else if (level > 20) {
+                fill.classList.add('medium');
+                text.classList.add('medium');
+            } else {
+                fill.classList.add('low');
+                text.classList.add('low');
+            }
+            
+            // Update kalo berubah
+            baterai.addEventListener('levelchange', () => updateBaterai());
+        }).catch(() => {
+            // Fallback kalo gak support
+            document.getElementById('batteryLevel').textContent = 'N/A';
+        });
+    } else {
+        document.getElementById('batteryLevel').textContent = 'N/A';
+    }
+}
+updateBaterai();
+
 // ============================================
 // DATA MATERI (EDUKASI DEFENSIF)
 // ============================================
@@ -156,6 +245,254 @@ function render(filter) {
         grid.innerHTML = '<div class="loading">😞 Tidak ada materi</div>';
         return;
     }
+cd ~/mywebsite && cat > index.html << 'EOF'
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>EDWARD CODE LAB</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#0a0e17;color:#fff;font-family:'Segoe UI',sans-serif;padding:15px;min-height:100vh}
+::selection{background:#ff2d55;color:#fff}
+
+/* TOP BAR - JAM & BATRE */
+.top-bar{display:flex;justify-content:space-between;align-items:center;padding:6px 0 10px;border-bottom:1px solid rgba(0,212,255,.1);margin-bottom:5px;flex-wrap:wrap;gap:6px}
+.top-bar .left{font-size:11px;color:rgba(255,255,255,.3);letter-spacing:1px}
+.top-bar .left span{color:#00d4ff}
+.top-bar .right{display:flex;gap:14px;align-items:center;font-size:13px;font-weight:600}
+.top-bar .right .time{color:#00d4ff;font-variant-numeric:tabular-nums;background:rgba(0,212,255,.08);padding:4px 14px;border-radius:20px;border:1px solid rgba(0,212,255,.15)}
+.top-bar .right .battery{display:flex;align-items:center;gap:6px;color:rgba(255,255,255,.7);background:rgba(255,255,255,.04);padding:4px 12px 4px 8px;border-radius:20px;border:1px solid rgba(255,255,255,.06)}
+.top-bar .right .battery .icon{font-size:18px;line-height:1}
+.top-bar .right .battery .level{font-size:12px;font-weight:700;min-width:28px;text-align:right}
+.top-bar .right .battery .level.good{color:#4caf50}
+.top-bar .right .battery .level.medium{color:#ffd700}
+.top-bar .right .battery .level.low{color:#ff6b6b}
+.top-bar .right .battery .bar-wrap{width:28px;height:12px;background:rgba(255,255,255,.08);border-radius:6px;overflow:hidden;border:1px solid rgba(255,255,255,.06);position:relative}
+.top-bar .right .battery .bar-wrap .fill{height:100%;border-radius:4px;transition:width .5s;width:100%}
+.top-bar .right .battery .bar-wrap .fill.good{background:#4caf50}
+.top-bar .right .battery .bar-wrap .fill.medium{background:#ffd700}
+.top-bar .right .battery .bar-wrap .fill.low{background:#ff6b6b}
+
+.header{text-align:center;padding:12px 0 8px;border-bottom:2px solid #00d4ff;margin-bottom:15px}
+.header h1{font-size:32px;background:linear-gradient(135deg,#00d4ff,#ff2d55,#ffd700);-webkit-background-clip:text;-webkit-text-fill-color:transparent;letter-spacing:2px}
+.header p{font-size:12px;color:rgba(255,255,255,.4);margin-top:4px;letter-spacing:1px}
+.header .sub{font-size:10px;color:rgba(255,255,255,.2);margin-top:2px}
+
+.search-wrap{display:flex;gap:8px;margin:10px 0;background:#141b2b;border-radius:30px;padding:4px}
+.search-wrap input{flex:1;background:0;border:0;padding:10px 16px;color:#fff;font-size:13px;outline:0}
+.search-wrap input::placeholder{color:rgba(255,255,255,.3)}
+.search-wrap button{background:#00d4ff;border:0;border-radius:30px;padding:8px 18px;color:#000;font-weight:700;cursor:pointer}
+
+.cat-scroll{display:flex;gap:8px;overflow-x:auto;padding:8px 0;margin-bottom:10px;scrollbar-width:none}
+.cat-scroll::-webkit-scrollbar{display:none}
+.cat-scroll button{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);border-radius:30px;padding:6px 16px;color:#aaa;font-size:11px;cursor:pointer;white-space:nowrap;transition:.2s}
+.cat-scroll button.active{background:#00d4ff;border-color:#00d4ff;color:#000;font-weight:700}
+
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:15px;margin-top:10px}
+.card{background:#141b2b;border-radius:16px;padding:18px;border:1px solid rgba(255,255,255,.05);transition:.3s;cursor:pointer}
+.card:hover{transform:translateY(-4px);border-color:#00d4ff;box-shadow:0 10px 30px rgba(0,212,255,.1)}
+.card .icon{font-size:32px;margin-bottom:8px}
+.card h3{font-size:16px;color:#fff;margin-bottom:4px}
+.card p{font-size:12px;color:rgba(255,255,255,.5);line-height:1.5}
+.card .tag{display:inline-block;background:rgba(0,212,255,.15);color:#00d4ff;padding:2px 12px;border-radius:20px;font-size:10px;margin-top:8px}
+.card .tag.cyber{background:rgba(255,45,85,.15);color:#ff2d55}
+.card .tag.tools{background:rgba(255,215,0,.15);color:#ffd700}
+.card .tag.code{background:rgba(0,255,136,.15);color:#00ff88}
+.card .tag.apk{background:rgba(255,107,53,.15);color:#ff6b35}
+.card .tag.informatika{background:rgba(0,212,255,.15);color:#00d4ff}
+
+.modal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.95);z-index:9999;flex-direction:column;align-items:center;justify-content:center;padding:20px}
+.modal.show{display:flex}
+.modal .top{position:absolute;top:0;left:0;right:0;padding:12px 20px;display:flex;justify-content:space-between;align-items:center;background:rgba(0,0,0,.8);border-bottom:2px solid #00d4ff}
+.modal .top .t{font-size:18px;font-weight:700;color:#00d4ff}
+.modal .top .close{background:#ff2d55;border:0;border-radius:50%;width:40px;height:40px;color:#fff;font-size:20px;cursor:pointer}
+.modal .content{max-width:700px;width:100%;max-height:80vh;overflow-y:auto;background:#141b2b;border-radius:16px;padding:25px;border:1px solid rgba(0,212,255,.2)}
+.modal .content h2{color:#00d4ff;margin-bottom:10px}
+.modal .content p{color:rgba(255,255,255,.7);line-height:1.7;margin-bottom:10px}
+.modal .content pre{background:#0a0e17;padding:15px;border-radius:10px;overflow-x:auto;font-size:12px;color:#00ff88;border:1px solid rgba(0,255,136,.1)}
+.modal .content .btn{display:inline-block;background:#00d4ff;color:#000;padding:10px 24px;border-radius:30px;text-decoration:none;font-weight:700;margin-top:10px;border:0;cursor:pointer}
+.modal .content ul{color:rgba(255,255,255,.7);padding-left:20px;margin:10px 0}
+.modal .content ul li{margin-bottom:5px}
+
+.loading{text-align:center;padding:40px;color:rgba(255,255,255,.3);grid-column:1/-1}
+.footer{text-align:center;padding:15px 0 8px;border-top:1px solid rgba(255,255,255,.05);margin-top:15px}
+.footer p{font-size:9px;color:rgba(255,255,255,.2)}
+.footer span{color:#00d4ff}
+</style>
+</head>
+<body>
+
+<!-- ===== TOP BAR ===== -->
+<div class="top-bar">
+<div class="left">⚡ <span>EDWARD</span> · Online</div>
+<div class="right">
+<div class="time" id="jamDisplay">--:--:--</div>
+<div class="battery">
+<span class="icon">🔋</span>
+<div class="bar-wrap"><div class="fill good" id="batteryFill" style="width:100%"></div></div>
+<span class="level good" id="batteryLevel">100%</span>
+</div>
+</div>
+</div>
+
+<div class="header">
+<h1>🧠 EDWARD CODE LAB</h1>
+<p>Belajar Informatika • Cyber Security • Coding • APK Builder</p>
+<div class="sub">~ Powered by Edward • No Gimmick ~</div>
+</div>
+
+<div class="search-wrap">
+<input id="search" placeholder="Cari materi..." onkeyup="if(event.key==='Enter') search()">
+<button onclick="search()">🔍 Cari</button>
+</div>
+
+<div class="cat-scroll" id="cat">
+<button class="active" onclick="filterCat('all')">📚 Semua</button>
+<button onclick="filterCat('cyber')">🔐 Cyber Security</button>
+<button onclick="filterCat('informatika')">💻 Informatika</button>
+<button onclick="filterCat('tools')">🛠️ Tools</button>
+<button onclick="filterCat('coding')">⌨️ Coding</button>
+<button onclick="filterCat('apk')">📱 APK Builder</button>
+</div>
+
+<div id="grid" class="grid"><div class="loading">⏳ Loading materi...</div></div>
+
+<div class="footer"><p>© 2026 <span>EDWARD</span> • Edward Code Lab • No Gimmick</p></div>
+
+<div class="modal" id="modal">
+<div class="top">
+<span class="t" id="modalTitle">📚 Materi</span>
+<button class="close" onclick="closeModal()">✕</button>
+</div>
+<div class="content" id="modalContent"></div>
+</div>
+
+<script>
+// ============================================
+// JAM REAL-TIME
+// ============================================
+function updateJam() {
+    const now = new Date();
+    const jam = String(now.getHours()).padStart(2, '0');
+    const menit = String(now.getMinutes()).padStart(2, '0');
+    const detik = String(now.getSeconds()).padStart(2, '0');
+    document.getElementById('jamDisplay').textContent = jam + ':' + menit + ':' + detik;
+}
+setInterval(updateJam, 1000);
+updateJam();
+
+// ============================================
+// BATRE REAL-TIME (pake Battery API)
+// ============================================
+function updateBaterai() {
+    if (navigator.getBattery) {
+        navigator.getBattery().then(baterai => {
+            const level = Math.round(baterai.level * 100);
+            const fill = document.getElementById('batteryFill');
+            const text = document.getElementById('batteryLevel');
+            
+            fill.style.width = level + '%';
+            text.textContent = level + '%';
+            
+            // Warna berdasarkan level
+            fill.className = 'fill';
+            text.className = 'level';
+            if (level > 50) {
+                fill.classList.add('good');
+                text.classList.add('good');
+            } else if (level > 20) {
+                fill.classList.add('medium');
+                text.classList.add('medium');
+            } else {
+                fill.classList.add('low');
+                text.classList.add('low');
+            }
+            
+            // Update kalo berubah
+            baterai.addEventListener('levelchange', () => updateBaterai());
+        }).catch(() => {
+            // Fallback kalo gak support
+            document.getElementById('batteryLevel').textContent = 'N/A';
+        });
+    } else {
+        document.getElementById('batteryLevel').textContent = 'N/A';
+    }
+}
+updateBaterai();
+
+// ============================================
+// DATA MATERI (EDUKASI DEFENSIF)
+// ============================================
+const DATA = [
+    // CYBER SECURITY (DEFENSIF)
+    {id:1, title:'Apa itu Cyber Security?', cat:'cyber', icon:'🔐', desc:'Pengertian dasar keamanan siber dan pentingnya.',
+     content:'<h2>🔐 Apa itu Cyber Security?</h2><p>Cyber Security adalah praktik melindungi sistem, jaringan, dan program dari serangan digital.</p><p><strong>Prinsip Dasar (CIA Triad):</strong></p><ul><li><strong>Confidentiality</strong> - Kerahasiaan</li><li><strong>Integrity</strong> - Keutuhan data</li><li><strong>Availability</strong> - Ketersediaan</li></ul><p><strong>Ancaman Umum:</strong> Malware, Phishing, Ransomware, DDOS</p>'},
+    {id:2, title:'OWASP Top 10', cat:'cyber', icon:'📋', desc:'10 kerentanan web paling kritis versi OWASP.',
+     content:'<h2>📋 OWASP Top 10 (2024)</h2><p><strong>1. Broken Access Control</strong></p><p><strong>2. Cryptographic Failures</strong></p><p><strong>3. Injection</strong></p><p><strong>4. Insecure Design</strong></p><p><strong>5. Security Misconfiguration</strong></p><p><strong>6. Vulnerable Components</strong></p><p><strong>7. Identification Failures</strong></p><p><strong>8. Data Integrity</strong></p><p><strong>9. Logging Failures</strong></p><p><strong>10. SSRF</strong></p>'},
+    {id:3, title:'Cara Menjadi Ethical Hacker', cat:'cyber', icon:'🎯', desc:'Langkah menjadi ethical hacker profesional.',
+     content:'<h2>🎯 Menjadi Ethical Hacker</h2><p><strong>1. Kuasai Networking:</strong> TCP/IP, DNS, HTTP</p><p><strong>2. Belajar OS:</strong> Windows, Linux (Kali)</p><p><strong>3. Programming:</strong> Python, Bash, JavaScript</p><p><strong>4. Tools:</strong> Nmap, Wireshark, Burp Suite</p><p><strong>5. Sertifikasi:</strong> CEH, OSCP, CompTIA Security+</p><p><strong>6. Practice:</strong> TryHackMe, HackTheBox</p>'},
+    {id:4, title:'Cara Mencegah SQL Injection', cat:'cyber', icon:'🛡️', desc:'Belajar mencegah SQL Injection.',
+     content:'<h2>🛡️ Mencegah SQL Injection</h2><p><strong>Apa itu SQL Injection?</strong></p><p>Serangan melalui input yang tidak divalidasi.</p><p><strong>Cara Mencegah:</strong></p><ul><li>Gunakan Prepared Statements</li><li>Validasi Input</li><li>Gunakan ORM</li><li>Limit Privileges</li><li>Gunakan WAF</li></ul>'},
+    {id:5, title:'Cara Mencegah XSS', cat:'cyber', icon:'🛡️', desc:'Belajar mencegah Cross-Site Scripting.',
+     content:'<h2>🛡️ Mencegah XSS</h2><p><strong>Apa itu XSS?</strong></p><p>Serangan dengan menyisipkan script jahat.</p><p><strong>Cara Mencegah:</strong></p><ul><li>Escape output</li><li>Validasi input</li><li>Content Security Policy (CSP)</li><li>Gunakan HttpOnly cookies</li></ul>'},
+    {id:6, title:'Cara Melindungi dari DDOS', cat:'cyber', icon:'🛡️', desc:'Cara melindungi server dari serangan DDOS.',
+     content:'<h2>🛡️ Melindungi dari DDOS</h2><p><strong>Apa itu DDOS?</strong></p><p>Serangan dengan membanjiri server dengan traffic.</p><p><strong>Cara Melindungi:</strong></p><ul><li>Gunakan Cloudflare atau CDN</li><li>Rate Limiting</li><li>Web Application Firewall (WAF)</li><li>Load Balancing</li><li>Monitoring traffic</li></ul>'},
+    {id:7, title:'Cara Melindungi dari Malware', cat:'cyber', icon:'🛡️', desc:'Cara melindungi perangkat dari malware.',
+     content:'<h2>🛡️ Melindungi dari Malware</h2><p><strong>Apa itu Malware?</strong></p><p>Program jahat yang merusak sistem.</p><p><strong>Cara Melindungi:</strong></p><ul><li>Gunakan Antivirus (Windows Defender, Malwarebytes)</li><li>Jangan klik link/attachment mencurigakan</li><li>Update sistem dan software</li><li>Backup data secara rutin</li><li>Gunakan firewall</li></ul>'},
+    {id:8, title:'Cara Membuat Password Kuat', cat:'cyber', icon:'🔑', desc:'Tips membuat password yang aman.',
+     content:'<h2>🔑 Password Kuat</h2><p><strong>Kriteria Password Kuat:</strong></p><ul><li>Minimal 12 karakter</li><li>Kombinasi huruf besar & kecil</li><li>Angka dan simbol</li><li>Jangan pakai kata umum</li><li>Gunakan password manager (Bitwarden, 1Password)</li></ul><p><strong>Contoh:</strong> S3cur3P@ssw0rd!2024</p>'},
+    
+    // INFORMATIKA
+    {id:9, title:'Apa itu Informatika?', cat:'informatika', icon:'💻', desc:'Pengertian dasar informatika dan ruang lingkupnya.',
+     content:'<h2>💻 Apa itu Informatika?</h2><p>Informatika adalah ilmu yang mempelajari tentang penggunaan komputer untuk mengolah dan menyimpan data.</p><p><strong>Ruang Lingkup:</strong></p><ul><li>Algoritma & Pemrograman</li><li>Jaringan Komputer</li><li>Basis Data</li><li>Kecerdasan Buatan</li><li>Keamanan Siber</li></ul>'},
+    {id:10, title:'Sejarah Komputer', cat:'informatika', icon:'🖥️', desc:'Perjalanan evolusi komputer dari masa ke masa.',
+     content:'<h2>🖥️ Sejarah Komputer</h2><p><strong>Generasi 1 (1940-1950):</strong> Tabung vakum, ENIAC</p><p><strong>Generasi 2 (1950-1960):</strong> Transistor</p><p><strong>Generasi 3 (1960-1970):</strong> IC (Integrated Circuit)</p><p><strong>Generasi 4 (1970-1980):</strong> Mikroprosesor</p><p><strong>Generasi 5 (1980-sekarang):</strong> AI dan komputasi modern</p>'},
+    {id:11, title:'Jaringan Komputer', cat:'informatika', icon:'🌐', desc:'Pengenalan LAN, WAN, dan internet.',
+     content:'<h2>🌐 Jaringan Komputer</h2><p><strong>LAN:</strong> Local Area Network - jaringan dalam area kecil</p><p><strong>MAN:</strong> Metropolitan Area Network - antar kota</p><p><strong>WAN:</strong> Wide Area Network - antar negara</p><p><strong>Internet:</strong> Kumpulan jaringan global</p><p><strong>Protokol:</strong> TCP/IP, HTTP, FTP, DNS</p>'},
+    {id:12, title:'Artificial Intelligence', cat:'informatika', icon:'🤖', desc:'Pengenalan AI dan machine learning.',
+     content:'<h2>🤖 Artificial Intelligence</h2><p>AI adalah simulasi kecerdasan manusia pada mesin.</p><p><strong>Jenis AI:</strong></p><ul><li><strong>Weak AI:</strong> AI spesifik tugas</li><li><strong>Strong AI:</strong> AI dengan kesadaran</li><li><strong>Super AI:</strong> AI melebihi manusia</li></ul><p><strong>Sub-bidang:</strong> Machine Learning, Deep Learning, NLP, Computer Vision</p>'},
+    
+    // TOOLS
+    {id:13, title:'Tools Developer', cat:'tools', icon:'🛠️', desc:'Daftar tools yang harus dikuasai developer.',
+     content:'<h2>🛠️ Tools Developer Wajib</h2><p><strong>VS Code:</strong> Editor kode terbaik</p><p><strong>Git & GitHub:</strong> Version control</p><p><strong>Terminal/CMD:</strong> Command line</p><p><strong>Postman:</strong> Testing API</p><p><strong>Figma:</strong> Desain UI/UX</p><p><strong>Docker:</strong> Containerisasi</p>'},
+    {id:14, title:'Tools Ethical Hacking', cat:'tools', icon:'🔐', desc:'Tools untuk belajar keamanan siber secara legal.',
+     content:'<h2>🔐 Tools Ethical Hacking</h2><p><strong>Kali Linux:</strong> OS security testing</p><p><strong>Nmap:</strong> Network scanning</p><p><strong>Wireshark:</strong> Packet analysis</p><p><strong>Metasploit:</strong> Framework exploit</p><p><strong>Burp Suite:</strong> Web security</p><p><strong>John the Ripper:</strong> Password cracking</p><p><em>⚠️ Gunakan hanya untuk pembelajaran!</em></p>'},
+    {id:15, title:'Tools Termux', cat:'tools', icon:'📱', desc:'Tools Termux untuk hacking dan coding di HP.',
+     content:'<h2>📱 Tools Termux</h2><p><strong>pkg update && pkg upgrade</strong></p><p><strong>pkg install python nodejs git</strong></p><p><strong>pkg install nmap wireshark</strong></p><p><strong>pkg install metasploit</strong></p><p><strong>pkg install hydra</strong></p><p><em>⚠️ Gunakan di HP Android!</em></p>'},
+    
+    // CODING
+    {id:16, title:'Dasar HTML', cat:'coding', icon:'🌐', desc:'Belajar HTML untuk membuat website.',
+     content:'<h2>🌐 Dasar HTML</h2><pre>&lt;!DOCTYPE html&gt;\n&lt;html&gt;\n&lt;head&gt;\n  &lt;title&gt;EDWARD&lt;/title&gt;\n&lt;/head&gt;\n&lt;body&gt;\n  &lt;h1&gt;Hello World!&lt;/h1&gt;\n  &lt;p&gt;Ini website pertama EDWARD&lt;/p&gt;\n&lt;/body&gt;\n&lt;/html&gt;</pre>'},
+    {id:17, title:'Dasar CSS', cat:'coding', icon:'🎨', desc:'Belajar CSS untuk styling website.',
+     content:'<h2>🎨 Dasar CSS</h2><pre>body {\n  background: #0a0e17;\n  color: #fff;\n  font-family: \'Segoe UI\', sans-serif;\n}\n\nh1 {\n  color: #00d4ff;\n  text-shadow: 0 0 20px rgba(0,212,255,.3);\n}</pre>'},
+    {id:18, title:'Dasar JavaScript', cat:'coding', icon:'📜', desc:'Belajar JavaScript untuk interaktivitas.',
+     content:'<h2>📜 Dasar JavaScript</h2><pre>// Variabel\nlet nama = "Edward";\nconst umur = 20;\n\n// Fungsi\nfunction sapa() {\n  alert("Halo " + nama);\n}\n\n// Event\ndocument.getElementById("btn").onclick = sapa;</pre>'},
+    {id:19, title:'Python Dasar', cat:'coding', icon:'🐍', desc:'Belajar Python dengan mudah.',
+     content:'<h2>🐍 Python Dasar</h2><pre># Hello World\nprint("Hello World!")\n\n# Variabel\nnama = "Edward"\numur = 20\n\n# Fungsi\ndef sapa():\n    print(f"Halo {nama}")\n\nsapa()\n\n# List\nbuah = ["Apel", "Jeruk", "Mangga"]\nfor i in buah:\n    print(i)</pre>'},
+    
+    // APK BUILDER
+    {id:20, title:'Buat APK dari Website', cat:'apk', icon:'📱', desc:'Ubah website jadi APK Android.',
+     content:'<h2>📱 Buat APK dari Website</h2><p><strong>1. PWA2APK (Termux)</strong></p><pre>pkg update && pkg upgrade\npkg install nodejs -y\nnpm install -g pwa2apk\npwa2apk https://namasite.vercel.app</pre><p><strong>2. Website2APK</strong></p><p>Buka <strong>website2apk.com</strong>, masukkan URL, build APK</p>'},
+    {id:21, title:'Buat APK dengan Termux', cat:'apk', icon:'📱', desc:'Bikin APK langsung dari HP.',
+     content:'<h2>📱 Buat APK dengan Termux</h2><pre># Install\npkg install openjdk-17 gradle android-sdk -y\n\n# Capacitor\ngit clone https://github.com/ionic-team/capacitor\ncd capacitor\nnpm install\nnpx cap init EDWARD com.edward.app\nnpx cap add android\nnpx cap copy\nnpx cap sync\nnpx cap open android</pre>'},
+    {id:22, title:'Buat APK Online', cat:'apk', icon:'📱', desc:'Bikin APK tanpa install.',
+     content:'<h2>📱 Buat APK Online</h2><p><strong>1. website2apk.com</strong></p><p>Masukkan URL → Build → Download</p><p><strong>2. appmaker.xyz</strong></p><p>Custom icon & splash screen</p><p><strong>3. appsgeyser.com</strong></p><p>Cocok untuk pemula</p>'}
+];
+
+// ============================================
+// FUNGSI RENDER (LANJUTAN)
+// ============================================
+let currentFilter = 'all';
+
+function render(filter) {
+    const grid = document.getElementById('grid');
+    const items = filter === 'all' ? DATA : DATA.filter(d => d.cat === filter);
+    if (items.length === 0) {
+        grid.innerHTML = '<div class="loading">😞 Tidak ada materi</div>';
+        return;
+    }
     grid.innerHTML = items.map(d => `
         <div class="card" onclick="openModal(${d.id})">
             <div class="icon">${d.icon}</div>
@@ -210,6 +547,9 @@ document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') closeModal();
 });
 
+// ============================================
+// START
+// ============================================
 render('all');
 </script>
 </body>
