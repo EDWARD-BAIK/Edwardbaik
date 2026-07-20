@@ -65,12 +65,12 @@ body{background:#0a0e17;color:#e0e0e0;font-family:'Inter','Segoe UI',sans-serif;
 
 <div class="header">
 <h1>⚡ EDWARD</h1>
-<div class="sub">Technical deep dives • Powered by NewsAPI</div>
+<div class="sub">Technical deep dives • Powered by Wikipedia</div>
 </div>
 
 <div id="grid" class="grid"><div class="loading">⏳ Loading...</div></div>
 
-<div class="footer"><p>© 2026 <span>EDWARD</span> • API Powered</p></div>
+<div class="footer"><p>© 2026 <span>EDWARD</span> • Wikipedia API</p></div>
 
 <div class="modal" id="modal">
 <div class="top">
@@ -82,66 +82,78 @@ body{background:#0a0e17;color:#e0e0e0;font-family:'Inter','Segoe UI',sans-serif;
 
 <script>
 // ============================================
-// NEWSAPI + 3 PROXY
+// WIKIPEDIA API - TOPICS UNIK
 // ============================================
-const API_KEY = '983c54c1664d4761b19b6440ca5619f1';
-const NEWS_URL = `https://newsapi.org/v2/top-headlines?category=technology&language=en&apiKey=${API_KEY}`;
+const WIKI_API = 'https://en.wikipedia.org/api/rest_v1/page/summary/';
 
-const PROXIES = [
-    'https://api.allorigins.win/raw?url=',
-    'https://corsproxy.io/?',
-    'https://thingproxy.freeboard.io/fetch/'
+const TOPICS = [
+    {title: 'Artificial Intelligence', page: 'Artificial_intelligence', tag: 'AI'},
+    {title: 'Machine Learning', page: 'Machine_learning', tag: 'ML'},
+    {title: 'Cloud Computing', page: 'Cloud_computing', tag: 'Cloud'},
+    {title: 'Cybersecurity', page: 'Computer_security', tag: 'Security'},
+    {title: 'Blockchain', page: 'Blockchain', tag: 'Blockchain'},
+    {title: 'Quantum Computing', page: 'Quantum_computing', tag: 'Quantum'},
+    {title: 'Data Science', page: 'Data_science', tag: 'Data'},
+    {title: 'Internet of Things', page: 'Internet_of_things', tag: 'IoT'},
+    {title: '5G', page: '5G', tag: '5G'},
+    {title: 'Robotics', page: 'Robotics', tag: 'Robotics'},
+    {title: 'Augmented Reality', page: 'Augmented_reality', tag: 'AR'},
+    {title: 'Virtual Reality', page: 'Virtual_reality', tag: 'VR'},
+    {title: 'Edge Computing', page: 'Edge_computing', tag: 'Edge'},
+    {title: 'DevOps', page: 'DevOps', tag: 'DevOps'},
+    {title: 'Kubernetes', page: 'Kubernetes', tag: 'K8s'},
+    {title: 'Python', page: 'Python_(programming_language)', tag: 'Python'},
+    {title: 'JavaScript', page: 'JavaScript', tag: 'JS'},
+    {title: 'React', page: 'React_(software)', tag: 'React'},
+    {title: 'Node.js', page: 'Node.js', tag: 'Node'},
+    {title: 'PostgreSQL', page: 'PostgreSQL', tag: 'DB'},
+    {title: 'MongoDB', page: 'MongoDB', tag: 'NoSQL'},
+    {title: 'GraphQL', page: 'GraphQL', tag: 'GraphQL'},
+    {title: 'REST API', page: 'Representational_state_transfer', tag: 'API'},
+    {title: 'Microservices', page: 'Microservices', tag: 'Micro'},
+    {title: 'Serverless', page: 'Serverless_computing', tag: 'Serverless'},
+    {title: 'Git', page: 'Git', tag: 'Git'},
+    {title: 'Linux', page: 'Linux', tag: 'Linux'},
+    {title: 'Docker', page: 'Docker_(software)', tag: 'Docker'},
+    {title: 'Nginx', page: 'Nginx', tag: 'Nginx'}
 ];
-
-async function fetchWithProxy(url) {
-    for (let proxy of PROXIES) {
-        try {
-            const response = await fetch(proxy + encodeURIComponent(url));
-            if (response.ok) {
-                return await response.json();
-            }
-        } catch (e) {
-            console.warn('Proxy gagal:', proxy);
-        }
-    }
-    throw new Error('Semua proxy gagal');
-}
 
 async function fetchArticles() {
     const grid = document.getElementById('grid');
     grid.innerHTML = '<div class="loading">⏳ Loading...</div>';
     
     try {
-        const data = await fetchWithProxy(NEWS_URL);
+        const results = [];
+        for (const topic of TOPICS) {
+            try {
+                const response = await fetch(WIKI_API + topic.page);
+                if (response.ok) {
+                    const data = await response.json();
+                    if (data.extract) {
+                        results.push({
+                            title: data.title || topic.title,
+                            tag: topic.tag,
+                            time: Math.ceil(data.extract.split(' ').length / 200) + ' min',
+                            desc: data.extract.slice(0, 200) + '...',
+                            content: data.extract || 'Konten tidak tersedia',
+                            author: 'Wikipedia',
+                            published: data.timestamp ? new Date(data.timestamp).toLocaleDateString('id-ID', {day:'numeric', month:'long', year:'numeric'}) : '2026'
+                        });
+                    }
+                }
+            } catch (e) {
+                console.warn('Gagal ambil:', topic.page);
+            }
+            await new Promise(r => setTimeout(r, 100));
+        }
         
-        if (data.status === 'ok' && data.articles && data.articles.length > 0) {
-            const articles = data.articles.map(item => {
-                let tag = item.source?.name || 'Tech';
-                if (tag.includes('Tech')) tag = 'Tech';
-                else if (tag.includes('AI')) tag = 'AI';
-                else if (tag.includes('Google')) tag = 'Google';
-                else if (tag.includes('Microsoft')) tag = 'Microsoft';
-                else if (tag.includes('Apple')) tag = 'Apple';
-                else if (tag.includes('Amazon')) tag = 'AWS';
-                else tag = 'Tech';
-                
-                return {
-                    title: item.title || 'Untitled',
-                    tag: tag,
-                    time: Math.ceil((item.content || item.description || '').split(' ').length / 150) + ' min',
-                    desc: item.description || item.content || 'Berita teknologi terbaru.',
-                    content: item.content || item.description || 'Konten tidak tersedia',
-                    author: item.author || item.source?.name || 'News',
-                    published: item.publishedAt ? new Date(item.publishedAt).toLocaleDateString('id-ID', {day:'numeric', month:'long', year:'numeric'}) : ''
-                };
-            });
-            renderArticles(articles);
+        if (results.length > 0) {
+            renderArticles(results);
         } else {
-            grid.innerHTML = '<div class="error">😞 Tidak ada artikel</div>';
+            grid.innerHTML = '<div class="error">😞 Gagal memuat artikel</div>';
         }
     } catch (e) {
         grid.innerHTML = `<div class="error">⚠️ Error: ${e.message}</div>`;
-        console.error('API Error:', e);
     }
 }
 
@@ -160,9 +172,9 @@ function renderArticles(articles) {
                 ${a.published ? `<span class="time">📅 ${a.published}</span>` : ''}
             </div>
             <h2>${a.title}</h2>
-            <div class="desc">${a.desc || 'Berita teknologi terbaru.'}</div>
+            <div class="desc">${a.desc || 'Artikel menarik tentang teknologi.'}</div>
             <div class="author">
-                <span>📰 ${a.author || 'News'}</span>
+                <span>📖 ${a.author || 'Wikipedia'}</span>
             </div>
         </div>
     `).join('');
