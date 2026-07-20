@@ -84,9 +84,54 @@ body{background:#0a0e17;color:#e0e0e0;font-family:'Inter','Segoe UI',sans-serif;
 
 <script>
 // ============================================
-// API DEV.TO
+// API 1: DEV.TO (LIST ARTIKEL)
+// API 2: DEV.TO SINGLE (FULL KONTEN)
 // ============================================
 const API_DEVTO = 'https://dev.to/api/articles?per_page=30';
+
+// ============================================
+// MARKDOWN → HTML SEDERHANA
+// ============================================
+function markdownToHtml(text) {
+    if (!text) return '<p>Konten tidak tersedia</p>';
+    
+    let html = text;
+    
+    // Code block
+    html = html.replace(/```([\s\S]*?)```/g, '<pre><code>$1</code></pre>');
+    
+    // Inline code
+    html = html.replace(/`([^`]+)`/g, '<code>$1</code>');
+    
+    // Bold
+    html = html.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
+    
+    // Italic
+    html = html.replace(/\*([^*]+)\*/g, '<em>$1</em>');
+    
+    // Heading
+    html = html.replace(/^### (.*$)/gim, '<h3>$1</h3>');
+    html = html.replace(/^## (.*$)/gim, '<h2>$1</h2>');
+    html = html.replace(/^# (.*$)/gim, '<h1>$1</h1>');
+    
+    // List
+    html = html.replace(/^- (.*$)/gim, '<li>$1</li>');
+    html = html.replace(/\n<li>([\s\S]*?)<\/li>/g, '<ul><li>$1</li></ul>');
+    
+    // Paragraph
+    html = html.replace(/\n\n/g, '</p><p>');
+    html = '<p>' + html + '</p>';
+    
+    // Fix double <p><p>
+    html = html.replace(/<p><p>/g, '<p>');
+    html = html.replace(/<\/p><\/p>/g, '</p>');
+    
+    // Fix list inside p
+    html = html.replace(/<p><ul>/g, '<ul>');
+    html = html.replace(/<\/ul><\/p>/g, '</ul>');
+    
+    return html;
+}
 
 // ============================================
 // FETCH + RENDER
@@ -102,12 +147,13 @@ async function fetchArticles() {
         
         if (data && data.length > 0) {
             const articles = data.map(item => ({
+                id: item.id,
                 title: item.title || 'Untitled',
                 tag: item.tag_list?.[0] || 'Tech',
                 time: Math.ceil(item.reading_time_minutes || 3) + ' min',
                 desc: item.description || item.summary || 'Artikel menarik tentang teknologi.',
-                // ===== AMBIL KONTEN FULL =====
-                content: item.body_html || item.body_markdown || item.description || '<p>Konten tidak tersedia</p>',
+                // Body markdown (full konten)
+                content: item.body_markdown || item.body_html || item.description || '<p>Konten tidak tersedia</p>',
                 author: item.user?.name || 'Anonymous',
                 authorImg: item.user?.profile_image || '',
                 published: item.published_at ? new Date(item.published_at).toLocaleDateString('id-ID', {day:'numeric', month:'long', year:'numeric'}) : ''
@@ -149,7 +195,7 @@ function renderArticles(articles) {
 }
 
 // ============================================
-// MODAL - FULL KONTEN
+// MODAL - FULL KONTEN (Markdown → HTML)
 // ============================================
 function openModal(index) {
     const articles = window._articles || [];
@@ -158,8 +204,8 @@ function openModal(index) {
     
     document.getElementById('modalTitle').textContent = '📄 ' + a.title;
     
-    // Render konten full tanpa potongan
-    let content = a.content || '<p>Konten tidak tersedia</p>';
+    // Convert markdown ke HTML
+    const fullContent = markdownToHtml(a.content);
     
     document.getElementById('modalContent').innerHTML = `
         <h2>${a.title}</h2>
@@ -168,7 +214,7 @@ function openModal(index) {
             <span class="time">⏱️ ${a.time || '3 min'}</span>
             ${a.published ? `<span class="time">📅 ${a.published}</span>` : ''}
         </div>
-        ${content}
+        ${fullContent}
         <button class="btn-close" onclick="closeModal()">Tutup</button>
     `;
     document.getElementById('modal').classList.add('show');
