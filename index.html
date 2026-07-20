@@ -82,21 +82,37 @@ body{background:#0a0e17;color:#e0e0e0;font-family:'Inter','Segoe UI',sans-serif;
 
 <script>
 // ============================================
-// NEWSAPI + CORS PROXY
+// NEWSAPI + 3 PROXY
 // ============================================
 const API_KEY = '983c54c1664d4761b19b6440ca5619f1';
-const PROXY = 'https://corsproxy.io/?';
-const NEWS_API = `https://newsapi.org/v2/top-headlines?category=technology&language=en&apiKey=${API_KEY}`;
+const NEWS_URL = `https://newsapi.org/v2/top-headlines?category=technology&language=en&apiKey=${API_KEY}`;
+
+const PROXIES = [
+    'https://api.allorigins.win/raw?url=',
+    'https://corsproxy.io/?',
+    'https://thingproxy.freeboard.io/fetch/'
+];
+
+async function fetchWithProxy(url) {
+    for (let proxy of PROXIES) {
+        try {
+            const response = await fetch(proxy + encodeURIComponent(url));
+            if (response.ok) {
+                return await response.json();
+            }
+        } catch (e) {
+            console.warn('Proxy gagal:', proxy);
+        }
+    }
+    throw new Error('Semua proxy gagal');
+}
 
 async function fetchArticles() {
     const grid = document.getElementById('grid');
     grid.innerHTML = '<div class="loading">⏳ Loading...</div>';
     
     try {
-        // Pake proxy buat tembus CORS
-        const response = await fetch(PROXY + encodeURIComponent(NEWS_API));
-        if (!response.ok) throw new Error('Gagal fetch data');
-        const data = await response.json();
+        const data = await fetchWithProxy(NEWS_URL);
         
         if (data.status === 'ok' && data.articles && data.articles.length > 0) {
             const articles = data.articles.map(item => {
