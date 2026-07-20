@@ -9,7 +9,6 @@
 body{background:#0a0e17;color:#fff;font-family:'Segoe UI',sans-serif;padding:15px;min-height:100vh}
 ::selection{background:#ff2d55;color:#fff}
 
-/* TOP BAR - JAM & BATRE */
 .top-bar{display:flex;justify-content:space-between;align-items:center;padding:6px 0 10px;border-bottom:1px solid rgba(0,212,255,.1);margin-bottom:5px;flex-wrap:wrap;gap:6px}
 .top-bar .left{font-size:11px;color:rgba(255,255,255,.3);letter-spacing:1px}
 .top-bar .left span{color:#00d4ff}
@@ -76,7 +75,6 @@ body{background:#0a0e17;color:#fff;font-family:'Segoe UI',sans-serif;padding:15p
 </head>
 <body>
 
-<!-- ===== TOP BAR ===== -->
 <div class="top-bar">
 <div class="left">⚡ <span>EDWARD</span> · Online</div>
 <div class="right">
@@ -136,7 +134,7 @@ setInterval(updateJam, 1000);
 updateJam();
 
 // ============================================
-// BATRE REAL-TIME (pake Battery API)
+// BATRE REAL-TIME
 // ============================================
 function updateBaterai() {
     if (navigator.getBattery) {
@@ -144,28 +142,14 @@ function updateBaterai() {
             const level = Math.round(baterai.level * 100);
             const fill = document.getElementById('batteryFill');
             const text = document.getElementById('batteryLevel');
-            
             fill.style.width = level + '%';
             text.textContent = level + '%';
-            
-            // Warna berdasarkan level
             fill.className = 'fill';
             text.className = 'level';
-            if (level > 50) {
-                fill.classList.add('good');
-                text.classList.add('good');
-            } else if (level > 20) {
-                fill.classList.add('medium');
-                text.classList.add('medium');
-            } else {
-                fill.classList.add('low');
-                text.classList.add('low');
-            }
-            
-            // Update kalo berubah
-            baterai.addEventListener('levelchange', () => updateBaterai());
+            if (level > 50) { fill.classList.add('good'); text.classList.add('good'); }
+            else if (level > 20) { fill.classList.add('medium'); text.classList.add('medium'); }
+            else { fill.classList.add('low'); text.classList.add('low'); }
         }).catch(() => {
-            // Fallback kalo gak support
             document.getElementById('batteryLevel').textContent = 'N/A';
         });
     } else {
@@ -175,10 +159,10 @@ function updateBaterai() {
 updateBaterai();
 
 // ============================================
-// DATA MATERI (EDUKASI DEFENSIF)
+// DATA MATERI
 // ============================================
 const DATA = [
-    // CYBER SECURITY (DEFENSIF)
+    // CYBER SECURITY
     {id:1, title:'Apa itu Cyber Security?', cat:'cyber', icon:'🔐', desc:'Pengertian dasar keamanan siber dan pentingnya.',
      content:'<h2>🔐 Apa itu Cyber Security?</h2><p>Cyber Security adalah praktik melindungi sistem, jaringan, dan program dari serangan digital.</p><p><strong>Prinsip Dasar (CIA Triad):</strong></p><ul><li><strong>Confidentiality</strong> - Kerahasiaan</li><li><strong>Integrity</strong> - Keutuhan data</li><li><strong>Availability</strong> - Ketersediaan</li></ul><p><strong>Ancaman Umum:</strong> Malware, Phishing, Ransomware, DDOS</p>'},
     {id:2, title:'OWASP Top 10', cat:'cyber', icon:'📋', desc:'10 kerentanan web paling kritis versi OWASP.',
@@ -195,7 +179,6 @@ const DATA = [
      content:'<h2>🛡️ Melindungi dari Malware</h2><p><strong>Apa itu Malware?</strong></p><p>Program jahat yang merusak sistem.</p><p><strong>Cara Melindungi:</strong></p><ul><li>Gunakan Antivirus (Windows Defender, Malwarebytes)</li><li>Jangan klik link/attachment mencurigakan</li><li>Update sistem dan software</li><li>Backup data secara rutin</li><li>Gunakan firewall</li></ul>'},
     {id:8, title:'Cara Membuat Password Kuat', cat:'cyber', icon:'🔑', desc:'Tips membuat password yang aman.',
      content:'<h2>🔑 Password Kuat</h2><p><strong>Kriteria Password Kuat:</strong></p><ul><li>Minimal 12 karakter</li><li>Kombinasi huruf besar & kecil</li><li>Angka dan simbol</li><li>Jangan pakai kata umum</li><li>Gunakan password manager (Bitwarden, 1Password)</li></ul><p><strong>Contoh:</strong> S3cur3P@ssw0rd!2024</p>'},
-    
     // INFORMATIKA
     {id:9, title:'Apa itu Informatika?', cat:'informatika', icon:'💻', desc:'Pengertian dasar informatika dan ruang lingkupnya.',
      content:'<h2>💻 Apa itu Informatika?</h2><p>Informatika adalah ilmu yang mempelajari tentang penggunaan komputer untuk mengolah dan menyimpan data.</p><p><strong>Ruang Lingkup:</strong></p><ul><li>Algoritma & Pemrograman</li><li>Jaringan Komputer</li><li>Basis Data</li><li>Kecerdasan Buatan</li><li>Keamanan Siber</li></ul>'},
@@ -205,7 +188,6 @@ const DATA = [
      content:'<h2>🌐 Jaringan Komputer</h2><p><strong>LAN:</strong> Local Area Network - jaringan dalam area kecil</p><p><strong>MAN:</strong> Metropolitan Area Network - antar kota</p><p><strong>WAN:</strong> Wide Area Network - antar negara</p><p><strong>Internet:</strong> Kumpulan jaringan global</p><p><strong>Protokol:</strong> TCP/IP, HTTP, FTP, DNS</p>'},
     {id:12, title:'Artificial Intelligence', cat:'informatika', icon:'🤖', desc:'Pengenalan AI dan machine learning.',
      content:'<h2>🤖 Artificial Intelligence</h2><p>AI adalah simulasi kecerdasan manusia pada mesin.</p><p><strong>Jenis AI:</strong></p><ul><li><strong>Weak AI:</strong> AI spesifik tugas</li><li><strong>Strong AI:</strong> AI dengan kesadaran</li><li><strong>Super AI:</strong> AI melebihi manusia</li></ul><p><strong>Sub-bidang:</strong> Machine Learning, Deep Learning, NLP, Computer Vision</p>'},
-    
     // TOOLS
     {id:13, title:'Tools Developer', cat:'tools', icon:'🛠️', desc:'Daftar tools yang harus dikuasai developer.',
      content:'<h2>🛠️ Tools Developer Wajib</h2><p><strong>VS Code:</strong> Editor kode terbaik</p><p><strong>Git & GitHub:</strong> Version control</p><p><strong>Terminal/CMD:</strong> Command line</p><p><strong>Postman:</strong> Testing API</p><p><strong>Figma:</strong> Desain UI/UX</p><p><strong>Docker:</strong> Containerisasi</p>'},
@@ -213,7 +195,6 @@ const DATA = [
      content:'<h2>🔐 Tools Ethical Hacking</h2><p><strong>Kali Linux:</strong> OS security testing</p><p><strong>Nmap:</strong> Network scanning</p><p><strong>Wireshark:</strong> Packet analysis</p><p><strong>Metasploit:</strong> Framework exploit</p><p><strong>Burp Suite:</strong> Web security</p><p><strong>John the Ripper:</strong> Password cracking</p><p><em>⚠️ Gunakan hanya untuk pembelajaran!</em></p>'},
     {id:15, title:'Tools Termux', cat:'tools', icon:'📱', desc:'Tools Termux untuk hacking dan coding di HP.',
      content:'<h2>📱 Tools Termux</h2><p><strong>pkg update && pkg upgrade</strong></p><p><strong>pkg install python nodejs git</strong></p><p><strong>pkg install nmap wireshark</strong></p><p><strong>pkg install metasploit</strong></p><p><strong>pkg install hydra</strong></p><p><em>⚠️ Gunakan di HP Android!</em></p>'},
-    
     // CODING
     {id:16, title:'Dasar HTML', cat:'coding', icon:'🌐', desc:'Belajar HTML untuk membuat website.',
      content:'<h2>🌐 Dasar HTML</h2><pre>&lt;!DOCTYPE html&gt;\n&lt;html&gt;\n&lt;head&gt;\n  &lt;title&gt;EDWARD&lt;/title&gt;\n&lt;/head&gt;\n&lt;body&gt;\n  &lt;h1&gt;Hello World!&lt;/h1&gt;\n  &lt;p&gt;Ini website pertama EDWARD&lt;/p&gt;\n&lt;/body&gt;\n&lt;/html&gt;</pre>'},
@@ -223,7 +204,6 @@ const DATA = [
      content:'<h2>📜 Dasar JavaScript</h2><pre>// Variabel\nlet nama = "Edward";\nconst umur = 20;\n\n// Fungsi\nfunction sapa() {\n  alert("Halo " + nama);\n}\n\n// Event\ndocument.getElementById("btn").onclick = sapa;</pre>'},
     {id:19, title:'Python Dasar', cat:'coding', icon:'🐍', desc:'Belajar Python dengan mudah.',
      content:'<h2>🐍 Python Dasar</h2><pre># Hello World\nprint("Hello World!")\n\n# Variabel\nnama = "Edward"\numur = 20\n\n# Fungsi\ndef sapa():\n    print(f"Halo {nama}")\n\nsapa()\n\n# List\nbuah = ["Apel", "Jeruk", "Mangga"]\nfor i in buah:\n    print(i)</pre>'},
-    
     // APK BUILDER
     {id:20, title:'Buat APK dari Website', cat:'apk', icon:'📱', desc:'Ubah website jadi APK Android.',
      content:'<h2>📱 Buat APK dari Website</h2><p><strong>1. PWA2APK (Termux)</strong></p><pre>pkg update && pkg upgrade\npkg install nodejs -y\nnpm install -g pwa2apk\npwa2apk https://namasite.vercel.app</pre><p><strong>2. Website2APK</strong></p><p>Buka <strong>website2apk.com</strong>, masukkan URL, build APK</p>'},
@@ -245,6 +225,19 @@ function render(filter) {
         grid.innerHTML = '<div class="loading">😞 Tidak ada materi</div>';
         return;
     }
+    grid.innerHTML = items.map(d => `
+        <div class="card" onclick="openModal(${d.id})">
+            <div class="icon">${d.icon}</div>
+            <h3>${d.title}</h3>
+            <p>${d.desc}</p>
+            <span class="tag ${d.cat}">${d.cat}</span>
+        </div>
+    `).join('');
+}
+
+function filterCat(cat) {
+    currentFilter = cat;
+    document.querySelectorAll('#cat button').forEach(b => b.classList.remove('active'));
 cd ~/mywebsite && cat > index.html << 'EOF'
 <!DOCTYPE html>
 <html>
@@ -257,7 +250,6 @@ cd ~/mywebsite && cat > index.html << 'EOF'
 body{background:#0a0e17;color:#fff;font-family:'Segoe UI',sans-serif;padding:15px;min-height:100vh}
 ::selection{background:#ff2d55;color:#fff}
 
-/* TOP BAR - JAM & BATRE */
 .top-bar{display:flex;justify-content:space-between;align-items:center;padding:6px 0 10px;border-bottom:1px solid rgba(0,212,255,.1);margin-bottom:5px;flex-wrap:wrap;gap:6px}
 .top-bar .left{font-size:11px;color:rgba(255,255,255,.3);letter-spacing:1px}
 .top-bar .left span{color:#00d4ff}
@@ -324,7 +316,6 @@ body{background:#0a0e17;color:#fff;font-family:'Segoe UI',sans-serif;padding:15p
 </head>
 <body>
 
-<!-- ===== TOP BAR ===== -->
 <div class="top-bar">
 <div class="left">⚡ <span>EDWARD</span> · Online</div>
 <div class="right">
@@ -384,7 +375,7 @@ setInterval(updateJam, 1000);
 updateJam();
 
 // ============================================
-// BATRE REAL-TIME (pake Battery API)
+// BATRE REAL-TIME
 // ============================================
 function updateBaterai() {
     if (navigator.getBattery) {
@@ -392,28 +383,14 @@ function updateBaterai() {
             const level = Math.round(baterai.level * 100);
             const fill = document.getElementById('batteryFill');
             const text = document.getElementById('batteryLevel');
-            
             fill.style.width = level + '%';
             text.textContent = level + '%';
-            
-            // Warna berdasarkan level
             fill.className = 'fill';
             text.className = 'level';
-            if (level > 50) {
-                fill.classList.add('good');
-                text.classList.add('good');
-            } else if (level > 20) {
-                fill.classList.add('medium');
-                text.classList.add('medium');
-            } else {
-                fill.classList.add('low');
-                text.classList.add('low');
-            }
-            
-            // Update kalo berubah
-            baterai.addEventListener('levelchange', () => updateBaterai());
+            if (level > 50) { fill.classList.add('good'); text.classList.add('good'); }
+            else if (level > 20) { fill.classList.add('medium'); text.classList.add('medium'); }
+            else { fill.classList.add('low'); text.classList.add('low'); }
         }).catch(() => {
-            // Fallback kalo gak support
             document.getElementById('batteryLevel').textContent = 'N/A';
         });
     } else {
@@ -423,10 +400,10 @@ function updateBaterai() {
 updateBaterai();
 
 // ============================================
-// DATA MATERI (EDUKASI DEFENSIF)
+// DATA MATERI
 // ============================================
 const DATA = [
-    // CYBER SECURITY (DEFENSIF)
+    // CYBER SECURITY
     {id:1, title:'Apa itu Cyber Security?', cat:'cyber', icon:'🔐', desc:'Pengertian dasar keamanan siber dan pentingnya.',
      content:'<h2>🔐 Apa itu Cyber Security?</h2><p>Cyber Security adalah praktik melindungi sistem, jaringan, dan program dari serangan digital.</p><p><strong>Prinsip Dasar (CIA Triad):</strong></p><ul><li><strong>Confidentiality</strong> - Kerahasiaan</li><li><strong>Integrity</strong> - Keutuhan data</li><li><strong>Availability</strong> - Ketersediaan</li></ul><p><strong>Ancaman Umum:</strong> Malware, Phishing, Ransomware, DDOS</p>'},
     {id:2, title:'OWASP Top 10', cat:'cyber', icon:'📋', desc:'10 kerentanan web paling kritis versi OWASP.',
@@ -443,7 +420,6 @@ const DATA = [
      content:'<h2>🛡️ Melindungi dari Malware</h2><p><strong>Apa itu Malware?</strong></p><p>Program jahat yang merusak sistem.</p><p><strong>Cara Melindungi:</strong></p><ul><li>Gunakan Antivirus (Windows Defender, Malwarebytes)</li><li>Jangan klik link/attachment mencurigakan</li><li>Update sistem dan software</li><li>Backup data secara rutin</li><li>Gunakan firewall</li></ul>'},
     {id:8, title:'Cara Membuat Password Kuat', cat:'cyber', icon:'🔑', desc:'Tips membuat password yang aman.',
      content:'<h2>🔑 Password Kuat</h2><p><strong>Kriteria Password Kuat:</strong></p><ul><li>Minimal 12 karakter</li><li>Kombinasi huruf besar & kecil</li><li>Angka dan simbol</li><li>Jangan pakai kata umum</li><li>Gunakan password manager (Bitwarden, 1Password)</li></ul><p><strong>Contoh:</strong> S3cur3P@ssw0rd!2024</p>'},
-    
     // INFORMATIKA
     {id:9, title:'Apa itu Informatika?', cat:'informatika', icon:'💻', desc:'Pengertian dasar informatika dan ruang lingkupnya.',
      content:'<h2>💻 Apa itu Informatika?</h2><p>Informatika adalah ilmu yang mempelajari tentang penggunaan komputer untuk mengolah dan menyimpan data.</p><p><strong>Ruang Lingkup:</strong></p><ul><li>Algoritma & Pemrograman</li><li>Jaringan Komputer</li><li>Basis Data</li><li>Kecerdasan Buatan</li><li>Keamanan Siber</li></ul>'},
@@ -453,7 +429,6 @@ const DATA = [
      content:'<h2>🌐 Jaringan Komputer</h2><p><strong>LAN:</strong> Local Area Network - jaringan dalam area kecil</p><p><strong>MAN:</strong> Metropolitan Area Network - antar kota</p><p><strong>WAN:</strong> Wide Area Network - antar negara</p><p><strong>Internet:</strong> Kumpulan jaringan global</p><p><strong>Protokol:</strong> TCP/IP, HTTP, FTP, DNS</p>'},
     {id:12, title:'Artificial Intelligence', cat:'informatika', icon:'🤖', desc:'Pengenalan AI dan machine learning.',
      content:'<h2>🤖 Artificial Intelligence</h2><p>AI adalah simulasi kecerdasan manusia pada mesin.</p><p><strong>Jenis AI:</strong></p><ul><li><strong>Weak AI:</strong> AI spesifik tugas</li><li><strong>Strong AI:</strong> AI dengan kesadaran</li><li><strong>Super AI:</strong> AI melebihi manusia</li></ul><p><strong>Sub-bidang:</strong> Machine Learning, Deep Learning, NLP, Computer Vision</p>'},
-    
     // TOOLS
     {id:13, title:'Tools Developer', cat:'tools', icon:'🛠️', desc:'Daftar tools yang harus dikuasai developer.',
      content:'<h2>🛠️ Tools Developer Wajib</h2><p><strong>VS Code:</strong> Editor kode terbaik</p><p><strong>Git & GitHub:</strong> Version control</p><p><strong>Terminal/CMD:</strong> Command line</p><p><strong>Postman:</strong> Testing API</p><p><strong>Figma:</strong> Desain UI/UX</p><p><strong>Docker:</strong> Containerisasi</p>'},
@@ -461,7 +436,6 @@ const DATA = [
      content:'<h2>🔐 Tools Ethical Hacking</h2><p><strong>Kali Linux:</strong> OS security testing</p><p><strong>Nmap:</strong> Network scanning</p><p><strong>Wireshark:</strong> Packet analysis</p><p><strong>Metasploit:</strong> Framework exploit</p><p><strong>Burp Suite:</strong> Web security</p><p><strong>John the Ripper:</strong> Password cracking</p><p><em>⚠️ Gunakan hanya untuk pembelajaran!</em></p>'},
     {id:15, title:'Tools Termux', cat:'tools', icon:'📱', desc:'Tools Termux untuk hacking dan coding di HP.',
      content:'<h2>📱 Tools Termux</h2><p><strong>pkg update && pkg upgrade</strong></p><p><strong>pkg install python nodejs git</strong></p><p><strong>pkg install nmap wireshark</strong></p><p><strong>pkg install metasploit</strong></p><p><strong>pkg install hydra</strong></p><p><em>⚠️ Gunakan di HP Android!</em></p>'},
-    
     // CODING
     {id:16, title:'Dasar HTML', cat:'coding', icon:'🌐', desc:'Belajar HTML untuk membuat website.',
      content:'<h2>🌐 Dasar HTML</h2><pre>&lt;!DOCTYPE html&gt;\n&lt;html&gt;\n&lt;head&gt;\n  &lt;title&gt;EDWARD&lt;/title&gt;\n&lt;/head&gt;\n&lt;body&gt;\n  &lt;h1&gt;Hello World!&lt;/h1&gt;\n  &lt;p&gt;Ini website pertama EDWARD&lt;/p&gt;\n&lt;/body&gt;\n&lt;/html&gt;</pre>'},
@@ -471,7 +445,6 @@ const DATA = [
      content:'<h2>📜 Dasar JavaScript</h2><pre>// Variabel\nlet nama = "Edward";\nconst umur = 20;\n\n// Fungsi\nfunction sapa() {\n  alert("Halo " + nama);\n}\n\n// Event\ndocument.getElementById("btn").onclick = sapa;</pre>'},
     {id:19, title:'Python Dasar', cat:'coding', icon:'🐍', desc:'Belajar Python dengan mudah.',
      content:'<h2>🐍 Python Dasar</h2><pre># Hello World\nprint("Hello World!")\n\n# Variabel\nnama = "Edward"\numur = 20\n\n# Fungsi\ndef sapa():\n    print(f"Halo {nama}")\n\nsapa()\n\n# List\nbuah = ["Apel", "Jeruk", "Mangga"]\nfor i in buah:\n    print(i)</pre>'},
-    
     // APK BUILDER
     {id:20, title:'Buat APK dari Website', cat:'apk', icon:'📱', desc:'Ubah website jadi APK Android.',
      content:'<h2>📱 Buat APK dari Website</h2><p><strong>1. PWA2APK (Termux)</strong></p><pre>pkg update && pkg upgrade\npkg install nodejs -y\nnpm install -g pwa2apk\npwa2apk https://namasite.vercel.app</pre><p><strong>2. Website2APK</strong></p><p>Buka <strong>website2apk.com</strong>, masukkan URL, build APK</p>'},
@@ -482,7 +455,7 @@ const DATA = [
 ];
 
 // ============================================
-// FUNGSI RENDER (LANJUTAN)
+// FUNGSI RENDER
 // ============================================
 let currentFilter = 'all';
 
@@ -513,7 +486,11 @@ function filterCat(cat) {
 function search() {
     const q = document.getElementById('search').value.trim().toLowerCase();
     if (!q) return render(currentFilter);
-    const items = DATA.filter(d => d.title.toLowerCase().includes(q) || d.desc.toLowerCase().includes(q) || d.cat.includes(q));
+    const items = DATA.filter(d => 
+        d.title.toLowerCase().includes(q) || 
+        d.desc.toLowerCase().includes(q) || 
+        d.cat.includes(q)
+    );
     const grid = document.getElementById('grid');
     if (items.length === 0) {
         grid.innerHTML = '<div class="loading">😞 Tidak ada hasil</div>';
