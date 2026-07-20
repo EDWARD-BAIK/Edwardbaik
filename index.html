@@ -21,7 +21,7 @@ body{background:#0a0e17;color:#e0e0e0;font-family:'Inter','Segoe UI',sans-serif;
 .card .meta .time{color:rgba(255,255,255,.2)}
 .card h2{font-size:20px;font-weight:700;color:#fff;margin-bottom:6px;line-height:1.3}
 .card h2:hover{color:#00d4ff}
-.card p{font-size:14px;color:rgba(255,255,255,.5);line-height:1.7}
+.card p{font-size:14px;color:rgba(255,255,255,.5);line-height:1.7;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
 .card .btn-read{display:inline-block;margin-top:14px;color:#00d4ff;font-weight:600;font-size:13px;border-bottom:1px solid transparent;transition:.2s}
 .card .btn-read:hover{border-bottom-color:#00d4ff}
 
@@ -29,18 +29,22 @@ body{background:#0a0e17;color:#e0e0e0;font-family:'Inter','Segoe UI',sans-serif;
 
 .modal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.97);z-index:9999;flex-direction:column;align-items:center;justify-content:center;padding:20px}
 .modal.show{display:flex}
-.modal .top{position:absolute;top:0;left:0;right:0;padding:12px 20px;display:flex;justify-content:space-between;align-items:center;background:rgba(0,0,0,.8);border-bottom:2px solid #00d4ff}
-.modal .top .t{font-size:17px;font-weight:700;color:#00d4ff}
+.modal .top{position:absolute;top:0;left:0;right:0;padding:15px 25px;display:flex;justify-content:space-between;align-items:center;background:rgba(0,0,0,.9);border-bottom:2px solid #00d4ff}
+.modal .top .t{font-size:17px;font-weight:700;color:#00d4ff;max-width:70%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .modal .top .close{background:#ff2d55;border:0;border-radius:50%;width:40px;height:40px;color:#fff;font-size:20px;cursor:pointer}
-.modal .content{max-width:750px;width:100%;max-height:80vh;overflow-y:auto;background:#141b2b;border-radius:16px;padding:30px;border:1px solid rgba(0,212,255,.2)}
-.modal .content h2{color:#00d4ff;font-size:24px;margin-bottom:12px}
-.modal .content .meta{font-size:12px;color:rgba(255,255,255,.3);margin-bottom:15px}
-.modal .content p{color:rgba(255,255,255,.8);line-height:1.8;margin-bottom:12px;font-size:15px}
-.modal .content ul{color:rgba(255,255,255,.8);padding-left:25px;margin:10px 0}
+.modal .content{max-width:750px;width:100%;max-height:80vh;overflow-y:auto;background:#141b2b;border-radius:16px;padding:35px;border:1px solid rgba(0,212,255,.2)}
+.modal .content h2{color:#00d4ff;font-size:26px;margin-bottom:12px;line-height:1.3}
+.modal .content .meta{font-size:12px;color:rgba(255,255,255,.3);margin-bottom:20px;padding-bottom:15px;border-bottom:1px solid rgba(255,255,255,.05)}
+.modal .content .meta .tag{color:#00d4ff}
+.modal .content p{color:rgba(255,255,255,.85);line-height:1.9;margin-bottom:16px;font-size:16px}
+.modal .content h3{color:#00d4ff;margin:20px 0 10px;font-size:18px}
+.modal .content ul{color:rgba(255,255,255,.8);padding-left:25px;margin:12px 0}
 .modal .content ul li{margin-bottom:8px}
-.modal .content .btn{display:inline-block;background:#00d4ff;color:#000;padding:10px 24px;border-radius:30px;font-weight:700;margin-top:15px;border:0;cursor:pointer}
-.modal .content pre{background:#0a0e17;padding:15px;border-radius:10px;overflow-x:auto;font-size:13px;color:#00ff88;border:1px solid rgba(0,255,136,.1);margin:10px 0}
+.modal .content .btn{display:inline-block;background:#00d4ff;color:#000;padding:10px 28px;border-radius:30px;font-weight:700;margin-top:15px;border:0;cursor:pointer}
+.modal .content pre{background:#0a0e17;padding:18px;border-radius:10px;overflow-x:auto;font-size:13px;color:#00ff88;border:1px solid rgba(0,255,136,.1);margin:15px 0;white-space:pre-wrap}
 .modal .content .highlight{color:#ffd700;font-weight:600}
+.modal .content blockquote{border-left:3px solid #00d4ff;padding-left:16px;margin:15px 0;color:rgba(255,255,255,.6)}
+.modal .content img{max-width:100%;border-radius:10px;margin:15px 0}
 
 .footer{max-width:900px;margin:30px auto 0;padding-top:15px;border-top:1px solid rgba(255,255,255,.05);text-align:center;font-size:11px;color:rgba(255,255,255,.2)}
 .footer span{color:#00d4ff}
@@ -51,6 +55,7 @@ body{background:#0a0e17;color:#e0e0e0;font-family:'Inter','Segoe UI',sans-serif;
   .card{padding:16px}
   .card h2{font-size:17px}
   .modal .content{padding:20px}
+  .modal .content h2{font-size:20px}
 }
 </style>
 </head>
@@ -75,108 +80,64 @@ body{background:#0a0e17;color:#e0e0e0;font-family:'Inter','Segoe UI',sans-serif;
 
 <script>
 // ============================================
-// API ENDPOINTS
+// API DEV.TO (ARTIKEL FULL)
 // ============================================
-const API = {
-    // 1. Dev.to API (Artikel Programming)
-    devto: 'https://dev.to/api/articles?per_page=20',
-    
-    // 2. GitHub API (Readme sebagai artikel)
-    github: 'https://api.github.com/repos/EbookFoundation/free-programming-books/contents/README.md',
-    
-    // 3. HackerNews API (Berita Tech)
-    hackernews: 'https://hacker-news.firebaseio.com/v0/topstories.json'
-};
+const API_DEVTO = 'https://dev.to/api/articles?per_page=25';
 
 // ============================================
-// FALLBACK ARTIKEL (KALO API ERROR)
+// FALLBACK (KALO API ERROR)
 // ============================================
 const FALLBACK = [
-    {
-        title: 'Kenapa Supabase Makin Populer di 2026?',
-        tag: 'Backend',
-        time: '5 min',
-        desc: 'Kupas tuntas fitur Supabase: database PostgreSQL, RLS, Auth realtime, dan efisiensi untuk proyek modern.',
-        content: '<h2>Kenapa Supabase Makin Populer di 2026?</h2><p>Supabase adalah open-source alternative Firebase yang semakin banyak digunakan karena menawarkan PostgreSQL sebagai database utama.</p>'
-    },
-    {
-        title: 'Row Level Security (RLS) di PostgreSQL',
-        tag: 'Database',
-        time: '4 min',
-        desc: 'Panduan lengkap RLS di PostgreSQL untuk keamanan data di level row.',
-        content: '<h2>Row Level Security (RLS) di PostgreSQL</h2><p>Row Level Security (RLS) adalah fitur PostgreSQL yang membatasi akses data berdasarkan pengguna yang sedang login.</p>'
-    },
-    {
-        title: 'Perbedaan SQL vs NoSQL untuk Pemula',
-        tag: 'Database',
-        time: '6 min',
-        desc: 'Penjelasan lengkap perbedaan SQL dan NoSQL, kapan harus pakai masing-masing.',
-        content: '<h2>Perbedaan SQL vs NoSQL</h2><p>SQL dan NoSQL adalah dua jenis database yang berbeda dengan keunggulan masing-masing.</p>'
-    },
-    {
-        title: 'Cara Kerja JWT (JSON Web Token)',
-        tag: 'Security',
-        time: '5 min',
-        desc: 'Penjelasan detail tentang JWT, cara kerja, dan implementasi di aplikasi web.',
-        content: '<h2>Cara Kerja JWT</h2><p>JWT adalah standar untuk membuat token akses yang aman dan stateless.</p>'
-    },
-    {
-        title: 'Apa itu CORS dan Cara Mengatasinya',
-        tag: 'Web Dev',
-        time: '4 min',
-        desc: 'Penjelasan CORS (Cross-Origin Resource Sharing) dan cara mengatasinya di backend.',
-        content: '<h2>Apa itu CORS?</h2><p>CORS adalah mekanisme keamanan yang memungkinkan server menentukan siapa saja yang boleh mengakses resource-nya.</p>'
-    },
-    {
-        title: 'Mengenal Docker untuk Pemula',
-        tag: 'DevOps',
-        time: '6 min',
-        desc: 'Panduan dasar Docker, container, image, dan cara menjalankan aplikasi di container.',
-        content: '<h2>Mengenal Docker</h2><p>Docker adalah platform untuk mengembangkan, mengirim, dan menjalankan aplikasi di dalam container.</p>'
-    },
-    {
-        title: 'Cara Bikin API dengan Express.js',
-        tag: 'Backend',
-        time: '7 min',
-        desc: 'Tutorial membuat REST API dengan Express.js dan PostgreSQL.',
-        content: '<h2>Membuat API dengan Express.js</h2><p>Express.js adalah framework Node.js yang paling populer untuk membuat REST API.</p>'
-    },
-    {
-        title: 'Apa itu Web3 dan Masa Depan Internet',
-        tag: 'Web3',
-        time: '5 min',
-        desc: 'Penjelasan tentang Web3, blockchain, dan bagaimana internet akan berubah di masa depan.',
-        content: '<h2>Apa itu Web3?</h2><p>Web3 adalah internet versi berikutnya yang desentralisasi, menggunakan blockchain sebagai basisnya.</p>'
-    }
+{
+  title: 'Top 7 Featured DEV Posts of the Week',
+  tag: 'Top7',
+  time: '3 min',
+  desc: 'Welcome to this week\'s Top 7, where the DEV editorial team handpicks their favorite posts from the community.',
+  content: '<h2>Top 7 Featured DEV Posts of the Week</h2><p>Welcome to this week\'s Top 7, where the DEV editorial team handpicks their favorite posts from the community. From AI deployment to web performance, here are the must-reads.</p>'
+},
+{
+  title: '2B Gemma 4 QAT Deployment with GCE, NVIDIA L4, MCP, and Antigravity CLI',
+  tag: 'AI',
+  time: '15 min',
+  desc: 'This article provides a step by step deployment guide for Gemma 4 to a Google Compute Engine hosted NVIDIA L4.',
+  content: '<h2>2B Gemma 4 QAT Deployment</h2><p>This article provides a step by step deployment guide for Gemma 4 to a Google Compute Engine hosted NVIDIA L4 with MCP and Antigravity CLI.</p>'
+},
+{
+  title: 'TPU Deployments with Gemma 31B, v6e-4, and Antigravity CLI',
+  tag: 'AI',
+  time: '26 min',
+  desc: 'This article provides a step by step debugging guide for deploying Gemma 4 to a Google Cloud TPU.',
+  content: '<h2>TPU Deployments with Gemma 31B</h2><p>This article provides a step by step debugging guide for deploying Gemma 4 to a Google Cloud TPU v6e-4 with Antigravity CLI.</p>'
+}
 ];
 
 // ============================================
-// AMBIL DARI API + FALLBACK
+// AMBIL DARI API + RENDER
 // ============================================
 async function fetchArticles() {
     const grid = document.getElementById('grid');
     grid.innerHTML = '<div class="loading">⏳ Memuat artikel dari API...</div>';
     
     try {
-        // Coba ambil dari Dev.to API
-        const response = await fetch(API.devto);
-        if (response.ok) {
-            const data = await response.json();
+        const response = await fetch(API_DEVTO);
+        if (!response.ok) throw new Error('API error');
+        const data = await response.json();
+        
+        if (data && data.length > 0) {
             const articles = data.map(item => ({
-                title: item.title,
+                title: item.title || 'Untitled',
                 tag: item.tag_list?.[0] || 'Tech',
                 time: Math.ceil(item.reading_time_minutes || 3) + ' min',
                 desc: item.description || item.summary || 'Artikel menarik tentang teknologi.',
-                content: `<h2>${item.title}</h2><p>${item.body_html || item.description || 'Baca selengkapnya di Dev.to'}</p>`
+                content: item.body_html || item.description || '<p>Baca selengkapnya di Dev.to</p>'
             }));
             renderArticles(articles);
             return;
         }
     } catch (e) {
-        console.warn('Dev.to API error, trying fallback...');
+        console.warn('API error, using fallback:', e);
     }
     
-    // Kalo API gagal, pake FALLBACK
     renderArticles(FALLBACK);
 }
 
@@ -202,12 +163,11 @@ function renderArticles(articles) {
         </div>
     `).join('');
     
-    // Simpan data ke global
     window._articles = articles;
 }
 
 // ============================================
-// MODAL
+// MODAL - TAMPILKAN FULL ARTIKEL
 // ============================================
 function openModal(index) {
     const articles = window._articles || FALLBACK;
@@ -215,10 +175,17 @@ function openModal(index) {
     if (!a) return;
     
     document.getElementById('modalTitle').textContent = '📄 ' + a.title;
-    document.getElementById('modalContent').innerHTML = `
+    
+    let content = `
+        <div class="meta">
+            <span class="tag">🏷️ ${a.tag || 'Tech'}</span>
+            <span>⏱️ ${a.time || '3 min'}</span>
+        </div>
         ${a.content || '<p>Konten tidak tersedia</p>'}
         <button class="btn" onclick="closeModal()">Tutup</button>
     `;
+    
+    document.getElementById('modalContent').innerHTML = content;
     document.getElementById('modal').classList.add('show');
     document.body.style.overflow = 'hidden';
 }
