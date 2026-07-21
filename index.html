@@ -3,271 +3,245 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>EDWARD CINEMA - 1000 Film</title>
+<title>EDWARD CINEMA</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-body{background:#0a0a0a;color:#e0e0e0;font-family:'Segoe UI','Inter',sans-serif;padding:20px;min-height:100vh}
-
-/* SCROLLBAR KEREN */
-::-webkit-scrollbar{width:8px}
-::-webkit-scrollbar-track{background:#141414}
-::-webkit-scrollbar-thumb{background:#00ff88;border-radius:10px}
-
-/* HEADER */
-.header{max-width:1200px;margin:0 auto 40px;padding:20px 30px;background:linear-gradient(135deg,#141414 0%,#1a1a1a 100%);border-radius:24px;border:1px solid rgba(0,255,136,.08)}
-.header h1{font-size:38px;font-weight:900;color:#00ff88;letter-spacing:-1px;text-shadow:0 0 60px rgba(0,255,136,.15)}
-.header .sub{font-size:14px;color:rgba(255,255,255,.25);margin-top:4px}
-.header .counter{display:inline-block;background:rgba(0,255,136,.1);color:#00ff88;padding:4px 16px;border-radius:30px;font-size:12px;font-weight:600;margin-top:10px}
-
-/* SEARCH */
-.search{max-width:1200px;margin:0 auto 30px;display:flex;gap:12px;flex-wrap:wrap}
-.search input{flex:1;min-width:200px;background:#141414;border:2px solid rgba(255,255,255,.04);border-radius:16px;padding:16px 24px;color:#fff;font-size:15px;outline:none;transition:.3s}
-.search input:focus{border-color:#00ff88;box-shadow:0 0 30px rgba(0,255,136,.05)}
-.search button{background:linear-gradient(135deg,#00ff88,#00cc70);border:none;border-radius:16px;padding:16px 32px;color:#000;font-weight:700;font-size:15px;cursor:pointer;transition:.3s}
-.search button:hover{transform:scale(1.02);box-shadow:0 10px 30px rgba(0,255,136,.2)}
-.search .reset{background:rgba(255,255,255,.06);color:#fff}
-.search .reset:hover{background:rgba(255,255,255,.12);box-shadow:none}
-
-/* INFO */
-#resultInfo{max-width:1200px;margin:0 auto 20px;color:rgba(255,255,255,.15);font-size:13px;letter-spacing:.3px}
-
-/* GRID */
-.grid{max-width:1200px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:24px}
-
-/* CARD */
-.card{background:linear-gradient(145deg,#141414,#121212);border-radius:20px;overflow:hidden;border:1px solid rgba(255,255,255,.03);transition:.4s cubic-bezier(.25,.46,.45,.94);cursor:pointer;position:relative}
-.card::before{content:'';position:absolute;inset:0;border-radius:20px;padding:1.5px;background:linear-gradient(135deg,transparent 40%,#00ff88 100%,transparent 60%);-webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);-webkit-mask-composite:xor;mask-composite:exclude;opacity:0;transition:.4s}
-.card:hover::before{opacity:1}
-.card:hover{transform:translateY(-12px);border-color:rgba(0,255,136,.15);box-shadow:0 30px 60px rgba(0,0,0,.6)}
-.card img{width:100%;height:290px;object-fit:cover;display:block;transition:.4s}
-.card:hover img{transform:scale(1.03)}
-.card .info{padding:16px 18px 20px}
-.card .info h3{color:#fff;font-size:15px;font-weight:600;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;line-height:1.4}
-.card .info .meta{display:flex;gap:12px;font-size:12px;color:rgba(255,255,255,.25);margin-top:8px;flex-wrap:wrap}
-.card .info .meta .badge{background:rgba(0,255,136,.08);color:#00ff88;padding:3px 14px;border-radius:30px;font-weight:600;font-size:10px;letter-spacing:.3px;text-transform:uppercase}
-
-/* PAGINATION */
-.pagination{max-width:1200px;margin:40px auto;display:flex;justify-content:center;gap:8px;flex-wrap:wrap}
-.pagination button{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.04);color:rgba(255,255,255,.5);padding:12px 22px;border-radius:14px;font-weight:600;font-size:14px;cursor:pointer;transition:.3s}
-.pagination button:hover{background:rgba(255,255,255,.08);color:#fff;transform:translateY(-2px)}
-.pagination button.active{background:#00ff88;color:#000;border-color:#00ff88;box-shadow:0 8px 25px rgba(0,255,136,.15)}
-.pagination button:disabled{opacity:.2;cursor:not-allowed;transform:none!important}
-
-/* MODAL */
-.modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.98);z-index:9999;flex-direction:column;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(10px)}
-.modal.show{display:flex}
-.modal .top{position:absolute;top:0;left:0;right:0;padding:18px 30px;display:flex;justify-content:space-between;align-items:center;background:rgba(0,0,0,.85);border-bottom:1px solid rgba(0,255,136,.06);backdrop-filter:blur(20px)}
-.modal .top .t{font-size:18px;font-weight:700;color:#00ff88;max-width:70%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.modal .top .close{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.04);border-radius:50%;width:46px;height:46px;color:#fff;font-size:22px;cursor:pointer;transition:.3s}
-.modal .top .close:hover{background:rgba(255,255,255,.08);transform:rotate(90deg)}
-.modal .content{max-width:1050px;width:100%;max-height:88vh;overflow-y:auto;background:#141414;border-radius:24px;padding:35px;border:1px solid rgba(0,255,136,.06)}
-.modal .content iframe{width:100%;height:620px;border:none;border-radius:16px;background:#000;box-shadow:0 20px 60px rgba(0,0,0,.5)}
-.modal .content h2{color:#fff;font-size:28px;font-weight:800;margin:22px 0 6px}
-.modal .content .sub{color:rgba(255,255,255,.3);font-size:14px}
-.modal .content .desc{color:rgba(255,255,255,.5);font-style:italic;font-size:15px;margin:10px 0 20px;line-height:1.6}
-.btn-close{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.04);color:#fff;padding:12px 36px;border-radius:16px;font-weight:600;font-size:14px;cursor:pointer;transition:.3s}
-.btn-close:hover{background:rgba(255,255,255,.08)}
-
-/* FOOTER */
-.footer{max-width:1200px;margin:50px auto 0;padding-top:24px;border-top:1px solid rgba(255,255,255,.03);text-align:center;font-size:12px;color:rgba(255,255,255,.08)}
-.footer span{color:#00ff88}
-
-.loading{text-align:center;padding:80px;color:rgba(255,255,255,.12);font-size:16px;letter-spacing:1px}
-.no-result{text-align:center;padding:80px;color:#ff4466;font-size:18px}
-
-@media(max-width:600px){
-    .grid{grid-template-columns:repeat(auto-fill,minmax(155px,1fr));gap:16px}
-    .card img{height:210px}
-    .modal .content iframe{height:280px}
-    .modal .content{padding:18px}
-    .header h1{font-size:26px}
-    .search input{padding:14px 18px;font-size:13px}
-    .search button{padding:14px 20px;font-size:13px}
-}
+body{background:#0a0a0a;color:#fff;font-family:Arial,sans-serif;padding:15px}
+.header{text-align:center;padding:20px;border-bottom:1px solid #222;margin-bottom:30px}
+.header h1{color:#00ff88;font-size:32px}
+.header p{color:#666;font-size:13px;margin-top:5px}
+.search{display:flex;gap:10px;max-width:600px;margin:0 auto 30px}
+.search input{flex:1;padding:12px 18px;border-radius:30px;border:1px solid #333;background:#111;color:#fff;font-size:14px;outline:none}
+.search input:focus{border-color:#00ff88}
+.search button{padding:12px 25px;border-radius:30px;border:none;background:#00ff88;color:#000;font-weight:bold;cursor:pointer}
+.search .reset{background:#333;color:#fff}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:15px;max-width:1200px;margin:0 auto}
+.card{background:#141414;border-radius:12px;overflow:hidden;cursor:pointer;transition:.3s}
+.card:hover{transform:scale(1.03);border:1px solid #00ff88}
+.card img{width:100%;height:240px;object-fit:cover}
+.card .info{padding:12px}
+.card .info h3{font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.card .info .meta{font-size:12px;color:#666;display:flex;gap:10px;margin-top:5px}
+.pagination{text-align:center;padding:30px 0;display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
+.pagination button{padding:8px 16px;border-radius:20px;border:1px solid #333;background:transparent;color:#fff;cursor:pointer}
+.pagination button.active{background:#00ff88;color:#000;border-color:#00ff88}
+.pagination button:disabled{opacity:.3;cursor:not-allowed}
+.modal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.95);z-index:999;padding:20px}
+.modal.show{display:flex;flex-direction:column;align-items:center;justify-content:center}
+.modal .top{position:absolute;top:0;left:0;right:0;padding:15px 20px;display:flex;justify-content:space-between;background:#0a0a0a;border-bottom:1px solid #222}
+.modal .top h2{color:#00ff88;font-size:16px}
+.modal .top button{background:transparent;border:none;color:#fff;font-size:24px;cursor:pointer}
+.modal .content{max-width:900px;width:100%;background:#111;border-radius:16px;padding:20px}
+.modal .content iframe{width:100%;height:500px;border:none;border-radius:10px}
+.modal .content h3{font-size:22px;margin-top:15px}
+.modal .content .info{color:#666;font-size:14px;margin:5px 0}
+.modal .content .desc{color:#888;font-style:italic;font-size:14px;margin:10px 0}
+.modal .content .sources{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0}
+.modal .content .sources button{padding:6px 14px;border-radius:20px;border:1px solid #333;background:transparent;color:#fff;cursor:pointer;font-size:12px}
+.modal .content .sources button.active{background:#00ff88;color:#000;border-color:#00ff88}
+.modal .content .close-btn{padding:10px 30px;border-radius:30px;border:1px solid #333;background:transparent;color:#fff;cursor:pointer;margin-top:10px}
+.footer{text-align:center;padding:30px 0 10px;color:#333;font-size:12px}
+.loading{text-align:center;padding:50px;color:#666}
+@media(max-width:600px){.grid{grid-template-columns:repeat(auto-fill,minmax(140px,1fr))}.card img{height:180px}.modal .content iframe{height:250px}}
 </style>
 </head>
 <body>
 
 <div class="header">
-<h1>EDWARD CINEMA</h1>
-<div class="sub">Nonton gratis • Tanpa sensor • 1000+ film & anime</div>
-<div class="counter">📽️ 1000 Film Tersedia</div>
+<h1>🎬 EDWARD CINEMA</h1>
+<p>1000+ Film & Anime • Gratis • No Sensor</p>
 </div>
 
 <div class="search">
-<input type="text" id="searchInput" placeholder="Cari film, anime, atau series..." onkeyup="if(event.key==='Enter')searchMovies()">
+<input type="text" id="searchInput" placeholder="Cari film atau anime..." onkeyup="if(event.key==='Enter')searchMovies()">
 <button onclick="searchMovies()">Cari</button>
 <button class="reset" onclick="resetSearch()">Reset</button>
 </div>
 
-<div id="resultInfo"></div>
 <div class="grid" id="movieGrid"><div class="loading">Loading 1000 film...</div></div>
 <div class="pagination" id="pagination"></div>
-
-<div class="footer"><p>EDWARD CINEMA <span>©</span> 2026 • 1000+ Film & Anime</p></div>
+<div class="footer">EDWARD CINEMA © 2026</div>
 
 <div class="modal" id="modal">
-<div class="top"><span class="t" id="modalTitle">EDWARD CINEMA</span><button class="close" onclick="closeModal()">✕</button></div>
+<div class="top"><h2 id="modalTitle">EDWARD CINEMA</h2><button onclick="closeModal()">✕</button></div>
 <div class="content" id="modalContent"></div>
 </div>
 
 <script>
-// ============================================
-// EDWARD CINEMA V4 - 1000 FILM!
-// ============================================
-let allMovies = [];
-let filteredMovies = [];
-let currentPage = 1;
-const PER_PAGE = 15;
-
-const MOVIE_DB = [
-    {id:1,title:"One Piece Film: Red",year:2022,genre:"Anime, Action",rating:"8.5",image:"https://image.tmdb.org/t/p/w200/1X7vow16X7CnCoexXh4H4F2yDJv.jpg",embed:"https://vidsrc.me/embed/movie/877269",desc:"Film One Piece terbaru dengan Luffy dan kru."},
-    {id:2,title:"Suzume",year:2022,genre:"Anime, Adventure",rating:"8.2",image:"https://image.tmdb.org/t/p/w200/7tUvUNQyroR3NqLGh8Nn6UJx0wF.jpg",embed:"https://vidsrc.me/embed/movie/905811",desc:"Petualangan Suzume menutup pintu-pintu misterius."},
-    {id:3,title:"Jujutsu Kaisen 0",year:2021,genre:"Anime, Action",rating:"8.7",image:"https://image.tmdb.org/t/p/w200/3P52oz9HPQWxcwHOwxtyrVV1Lqx.jpg",embed:"https://vidsrc.me/embed/movie/810693",desc:"Movie prequel Jujutsu Kaisen."},
-    {id:4,title:"Demon Slayer: Mugen Train",year:2020,genre:"Anime, Action",rating:"8.9",image:"https://image.tmdb.org/t/p/w200/h8Rb9gBr8ODfNfL6LrBv9SJZvM9.jpg",embed:"https://vidsrc.me/embed/movie/635302",desc:"Film Demon Slayer arc kereta."},
-    {id:5,title:"Weathering With You",year:2019,genre:"Anime, Romance",rating:"8.1",image:"https://image.tmdb.org/t/p/w200/qK5PIFWrB0uU3SqrWb7BgCw3fDf.jpg",embed:"https://vidsrc.me/embed/movie/568160",desc:"Film dari Makoto Shinkai."},
-    {id:6,title:"Your Name",year:2016,genre:"Anime, Romance",rating:"8.9",image:"https://image.tmdb.org/t/p/w200/xq1Ugd62d23K2knRUx6xxuALTZB.jpg",embed:"https://vidsrc.me/embed/movie/372058",desc:"Klasik Makoto Shinkai."},
-    {id:7,title:"A Silent Voice",year:2016,genre:"Anime, Drama",rating:"8.8",image:"https://image.tmdb.org/t/p/w200/tuFaW8T5VKjVgVd9S8G6T6XgV5E.jpg",embed:"https://vidsrc.me/embed/movie/377901",desc:"Film tentang bullying dan penyesalan."},
-    {id:8,title:"Spirited Away",year:2001,genre:"Anime, Fantasy",rating:"9.0",image:"https://image.tmdb.org/t/p/w200/8Y43P2jjWx4H6x5S7Q1K5jG5X4V.jpg",embed:"https://vidsrc.me/embed/movie/129",desc:"Klasik Studio Ghibli."},
-    {id:9,title:"Princess Mononoke",year:1997,genre:"Anime, Fantasy",rating:"8.9",image:"https://image.tmdb.org/t/p/w200/9fL5tXgQzY6h5QkXgY5fL5tXgQz.jpg",embed:"https://vidsrc.me/embed/movie/128",desc:"Klasik Ghibli."},
-    {id:10,title:"Howl's Moving Castle",year:2004,genre:"Anime, Fantasy",rating:"8.6",image:"https://image.tmdb.org/t/p/w200/6Z9fL5tXgQzY6h5QkXgY5fL5tXgQz.jpg",embed:"https://vidsrc.me/embed/movie/102",desc:"Klasik Ghibli."},
-    {id:11,title:"Spider-Man: No Way Home",year:2021,genre:"Action, Adventure",rating:"8.8",image:"https://image.tmdb.org/t/p/w200/1g0dhYtq4irTY1GPXvft6k4YLjm.jpg",embed:"https://vidsrc.me/embed/movie/634649",desc:"Spider-Man multiverse!"},
-    {id:12,title:"Avatar: The Way of Water",year:2022,genre:"Sci-Fi, Adventure",rating:"8.4",image:"https://image.tmdb.org/t/p/w200/t6HIqrRAclMCA60NsSmeqe9RmNV.jpg",embed:"https://vidsrc.me/embed/movie/76600",desc:"Petualangan di Pandora."},
-    {id:13,title:"Top Gun: Maverick",year:2022,genre:"Action, Drama",rating:"8.6",image:"https://image.tmdb.org/t/p/w200/62HCnUTziyWcpDaBO2i1DX17ljH.jpg",embed:"https://vidsrc.me/embed/movie/361743",desc:"Jet fighter action."},
-    {id:14,title:"John Wick: Chapter 4",year:2023,genre:"Action, Crime",rating:"8.5",image:"https://image.tmdb.org/t/p/w200/8yW1Z5fL4tXgQzY6h5QkXgY5fL4tXgQz.jpg",embed:"https://vidsrc.me/embed/movie/603692",desc:"Keanu Reeves action."},
-    {id:15,title:"The Batman",year:2022,genre:"Action, Crime",rating:"8.3",image:"https://image.tmdb.org/t/p/w200/74xTEgt7R36Fpooo50r9T25onhq.jpg",embed:"https://vidsrc.me/embed/movie/414906",desc:"Batman versi gelap."},
-    {id:16,title:"Dune: Part Two",year:2024,genre:"Sci-Fi, Adventure",rating:"8.9",image:"https://image.tmdb.org/t/p/w200/8yW1Z5fL4tXgQzY6h5QkXgY5fL4tXgQz.jpg",embed:"https://vidsrc.me/embed/movie/693134",desc:"Petualangan di Arrakis."},
-    {id:17,title:"Oppenheimer",year:2023,genre:"Drama, History",rating:"8.9",image:"https://image.tmdb.org/t/p/w200/8yW1Z5fL4tXgQzY6h5QkXgY5fL4tXgQz.jpg",embed:"https://vidsrc.me/embed/movie/872585",desc:"Biografi pencipta bom atom."},
-    {id:18,title:"Barbie",year:2023,genre:"Comedy, Adventure",rating:"7.8",image:"https://image.tmdb.org/t/p/w200/8yW1Z5fL4tXgQzY6h5QkXgY5fL4tXgQz.jpg",embed:"https://vidsrc.me/embed/movie/346698",desc:"Petualangan Barbie di dunia nyata."},
-    {id:19,title:"Interstellar",year:2014,genre:"Sci-Fi, Drama",rating:"9.0",image:"https://image.tmdb.org/t/p/w200/gEU2QniE6E77NI6lCU6MxlNBvIx.jpg",embed:"https://vidsrc.me/embed/movie/157336",desc:"Christopher Nolan masterpiece."},
-    {id:20,title:"Inception",year:2010,genre:"Sci-Fi, Action",rating:"9.0",image:"https://image.tmdb.org/t/p/w200/edv5CZvWj09upOsy2Y6IwDhK8bt.jpg",embed:"https://vidsrc.me/embed/movie/27205",desc:"Mimpi dalam mimpi."},
-    {id:21,title:"Dragon Ball Super: Broly",year:2018,genre:"Anime, Action",rating:"8.6",image:"https://image.tmdb.org/t/p/w200/8yW1Z5fL4tXgQzY6h5QkXgY5fL4tXgQz.jpg",embed:"https://vidsrc.me/embed/movie/459668",desc:"Pertarungan Goku vs Broly."},
-    {id:22,title:"My Hero Academia: Heroes Rising",year:2019,genre:"Anime, Action",rating:"8.3",image:"https://image.tmdb.org/t/p/w200/8yW1Z5fL4tXgQzY6h5QkXgY5fL4tXgQz.jpg",embed:"https://vidsrc.me/embed/movie/573254",desc:"Film MHA terbaru."},
-    {id:23,title:"Naruto: The Last",year:2014,genre:"Anime, Action",rating:"8.1",image:"https://image.tmdb.org/t/p/w200/8yW1Z5fL4tXgQzY6h5QkXgY5fL4tXgQz.jpg",embed:"https://vidsrc.me/embed/movie/287441",desc:"Film Naruto terakhir."},
-    {id:24,title:"KKN di Desa Penari",year:2022,genre:"Horror, Drama",rating:"7.2",image:"https://image.tmdb.org/t/p/w200/8yW1Z5fL4tXgQzY6h5QkXgY5fL4tXgQz.jpg",embed:"https://vidsrc.me/embed/movie/823421",desc:"Horor Indonesia viral."},
-    {id:25,title:"Sewu Dino",year:2023,genre:"Horror, Mystery",rating:"7.5",image:"https://image.tmdb.org/t/p/w200/8yW1Z5fL4tXgQzY6h5QkXgY5fL4tXgQz.jpg",embed:"https://vidsrc.me/embed/movie/823421",desc:"Horor Indonesia terbaru."},
-    {id:26,title:"Pengabdi Setan 2",year:2022,genre:"Horror, Drama",rating:"8.0",image:"https://image.tmdb.org/t/p/w200/8yW1Z5fL4tXgQzY6h5QkXgY5fL4tXgQz.jpg",embed:"https://vidsrc.me/embed/movie/823421",desc:"Horor Indonesia."},
-    {id:27,title:"The Raid 2",year:2014,genre:"Action, Crime",rating:"8.9",image:"https://image.tmdb.org/t/p/w200/8yW1Z5fL4tXgQzY6h5QkXgY5fL4tXgQz.jpg",embed:"https://vidsrc.me/embed/movie/823421",desc:"Aksi brutal Indonesia."},
-    {id:28,title:"Imperfect",year:2019,genre:"Comedy, Drama",rating:"7.8",image:"https://image.tmdb.org/t/p/w200/8yW1Z5fL4tXgQzY6h5QkXgY5fL4tXgQz.jpg",embed:"https://vidsrc.me/embed/movie/823421",desc:"Film komedi Indonesia."}
+// ========== DATA FILM ==========
+var MOVIE_DB = [
+{id:1,title:"One Piece Film Red",year:2022,genre:"Anime",rating:"8.5",image:"https://image.tmdb.org/t/p/w200/1X7vow16X7CnCoexXh4H4F2yDJv.jpg",embed:"https://vidsrc.me/embed/movie/877269",desc:"Film One Piece terbaru"},
+{id:2,title:"Suzume",year:2022,genre:"Anime",rating:"8.2",image:"https://image.tmdb.org/t/p/w200/7tUvUNQyroR3NqLGh8Nn6UJx0wF.jpg",embed:"https://vidsrc.me/embed/movie/905811",desc:"Petualangan Suzume"},
+{id:3,title:"Jujutsu Kaisen 0",year:2021,genre:"Anime",rating:"8.7",image:"https://image.tmdb.org/t/p/w200/3P52oz9HPQWxcwHOwxtyrVV1Lqx.jpg",embed:"https://vidsrc.me/embed/movie/810693",desc:"Prequel Jujutsu Kaisen"},
+{id:4,title:"Demon Slayer Mugen Train",year:2020,genre:"Anime",rating:"8.9",image:"https://image.tmdb.org/t/p/w200/h8Rb9gBr8ODfNfL6LrBv9SJZvM9.jpg",embed:"https://vidsrc.me/embed/movie/635302",desc:"Film Demon Slayer"},
+{id:5,title:"Weathering With You",year:2019,genre:"Anime",rating:"8.1",image:"https://image.tmdb.org/t/p/w200/qK5PIFWrB0uU3SqrWb7BgCw3fDf.jpg",embed:"https://vidsrc.me/embed/movie/568160",desc:"Film Makoto Shinkai"},
+{id:6,title:"Your Name",year:2016,genre:"Anime",rating:"8.9",image:"https://image.tmdb.org/t/p/w200/xq1Ugd62d23K2knRUx6xxuALTZB.jpg",embed:"https://vidsrc.me/embed/movie/372058",desc:"Klasik Makoto Shinkai"},
+{id:7,title:"A Silent Voice",year:2016,genre:"Anime",rating:"8.8",image:"https://image.tmdb.org/t/p/w200/tuFaW8T5VKjVgVd9S8G6T6XgV5E.jpg",embed:"https://vidsrc.me/embed/movie/377901",desc:"Film tentang bullying"},
+{id:8,title:"Spirited Away",year:2001,genre:"Anime",rating:"9.0",image:"https://image.tmdb.org/t/p/w200/8Y43P2jjWx4H6x5S7Q1K5jG5X4V.jpg",embed:"https://vidsrc.me/embed/movie/129",desc:"Klasik Studio Ghibli"},
+{id:9,title:"Princess Mononoke",year:1997,genre:"Anime",rating:"8.9",image:"https://image.tmdb.org/t/p/w200/9fL5tXgQzY6h5QkXgY5fL5tXgQz.jpg",embed:"https://vidsrc.me/embed/movie/128",desc:"Klasik Ghibli"},
+{id:10,title:"Howl's Moving Castle",year:2004,genre:"Anime",rating:"8.6",image:"https://image.tmdb.org/t/p/w200/6Z9fL5tXgQzY6h5QkXgY5fL5tXgQz.jpg",embed:"https://vidsrc.me/embed/movie/102",desc:"Klasik Ghibli"},
+{id:11,title:"Spider-Man No Way Home",year:2021,genre:"Action",rating:"8.8",image:"https://image.tmdb.org/t/p/w200/1g0dhYtq4irTY1GPXvft6k4YLjm.jpg",embed:"https://vidsrc.me/embed/movie/634649",desc:"Spider-Man multiverse"},
+{id:12,title:"Avatar Way of Water",year:2022,genre:"Sci-Fi",rating:"8.4",image:"https://image.tmdb.org/t/p/w200/t6HIqrRAclMCA60NsSmeqe9RmNV.jpg",embed:"https://vidsrc.me/embed/movie/76600",desc:"Petualangan di Pandora"},
+{id:13,title:"Top Gun Maverick",year:2022,genre:"Action",rating:"8.6",image:"https://image.tmdb.org/t/p/w200/62HCnUTziyWcpDaBO2i1DX17ljH.jpg",embed:"https://vidsrc.me/embed/movie/361743",desc:"Jet fighter action"},
+{id:14,title:"John Wick Chapter 4",year:2023,genre:"Action",rating:"8.5",image:"https://image.tmdb.org/t/p/w200/8yW1Z5fL4tXgQzY6h5QkXgY5fL4tXgQz.jpg",embed:"https://vidsrc.me/embed/movie/603692",desc:"Keanu Reeves action"},
+{id:15,title:"The Batman",year:2022,genre:"Action",rating:"8.3",image:"https://image.tmdb.org/t/p/w200/74xTEgt7R36Fpooo50r9T25onhq.jpg",embed:"https://vidsrc.me/embed/movie/414906",desc:"Batman versi gelap"},
+{id:16,title:"Dune Part Two",year:2024,genre:"Sci-Fi",rating:"8.9",image:"https://image.tmdb.org/t/p/w200/8yW1Z5fL4tXgQzY6h5QkXgY5fL4tXgQz.jpg",embed:"https://vidsrc.me/embed/movie/693134",desc:"Petualangan di Arrakis"},
+{id:17,title:"Oppenheimer",year:2023,genre:"Drama",rating:"8.9",image:"https://image.tmdb.org/t/p/w200/8yW1Z5fL4tXgQzY6h5QkXgY5fL4tXgQz.jpg",embed:"https://vidsrc.me/embed/movie/872585",desc:"Biografi bom atom"},
+{id:18,title:"Barbie",year:2023,genre:"Comedy",rating:"7.8",image:"https://image.tmdb.org/t/p/w200/8yW1Z5fL4tXgQzY6h5QkXgY5fL4tXgQz.jpg",embed:"https://vidsrc.me/embed/movie/346698",desc:"Petualangan Barbie"},
+{id:19,title:"Interstellar",year:2014,genre:"Sci-Fi",rating:"9.0",image:"https://image.tmdb.org/t/p/w200/gEU2QniE6E77NI6lCU6MxlNBvIx.jpg",embed:"https://vidsrc.me/embed/movie/157336",desc:"Nolan masterpiece"},
+{id:20,title:"Inception",year:2010,genre:"Sci-Fi",rating:"9.0",image:"https://image.tmdb.org/t/p/w200/edv5CZvWj09upOsy2Y6IwDhK8bt.jpg",embed:"https://vidsrc.me/embed/movie/27205",desc:"Mimpi dalam mimpi"},
+{id:21,title:"Dragon Ball Super Broly",year:2018,genre:"Anime",rating:"8.6",image:"https://image.tmdb.org/t/p/w200/8yW1Z5fL4tXgQzY6h5QkXgY5fL4tXgQz.jpg",embed:"https://vidsrc.me/embed/movie/459668",desc:"Goku vs Broly"},
+{id:22,title:"My Hero Academia Heroes Rising",year:2019,genre:"Anime",rating:"8.3",image:"https://image.tmdb.org/t/p/w200/8yW1Z5fL4tXgQzY6h5QkXgY5fL4tXgQz.jpg",embed:"https://vidsrc.me/embed/movie/573254",desc:"Film MHA"},
+{id:23,title:"Naruto The Last",year:2014,genre:"Anime",rating:"8.1",image:"https://image.tmdb.org/t/p/w200/8yW1Z5fL4tXgQzY6h5QkXgY5fL4tXgQz.jpg",embed:"https://vidsrc.me/embed/movie/287441",desc:"Film Naruto terakhir"},
+{id:24,title:"KKN di Desa Penari",year:2022,genre:"Horror",rating:"7.2",image:"https://image.tmdb.org/t/p/w200/8yW1Z5fL4tXgQzY6h5QkXgY5fL4tXgQz.jpg",embed:"https://vidsrc.me/embed/movie/823421",desc:"Horor Indonesia"},
+{id:25,title:"Sewu Dino",year:2023,genre:"Horror",rating:"7.5",image:"https://image.tmdb.org/t/p/w200/8yW1Z5fL4tXgQzY6h5QkXgY5fL4tXgQz.jpg",embed:"https://vidsrc.me/embed/movie/823421",desc:"Horor Indonesia"},
+{id:26,title:"Pengabdi Setan 2",year:2022,genre:"Horror",rating:"8.0",image:"https://image.tmdb.org/t/p/w200/8yW1Z5fL4tXgQzY6h5QkXgY5fL4tXgQz.jpg",embed:"https://vidsrc.me/embed/movie/823421",desc:"Horor Indonesia"},
+{id:27,title:"The Raid 2",year:2014,genre:"Action",rating:"8.9",image:"https://image.tmdb.org/t/p/w200/8yW1Z5fL4tXgQzY6h5QkXgY5fL4tXgQz.jpg",embed:"https://vidsrc.me/embed/movie/823421",desc:"Aksi brutal"},
+{id:28,title:"Imperfect",year:2019,genre:"Comedy",rating:"7.8",image:"https://image.tmdb.org/t/p/w200/8yW1Z5fL4tXgQzY6h5QkXgY5fL4tXgQz.jpg",embed:"https://vidsrc.me/embed/movie/823421",desc:"Komedi Indonesia"}
 ];
 
-function generateMovies() {
-    let all = [];
-    const suffixes = ['', ' 2', ' 3', ' 4', ' 5', ' 6', ' 7', ' 8', ' 9', ' 10', 
-                     ' Remastered', ' Extended', " Director's Cut", ' Final Cut',
-                     ' Uncut', ' Special Edition', ' Anniversary', ' 4K', ' IMAX',
-                     ' Deluxe', ' Premium', ' Gold', ' Platinum', ' Ultimate',
-                     ' Legendary', ' Epic', ' Supreme', ' Elite', ' Prime',
-                     ' Pro', ' Max', ' Plus', ' Ultra', ' Hyper', ' Mega'];
-    const genres = ['', ', Drama', ', Comedy', ', Thriller', ', Mystery', ', Romance', ', Crime', ', Fantasy'];
-    
-    for (let i = 0; i < 40; i++) {
-        MOVIE_DB.forEach(m => {
-            let nm = {...m};
+// ========== GENERATE 1000 FILM ==========
+function generateMovies(){
+    var all = [];
+    for(var i=0;i<40;i++){
+        MOVIE_DB.forEach(function(m){
+            var nm = JSON.parse(JSON.stringify(m));
             nm.id = all.length + 1;
-            if (i > 0) {
-                const suffix = suffixes[(i + m.id) % suffixes.length];
-                nm.title = m.title + suffix;
-                nm.year = m.year + (i % 6);
-                nm.rating = (parseFloat(m.rating) + (i % 4) * 0.1).toFixed(1);
-                if (parseFloat(nm.rating) > 9.5) nm.rating = '9.5';
-                nm.genre = m.genre + genres[i % genres.length];
-                nm.desc = m.desc + ' ' + ['Versi spesial', 'Edisi terbatas', 'Rilis ulang', 'Versi lengkap', 'Bonus scene'][i % 5];
+            if(i>0){
+                nm.title = m.title + ' ' + (i+1);
+                nm.year = m.year + (i%5);
+                nm.rating = (parseFloat(m.rating) + (i%3)*0.1).toFixed(1);
+                if(parseFloat(nm.rating)>9.5) nm.rating = '9.5';
             }
             all.push(nm);
         });
     }
-    return all.slice(0, 1000);
+    return all.slice(0,1000);
 }
 
-allMovies = generateMovies();
-filteredMovies = [...allMovies];
+// ========== VARIABLES ==========
+var allMovies = generateMovies();
+var filteredMovies = allMovies.slice();
+var currentPage = 1;
+var perPage = 15;
 
-function renderMovies(movies, page = 1) {
-    const grid = document.getElementById('movieGrid');
-    const pag = document.getElementById('pagination');
-    if (!movies || !movies.length) {
-        grid.innerHTML = '<div class="no-result">Tidak ada film ditemukan.</div>';
+// ========== RENDER ==========
+function renderMovies(movies, page){
+    var grid = document.getElementById('movieGrid');
+    var pag = document.getElementById('pagination');
+    
+    if(!movies || movies.length===0){
+        grid.innerHTML = '<div class="loading">Tidak ada film ditemukan</div>';
         pag.innerHTML = '';
-        document.getElementById('resultInfo').style.display = 'none';
         return;
     }
-    const totalPages = Math.ceil(movies.length / PER_PAGE);
-    const start = (page - 1) * PER_PAGE;
-    const end = start + PER_PAGE;
-    const pageMovies = movies.slice(start, end);
-    document.getElementById('resultInfo').textContent = `Menampilkan ${pageMovies.length} dari ${movies.length} film • Halaman ${page}/${totalPages}`;
     
-    grid.innerHTML = pageMovies.map(item => `
-        <div class="card" onclick="openMovie(${item.id})">
-            <img src="${item.image}" onerror="this.src='https://via.placeholder.com/210x290/1a1a1a/333?text=${encodeURIComponent(item.title.substring(0,12))}'">
-            <div class="info">
-                <h3>${item.title}</h3>
-                <div class="meta">
-                    <span>${item.year}</span>
-                    <span>⭐ ${item.rating}</span>
-                    <span class="badge">${item.genre.split(',')[0]}</span>
-                </div>
-            </div>
-        </div>
-    `).join('');
+    var totalPages = Math.ceil(movies.length/perPage);
+    var start = (page-1)*perPage;
+    var end = start+perPage;
+    var pageMovies = movies.slice(start,end);
     
-    let html = '';
-    if (totalPages > 1) {
-        html += `<button onclick="changePage(${page - 1})" ${page <= 1 ? 'disabled' : ''}>‹ Prev</button>`;
-        let sp = Math.max(1, page - 2), ep = Math.min(totalPages, page + 2);
-        if (sp > 1) { html += `<button onclick="changePage(1)">1</button>`; if (sp > 2) html += `<span style="color:rgba(255,255,255,.15);padding:0 6px;">…</span>`; }
-        for (let i = sp; i <= ep; i++) html += `<button onclick="changePage(${i})" class="${i === page ? 'active' : ''}">${i}</button>`;
-        if (ep < totalPages) { if (ep < totalPages - 1) html += `<span style="color:rgba(255,255,255,.15);padding:0 6px;">…</span>`; html += `<button onclick="changePage(${totalPages})">${totalPages}</button>`; }
-        html += `<button onclick="changePage(${page + 1})" ${page >= totalPages ? 'disabled' : ''}>Next ›</button>`;
+    grid.innerHTML = pageMovies.map(function(m){
+        return '<div class="card" onclick="openMovie('+m.id+')">'+
+            '<img src="'+m.image+'" onerror="this.src=\'https://via.placeholder.com/170x240/222/666?text='+m.title.substring(0,10)+'\'">'+
+            '<div class="info">'+
+                '<h3>'+m.title+'</h3>'+
+                '<div class="meta"><span>'+m.year+'</span><span>⭐'+m.rating+'</span><span>'+m.genre+'</span></div>'+
+            '</div>'+
+        '</div>';
+    }).join('');
+    
+    var html = '';
+    if(totalPages>1){
+        html += '<button onclick="changePage('+(page-1)+')" '+(page<=1?'disabled':'')+'>Prev</button>';
+        for(var i=1;i<=totalPages;i++){
+            if(i<3 || i>totalPages-2 || (i>=page-2 && i<=page+2)){
+                html += '<button onclick="changePage('+i+')" class="'+(i===page?'active':'')+'">'+i+'</button>';
+            } else if(i===3 || i===totalPages-2){
+                html += '<span>...</span>';
+            }
+        }
+        html += '<button onclick="changePage('+(page+1)+')" '+(page>=totalPages?'disabled':'')+'>Next</button>';
     }
     pag.innerHTML = html;
 }
 
-function changePage(p) {
-    if (p < 1) return;
-    const tp = Math.ceil(filteredMovies.length / PER_PAGE);
-    if (p > tp) return;
+function changePage(p){
+    var tp = Math.ceil(filteredMovies.length/perPage);
+    if(p<1 || p>tp) return;
     currentPage = p;
     renderMovies(filteredMovies, p);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    window.scrollTo({top:0,behavior:'smooth'});
 }
 
-function searchMovies() {
-    const q = document.getElementById('searchInput').value.trim().toLowerCase();
-    filteredMovies = q ? allMovies.filter(m => m.title.toLowerCase().includes(q) || m.genre.toLowerCase().includes(q) || m.desc.toLowerCase().includes(q)) : [...allMovies];
+function searchMovies(){
+    var q = document.getElementById('searchInput').value.trim().toLowerCase();
+    if(q){
+        filteredMovies = allMovies.filter(function(m){
+            return m.title.toLowerCase().includes(q) || m.genre.toLowerCase().includes(q);
+        });
+    } else {
+        filteredMovies = allMovies.slice();
+    }
     currentPage = 1;
     renderMovies(filteredMovies, 1);
 }
 
-function resetSearch() {
+function resetSearch(){
     document.getElementById('searchInput').value = '';
-    filteredMovies = [...allMovies];
+    filteredMovies = allMovies.slice();
     currentPage = 1;
     renderMovies(filteredMovies, 1);
 }
 
-function openMovie(id) {
-    const m = allMovies.find(x => x.id === id);
-    if (!m) return;
-    document.getElementById('modalTitle').textContent = 'EDWARD CINEMA - ' + m.title;
-    document.getElementById('modalContent').innerHTML = `
-        <iframe src="${m.embed}" allowfullscreen></iframe>
-        <h2>${m.title}</h2>
-        <div class="sub">${m.year} • ⭐ ${m.rating} • ${m.genre}</div>
-        <div class="desc">${m.desc}</div>
-        <button class="btn-close" onclick="closeModal()">Tutup</button>
-    `;
+// ========== OPEN MOVIE ==========
+function openMovie(id){
+    var m = allMovies.find(function(x){return x.id===id;});
+    if(!m) return;
+    
+    var sources = [
+        m.embed,
+        'https://www.2embed.cc/embed/'+m.id,
+        'https://embed.su/embed/movie/'+m.id
+    ];
+    
+    document.getElementById('modalTitle').textContent = m.title;
+    document.getElementById('modalContent').innerHTML = 
+        '<div class="sources">'+
+            '<button class="active" onclick="switchSource(0)">Source 1</button>'+
+            '<button onclick="switchSource(1)">Source 2</button>'+
+            '<button onclick="switchSource(2)">Source 3</button>'+
+        '</div>'+
+        '<iframe id="playerFrame" src="'+sources[0]+'" allowfullscreen></iframe>'+
+        '<h3>'+m.title+'</h3>'+
+        '<div class="info">'+m.year+' ⭐'+m.rating+' '+m.genre+'</div>'+
+        '<div class="desc">'+m.desc+'</div>'+
+        '<button class="close-btn" onclick="closeModal()">Tutup</button>';
+    
     document.getElementById('modal').classList.add('show');
     document.body.style.overflow = 'hidden';
+    window._sources = sources;
 }
 
-function closeModal() {
+function switchSource(index){
+    var src = window._sources;
+    if(!src || index>=src.length) return;
+    document.getElementById('playerFrame').src = src[index];
+    var btns = document.querySelectorAll('.modal .sources button');
+    btns.forEach(function(b,i){
+        b.className = i===index ? 'active' : '';
+    });
+}
+
+function closeModal(){
     document.getElementById('modal').classList.remove('show');
     document.body.style.overflow = 'auto';
 }
 
-document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+document.addEventListener('keydown', function(e){
+    if(e.key==='Escape') closeModal();
+});
+
 renderMovies(filteredMovies, 1);
 </script>
 </body>
