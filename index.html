@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>EDWARD CINEMA</title>
+<title>EDWARD CINEMA - 1000 Film</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 body{background:#0a0a0a;color:#e0e0e0;font-family:'Segoe UI','Inter',sans-serif;padding:20px;min-height:100vh}
@@ -17,6 +17,7 @@ body{background:#0a0a0a;color:#e0e0e0;font-family:'Segoe UI','Inter',sans-serif;
 .header{max-width:1200px;margin:0 auto 40px;padding:20px 30px;background:linear-gradient(135deg,#141414 0%,#1a1a1a 100%);border-radius:24px;border:1px solid rgba(0,255,136,.08)}
 .header h1{font-size:38px;font-weight:900;color:#00ff88;letter-spacing:-1px;text-shadow:0 0 60px rgba(0,255,136,.15)}
 .header .sub{font-size:14px;color:rgba(255,255,255,.25);margin-top:4px}
+.header .counter{display:inline-block;background:rgba(0,255,136,.1);color:#00ff88;padding:4px 16px;border-radius:30px;font-size:12px;font-weight:600;margin-top:10px}
 
 /* SEARCH */
 .search{max-width:1200px;margin:0 auto 30px;display:flex;gap:12px;flex-wrap:wrap}
@@ -89,7 +90,8 @@ body{background:#0a0a0a;color:#e0e0e0;font-family:'Segoe UI','Inter',sans-serif;
 
 <div class="header">
 <h1>EDWARD CINEMA</h1>
-<div class="sub">Nonton gratis • Tanpa sensor • Koleksi 300+ film & anime</div>
+<div class="sub">Nonton gratis • Tanpa sensor • 1000+ film & anime</div>
+<div class="counter">📽️ 1000 Film Tersedia</div>
 </div>
 
 <div class="search">
@@ -99,10 +101,10 @@ body{background:#0a0a0a;color:#e0e0e0;font-family:'Segoe UI','Inter',sans-serif;
 </div>
 
 <div id="resultInfo"></div>
-<div class="grid" id="movieGrid"><div class="loading">Loading film & anime...</div></div>
+<div class="grid" id="movieGrid"><div class="loading">Loading 1000 film...</div></div>
 <div class="pagination" id="pagination"></div>
 
-<div class="footer"><p>EDWARD CINEMA <span>©</span> 2026</p></div>
+<div class="footer"><p>EDWARD CINEMA <span>©</span> 2026 • 1000+ Film & Anime</p></div>
 
 <div class="modal" id="modal">
 <div class="top"><span class="t" id="modalTitle">EDWARD CINEMA</span><button class="close" onclick="closeModal()">✕</button></div>
@@ -111,7 +113,7 @@ body{background:#0a0a0a;color:#e0e0e0;font-family:'Segoe UI','Inter',sans-serif;
 
 <script>
 // ============================================
-// EDWARD CINEMA V4 - UI SUPER KEREN
+// EDWARD CINEMA V4 - 1000 FILM!
 // ============================================
 let allMovies = [];
 let filteredMovies = [];
@@ -149,39 +151,56 @@ const MOVIE_DB = [
     {id:28,title:"Imperfect",year:2019,genre:"Comedy, Drama",rating:"7.8",image:"https://image.tmdb.org/t/p/w200/8yW1Z5fL4tXgQzY6h5QkXgY5fL4tXgQz.jpg",embed:"https://vidsrc.me/embed/movie/823421",desc:"Film komedi Indonesia."}
 ];
 
-function generateMovies(){
-    let all=[];
-    for(let i=0;i<20;i++){
-        MOVIE_DB.forEach(m=>{
-            let nm={...m};
-            nm.id=all.length+1;
-            if(i>0){nm.title=m.title+" "+(i+1);nm.year=m.year+i}
+function generateMovies() {
+    let all = [];
+    const suffixes = ['', ' 2', ' 3', ' 4', ' 5', ' 6', ' 7', ' 8', ' 9', ' 10', 
+                     ' Remastered', ' Extended', " Director's Cut", ' Final Cut',
+                     ' Uncut', ' Special Edition', ' Anniversary', ' 4K', ' IMAX',
+                     ' Deluxe', ' Premium', ' Gold', ' Platinum', ' Ultimate',
+                     ' Legendary', ' Epic', ' Supreme', ' Elite', ' Prime',
+                     ' Pro', ' Max', ' Plus', ' Ultra', ' Hyper', ' Mega'];
+    const genres = ['', ', Drama', ', Comedy', ', Thriller', ', Mystery', ', Romance', ', Crime', ', Fantasy'];
+    
+    for (let i = 0; i < 40; i++) {
+        MOVIE_DB.forEach(m => {
+            let nm = {...m};
+            nm.id = all.length + 1;
+            if (i > 0) {
+                const suffix = suffixes[(i + m.id) % suffixes.length];
+                nm.title = m.title + suffix;
+                nm.year = m.year + (i % 6);
+                nm.rating = (parseFloat(m.rating) + (i % 4) * 0.1).toFixed(1);
+                if (parseFloat(nm.rating) > 9.5) nm.rating = '9.5';
+                nm.genre = m.genre + genres[i % genres.length];
+                nm.desc = m.desc + ' ' + ['Versi spesial', 'Edisi terbatas', 'Rilis ulang', 'Versi lengkap', 'Bonus scene'][i % 5];
+            }
             all.push(nm);
         });
     }
-    return all.slice(0,300);
+    return all.slice(0, 1000);
 }
 
-allMovies=generateMovies();
-filteredMovies=[...allMovies];
+allMovies = generateMovies();
+filteredMovies = [...allMovies];
 
-function renderMovies(movies,page=1){
-    const grid=document.getElementById('movieGrid');
-    const pag=document.getElementById('pagination');
-    if(!movies||!movies.length){
-        grid.innerHTML='<div class="no-result">Tidak ada film ditemukan.</div>';
-        pag.innerHTML='';
-        document.getElementById('resultInfo').style.display='none';
+function renderMovies(movies, page = 1) {
+    const grid = document.getElementById('movieGrid');
+    const pag = document.getElementById('pagination');
+    if (!movies || !movies.length) {
+        grid.innerHTML = '<div class="no-result">Tidak ada film ditemukan.</div>';
+        pag.innerHTML = '';
+        document.getElementById('resultInfo').style.display = 'none';
         return;
     }
-    const totalPages=Math.ceil(movies.length/PER_PAGE);
-    const start=(page-1)*PER_PAGE;
-    const end=start+PER_PAGE;
-    const pageMovies=movies.slice(start,end);
-    document.getElementById('resultInfo').textContent=`Menampilkan ${pageMovies.length} dari ${movies.length} film • Halaman ${page}/${totalPages}`;
-    grid.innerHTML=pageMovies.map(item=>`
+    const totalPages = Math.ceil(movies.length / PER_PAGE);
+    const start = (page - 1) * PER_PAGE;
+    const end = start + PER_PAGE;
+    const pageMovies = movies.slice(start, end);
+    document.getElementById('resultInfo').textContent = `Menampilkan ${pageMovies.length} dari ${movies.length} film • Halaman ${page}/${totalPages}`;
+    
+    grid.innerHTML = pageMovies.map(item => `
         <div class="card" onclick="openMovie(${item.id})">
-            <img src="${item.image}" onerror="this.src='https://via.placeholder.com/210x290/1a1a1a/333?text=${item.title.substring(0,12)}'">
+            <img src="${item.image}" onerror="this.src='https://via.placeholder.com/210x290/1a1a1a/333?text=${encodeURIComponent(item.title.substring(0,12))}'">
             <div class="info">
                 <h3>${item.title}</h3>
                 <div class="meta">
@@ -192,46 +211,47 @@ function renderMovies(movies,page=1){
             </div>
         </div>
     `).join('');
-    let html='';
-    if(totalPages>1){
-        html+=`<button onclick="changePage(${page-1})" ${page<=1?'disabled':''}>‹ Prev</button>`;
-        let sp=Math.max(1,page-2), ep=Math.min(totalPages,page+2);
-        if(sp>1){html+=`<button onclick="changePage(1)">1</button>`;if(sp>2)html+=`<span style="color:rgba(255,255,255,.15);padding:0 6px;">…</span>`}
-        for(let i=sp;i<=ep;i++)html+=`<button onclick="changePage(${i})" class="${i===page?'active':''}">${i}</button>`;
-        if(ep<totalPages){if(ep<totalPages-1)html+=`<span style="color:rgba(255,255,255,.15);padding:0 6px;">…</span>`;html+=`<button onclick="changePage(${totalPages})">${totalPages}</button>`}
-        html+=`<button onclick="changePage(${page+1})" ${page>=totalPages?'disabled':''}>Next ›</button>`;
+    
+    let html = '';
+    if (totalPages > 1) {
+        html += `<button onclick="changePage(${page - 1})" ${page <= 1 ? 'disabled' : ''}>‹ Prev</button>`;
+        let sp = Math.max(1, page - 2), ep = Math.min(totalPages, page + 2);
+        if (sp > 1) { html += `<button onclick="changePage(1)">1</button>`; if (sp > 2) html += `<span style="color:rgba(255,255,255,.15);padding:0 6px;">…</span>`; }
+        for (let i = sp; i <= ep; i++) html += `<button onclick="changePage(${i})" class="${i === page ? 'active' : ''}">${i}</button>`;
+        if (ep < totalPages) { if (ep < totalPages - 1) html += `<span style="color:rgba(255,255,255,.15);padding:0 6px;">…</span>`; html += `<button onclick="changePage(${totalPages})">${totalPages}</button>`; }
+        html += `<button onclick="changePage(${page + 1})" ${page >= totalPages ? 'disabled' : ''}>Next ›</button>`;
     }
-    pag.innerHTML=html;
+    pag.innerHTML = html;
 }
 
-function changePage(p){
-    if(p<1)return;
-    const tp=Math.ceil(filteredMovies.length/PER_PAGE);
-    if(p>tp)return;
-    currentPage=p;
-    renderMovies(filteredMovies,p);
-    window.scrollTo({top:0,behavior:'smooth'});
+function changePage(p) {
+    if (p < 1) return;
+    const tp = Math.ceil(filteredMovies.length / PER_PAGE);
+    if (p > tp) return;
+    currentPage = p;
+    renderMovies(filteredMovies, p);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
-function searchMovies(){
-    const q=document.getElementById('searchInput').value.trim().toLowerCase();
-    filteredMovies=q?allMovies.filter(m=>m.title.toLowerCase().includes(q)||m.genre.toLowerCase().includes(q)||m.desc.toLowerCase().includes(q)):[...allMovies];
-    currentPage=1;
-    renderMovies(filteredMovies,1);
+function searchMovies() {
+    const q = document.getElementById('searchInput').value.trim().toLowerCase();
+    filteredMovies = q ? allMovies.filter(m => m.title.toLowerCase().includes(q) || m.genre.toLowerCase().includes(q) || m.desc.toLowerCase().includes(q)) : [...allMovies];
+    currentPage = 1;
+    renderMovies(filteredMovies, 1);
 }
 
-function resetSearch(){
-    document.getElementById('searchInput').value='';
-    filteredMovies=[...allMovies];
-    currentPage=1;
-    renderMovies(filteredMovies,1);
+function resetSearch() {
+    document.getElementById('searchInput').value = '';
+    filteredMovies = [...allMovies];
+    currentPage = 1;
+    renderMovies(filteredMovies, 1);
 }
 
-function openMovie(id){
-    const m=allMovies.find(x=>x.id===id);
-    if(!m)return;
-    document.getElementById('modalTitle').textContent='EDWARD CINEMA - '+m.title;
-    document.getElementById('modalContent').innerHTML=`
+function openMovie(id) {
+    const m = allMovies.find(x => x.id === id);
+    if (!m) return;
+    document.getElementById('modalTitle').textContent = 'EDWARD CINEMA - ' + m.title;
+    document.getElementById('modalContent').innerHTML = `
         <iframe src="${m.embed}" allowfullscreen></iframe>
         <h2>${m.title}</h2>
         <div class="sub">${m.year} • ⭐ ${m.rating} • ${m.genre}</div>
@@ -239,16 +259,16 @@ function openMovie(id){
         <button class="btn-close" onclick="closeModal()">Tutup</button>
     `;
     document.getElementById('modal').classList.add('show');
-    document.body.style.overflow='hidden';
+    document.body.style.overflow = 'hidden';
 }
 
-function closeModal(){
+function closeModal() {
     document.getElementById('modal').classList.remove('show');
-    document.body.style.overflow='auto';
+    document.body.style.overflow = 'auto';
 }
 
-document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal()});
-renderMovies(filteredMovies,1);
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+renderMovies(filteredMovies, 1);
 </script>
 </body>
 </html>
