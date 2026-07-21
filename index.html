@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>EDWARD CINEMA - 1000 Film</title>
+<title>-EDWARD-</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 body{background:#0a0a0a;color:#e0e0e0;font-family:'Segoe UI','Inter',sans-serif;padding:20px;min-height:100vh}
@@ -89,7 +89,7 @@ body{background:#0a0a0a;color:#e0e0e0;font-family:'Segoe UI','Inter',sans-serif;
 <body>
 
 <div class="header">
-<h1>EDWARD CINEMA</h1>
+<h1>-EDWARD-</h1>
 <div class="sub">Nonton gratis • Tanpa sensor • 1000+ film & anime</div>
 <div class="counter">📽️ 1000 Film Tersedia</div>
 </div>
@@ -104,16 +104,16 @@ body{background:#0a0a0a;color:#e0e0e0;font-family:'Segoe UI','Inter',sans-serif;
 <div class="grid" id="movieGrid"><div class="loading">Loading 1000 film...</div></div>
 <div class="pagination" id="pagination"></div>
 
-<div class="footer"><p>EDWARD CINEMA <span>©</span> 2026 • 1000+ Film & Anime</p></div>
+<div class="footer"><p>-EDWARD- <span>©</span> 2026 • 1000+ Film & Anime</p></div>
 
 <div class="modal" id="modal">
-<div class="top"><span class="t" id="modalTitle">EDWARD CINEMA</span><button class="close" onclick="closeModal()">✕</button></div>
+<div class="top"><span class="t" id="modalTitle">-EDWARD-</span><button class="close" onclick="closeModal()">✕</button></div>
 <div class="content" id="modalContent"></div>
 </div>
 
 <script>
 // ============================================
-// EDWARD CINEMA V4 - 1000 FILM!
+// -EDWARD- V4 - 1000 FILM!
 // ============================================
 let allMovies = [];
 let filteredMovies = [];
@@ -143,12 +143,7 @@ const MOVIE_DB = [
     {id:20,title:"Inception",year:2010,genre:"Sci-Fi, Action",rating:"9.0",image:"https://image.tmdb.org/t/p/w200/edv5CZvWj09upOsy2Y6IwDhK8bt.jpg",embed:"https://vidsrc.me/embed/movie/27205",desc:"Mimpi dalam mimpi."},
     {id:21,title:"Dragon Ball Super: Broly",year:2018,genre:"Anime, Action",rating:"8.6",image:"https://image.tmdb.org/t/p/w200/8yW1Z5fL4tXgQzY6h5QkXgY5fL4tXgQz.jpg",embed:"https://vidsrc.me/embed/movie/459668",desc:"Pertarungan Goku vs Broly."},
     {id:22,title:"My Hero Academia: Heroes Rising",year:2019,genre:"Anime, Action",rating:"8.3",image:"https://image.tmdb.org/t/p/w200/8yW1Z5fL4tXgQzY6h5QkXgY5fL4tXgQz.jpg",embed:"https://vidsrc.me/embed/movie/573254",desc:"Film MHA terbaru."},
-    {id:23,title:"Naruto: The Last",year:2014,genre:"Anime, Action",rating:"8.1",image:"https://image.tmdb.org/t/p/w200/8yW1Z5fL4tXgQzY6h5QkXgY5fL4tXgQz.jpg",embed:"https://vidsrc.me/embed/movie/287441",desc:"Film Naruto terakhir."},
-    {id:24,title:"KKN di Desa Penari",year:2022,genre:"Horror, Drama",rating:"7.2",image:"https://image.tmdb.org/t/p/w200/8yW1Z5fL4tXgQzY6h5QkXgY5fL4tXgQz.jpg",embed:"https://vidsrc.me/embed/movie/823421",desc:"Horor Indonesia viral."},
-    {id:25,title:"Sewu Dino",year:2023,genre:"Horror, Mystery",rating:"7.5",image:"https://image.tmdb.org/t/p/w200/8yW1Z5fL4tXgQzY6h5QkXgY5fL4tXgQz.jpg",embed:"https://vidsrc.me/embed/movie/823421",desc:"Horor Indonesia terbaru."},
-    {id:26,title:"Pengabdi Setan 2",year:2022,genre:"Horror, Drama",rating:"8.0",image:"https://image.tmdb.org/t/p/w200/8yW1Z5fL4tXgQzY6h5QkXgY5fL4tXgQz.jpg",embed:"https://vidsrc.me/embed/movie/823421",desc:"Horor Indonesia."},
-    {id:27,title:"The Raid 2",year:2014,genre:"Action, Crime",rating:"8.9",image:"https://image.tmdb.org/t/p/w200/8yW1Z5fL4tXgQzY6h5QkXgY5fL4tXgQz.jpg",embed:"https://vidsrc.me/embed/movie/823421",desc:"Aksi brutal Indonesia."},
-    {id:28,title:"Imperfect",year:2019,genre:"Comedy, Drama",rating:"7.8",image:"https://image.tmdb.org/t/p/w200/8yW1Z5fL4tXgQzY6h5QkXgY5fL4tXgQz.jpg",embed:"https://vidsrc.me/embed/movie/823421",desc:"Film komedi Indonesia."}
+    {id:23,title:"Naruto: The Last",year:2014,genre:"Anime, Action",rating:"8.1",image:"https://image.tmdb.org/t/p/w200/8yW1Z5fL4tXgQzY6h5QkXgY5fL4tXgQz.jpg",embed:"https://vidsrc.me/embed/movie/287441",desc:"Film Naruto terakhir."}
 ];
 
 function generateMovies() {
@@ -250,7 +245,7 @@ function resetSearch() {
 function openMovie(id) {
     const m = allMovies.find(x => x.id === id);
     if (!m) return;
-    document.getElementById('modalTitle').textContent = 'EDWARD CINEMA - ' + m.title;
+    document.getElementById('modalTitle').textContent = '-EDWARD- - ' + m.title;
     document.getElementById('modalContent').innerHTML = `
         <iframe src="${m.embed}" allowfullscreen></iframe>
         <h2>${m.title}</h2>
