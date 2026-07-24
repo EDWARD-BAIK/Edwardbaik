@@ -14,47 +14,47 @@ export default async function handler(req, res) {
   }
 
   try {
-    // ========== API 1: social-download.net (UNIVERSAL) ==========
-    const apiUrl = `https://social-download.net/api/convert?url=${encodeURIComponent(url)}&format=${format === 'audio' ? 'mp3' : 'mp4'}`;
-    const response1 = await axios.get(apiUrl, { timeout: 20000 });
-    const data1 = response1.data;
+    // ========== API 1: SaveFrom (UNIVERSAL) ==========
+    const sfUrl = `https://api.savefrom.net/2?url=${encodeURIComponent(url)}&format=${format === 'audio' ? 'mp3' : 'mp4'}`;
+    const sfRes = await axios.get(sfUrl, { timeout: 15000 });
+    const sfData = sfRes.data;
 
-    if (data1 && data1.success && data1.download_url) {
+    if (sfData && sfData.video && sfData.video.download_url) {
       return res.status(200).json({
-        title: data1.title || 'Unknown',
-        thumbnail: data1.thumbnail || '',
-        duration: data1.duration || '00:00',
-        downloadUrl: data1.download_url || data1.url || '',
+        title: sfData.video.title || 'Unknown',
+        thumbnail: sfData.video.thumb || '',
+        duration: sfData.video.duration || '00:00',
+        downloadUrl: sfData.video.download_url || sfData.video.url || '',
         format: format || 'video'
       });
     }
 
-    // ========== API 2: socialdownload (cadangan) ==========
-    const apiUrl2 = `https://api.socialdownload.net/convert?url=${encodeURIComponent(url)}&format=${format === 'audio' ? 'mp3' : 'mp4'}`;
-    const response2 = await axios.get(apiUrl2, { timeout: 20000 });
-    const data2 = response2.data;
+    // ========== API 2: yt-dl (YouTube & beberapa platform) ==========
+    const ytdlUrl = `https://api.yt-dl.org/download?url=${encodeURIComponent(url)}&format=${format === 'audio' ? 'mp3' : 'mp4'}`;
+    const ytdlRes = await axios.get(ytdlUrl, { timeout: 15000 });
+    const ytdlData = ytdlRes.data;
 
-    if (data2 && data2.success && data2.download_url) {
+    if (ytdlData && ytdlData.success && ytdlData.download_url) {
       return res.status(200).json({
-        title: data2.title || 'Unknown',
-        thumbnail: data2.thumbnail || '',
-        duration: data2.duration || '00:00',
-        downloadUrl: data2.download_url || data2.url || '',
+        title: ytdlData.title || 'Unknown',
+        thumbnail: ytdlData.thumbnail || '',
+        duration: ytdlData.duration || '00:00',
+        downloadUrl: ytdlData.download_url || ytdlData.url || '',
         format: format || 'video'
       });
     }
 
-    // ========== API 3: social-download (v3) ==========
-    const apiUrl3 = `https://social-download.net/api/v3/convert?url=${encodeURIComponent(url)}&format=${format === 'audio' ? 'mp3' : 'mp4'}`;
-    const response3 = await axios.get(apiUrl3, { timeout: 20000 });
-    const data3 = response3.data;
+    // ========== API 3: vidsrc (YouTube khusus) ==========
+    const vidsrcUrl = `https://vidsrc.me/embed/movie/${encodeURIComponent(url)}`;
+    const vidsrcRes = await axios.get(vidsrcUrl, { timeout: 15000 });
+    const vidsrcData = vidsrcRes.data;
 
-    if (data3 && data3.success && data3.download_url) {
+    if (vidsrcData && vidsrcData.success && vidsrcData.download_url) {
       return res.status(200).json({
-        title: data3.title || 'Unknown',
-        thumbnail: data3.thumbnail || '',
-        duration: data3.duration || '00:00',
-        downloadUrl: data3.download_url || data3.url || '',
+        title: vidsrcData.title || 'Unknown',
+        thumbnail: vidsrcData.thumbnail || '',
+        duration: vidsrcData.duration || '00:00',
+        downloadUrl: vidsrcData.download_url || vidsrcData.url || '',
         format: format || 'video'
       });
     }
