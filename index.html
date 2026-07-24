@@ -29,7 +29,6 @@ body {
   border-radius: 0;
 }
 
-/* HEADER */
 .header {
   max-width: 900px;
   margin: 0 auto 40px;
@@ -57,7 +56,6 @@ body {
   text-transform: uppercase;
 }
 
-/* MAIN CARD */
 .main {
   max-width: 900px;
   margin: 0 auto;
@@ -84,7 +82,6 @@ body {
   letter-spacing: 0.5px;
 }
 
-/* INPUT */
 .input-group {
   display: flex;
   gap: 0;
@@ -107,6 +104,11 @@ body {
   background: #111;
   border-left: 4px solid #00ff88;
 }
+.input-group input::placeholder {
+  color: rgba(255, 255, 255, 0.08);
+  font-weight: 400;
+  letter-spacing: 0.3px;
+}
 .input-group button {
   background: #00ff88;
   border: none;
@@ -124,7 +126,6 @@ body {
   transform: scale(1.02);
 }
 
-/* PLATFORM BADGE */
 .platforms {
   display: flex;
   gap: 8px;
@@ -147,7 +148,6 @@ body {
   color: #00ff88;
 }
 
-/* FORMAT SELECTOR - CLEAN & CLICKABLE */
 .format-group {
   display: flex;
   gap: 20px;
@@ -212,7 +212,6 @@ body {
   background: rgba(0, 255, 136, 0.03);
 }
 
-/* RESULT */
 .result {
   display: none;
   margin-top: 28px;
@@ -267,7 +266,6 @@ body {
   color: #000;
 }
 
-/* FOOTER */
 .footer {
   max-width: 900px;
   margin: 40px auto 0;
@@ -333,7 +331,7 @@ body {
   <div class="desc">Support TikTok • Instagram • YouTube • MP3/Audio</div>
 
   <div class="input-group">
-    <input type="text" id="urlInput" placeholder="https://www.tiktok.com/... / https://www.instagram.com/... / https://www.youtube.com/..." onkeyup="if(event.key==='Enter')processUrl()">
+    <input type="text" id="urlInput" placeholder="Paste link TikTok, Instagram, YouTube, atau MP3..." onkeyup="if(event.key==='Enter')processUrl()">
     <button onclick="processUrl()">⬡ Proses</button>
   </div>
 
@@ -344,7 +342,6 @@ body {
     <span class="badge active">⬡ MP3/Audio</span>
   </div>
 
-  <!-- FORMAT SELECTOR CLEAN -->
   <div class="format-group">
     <label>
       <input type="radio" name="format" value="video" checked>
@@ -375,9 +372,6 @@ body {
 </div>
 
 <script>
-// ============================================
-// EDWARD-DOWNLOADER V2 - FAKE API SIMULATOR
-// ============================================
 function processUrl() {
   const url = document.getElementById('urlInput').value.trim();
   const format = document.querySelector('input[name="format"]:checked').value;
@@ -434,7 +428,6 @@ function downloadMedia() {
   alert('⬡ Download dimulai Bos! (Fitur ini butuh backend API nyata)');
 }
 
-// Auto-detect format from link
 document.getElementById('urlInput').addEventListener('input', function() {
   const url = this.value.trim();
   const audioRadio = document.querySelector('input[name="format"][value="audio"]');
