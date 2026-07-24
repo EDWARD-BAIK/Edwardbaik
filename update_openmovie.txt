@@ -1,0 +1,58 @@
+function openMovie(id) {
+    const m = allMovies.find(x => x.id === id);
+    if (!m) return;
+    
+    // Multiple embed sources (fallback)
+    const sources = [
+        m.embed, // source 1: vidsrc.me
+        `https://www.2embed.cc/embed/${m.id}`, // source 2
+        `https://embed.su/embed/movie/${m.id}`, // source 3
+        `https://multiembed.mov/?video_id=${m.id}`, // source 4
+        `https://database.gdriveplayer.us/player.php?imdb=${m.id}` // source 5
+    ];
+    
+    document.getElementById('modalTitle').textContent = 'EDWARD CINEMA - ' + m.title;
+    document.getElementById('modalContent').innerHTML = `
+        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px;">
+            <button onclick="switchSource(0)" style="background:#00ff88;color:#000;border:none;padding:6px 16px;border-radius:20px;font-weight:600;cursor:pointer;font-size:12px;">Source 1</button>
+            <button onclick="switchSource(1)" style="background:rgba(255,255,255,.06);color:#fff;border:none;padding:6px 16px;border-radius:20px;cursor:pointer;font-size:12px;">Source 2</button>
+            <button onclick="switchSource(2)" style="background:rgba(255,255,255,.06);color:#fff;border:none;padding:6px 16px;border-radius:20px;cursor:pointer;font-size:12px;">Source 3</button>
+            <button onclick="switchSource(3)" style="background:rgba(255,255,255,.06);color:#fff;border:none;padding:6px 16px;border-radius:20px;cursor:pointer;font-size:12px;">Source 4</button>
+            <button onclick="switchSource(4)" style="background:rgba(255,255,255,.06);color:#fff;border:none;padding:6px 16px;border-radius:20px;cursor:pointer;font-size:12px;">Source 5</button>
+        </div>
+        <iframe id="playerFrame" src="${sources[0]}" allowfullscreen style="width:100%;height:600px;border:none;border-radius:12px;background:#000;"></iframe>
+        <h2 style="color:#fff;font-size:26px;margin:20px 0 6px;">${m.title}</h2>
+        <div style="color:rgba(255,255,255,.3);font-size:14px;">${m.year} • ⭐ ${m.rating} • ${m.genre}</div>
+        <div style="color:rgba(255,255,255,.5);font-style:italic;font-size:15px;margin:10px 0 20px;">${m.desc}</div>
+        <button class="btn-close" onclick="closeModal()">Tutup</button>
+    `;
+    document.getElementById('modal').classList.add('show');
+    document.body.style.overflow = 'hidden';
+    
+    // Simpan sources ke global variable
+    window._currentSources = sources;
+    window._currentSourceIndex = 0;
+}
+
+function switchSource(index) {
+    const sources = window._currentSources;
+    if (!sources || index >= sources.length) return;
+    
+    const iframe = document.getElementById('playerFrame');
+    if (iframe) {
+        iframe.src = sources[index];
+        window._currentSourceIndex = index;
+        
+        // Update tombol highlight
+        const buttons = document.querySelectorAll('.modal .content div button');
+        buttons.forEach((btn, i) => {
+            if (i === index) {
+                btn.style.background = '#00ff88';
+                btn.style.color = '#000';
+            } else {
+                btn.style.background = 'rgba(255,255,255,.06)';
+                btn.style.color = '#fff';
+            }
+        });
+    }
+}
