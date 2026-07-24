@@ -1,4 +1,6 @@
-import axios from 'axios';
+import { exec } from 'child_process';
+import { promisify } from 'util';
+const execAsync = promisify(exec);
 
 export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -14,53 +16,38 @@ export default async function handler(req, res) {
   }
 
   try {
-    // ========== API 1: SaveFrom (UNIVERSAL) ==========
-    const sfUrl = `https://api.savefrom.net/2?url=${encodeURIComponent(url)}&format=${format === 'audio' ? 'mp3' : 'mp4'}`;
-    const sfRes = await axios.get(sfUrl, { timeout: 15000 });
-    const sfData = sfRes.data;
+    // Gunakan yt-dlp untuk ambil info video
+    const cmd = `yt-dlp -j "${url}"`;
+    const { stdout } = await execAsync(cmd);
+    const data = JSON.parse(stdout);
 
-    if (sfData && sfData.video && sfData.video.download_url) {
-      return res.status(200).json({
-        title: sfData.video.title || 'Unknown',
-        thumbnail: sfData.video.thumb || '',
-        duration: sfData.video.duration || '00:00',
-        downloadUrl: sfData.video.download_url || sfData.video.url || '',
-        format: format || 'video'
-      });
+    if (!data) {
+      return res.status(500).json({ error: 'Gagal ambil data video' });
     }
 
-    // ========== API 2: yt-dl (YouTube & beberapa platform) ==========
-    const ytdlUrl = `https://api.yt-dl.org/download?url=${encodeURIComponent(url)}&format=${format === 'audio' ? 'mp3' : 'mp4'}`;
-    const ytdlRes = await axios.get(ytdlUrl, { timeout: 15000 });
-    const ytdlData = ytdlRes.data;
-
-    if (ytdlData && ytdlData.success && ytdlData.download_url) {
-      return res.status(200).json({
-        title: ytdlData.title || 'Unknown',
-        thumbnail: ytdlData.thumbnail || '',
-        duration: ytdlData.duration || '00:00',
-        downloadUrl: ytdlData.download_url || ytdlData.url || '',
-        format: format || 'video'
-      });
+    const title = data.title || 'Unknown';
+    const thumbnail = data.thumbnail || '';
+    const duration = data.duration || '00:00';
+    
+    // Cari format terbaik
+    let downloadUrl = '';
+    if (format === 'audio') {
+      // Cari format audio terbaik
+      const audioFormat = data.formats?.find(f => f.acodec !== 'none' && f.vcodec === 'none');
+      downloadUrl = audioFormat?.url || data.url || '';
+    } else {
+      // Cari format video terbaik
+      const videoFormat = data.formats?.find(f => f.vcodec !== 'none' && f.acodec !== 'none');
+      downloadUrl = videoFormat?.url || data.url || '';
     }
 
-    // ========== API 3: vidsrc (YouTube khusus) ==========
-    const vidsrcUrl = `https://vidsrc.me/embed/movie/${encodeURIComponent(url)}`;
-    const vidsrcRes = await axios.get(vidsrcUrl, { timeout: 15000 });
-    const vidsrcData = vidsrcRes.data;
-
-    if (vidsrcData && vidsrcData.success && vidsrcData.download_url) {
-      return res.status(200).json({
-        title: vidsrcData.title || 'Unknown',
-        thumbnail: vidsrcData.thumbnail || '',
-        duration: vidsrcData.duration || '00:00',
-        downloadUrl: vidsrcData.download_url || vidsrcData.url || '',
-        format: format || 'video'
-      });
-    }
-
-    // ========== Semua gagal ==========
-    return res.status(500).json({ error: 'Gagal ambil data dari semua API. Coba link lain.' });
+    return res.status(200).json({
+      title,
+      thumbnail,
+      duration,
+      downloadUrl,
+      format: format || 'video'
+    });
 
   } catch (error) {
     console.error('Error:', error.message);
