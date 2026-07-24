@@ -5,181 +5,442 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>EDWARD-DOWNLOADER</title>
 <style>
-*{margin:0;padding:0;box-sizing:border-box}
-body{background:#0a0a0a;color:#e0e0e0;font-family:'Segoe UI','Inter',sans-serif;min-height:100vh;padding:20px;background-image:radial-gradient(circle at 30% 40%,#0f0f1f 0%,#050505 90%)}
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+body {
+  background: #0a0a0a;
+  color: #e0e0e0;
+  font-family: 'Inter', 'Segoe UI', sans-serif;
+  min-height: 100vh;
+  padding: 20px;
+  background-image: radial-gradient(circle at 30% 40%, #0f0f1f 0%, #050505 90%);
+}
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #0a0a0a;
+}
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #00ff88, #00cc70);
+  border-radius: 0;
+}
 
-::-webkit-scrollbar{width:8px}
-::-webkit-scrollbar-track{background:#0a0a0a}
-::-webkit-scrollbar-thumb{background:linear-gradient(180deg,#00ff88,#00cc70);border-radius:0}
-
-/* HEADER BRUTALISM X NEON GLASS */
-.header{max-width:900px;margin:0 auto 40px;padding:24px 32px;background:rgba(10,10,10,0.6);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border-left:6px solid #00ff88;border-right:6px solid #00ff88;box-shadow:0 0 80px rgba(0,255,136,.05),inset 0 0 80px rgba(0,255,136,.02)}
-.header h1{font-size:36px;font-weight:900;color:#00ff88;letter-spacing:-1px;text-shadow:0 0 60px rgba(0,255,136,.1);font-family:'Inter',sans-serif;text-transform:uppercase}
-.header .sub{font-size:13px;color:rgba(255,255,255,.15);margin-top:4px;letter-spacing:2px;text-transform:uppercase}
+/* HEADER */
+.header {
+  max-width: 900px;
+  margin: 0 auto 40px;
+  padding: 24px 32px;
+  background: rgba(10, 10, 10, 0.6);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border-left: 6px solid #00ff88;
+  border-right: 6px solid #00ff88;
+  box-shadow: 0 0 80px rgba(0, 255, 136, 0.05), inset 0 0 80px rgba(0, 255, 136, 0.02);
+}
+.header h1 {
+  font-size: 36px;
+  font-weight: 900;
+  color: #00ff88;
+  letter-spacing: -1px;
+  text-shadow: 0 0 60px rgba(0, 255, 136, 0.1);
+  text-transform: uppercase;
+}
+.header .sub {
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.15);
+  margin-top: 4px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
 
 /* MAIN CARD */
-.main{max-width:900px;margin:0 auto;background:rgba(15,15,15,0.5);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);padding:40px;border-left:6px solid #00ff88;border-bottom:6px solid #00ff88;box-shadow:0 20px 60px rgba(0,0,0,.8)}
-
-.main h2{font-size:22px;font-weight:800;color:#fff;margin-bottom:6px;text-transform:uppercase;letter-spacing:-0.5px}
-.main .desc{font-size:14px;color:rgba(255,255,255,.2);margin-bottom:24px;letter-spacing:0.5px}
+.main {
+  max-width: 900px;
+  margin: 0 auto;
+  background: rgba(15, 15, 15, 0.5);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  padding: 40px;
+  border-left: 6px solid #00ff88;
+  border-bottom: 6px solid #00ff88;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8);
+}
+.main h2 {
+  font-size: 22px;
+  font-weight: 800;
+  color: #fff;
+  margin-bottom: 6px;
+  text-transform: uppercase;
+  letter-spacing: -0.5px;
+}
+.main .desc {
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.2);
+  margin-bottom: 24px;
+  letter-spacing: 0.5px;
+}
 
 /* INPUT */
-.input-group{display:flex;gap:0;flex-wrap:wrap;border:2px solid rgba(255,255,255,.04)}
-.input-group input{flex:1;min-width:200px;background:#0a0a0a;border:none;padding:16px 20px;color:#fff;font-size:15px;outline:none;font-weight:500}
-.input-group input:focus{background:#111;border-left:4px solid #00ff88}
-.input-group button{background:#00ff88;border:none;padding:16px 28px;color:#000;font-weight:800;font-size:15px;cursor:pointer;transition:.3s;text-transform:uppercase;letter-spacing:1px}
-.input-group button:hover{background:#00cc70;transform:scale(1.02)}
+.input-group {
+  display: flex;
+  gap: 0;
+  flex-wrap: wrap;
+  border: 2px solid rgba(255, 255, 255, 0.04);
+}
+.input-group input {
+  flex: 1;
+  min-width: 200px;
+  background: #0a0a0a;
+  border: none;
+  padding: 16px 20px;
+  color: #fff;
+  font-size: 15px;
+  outline: none;
+  font-weight: 500;
+  transition: 0.3s;
+}
+.input-group input:focus {
+  background: #111;
+  border-left: 4px solid #00ff88;
+}
+.input-group button {
+  background: #00ff88;
+  border: none;
+  padding: 16px 28px;
+  color: #000;
+  font-weight: 800;
+  font-size: 15px;
+  cursor: pointer;
+  transition: 0.3s;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+.input-group button:hover {
+  background: #00cc70;
+  transform: scale(1.02);
+}
 
 /* PLATFORM BADGE */
-.platforms{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px}
-.platforms .badge{background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.04);padding:6px 16px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;color:rgba(255,255,255,.2)}
-.platforms .badge.active{background:rgba(0,255,136,.08);border-color:#00ff88;color:#00ff88}
+.platforms {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 16px;
+}
+.platforms .badge {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.04);
+  padding: 6px 16px;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: rgba(255, 255, 255, 0.2);
+}
+.platforms .badge.active {
+  background: rgba(0, 255, 136, 0.08);
+  border-color: #00ff88;
+  color: #00ff88;
+}
 
-/* FORMAT SELECTOR */
-.format-group{display:flex;gap:12px;flex-wrap:wrap;margin:20px 0 16px}
-.format-group label{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:600;color:rgba(255,255,255,.4);cursor:pointer;text-transform:uppercase;letter-spacing:0.5px}
-.format-group label input[type="radio"]{accent-color:#00ff88;width:16px;height:16px}
+/* FORMAT SELECTOR - CLEAN & CLICKABLE */
+.format-group {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+  margin: 20px 0 16px;
+  padding: 12px 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.03);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+}
+.format-group label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 14px;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.3);
+  cursor: pointer;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  padding: 6px 14px;
+  border: 1px solid transparent;
+  transition: 0.3s;
+}
+.format-group label:hover {
+  color: #fff;
+  border-color: rgba(0, 255, 136, 0.1);
+}
+.format-group input[type="radio"] {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 18px;
+  height: 18px;
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  background: transparent;
+  cursor: pointer;
+  position: relative;
+  transition: 0.2s;
+  flex-shrink: 0;
+}
+.format-group input[type="radio"]:checked {
+  border-color: #00ff88;
+  background: #00ff88;
+}
+.format-group input[type="radio"]:checked::after {
+  content: "⬡";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: #000;
+  font-size: 10px;
+  font-weight: 900;
+}
+.format-group input[type="radio"]:checked + span {
+  color: #00ff88;
+}
+.format-group label span {
+  transition: 0.3s;
+}
+.format-group label:has(input:checked) {
+  border-color: rgba(0, 255, 136, 0.2);
+  background: rgba(0, 255, 136, 0.03);
+}
 
 /* RESULT */
-.result{display:none;margin-top:28px;padding:20px;background:rgba(0,0,0,.4);border-left:4px solid #00ff88}
-.result.show{display:block}
-.result .info{display:flex;gap:16px;align-items:center;flex-wrap:wrap}
-.result .info .thumb{width:80px;height:80px;background:#141414;object-fit:cover;border:2px solid rgba(0,255,136,.1)}
-.result .info .detail{flex:1}
-.result .info .detail h3{color:#fff;font-size:18px;font-weight:700}
-.result .info .detail p{color:rgba(255,255,255,.2);font-size:13px;margin-top:2px}
-.result .btn-download{background:transparent;border:2px solid #00ff88;color:#00ff88;padding:12px 36px;font-weight:800;font-size:14px;cursor:pointer;transition:.3s;text-transform:uppercase;letter-spacing:1px;margin-top:16px}
-.result .btn-download:hover{background:#00ff88;color:#000}
+.result {
+  display: none;
+  margin-top: 28px;
+  padding: 20px;
+  background: rgba(0, 0, 0, 0.4);
+  border-left: 4px solid #00ff88;
+}
+.result.show {
+  display: block;
+}
+.result .info {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+.result .info .thumb {
+  width: 80px;
+  height: 80px;
+  background: #141414;
+  object-fit: cover;
+  border: 2px solid rgba(0, 255, 136, 0.1);
+}
+.result .info .detail {
+  flex: 1;
+}
+.result .info .detail h3 {
+  color: #fff;
+  font-size: 18px;
+  font-weight: 700;
+}
+.result .info .detail p {
+  color: rgba(255, 255, 255, 0.2);
+  font-size: 13px;
+  margin-top: 2px;
+}
+.result .btn-download {
+  background: transparent;
+  border: 2px solid #00ff88;
+  color: #00ff88;
+  padding: 12px 36px;
+  font-weight: 800;
+  font-size: 14px;
+  cursor: pointer;
+  transition: 0.3s;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-top: 16px;
+}
+.result .btn-download:hover {
+  background: #00ff88;
+  color: #000;
+}
 
 /* FOOTER */
-.footer{max-width:900px;margin:40px auto 0;padding-top:20px;border-top:2px solid rgba(0,255,136,.04);text-align:center;font-size:11px;color:rgba(255,255,255,.04);text-transform:uppercase;letter-spacing:2px}
-.footer span{color:#00ff88}
+.footer {
+  max-width: 900px;
+  margin: 40px auto 0;
+  padding-top: 20px;
+  border-top: 2px solid rgba(0, 255, 136, 0.04);
+  text-align: center;
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.04);
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+.footer span {
+  color: #00ff88;
+}
 
-.loading-text{text-align:center;padding:40px;color:rgba(255,255,255,.04);font-size:14px;letter-spacing:2px;text-transform:uppercase}
+.loading-text {
+  text-align: center;
+  padding: 40px;
+  color: rgba(255, 255, 255, 0.04);
+  font-size: 14px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
 
-@media(max-width:600px){
-    .main{padding:20px}
-    .header h1{font-size:26px}
-    .input-group input{padding:14px 16px;font-size:13px}
-    .input-group button{padding:14px 20px;font-size:13px}
-    .result .info .thumb{width:60px;height:60px}
+@media (max-width: 600px) {
+  .main {
+    padding: 20px;
+  }
+  .header h1 {
+    font-size: 26px;
+  }
+  .input-group input {
+    padding: 14px 16px;
+    font-size: 13px;
+  }
+  .input-group button {
+    padding: 14px 20px;
+    font-size: 13px;
+  }
+  .result .info .thumb {
+    width: 60px;
+    height: 60px;
+  }
+  .format-group {
+    gap: 10px;
+  }
+  .format-group label {
+    font-size: 12px;
+    padding: 4px 10px;
+  }
 }
 </style>
 </head>
 <body>
 
 <div class="header">
-<h1>⬡ EDWARD-DOWNLOADER</h1>
-<div class="sub">Brutal • Cepat • Tanpa Sensor</div>
+  <h1>⬡ EDWARD-DOWNLOADER</h1>
+  <div class="sub">Brutal • Cepat • Tanpa Sensor</div>
 </div>
 
 <div class="main">
-<h2>⬡ Paste Link</h2>
-<div class="desc">Support TikTok • Instagram • YouTube • MP3/Audio</div>
+  <h2>⬡ Paste Link</h2>
+  <div class="desc">Support TikTok • Instagram • YouTube • MP3/Audio</div>
 
-<div class="input-group">
-<input type="text" id="urlInput" placeholder="https://www.tiktok.com/... / https://www.instagram.com/... / https://www.youtube.com/..." onkeyup="if(event.key==='Enter')processUrl()">
-<button onclick="processUrl()">⬡ Proses</button>
+  <div class="input-group">
+    <input type="text" id="urlInput" placeholder="https://www.tiktok.com/... / https://www.instagram.com/... / https://www.youtube.com/..." onkeyup="if(event.key==='Enter')processUrl()">
+    <button onclick="processUrl()">⬡ Proses</button>
+  </div>
+
+  <div class="platforms">
+    <span class="badge active">⬡ TikTok</span>
+    <span class="badge active">⬡ Instagram</span>
+    <span class="badge active">⬡ YouTube</span>
+    <span class="badge active">⬡ MP3/Audio</span>
+  </div>
+
+  <!-- FORMAT SELECTOR CLEAN -->
+  <div class="format-group">
+    <label>
+      <input type="radio" name="format" value="video" checked>
+      <span>⬡ Video (MP4)</span>
+    </label>
+    <label>
+      <input type="radio" name="format" value="audio">
+      <span>⬡ Audio (MP3)</span>
+    </label>
+  </div>
+
+  <div class="result" id="resultBox">
+    <div class="info">
+      <img class="thumb" id="thumbImg" src="" alt="Thumb">
+      <div class="detail">
+        <h3 id="titleText">Judul Video</h3>
+        <p id="metaText">Source • Durasi</p>
+      </div>
+    </div>
+    <button class="btn-download" id="downloadBtn" onclick="downloadMedia()">⬡ Download</button>
+  </div>
+
+  <div id="loadingMsg" class="loading-text" style="display:none;">⬡ Memproses link...</div>
 </div>
 
-<div class="platforms">
-<span class="badge active">⬡ TikTok</span>
-<span class="badge active">⬡ Instagram</span>
-<span class="badge active">⬡ YouTube</span>
-<span class="badge active">⬡ MP3/Audio</span>
+<div class="footer">
+  <p>EDWARD-DOWNLOADER <span>©</span> 2026 • Brutalism x Neon Glass</p>
 </div>
-
-<div class="format-group">
-<label><input type="radio" name="format" value="video" checked> Video (MP4)</label>
-<label><input type="radio" name="format" value="audio"> Audio (MP3)</label>
-</div>
-
-<div class="result" id="resultBox">
-<div class="info">
-<img class="thumb" id="thumbImg" src="" alt="Thumb">
-<div class="detail">
-<h3 id="titleText">Judul Video</h3>
-<p id="metaText">Source • Durasi</p>
-</div>
-</div>
-<button class="btn-download" id="downloadBtn" onclick="downloadMedia()">⬡ Download</button>
-</div>
-
-<div id="loadingMsg" class="loading-text" style="display:none;">⬡ Memproses link...</div>
-</div>
-
-<div class="footer"><p>EDWARD-DOWNLOADER <span>©</span> 2026 • Brutalism x Neon Glass</p></div>
 
 <script>
 // ============================================
-// EDWARD-DOWNLOADER - FAKE API SIMULATOR
+// EDWARD-DOWNLOADER V2 - FAKE API SIMULATOR
 // ============================================
 function processUrl() {
-    const url = document.getElementById('urlInput').value.trim();
-    const format = document.querySelector('input[name="format"]:checked').value;
-    const resultBox = document.getElementById('resultBox');
-    const loading = document.getElementById('loadingMsg');
+  const url = document.getElementById('urlInput').value.trim();
+  const format = document.querySelector('input[name="format"]:checked').value;
+  const resultBox = document.getElementById('resultBox');
+  const loading = document.getElementById('loadingMsg');
 
-    if (!url) {
-        alert('⬡ Masukkan link dulu Bos!');
-        return;
+  if (!url) {
+    alert('⬡ Masukkan link dulu Bos!');
+    return;
+  }
+
+  loading.style.display = 'block';
+  resultBox.classList.remove('show');
+
+  setTimeout(() => {
+    loading.style.display = 'none';
+
+    let title = 'Unknown Media';
+    let meta = 'Source Unknown • 00:00';
+    let thumb = 'https://via.placeholder.com/80x80/0a0a0a/00ff88?text=⬡';
+
+    if (url.includes('tiktok.com')) {
+      title = 'TikTok Video';
+      meta = 'TikTok • 00:15';
+      thumb = 'https://via.placeholder.com/80x80/0a0a0a/00ff88?text=TK';
+    } else if (url.includes('instagram.com')) {
+      title = 'Instagram Reel';
+      meta = 'Instagram • 00:30';
+      thumb = 'https://via.placeholder.com/80x80/0a0a0a/00ff88?text=IG';
+    } else if (url.includes('youtube.com') || url.includes('youtu.be')) {
+      title = 'YouTube Video';
+      meta = 'YouTube • 03:45';
+      thumb = 'https://via.placeholder.com/80x80/0a0a0a/00ff88?text=YT';
+    } else {
+      title = 'Audio / MP3';
+      meta = 'Audio • 02:20';
+      thumb = 'https://via.placeholder.com/80x80/0a0a0a/00ff88?text=MP3';
     }
 
-    // Show loading
-    loading.style.display = 'block';
-    resultBox.classList.remove('show');
+    if (format === 'audio') {
+      title += ' (MP3)';
+      meta += ' • Audio Only';
+    }
 
-    // Simulate processing
-    setTimeout(() => {
-        loading.style.display = 'none';
+    document.getElementById('thumbImg').src = thumb;
+    document.getElementById('titleText').textContent = title;
+    document.getElementById('metaText').textContent = meta;
+    resultBox.classList.add('show');
 
-        // Fake result based on URL
-        let title = 'Unknown Media';
-        let meta = 'Source Unknown • 00:00';
-        let thumb = 'https://via.placeholder.com/80x80/0a0a0a/00ff88?text=⬡';
-
-        if (url.includes('tiktok.com')) {
-            title = 'TikTok Video';
-            meta = 'TikTok • 00:15';
-            thumb = 'https://via.placeholder.com/80x80/0a0a0a/00ff88?text=TK';
-        } else if (url.includes('instagram.com')) {
-            title = 'Instagram Reel';
-            meta = 'Instagram • 00:30';
-            thumb = 'https://via.placeholder.com/80x80/0a0a0a/00ff88?text=IG';
-        } else if (url.includes('youtube.com') || url.includes('youtu.be')) {
-            title = 'YouTube Video';
-            meta = 'YouTube • 03:45';
-            thumb = 'https://via.placeholder.com/80x80/0a0a0a/00ff88?text=YT';
-        } else {
-            title = 'Audio / MP3';
-            meta = 'Audio • 02:20';
-            thumb = 'https://via.placeholder.com/80x80/0a0a0a/00ff88?text=MP3';
-        }
-
-        if (format === 'audio') {
-            title += ' (MP3)';
-            meta += ' • Audio Only';
-        }
-
-        document.getElementById('thumbImg').src = thumb;
-        document.getElementById('titleText').textContent = title;
-        document.getElementById('metaText').textContent = meta;
-        resultBox.classList.add('show');
-
-    }, 1500);
+  }, 1500);
 }
 
 function downloadMedia() {
-    alert('⬡ Download dimulai Bos! (Fitur ini butuh backend API nyata)');
+  alert('⬡ Download dimulai Bos! (Fitur ini butuh backend API nyata)');
 }
 
 // Auto-detect format from link
 document.getElementById('urlInput').addEventListener('input', function() {
-    const url = this.value.trim();
-    const audioRadio = document.querySelector('input[name="format"][value="audio"]');
-    if (url.includes('youtube.com') || url.includes('youtu.be') || url.includes('soundcloud.com')) {
-        audioRadio.checked = true;
-    }
+  const url = this.value.trim();
+  const audioRadio = document.querySelector('input[name="format"][value="audio"]');
+  if (url.includes('youtube.com') || url.includes('youtu.be') || url.includes('soundcloud.com')) {
+    audioRadio.checked = true;
+  }
 });
 </script>
 </body>
