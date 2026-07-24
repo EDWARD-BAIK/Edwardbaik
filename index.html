@@ -5,339 +5,49 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>EDWARD-DOWNLOADER</title>
 <style>
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-body {
-  background: #0a0a0a;
-  color: #e0e0e0;
-  font-family: 'Inter', 'Segoe UI', sans-serif;
-  min-height: 100vh;
-  padding: 20px;
-  background-image: radial-gradient(circle at 30% 40%, #0f0f1f 0%, #050505 90%);
-}
-::-webkit-scrollbar {
-  width: 8px;
-}
-::-webkit-scrollbar-track {
-  background: #0a0a0a;
-}
-::-webkit-scrollbar-thumb {
-  background: linear-gradient(180deg, #00ff88, #00cc70);
-  border-radius: 0;
-}
-
-.header {
-  max-width: 900px;
-  margin: 0 auto 40px;
-  padding: 24px 32px;
-  background: rgba(10, 10, 10, 0.6);
-  backdrop-filter: blur(24px);
-  -webkit-backdrop-filter: blur(24px);
-  border-left: 6px solid #00ff88;
-  border-right: 6px solid #00ff88;
-  box-shadow: 0 0 80px rgba(0, 255, 136, 0.05), inset 0 0 80px rgba(0, 255, 136, 0.02);
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 12px;
-}
-.header h1 {
-  font-size: 36px;
-  font-weight: 900;
-  color: #00ff88;
-  letter-spacing: -1px;
-  text-shadow: 0 0 60px rgba(0, 255, 136, 0.1);
-  text-transform: uppercase;
-}
-.header .sub {
-  font-size: 13px;
-  color: rgba(255, 255, 255, 0.15);
-  margin-top: 4px;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-}
-.header .clock {
-  font-size: 28px;
-  font-weight: 800;
-  color: #00ff88;
-  letter-spacing: 2px;
-  text-shadow: 0 0 40px rgba(0, 255, 136, 0.08);
-  font-variant-numeric: tabular-nums;
-  background: rgba(0, 0, 0, 0.3);
-  padding: 6px 16px;
-  border-left: 3px solid #00ff88;
-  font-family: 'Inter', monospace;
-}
-
-.main {
-  max-width: 900px;
-  margin: 0 auto;
-  background: rgba(15, 15, 15, 0.5);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  padding: 40px;
-  border-left: 6px solid #00ff88;
-  border-bottom: 6px solid #00ff88;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8);
-}
-.main h2 {
-  font-size: 22px;
-  font-weight: 800;
-  color: #fff;
-  margin-bottom: 6px;
-  text-transform: uppercase;
-  letter-spacing: -0.5px;
-}
-.main .desc {
-  font-size: 14px;
-  color: rgba(255, 255, 255, 0.2);
-  margin-bottom: 24px;
-  letter-spacing: 0.5px;
-}
-
-.input-group {
-  display: flex;
-  gap: 0;
-  flex-wrap: wrap;
-  border: 2px solid rgba(255, 255, 255, 0.04);
-}
-.input-group input {
-  flex: 1;
-  min-width: 200px;
-  background: #0a0a0a;
-  border: none;
-  padding: 16px 20px;
-  color: #fff;
-  font-size: 15px;
-  outline: none;
-  font-weight: 500;
-  transition: 0.3s;
-}
-.input-group input:focus {
-  background: #111;
-  border-left: 4px solid #00ff88;
-}
-.input-group input::placeholder {
-  color: rgba(255, 255, 255, 0.08);
-  font-weight: 400;
-  letter-spacing: 0.3px;
-}
-.input-group button {
-  background: #00ff88;
-  border: none;
-  padding: 16px 28px;
-  color: #000;
-  font-weight: 800;
-  font-size: 15px;
-  cursor: pointer;
-  transition: 0.3s;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-}
-.input-group button:hover {
-  background: #00cc70;
-  transform: scale(1.02);
-}
-
-.platforms {
-  display: flex;
-  gap: 8px;
-  flex-wrap: wrap;
-  margin-top: 16px;
-}
-.platforms .badge {
-  background: rgba(255, 255, 255, 0.02);
-  border: 1px solid rgba(255, 255, 255, 0.04);
-  padding: 6px 16px;
-  font-size: 11px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  color: rgba(255, 255, 255, 0.2);
-}
-.platforms .badge.active {
-  background: rgba(0, 255, 136, 0.08);
-  border-color: #00ff88;
-  color: #00ff88;
-}
-
-.format-group {
-  display: flex;
-  gap: 20px;
-  flex-wrap: wrap;
-  margin: 20px 0 16px;
-  padding: 12px 0;
-  border-top: 1px solid rgba(255, 255, 255, 0.03);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.03);
-}
-.format-group label {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  font-size: 14px;
-  font-weight: 700;
-  color: rgba(255, 255, 255, 0.3);
-  cursor: pointer;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  padding: 6px 14px;
-  border: 1px solid transparent;
-  transition: 0.3s;
-}
-.format-group label:hover {
-  color: #fff;
-  border-color: rgba(0, 255, 136, 0.1);
-}
-.format-group input[type="radio"] {
-  appearance: none;
-  -webkit-appearance: none;
-  width: 18px;
-  height: 18px;
-  border: 2px solid rgba(255, 255, 255, 0.1);
-  background: transparent;
-  cursor: pointer;
-  position: relative;
-  transition: 0.2s;
-  flex-shrink: 0;
-}
-.format-group input[type="radio"]:checked {
-  border-color: #00ff88;
-  background: #00ff88;
-}
-.format-group input[type="radio"]:checked::after {
-  content: "⬡";
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  color: #000;
-  font-size: 10px;
-  font-weight: 900;
-}
-.format-group input[type="radio"]:checked + span {
-  color: #00ff88;
-}
-.format-group label span {
-  transition: 0.3s;
-}
-.format-group label:has(input:checked) {
-  border-color: rgba(0, 255, 136, 0.2);
-  background: rgba(0, 255, 136, 0.03);
-}
-
-.result {
-  display: none;
-  margin-top: 28px;
-  padding: 20px;
-  background: rgba(0, 0, 0, 0.4);
-  border-left: 4px solid #00ff88;
-}
-.result.show {
-  display: block;
-}
-.result .info {
-  display: flex;
-  gap: 16px;
-  align-items: center;
-  flex-wrap: wrap;
-}
-.result .info .thumb {
-  width: 80px;
-  height: 80px;
-  background: #141414;
-  object-fit: cover;
-  border: 2px solid rgba(0, 255, 136, 0.1);
-}
-.result .info .detail {
-  flex: 1;
-}
-.result .info .detail h3 {
-  color: #fff;
-  font-size: 18px;
-  font-weight: 700;
-}
-.result .info .detail p {
-  color: rgba(255, 255, 255, 0.2);
-  font-size: 13px;
-  margin-top: 2px;
-}
-.result .btn-download {
-  background: transparent;
-  border: 2px solid #00ff88;
-  color: #00ff88;
-  padding: 12px 36px;
-  font-weight: 800;
-  font-size: 14px;
-  cursor: pointer;
-  transition: 0.3s;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  margin-top: 16px;
-}
-.result .btn-download:hover {
-  background: #00ff88;
-  color: #000;
-}
-
-.footer {
-  max-width: 900px;
-  margin: 40px auto 0;
-  padding-top: 20px;
-  border-top: 2px solid rgba(0, 255, 136, 0.04);
-  text-align: center;
-  font-size: 11px;
-  color: rgba(255, 255, 255, 0.04);
-  text-transform: uppercase;
-  letter-spacing: 2px;
-}
-.footer span {
-  color: #00ff88;
-}
-
-.loading-text {
-  text-align: center;
-  padding: 40px;
-  color: rgba(255, 255, 255, 0.04);
-  font-size: 14px;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-}
-
-@media (max-width: 600px) {
-  .main {
-    padding: 20px;
-  }
-  .header h1 {
-    font-size: 26px;
-  }
-  .header .clock {
-    font-size: 20px;
-    padding: 4px 12px;
-  }
-  .input-group input {
-    padding: 14px 16px;
-    font-size: 13px;
-  }
-  .input-group button {
-    padding: 14px 20px;
-    font-size: 13px;
-  }
-  .result .info .thumb {
-    width: 60px;
-    height: 60px;
-  }
-  .format-group {
-    gap: 10px;
-  }
-  .format-group label {
-    font-size: 12px;
-    padding: 4px 10px;
-  }
-}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#0a0a0a;color:#e0e0e0;font-family:'Inter','Segoe UI',sans-serif;min-height:100vh;padding:20px;background-image:radial-gradient(circle at 30% 40%,#0f0f1f 0%,#050505 90%)}
+::-webkit-scrollbar{width:8px}
+::-webkit-scrollbar-track{background:#0a0a0a}
+::-webkit-scrollbar-thumb{background:linear-gradient(180deg,#00ff88,#00cc70);border-radius:0}
+.header{max-width:900px;margin:0 auto 40px;padding:24px 32px;background:rgba(10,10,10,0.6);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border-left:6px solid #00ff88;border-right:6px solid #00ff88;box-shadow:0 0 80px rgba(0,255,136,0.05),inset 0 0 80px rgba(0,255,136,0.02);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px}
+.header h1{font-size:36px;font-weight:900;color:#00ff88;letter-spacing:-1px;text-shadow:0 0 60px rgba(0,255,136,0.1);text-transform:uppercase}
+.header .sub{font-size:13px;color:rgba(255,255,255,0.15);margin-top:4px;letter-spacing:2px;text-transform:uppercase}
+.header .clock{font-size:28px;font-weight:800;color:#00ff88;letter-spacing:2px;text-shadow:0 0 40px rgba(0,255,136,0.08);font-variant-numeric:tabular-nums;background:rgba(0,0,0,0.3);padding:6px 16px;border-left:3px solid #00ff88;font-family:'Inter',monospace}
+.main{max-width:900px;margin:0 auto;background:rgba(15,15,15,0.5);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);padding:40px;border-left:6px solid #00ff88;border-bottom:6px solid #00ff88;box-shadow:0 20px 60px rgba(0,0,0,0.8)}
+.main h2{font-size:22px;font-weight:800;color:#fff;margin-bottom:6px;text-transform:uppercase;letter-spacing:-0.5px}
+.main .desc{font-size:14px;color:rgba(255,255,255,0.2);margin-bottom:24px;letter-spacing:0.5px}
+.input-group{display:flex;gap:0;flex-wrap:wrap;border:2px solid rgba(255,255,255,0.04)}
+.input-group input{flex:1;min-width:200px;background:#0a0a0a;border:none;padding:16px 20px;color:#fff;font-size:15px;outline:none;font-weight:500;transition:0.3s}
+.input-group input:focus{background:#111;border-left:4px solid #00ff88}
+.input-group input::placeholder{color:rgba(255,255,255,0.08);font-weight:400;letter-spacing:0.3px}
+.input-group button{background:#00ff88;border:none;padding:16px 28px;color:#000;font-weight:800;font-size:15px;cursor:pointer;transition:0.3s;text-transform:uppercase;letter-spacing:1px}
+.input-group button:hover{background:#00cc70;transform:scale(1.02)}
+.platforms{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px}
+.platforms .badge{background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.04);padding:6px 16px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;color:rgba(255,255,255,0.2)}
+.platforms .badge.active{background:rgba(0,255,136,0.08);border-color:#00ff88;color:#00ff88}
+.format-group{display:flex;gap:20px;flex-wrap:wrap;margin:20px 0 16px;padding:12px 0;border-top:1px solid rgba(255,255,255,0.03);border-bottom:1px solid rgba(255,255,255,0.03)}
+.format-group label{display:flex;align-items:center;gap:10px;font-size:14px;font-weight:700;color:rgba(255,255,255,0.3);cursor:pointer;text-transform:uppercase;letter-spacing:0.5px;padding:6px 14px;border:1px solid transparent;transition:0.3s}
+.format-group label:hover{color:#fff;border-color:rgba(0,255,136,0.1)}
+.format-group input[type="radio"]{appearance:none;-webkit-appearance:none;width:18px;height:18px;border:2px solid rgba(255,255,255,0.1);background:transparent;cursor:pointer;position:relative;transition:0.2s;flex-shrink:0}
+.format-group input[type="radio"]:checked{border-color:#00ff88;background:#00ff88}
+.format-group input[type="radio"]:checked::after{content:"⬡";position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);color:#000;font-size:10px;font-weight:900}
+.format-group input[type="radio"]:checked + span{color:#00ff88}
+.format-group label span{transition:0.3s}
+.format-group label:has(input:checked){border-color:rgba(0,255,136,0.2);background:rgba(0,255,136,0.03)}
+.result{display:none;margin-top:28px;padding:20px;background:rgba(0,0,0,0.4);border-left:4px solid #00ff88}
+.result.show{display:block}
+.result .info{display:flex;gap:16px;align-items:center;flex-wrap:wrap}
+.result .info .thumb{width:80px;height:80px;background:#141414;object-fit:cover;border:2px solid rgba(0,255,136,0.1)}
+.result .info .detail{flex:1}
+.result .info .detail h3{color:#fff;font-size:18px;font-weight:700}
+.result .info .detail p{color:rgba(255,255,255,0.2);font-size:13px;margin-top:2px}
+.result .btn-download{background:transparent;border:2px solid #00ff88;color:#00ff88;padding:12px 36px;font-weight:800;font-size:14px;cursor:pointer;transition:0.3s;text-transform:uppercase;letter-spacing:1px;margin-top:16px}
+.result .btn-download:hover{background:#00ff88;color:#000}
+.footer{max-width:900px;margin:40px auto 0;padding-top:20px;border-top:2px solid rgba(0,255,136,0.04);text-align:center;font-size:11px;color:rgba(255,255,255,0.04);text-transform:uppercase;letter-spacing:2px}
+.footer span{color:#00ff88}
+.loading-text{text-align:center;padding:40px;color:rgba(255,255,255,0.04);font-size:14px;letter-spacing:2px;text-transform:uppercase}
+@media(max-width:600px){.main{padding:20px}.header h1{font-size:26px}.header .clock{font-size:20px;padding:4px 12px}.input-group input{padding:14px 16px;font-size:13px}.input-group button{padding:14px 20px;font-size:13px}.result .info .thumb{width:60px;height:60px}.format-group{gap:10px}.format-group label{font-size:12px;padding:4px 10px}}
 </style>
 </head>
 <body>
@@ -345,7 +55,6 @@ body {
 <div class="header">
   <div>
     <h1>⬡ EDWARD-DOWNLOADER</h1>
-    <div class="sub">Brutal • Cepat • Tanpa Sensor</div>
   </div>
   <div class="clock" id="clockDisplay">--:--:--</div>
 </div>
@@ -367,14 +76,8 @@ body {
   </div>
 
   <div class="format-group">
-    <label>
-      <input type="radio" name="format" value="video" checked>
-      <span>⬡ Video (MP4)</span>
-    </label>
-    <label>
-      <input type="radio" name="format" value="audio">
-      <span>⬡ Audio (MP3)</span>
-    </label>
+    <label><input type="radio" name="format" value="video" checked><span>⬡ Video (MP4)</span></label>
+    <label><input type="radio" name="format" value="audio"><span>⬡ Audio (MP3)</span></label>
   </div>
 
   <div class="result" id="resultBox">
@@ -396,9 +99,6 @@ body {
 </div>
 
 <script>
-// ============================================
-// JAM REAL TIME
-// ============================================
 function updateClock() {
   const now = new Date();
   const hours = String(now.getHours()).padStart(2, '0');
@@ -409,9 +109,6 @@ function updateClock() {
 setInterval(updateClock, 1000);
 updateClock();
 
-// ============================================
-// EDWARD-DOWNLOADER - FAKE API SIMULATOR
-// ============================================
 function processUrl() {
   const url = document.getElementById('urlInput').value.trim();
   const format = document.querySelector('input[name="format"]:checked').value;
