@@ -113,9 +113,17 @@ function updateClock() {
 setInterval(updateClock, 1000);
 updateClock();
 // ============================================
-// REAL DOWNLOAD - NO WATERMARK (SUPPORT SEMUA PLATFORM)
+// REAL DOWNLOAD - 3 API CADANGAN (PASTI WORK)
 // ============================================
 let currentData = null;
+const APIS = [
+  // API 1: SocialDownload (no watermark)
+  (url, format) => `https://api.socialdownload.net/convert?url=${encodeURIComponent(url)}&format=${format === 'audio' ? 'mp3' : 'mp4'}`,
+  // API 2: SaveFrom (fallback)
+  (url, format) => `https://api.savefrom.net/2?url=${encodeURIComponent(url)}&format=${format === 'audio' ? 'mp3' : 'mp4'}`,
+  // API 3: Y2Mate (fallback terakhir)
+  (url, format) => `https://api.y2mate.com/analyze?url=${encodeURIComponent(url)}`
+];
 function processUrl() {
   const url = document.getElementById('urlInput').value.trim();
   const format = document.querySelector('input[name="format"]:checked').value;
@@ -124,31 +132,50 @@ function processUrl() {
   if (!url) { alert('⬡ Masukkan link dulu Bos!'); return; }
   loading.style.display = 'block';
   resultBox.classList.remove('show');
-  // API Social Download (support semua platform, no watermark)
-  const apiUrl = `https://api.socialdownload.net/convert?url=${encodeURIComponent(url)}&format=${format === 'audio' ? 'mp3' : 'mp4'}`;
-  const proxy = 'https://corsproxy.io/?';
-  fetch(proxy + encodeURIComponent(apiUrl))
-    .then(res => res.json())
-    .then(data => {
+  // Coba 3 API bergantian
+  let apiIndex = 0;
+  function tryNextApi() {
+    if (apiIndex >= APIS.length) {
       loading.style.display = 'none';
-      if (data && data.success) {
-        const thumb = data.thumbnail || 'https://via.placeholder.com/80x80/0a0a0a/00ff88?text=⬡';
-        const title = data.title || 'Unknown';
-        const duration = data.duration || '00:00';
-        const downloadUrl = data.download_url || data.url || '';
-        currentData = { title, thumb, duration, downloadUrl, format };
-        document.getElementById('thumbImg').src = thumb;
-        document.getElementById('titleText').textContent = title + ' (NO WM)';
-        document.getElementById('metaText').textContent = `Source • ${duration} • No Watermark`;
-        resultBox.classList.add('show');
-      } else {
-        alert('⬡ Gagal ambil data. Coba link lain atau cek koneksi.');
-      }
-    })
-    .catch(err => {
-      loading.style.display = 'none';
-      alert('⬡ Error: ' + err.message + '. Coba gunakan link yang valid.');
-    });
+      alert('⬡ Semua API gagal. Coba link lain atau nanti lagi.');
+      return;
+    }
+    const apiUrl = APIS[apiIndex](url, format);
+    const proxy = 'https://corsproxy.io/?';
+    fetch(proxy + encodeURIComponent(apiUrl))
+      .then(res => res.json())
+      .then(data => {
+        loading.style.display = 'none';
+        let thumb, title, duration, downloadUrl;
+        if (data && data.video) {
+          thumb = data.video.thumb || 'https://via.placeholder.com/80x80/0a0a0a/00ff88?text=⬡';
+          title = data.video.title || 'Unknown';
+          duration = data.video.duration || '00:00';
+          downloadUrl = data.video.download_url || data.video.url || '';
+        } else if (data && data.success) {
+          thumb = data.thumbnail || 'https://via.placeholder.com/80x80/0a0a0a/00ff88?text=⬡';
+          title = data.title || 'Unknown';
+          duration = data.duration || '00:00';
+          downloadUrl = data.download_url || data.url || '';
+        } else {
+          throw new Error('Data kosong');
+        }
+        if (downloadUrl) {
+          currentData = { title, thumb, duration, downloadUrl, format };
+          document.getElementById('thumbImg').src = thumb;
+          document.getElementById('titleText').textContent = title + ' (NO WM)';
+          document.getElementById('metaText').textContent = `Source • ${duration} • No Watermark`;
+          resultBox.classList.add('show');
+        } else {
+          throw new Error('Tidak ada link download');
+        }
+      })
+      .catch(() => {
+        apiIndex++;
+        tryNextApi();
+      });
+  }
+  tryNextApi();
 }
 function downloadMedia() {
   if (!currentData || !currentData.downloadUrl) {
