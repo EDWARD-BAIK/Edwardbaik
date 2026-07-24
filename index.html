@@ -1,174 +1,386 @@
 <!DOCTYPE html>
-<html>
+<html lang="id">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>EDWARD-DOWNLOADER</title>
-<style>
-*{margin:0;padding:0;box-sizing:border-box}
-body{background:#0a0a0a;color:#e0e0e0;font-family:'Inter','Segoe UI',sans-serif;min-height:100vh;padding:20px;background-image:radial-gradient(circle at 30% 40%,#0f0f1f 0%,#050505 90%)}
-::-webkit-scrollbar{width:8px}
-::-webkit-scrollbar-track{background:#0a0a0a}
-::-webkit-scrollbar-thumb{background:linear-gradient(180deg,#00ff88,#00cc70);border-radius:0}
-.header{max-width:900px;margin:0 auto 40px;padding:24px 32px;background:rgba(10,10,10,0.6);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border-left:6px solid #00ff88;border-right:6px solid #00ff88;box-shadow:0 0 80px rgba(0,255,136,0.05),inset 0 0 80px rgba(0,255,136,0.02);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px}
-.header h1{font-size:36px;font-weight:900;color:#00ff88;letter-spacing:-1px;text-shadow:0 0 60px rgba(0,255,136,0.1);text-transform:uppercase}
-.header .clock{font-size:28px;font-weight:800;color:#00ff88;letter-spacing:2px;text-shadow:0 0 40px rgba(0,255,136,0.08);font-variant-numeric:tabular-nums;background:rgba(0,0,0,0.3);padding:6px 16px;border-left:3px solid #00ff88;font-family:'Inter',monospace}
-.header .badge-watermark{background:rgba(255,0,80,0.12);border:1px solid #ff0050;color:#ff0050;padding:4px 14px;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:1px}
-.main{max-width:900px;margin:0 auto;background:rgba(15,15,15,0.5);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);padding:40px;border-left:6px solid #00ff88;border-bottom:6px solid #00ff88;box-shadow:0 20px 60px rgba(0,0,0,0.8)}
-.main h2{font-size:22px;font-weight:800;color:#fff;margin-bottom:6px;text-transform:uppercase;letter-spacing:-0.5px}
-.main .desc{font-size:14px;color:rgba(255,255,255,0.2);margin-bottom:24px;letter-spacing:0.5px}
-.input-group{display:flex;gap:0;flex-wrap:wrap;border:2px solid rgba(255,255,255,0.04)}
-.input-group input{flex:1;min-width:200px;background:#0a0a0a;border:none;padding:16px 20px;color:#fff;font-size:15px;outline:none;font-weight:500;transition:0.3s}
-.input-group input:focus{background:#111;border-left:4px solid #00ff88}
-.input-group input::placeholder{color:rgba(255,255,255,0.08);font-weight:400;letter-spacing:0.3px}
-.input-group button{background:#00ff88;border:none;padding:16px 28px;color:#000;font-weight:800;font-size:15px;cursor:pointer;transition:0.3s;text-transform:uppercase;letter-spacing:1px}
-.input-group button:hover{background:#00cc70;transform:scale(1.02)}
-.platforms{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px}
-.platforms .badge{background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.04);padding:6px 16px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;color:rgba(255,255,255,0.2)}
-.platforms .badge.active{background:rgba(0,255,136,0.08);border-color:#00ff88;color:#00ff88}
-.format-group{display:flex;gap:20px;flex-wrap:wrap;margin:20px 0 16px;padding:12px 0;border-top:1px solid rgba(255,255,255,0.03);border-bottom:1px solid rgba(255,255,255,0.03)}
-.format-group label{display:flex;align-items:center;gap:10px;font-size:14px;font-weight:700;color:rgba(255,255,255,0.3);cursor:pointer;text-transform:uppercase;letter-spacing:0.5px;padding:6px 14px;border:1px solid transparent;transition:0.3s}
-.format-group label:hover{color:#fff;border-color:rgba(0,255,136,0.1)}
-.format-group input[type="radio"]{appearance:none;-webkit-appearance:none;width:18px;height:18px;border:2px solid rgba(255,255,255,0.1);background:transparent;cursor:pointer;position:relative;transition:0.2s;flex-shrink:0}
-.format-group input[type="radio"]:checked{border-color:#00ff88;background:#00ff88}
-.format-group input[type="radio"]:checked::after{content:"⬡";position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);color:#000;font-size:10px;font-weight:900}
-.format-group input[type="radio"]:checked + span{color:#00ff88}
-.format-group label span{transition:0.3s}
-.format-group label:has(input:checked){border-color:rgba(0,255,136,0.2);background:rgba(0,255,136,0.03)}
-.result{display:none;margin-top:28px;padding:20px;background:rgba(0,0,0,0.4);border-left:4px solid #00ff88}
-.result.show{display:block}
-.result .info{display:flex;gap:16px;align-items:center;flex-wrap:wrap}
-.result .info .thumb{width:80px;height:80px;background:#141414;object-fit:cover;border:2px solid rgba(0,255,136,0.1)}
-.result .info .detail{flex:1}
-.result .info .detail h3{color:#fff;font-size:18px;font-weight:700}
-.result .info .detail p{color:rgba(255,255,255,0.2);font-size:13px;margin-top:2px}
-.result .btn-download{background:transparent;border:2px solid #00ff88;color:#00ff88;padding:12px 36px;font-weight:800;font-size:14px;cursor:pointer;transition:0.3s;text-transform:uppercase;letter-spacing:1px;margin-top:16px}
-.result .btn-download:hover{background:#00ff88;color:#000}
-.footer{max-width:900px;margin:40px auto 0;padding-top:20px;border-top:2px solid rgba(0,255,136,0.04);text-align:center;font-size:11px;color:rgba(255,255,255,0.04);text-transform:uppercase;letter-spacing:2px}
-.footer span{color:#00ff88}
-.loading-text{text-align:center;padding:40px;color:rgba(255,255,255,0.04);font-size:14px;letter-spacing:2px;text-transform:uppercase}
-@media(max-width:600px){.main{padding:20px}.header h1{font-size:26px}.header .clock{font-size:20px;padding:4px 12px}.input-group input{padding:14px 16px;font-size:13px}.input-group button{padding:14px 20px;font-size:13px}.result .info .thumb{width:60px;height:60px}.format-group{gap:10px}.format-group label{font-size:12px;padding:4px 10px}}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EDWARD - Real Time Sky</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', 'Segoe UI', sans-serif;
+            height: 100vh;
+            overflow: hidden;
+            transition: background 1.5s ease;
+            background: linear-gradient(180deg, #0b0e1a 0%, #1a1f33 100%);
+        }
+
+        /* ===== LANGIT ===== */
+        .sky {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+            transition: background 1.5s ease;
+        }
+
+        /* ===== MATAHARI ===== */
+        .sun {
+            position: absolute;
+            width: 80px;
+            height: 80px;
+            background: radial-gradient(circle, #ffdd55, #ff8800);
+            border-radius: 50%;
+            box-shadow: 0 0 80px rgba(255, 200, 50, 0.8), 0 0 160px rgba(255, 150, 0, 0.4);
+            transition: all 0.5s ease;
+            transform: translate(-50%, -50%);
+            z-index: 10;
+        }
+
+        /* ===== BULAN ===== */
+        .moon {
+            position: absolute;
+            width: 70px;
+            height: 70px;
+            background: radial-gradient(circle at 35% 35%, #f0f0f0, #aaaac0);
+            border-radius: 50%;
+            box-shadow: 0 0 60px rgba(200, 200, 255, 0.3), 0 0 120px rgba(150, 150, 255, 0.1);
+            transition: all 0.5s ease;
+            transform: translate(-50%, -50%);
+            z-index: 10;
+        }
+        .moon::after {
+            content: '';
+            position: absolute;
+            top: 10px;
+            left: 15px;
+            width: 18px;
+            height: 18px;
+            background: rgba(180, 180, 200, 0.3);
+            border-radius: 50%;
+            box-shadow: 20px 20px 0 5px rgba(180, 180, 200, 0.2), 40px 5px 0 3px rgba(180, 180, 200, 0.15);
+        }
+
+        /* ===== BINTANG ===== */
+        .stars {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            pointer-events: none;
+        }
+        .star {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: white;
+            border-radius: 50%;
+            opacity: 0;
+            transition: opacity 2s ease;
+        }
+        .star.visible {
+            opacity: 0.8;
+        }
+
+        /* ===== HORIZON ===== */
+        .horizon {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 35%;
+            background: linear-gradient(0deg, rgba(20, 30, 50, 0.6) 0%, transparent 100%);
+            z-index: 5;
+            pointer-events: none;
+        }
+
+        /* ===== INFO ===== */
+        .info {
+            position: absolute;
+            top: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 20;
+            text-align: center;
+            color: white;
+            text-shadow: 0 4px 20px rgba(0, 0, 0, 0.6);
+            background: rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(12px);
+            padding: 16px 32px;
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            pointer-events: none;
+        }
+        .info h1 {
+            font-size: 28px;
+            font-weight: 800;
+            letter-spacing: 2px;
+            color: #00ff88;
+            text-shadow: 0 0 40px rgba(0, 255, 136, 0.15);
+        }
+        .info .clock {
+            font-size: 36px;
+            font-weight: 300;
+            letter-spacing: 4px;
+            margin-top: 4px;
+            font-variant-numeric: tabular-nums;
+        }
+        .info .status {
+            font-size: 14px;
+            font-weight: 500;
+            letter-spacing: 1px;
+            margin-top: 4px;
+            opacity: 0.6;
+            text-transform: uppercase;
+        }
+
+        /* ===== LOKASI ===== */
+        .location {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 20;
+            color: rgba(255, 255, 255, 0.3);
+            font-size: 12px;
+            letter-spacing: 1px;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+            background: rgba(0, 0, 0, 0.15);
+            backdrop-filter: blur(8px);
+            padding: 8px 20px;
+            border-radius: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            pointer-events: none;
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 600px) {
+            .info {
+                top: 16px;
+                padding: 12px 20px;
+                width: 90%;
+            }
+            .info h1 {
+                font-size: 20px;
+            }
+            .info .clock {
+                font-size: 26px;
+            }
+            .sun {
+                width: 55px;
+                height: 55px;
+            }
+            .moon {
+                width: 50px;
+                height: 50px;
+            }
+            .location {
+                font-size: 10px;
+                padding: 6px 14px;
+                bottom: 16px;
+            }
+        }
+    </style>
 </head>
 <body>
-<div class="header">
-  <div>
-    <h1>⬡ EDWARD-DOWNLOADER</h1>
-    <span class="badge-watermark">⬡ NO WATERMARK</span>
-  </div>
-  <div class="clock" id="clockDisplay">--:--:--</div>
-</div>
-<div class="main">
-  <h2>⬡ Paste Link</h2>
-  <div class="desc">Support TikTok • Instagram • YouTube • Facebook • Twitter/X • NO WATERMARK</div>
-  <div class="input-group">
-    <input type="text" id="urlInput" placeholder="Paste link video dari platform apapun..." onkeyup="if(event.key==='Enter')processUrl()">
-    <button onclick="processUrl()">⬡ Proses</button>
-  </div>
-  <div class="platforms">
-    <span class="badge active">⬡ TikTok</span>
-    <span class="badge active">⬡ Instagram</span>
-    <span class="badge active">⬡ YouTube</span>
-    <span class="badge active">⬡ Facebook</span>
-    <span class="badge active">⬡ Twitter/X</span>
-  </div>
-  <div class="format-group">
-    <label><input type="radio" name="format" value="video" checked><span>⬡ Video (MP4)</span></label>
-    <label><input type="radio" name="format" value="audio"><span>⬡ Audio (MP3)</span></label>
-  </div>
-  <div class="result" id="resultBox">
-    <div class="info">
-      <img class="thumb" id="thumbImg" src="" alt="Thumb">
-      <div class="detail">
-        <h3 id="titleText">Judul Video</h3>
-        <p id="metaText">Source • Durasi</p>
-      </div>
+    <div class="sky" id="sky">
+        <!-- Bintang -->
+        <div class="stars" id="stars"></div>
+
+        <!-- Matahari -->
+        <div class="sun" id="sun"></div>
+
+        <!-- Bulan -->
+        <div class="moon" id="moon"></div>
+
+        <!-- Horizon -->
+        <div class="horizon"></div>
+
+        <!-- Info -->
+        <div class="info">
+            <h1>⬡ EDWARD</h1>
+            <div class="clock" id="clock">--:--:--</div>
+            <div class="status" id="status">Mencari lokasi...</div>
+        </div>
+
+        <!-- Lokasi -->
+        <div class="location" id="location">🌍 Menunggu izin lokasi...</div>
     </div>
-    <button class="btn-download" id="downloadBtn" onclick="downloadMedia()">⬡ Download</button>
-  </div>
-  <div id="loadingMsg" class="loading-text" style="display:none;">⬡ Memproses link...</div>
-</div>
-<div class="footer"><p>EDWARD-DOWNLOADER <span>©</span> 2026 • Brutalism x Neon Glass • NO WATERMARK</p></div>
-<script>
-// ============================================
-// PROTECTION
-// ============================================
-document.addEventListener('contextmenu', e => { e.preventDefault(); return false; });
-document.addEventListener('keydown', e => {
-  if (e.key === 'F12' || (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'J')) || (e.ctrlKey && e.key === 'u') || (e.ctrlKey && e.key === 's')) {
-    e.preventDefault();
-    return false;
-  }
-});
-// ============================================
-// JAM
-// ============================================
-function updateClock() {
-  const now = new Date();
-  document.getElementById('clockDisplay').textContent =
-    String(now.getHours()).padStart(2, '0') + ':' +
-    String(now.getMinutes()).padStart(2, '0') + ':' +
-    String(now.getSeconds()).padStart(2, '0');
-}
-setInterval(updateClock, 1000);
-updateClock();
-// ============================================
-// PAKE API KITA SENDIRI
-// ============================================
-let currentData = null;
-function processUrl() {
-  const url = document.getElementById('urlInput').value.trim();
-  const format = document.querySelector('input[name="format"]:checked').value;
-  const resultBox = document.getElementById('resultBox');
-  const loading = document.getElementById('loadingMsg');
-  if (!url) { alert('⬡ Masukkan link dulu Bos!'); return; }
-  loading.style.display = 'block';
-  resultBox.classList.remove('show');
-  // Panggil API kita sendiri
-  fetch(`/api/download?url=${encodeURIComponent(url)}&format=${format}`)
-    .then(res => res.json())
-    .then(data => {
-      loading.style.display = 'none';
-      if (data.error) {
-        alert('⬡ Error: ' + data.error);
-        return;
-      }
-      if (data.downloadUrl) {
-        currentData = data;
-        document.getElementById('thumbImg').src = data.thumbnail || 'https://via.placeholder.com/80x80/0a0a0a/00ff88?text=⬡';
-        document.getElementById('titleText').textContent = data.title + ' (NO WM)';
-        document.getElementById('metaText').textContent = `Source • ${data.duration || '00:00'} • No Watermark`;
-        resultBox.classList.add('show');
-      } else {
-        alert('⬡ Gagal ambil data. Coba link lain.');
-      }
-    })
-    .catch(err => {
-      loading.style.display = 'none';
-      alert('⬡ Error: ' + err.message);
-    });
-}
-function downloadMedia() {
-  if (!currentData || !currentData.downloadUrl) {
-    alert('⬡ Proses link dulu Bos!');
-    return;
-  }
-  const btn = document.getElementById('downloadBtn');
-  btn.textContent = '⬡ Downloading...';
-  btn.disabled = true;
-  btn.style.opacity = '0.5';
-  window.open(currentData.downloadUrl, '_blank');
-  btn.textContent = '⬡ Download';
-  btn.disabled = false;
-  btn.style.opacity = '1';
-}
-document.getElementById('urlInput').addEventListener('input', function() {
-  const url = this.value.trim();
-  const audioRadio = document.querySelector('input[name="format"][value="audio"]');
-  if (url.includes('youtube.com') || url.includes('youtu.be') || url.includes('soundcloud.com')) {
-    audioRadio.checked = true;
-  }
-});
-</script>
+
+    <script>
+        // ============================================
+        // GENERATE BINTANG
+        // ============================================
+        const starsContainer = document.getElementById('stars');
+        for (let i = 0; i < 200; i++) {
+            const star = document.createElement('div');
+            star.className = 'star';
+            star.style.left = Math.random() * 100 + '%';
+            star.style.top = Math.random() * 70 + '%';
+            star.style.width = (Math.random() * 2.5 + 1) + 'px';
+            star.style.height = star.style.width;
+            star.style.animationDelay = (Math.random() * 3) + 's';
+            starsContainer.appendChild(star);
+        }
+        const starElements = document.querySelectorAll('.star');
+
+        // ============================================
+        // ELEMEN
+        // ============================================
+        const sky = document.getElementById('sky');
+        const sun = document.getElementById('sun');
+        const moon = document.getElementById('moon');
+        const clockEl = document.getElementById('clock');
+        const statusEl = document.getElementById('status');
+        const locationEl = document.getElementById('location');
+
+        let userLat = -6.2088; // Default: Jakarta
+        let userLng = 106.8456;
+        let isNight = false;
+
+        // ============================================
+        // MINTAA IZIN LOKASI
+        // ============================================
+        function getLocation() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                    (pos) => {
+                        userLat = pos.coords.latitude;
+                        userLng = pos.coords.longitude;
+                        locationEl.textContent = `🌍 ${userLat.toFixed(4)}, ${userLng.toFixed(4)}`;
+                        statusEl.textContent = 'Lokasi ditemukan ✅';
+                        updateSky();
+                    },
+                    (err) => {
+                        locationEl.textContent = '⚠️ Izin lokasi ditolak, gunakan default (Jakarta)';
+                        statusEl.textContent = 'Menggunakan lokasi default';
+                        console.warn('Geolocation error:', err.message);
+                        updateSky();
+                    },
+                    { enableHighAccuracy: true }
+                );
+            } else {
+                locationEl.textContent = '⚠️ Geolocation tidak didukung browser';
+                statusEl.textContent = 'Menggunakan lokasi default';
+                updateSky();
+            }
+        }
+
+        // ============================================
+        // HITUNG POSISI MATAHARI & BULAN
+        // ============================================
+        function calculateSunPosition(lat, lng, now) {
+            const hours = now.getHours() + now.getMinutes() / 60;
+            // Sederhana: 6:00 = sunrise (0%), 12:00 = puncak (100%), 18:00 = sunset (0%)
+            let progress = (hours - 6) / 12; // 0 = sunrise, 1 = sunset
+            if (progress < 0) progress = 0;
+            if (progress > 1) progress = 1;
+
+            // Posisi X: kiri ke kanan
+            const x = progress * 100;
+            // Posisi Y: parabola (0 = horizon, 1 = puncak)
+            const y = Math.sin(progress * Math.PI) * 70 + 10; // 10% = horizon, 80% = puncak
+
+            return { x, y, progress };
+        }
+
+        function getSunriseSunset(lat, lng, now) {
+            // Estimasi sederhana (bisa pakai rumus lebih akurat nanti)
+            const dayOfYear = Math.floor((now - new Date(now.getFullYear(), 0, 0)) / 86400000);
+            const declination = 23.44 * Math.sin((360 / 365) * (dayOfYear - 81) * Math.PI / 180);
+            const latRad = lat * Math.PI / 180;
+            const declRad = declination * Math.PI / 180;
+            const cosHourAngle = -Math.tan(latRad) * Math.tan(declRad);
+            let hourAngle = Math.acos(Math.min(1, Math.max(-1, cosHourAngle))) * 180 / Math.PI;
+            hourAngle = hourAngle / 15;
+
+            const sunrise = 12 - hourAngle;
+            const sunset = 12 + hourAngle;
+            return { sunrise, sunset };
+        }
+
+        // ============================================
+        // UPDATE SKY
+        // ============================================
+        function updateSky() {
+            const now = new Date();
+            const hours = now.getHours() + now.getMinutes() / 60;
+
+            // Hitung sunrise/sunset berdasarkan lokasi
+            const { sunrise, sunset } = getSunriseSunset(userLat, userLng, now);
+
+            // Tentukan apakah malam
+            isNight = hours < sunrise || hours > sunset;
+
+            // Update status
+            if (isNight) {
+                statusEl.textContent = '🌙 Malam';
+            } else {
+                statusEl.textContent = '☀️ Siang';
+            }
+
+            // Update background langit
+            if (isNight) {
+                sky.style.background = 'linear-gradient(180deg, #05080f 0%, #0b1424 40%, #1a1f33 100%)';
+            } else {
+                // Gradasi berdasarkan posisi matahari
+                const progress = (hours - sunrise) / (sunset - sunrise);
+                const clamped = Math.min(1, Math.max(0, progress));
+                const r = Math.round(20 + 135 * clamped);
+                const g = Math.round(30 + 150 * (1 - Math.abs(clamped - 0.5) * 2));
+                const b = Math.round(60 + 150 * (1 - clamped));
+                sky.style.background = `linear-gradient(180deg, rgb(${r}, ${g}, ${b}) 0%, rgb(${r/2}, ${g/2}, ${b/2}) 100%)`;
+            }
+
+            // Update posisi matahari
+            const sunProgress = (hours - sunrise) / (sunset - sunrise);
+            const sunClamped = Math.min(1, Math.max(0, sunProgress));
+            const sunX = sunClamped * 90 + 5;
+            const sunY = Math.sin(sunClamped * Math.PI) * 60 + 15;
+
+            sun.style.left = sunX + '%';
+            sun.style.top = sunY + '%';
+            sun.style.opacity = isNight ? '0' : '1';
+
+            // Update posisi bulan (kebalikan dari matahari)
+            const moonProgress = 1 - sunClamped;
+            const moonX = moonProgress * 90 + 5;
+            const moonY = Math.sin(moonProgress * Math.PI) * 60 + 15;
+
+            moon.style.left = moonX + '%';
+            moon.style.top = moonY + '%';
+            moon.style.opacity = isNight ? '1' : '0.2';
+
+            // Update bintang
+            starElements.forEach(star => {
+                const shouldShow = isNight && Math.random() > 0.2;
+                star.classList.toggle('visible', shouldShow);
+            });
+
+            // Update jam
+            clockEl.textContent = now.toLocaleTimeString('id-ID', { hour12: false });
+        }
+
+        // ============================================
+        // LOOP
+        // ============================================
+        setInterval(() => {
+            updateSky();
+        }, 1000);
+
+        // ============================================
+        // START
+        // ============================================
+        getLocation();
+
+        // Fallback: update tiap menit biar posisi matahari halus
+        setInterval(() => {
+            updateSky();
+        }, 30000);
+    </script>
 </body>
 </html>
