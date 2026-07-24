@@ -1,265 +1,268 @@
 <!DOCTYPE html>
-<html lang="id">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>EDWARD</title>
-    <style>
-        *{margin:0;padding:0;box-sizing:border-box}
-        body{font-family:'Inter','Segoe UI',sans-serif;height:100vh;overflow:hidden;background:#0b0e1a}
-        .sky{position:relative;width:100vw;height:100vh;overflow:hidden;transition:background 1.5s ease}
-        .stars{position:absolute;width:100%;height:100%;z-index:1;pointer-events:none}
-        .star{position:absolute;background:#fff;border-radius:50%;opacity:0;transition:opacity 1.8s ease}
-        .star.visible{opacity:.9}
-        .sun{position:absolute;width:80px;height:80px;background:radial-gradient(circle at 30% 30%,#fff7b0,#ffb347);border-radius:50%;box-shadow:0 0 90px rgba(255,200,50,.8),0 0 200px rgba(255,150,0,.4);transition:all .4s ease;transform:translate(-50%,-50%);z-index:10;pointer-events:none}
-        .moon{position:absolute;width:70px;height:70px;background:radial-gradient(circle at 40% 35%,#f5f5ff,#b0b0d0);border-radius:50%;box-shadow:0 0 70px rgba(200,200,255,.3),0 0 150px rgba(150,150,255,.1);transition:all .4s ease;transform:translate(-50%,-50%);z-index:11;pointer-events:none}
-        .moon::before{content:'';position:absolute;top:15%;left:20%;width:16px;height:16px;background:rgba(180,180,200,.25);border-radius:50%;box-shadow:22px 18px 0 4px rgba(180,180,200,.2),42px 4px 0 3px rgba(180,180,200,.15)}
-        .ground{position:absolute;bottom:0;left:0;width:100%;height:30%;z-index:5;pointer-events:none;background:linear-gradient(0deg,#1a2a1a 0%,#2a4a2a 50%,#3a6a3a 100%);transition:background 1.5s ease}
-        .ground .grass{position:absolute;top:-10px;left:0;width:100%;height:20px;background:#4a8a3a;clip-path:polygon(0% 0%,10% 40%,20% 10%,30% 50%,40% 20%,50% 60%,60% 30%,70% 50%,80% 20%,90% 40%,100% 0%,100% 100%,0% 100%);transition:background 1.5s ease}
-        .info{position:absolute;top:20px;left:50%;transform:translateX(-50%);z-index:20;text-align:center;color:#fff;text-shadow:0 2px 20px rgba(0,0,0,.8);background:rgba(0,0,0,.25);backdrop-filter:blur(12px);padding:14px 28px;border-radius:16px;border:1px solid rgba(255,255,255,.06);pointer-events:none;min-width:200px}
-        .info h1{font-size:26px;font-weight:700;letter-spacing:2px;color:#00ff88;text-shadow:0 0 40px rgba(0,255,136,.15)}
-        .info .clock{font-size:30px;font-weight:300;letter-spacing:4px;margin-top:2px;font-variant-numeric:tabular-nums}
-        .info .status{font-size:12px;font-weight:500;letter-spacing:1px;margin-top:2px;opacity:.5;text-transform:uppercase}
-        .location{position:absolute;bottom:20px;left:50%;transform:translateX(-50%);z-index:20;color:rgba(255,255,255,.25);font-size:11px;letter-spacing:1px;background:rgba(0,0,0,.15);backdrop-filter:blur(8px);padding:6px 18px;border-radius:30px;border:1px solid rgba(255,255,255,.04);pointer-events:none}
-        @media(max-width:600px){.info{top:12px;padding:10px 16px;min-width:unset;width:92%}.info h1{font-size:18px}.info .clock{font-size:22px}.sun{width:55px;height:55px}.moon{width:45px;height:45px}.location{font-size:9px;padding:4px 12px;bottom:10px}}
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>-EDWARD-</title>
+<style>
+/* RESET & FONTS */
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#0a0a0a;color:#e0e0e0;font-family:'Segoe UI','Inter',sans-serif;padding:20px;min-height:100vh;background-image:radial-gradient(circle at 20% 30%,#1a1a2e 0%,#0a0a0a 80%)}
+
+/* SCROLLBAR KEREN */
+::-webkit-scrollbar{width:8px}
+::-webkit-scrollbar-track{background:#141414}
+::-webkit-scrollbar-thumb{background:linear-gradient(180deg,#00ff88,#00cc70);border-radius:10px}
+
+/* GLASS HEADER */
+.header{max-width:1200px;margin:0 auto 40px;padding:20px 30px;background:rgba(20,20,20,0.55);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-radius:0;border-left:8px solid #00ff88;border-right:8px solid #00ff88;box-shadow:0 0 60px rgba(0,255,136,.08),inset 0 0 60px rgba(0,255,136,.02)}
+.header h1{font-size:42px;font-weight:900;color:#00ff88;letter-spacing:-2px;text-shadow:0 0 80px rgba(0,255,136,.15);font-family:'Inter',sans-serif;text-transform:uppercase}
+.header .sub{font-size:14px;color:rgba(255,255,255,.2);margin-top:4px;letter-spacing:2px;text-transform:uppercase}
+.header .counter{display:inline-block;background:rgba(0,255,136,.1);color:#00ff88;padding:4px 20px;border-radius:0;font-size:12px;font-weight:700;margin-top:10px;border:1px solid rgba(0,255,136,.2);text-transform:uppercase;letter-spacing:1px}
+
+/* SEARCH BRUTALIST */
+.search{max-width:1200px;margin:0 auto 30px;display:flex;gap:0;flex-wrap:wrap;border:2px solid rgba(255,255,255,.05)}
+.search input{flex:1;min-width:200px;background:#0a0a0a;border:none;padding:16px 24px;color:#fff;font-size:15px;outline:none;font-weight:500}
+.search input:focus{background:#111;border-left:4px solid #00ff88}
+.search button{background:#00ff88;border:none;padding:16px 36px;color:#000;font-weight:800;font-size:15px;cursor:pointer;transition:.3s;text-transform:uppercase;letter-spacing:1px}
+.search button:hover{background:#00cc70;transform:scale(1.02)}
+.search .reset{background:rgba(255,255,255,.04);color:#fff;border-left:1px solid rgba(255,255,255,.04)}
+.search .reset:hover{background:rgba(255,255,255,.08)}
+
+/* INFO */
+#resultInfo{max-width:1200px;margin:0 auto 20px;color:rgba(255,255,255,.15);font-size:13px;letter-spacing:1px;text-transform:uppercase}
+
+/* GRID */
+.grid{max-width:1200px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:24px}
+
+/* CARD — Brutalism x Glass */
+.card{background:rgba(20,20,20,0.4);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-radius:0;overflow:hidden;border-left:4px solid #00ff88;border-bottom:4px solid #00ff88;transition:.4s cubic-bezier(.25,.46,.45,.94);cursor:pointer;position:relative;box-shadow:0 10px 40px rgba(0,0,0,.6)}
+.card::after{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(0,255,136,.03),transparent 60%);pointer-events:none}
+.card:hover{transform:translateY(-8px) scale(1.01);border-left-width:8px;border-bottom-width:8px;box-shadow:0 20px 60px rgba(0,255,136,.08),inset 0 0 40px rgba(0,255,136,.02)}
+.card img{width:100%;height:290px;object-fit:cover;display:block;transition:.4s;filter:grayscale(20%) contrast(1.1)}
+.card:hover img{transform:scale(1.04);filter:grayscale(0%) contrast(1.2)}
+.card .info{padding:16px 18px 20px}
+.card .info h3{color:#fff;font-size:16px;font-weight:700;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;line-height:1.4;letter-spacing:-0.3px}
+.card .info .meta{display:flex;gap:12px;font-size:12px;color:rgba(255,255,255,.2);margin-top:8px;flex-wrap:wrap;text-transform:uppercase;letter-spacing:0.5px}
+.card .info .meta .badge{background:rgba(0,255,136,.08);color:#00ff88;padding:3px 14px;border-radius:0;font-weight:700;font-size:10px;letter-spacing:0.5px;text-transform:uppercase;border:1px solid rgba(0,255,136,.1)}
+
+/* PAGINATION BRUTALIST */
+.pagination{max-width:1200px;margin:40px auto;display:flex;justify-content:center;gap:4px;flex-wrap:wrap}
+.pagination button{background:rgba(255,255,255,.02);border:2px solid rgba(255,255,255,.04);color:rgba(255,255,255,.5);padding:12px 22px;border-radius:0;font-weight:700;font-size:14px;cursor:pointer;transition:.3s;text-transform:uppercase;letter-spacing:0.5px}
+.pagination button:hover{background:rgba(255,255,255,.06);color:#fff;border-color:#00ff88}
+.pagination button.active{background:#00ff88;color:#000;border-color:#00ff88;box-shadow:0 0 40px rgba(0,255,136,.1)}
+.pagination button:disabled{opacity:.2;cursor:not-allowed;transform:none!important}
+
+/* MODAL — GLASS FULLSCREEN */
+.modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.92);backdrop-filter:blur(30px);-webkit-backdrop-filter:blur(30px);z-index:9999;flex-direction:column;align-items:center;justify-content:center;padding:20px}
+.modal.show{display:flex}
+.modal .top{position:absolute;top:0;left:0;right:0;padding:18px 30px;display:flex;justify-content:space-between;align-items:center;background:rgba(0,0,0,.6);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:2px solid rgba(0,255,136,.08)}
+.modal .top .t{font-size:18px;font-weight:800;color:#00ff88;max-width:70%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-transform:uppercase;letter-spacing:-0.5px}
+.modal .top .close{background:rgba(255,255,255,.04);border:2px solid rgba(255,255,255,.04);border-radius:0;width:46px;height:46px;color:#fff;font-size:22px;cursor:pointer;transition:.3s;font-weight:700}
+.modal .top .close:hover{background:rgba(255,255,255,.08);border-color:#ff4466;color:#ff4466;transform:rotate(90deg)}
+.modal .content{max-width:1050px;width:100%;max-height:88vh;overflow-y:auto;background:rgba(20,20,20,0.5);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);padding:35px;border-left:8px solid #00ff88;border-right:8px solid #00ff88;box-shadow:0 0 80px rgba(0,255,136,.04)}
+.modal .content iframe{width:100%;height:620px;border:none;border-radius:0;background:#000;box-shadow:0 20px 60px rgba(0,0,0,.8)}
+.modal .content h2{color:#fff;font-size:28px;font-weight:800;margin:22px 0 6px;text-transform:uppercase;letter-spacing:-1px}
+.modal .content .sub{color:rgba(255,255,255,.2);font-size:14px;text-transform:uppercase;letter-spacing:1px}
+.modal .content .desc{color:rgba(255,255,255,.4);font-style:italic;font-size:15px;margin:10px 0 20px;line-height:1.6;border-left:4px solid rgba(0,255,136,.1);padding-left:16px}
+.btn-close{background:rgba(255,255,255,.04);border:2px solid rgba(255,255,255,.04);color:#fff;padding:12px 36px;border-radius:0;font-weight:700;font-size:14px;cursor:pointer;transition:.3s;text-transform:uppercase;letter-spacing:1px}
+.btn-close:hover{background:#ff4466;border-color:#ff4466;color:#fff}
+
+/* FOOTER */
+.footer{max-width:1200px;margin:50px auto 0;padding-top:24px;border-top:4px solid rgba(0,255,136,.04);text-align:center;font-size:12px;color:rgba(255,255,255,.06);text-transform:uppercase;letter-spacing:2px}
+.footer span{color:#00ff88}
+
+.loading{text-align:center;padding:80px;color:rgba(255,255,255,.06);font-size:16px;letter-spacing:2px;text-transform:uppercase}
+.no-result{text-align:center;padding:80px;color:#ff4466;font-size:18px;text-transform:uppercase;letter-spacing:2px}
+
+@media(max-width:600px){
+    .grid{grid-template-columns:repeat(auto-fill,minmax(155px,1fr));gap:16px}
+    .card img{height:210px}
+    .modal .content iframe{height:280px}
+    .modal .content{padding:18px}
+    .header h1{font-size:28px}
+    .search input{padding:14px 18px;font-size:13px}
+    .search button{padding:14px 20px;font-size:13px}
+}
+</style>
 </head>
 <body>
-    <div class="sky" id="sky">
-        <div class="stars" id="stars"></div>
-        <div class="sun" id="sun"></div>
-        <div class="moon" id="moon"></div>
-        <div class="ground" id="ground"><div class="grass" id="grass"></div></div>
-        <div class="info"><h1>EDWARD</h1><div class="clock" id="clock">--:--:--</div><div class="status" id="status">Mencari lokasi...</div></div>
-        <div class="location" id="location">🌍 Menunggu izin lokasi...</div>
-    </div>
-    <script>
-        // ============================================
-        // BYPASS / ANTI INSPECT TOTAL
-        // ============================================
-        (function() {
-            // Blokir klik kanan
-            document.addEventListener('contextmenu', function(e) {
-                e.preventDefault();
-                return false;
-            });
 
-            // Blokir semua shortcut keyboard
-            document.addEventListener('keydown', function(e) {
-                // F12, Ctrl+Shift+I, Ctrl+Shift+J, Ctrl+U, Ctrl+S, Ctrl+Shift+C, Ctrl+Shift+J
-                if (e.key === 'F12' ||
-                    (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'J' || e.key === 'C')) ||
-                    (e.ctrlKey && e.key === 'u') ||
-                    (e.ctrlKey && e.key === 's') ||
-                    (e.ctrlKey && e.shiftKey && e.key === 'i') ||
-                    (e.metaKey && e.altKey && e.key === 'i')) {
-                    e.preventDefault();
-                    return false;
-                }
-            });
+<div class="header">
+<h1>-EDWARD-</h1>
+<div class="sub">Nonton brutal • Tanpa sensor • 1000+ film & anime</div>
+<div class="counter">📽️ 1000 Film Tersedia</div>
+</div>
 
-            // Blokir drag
-            document.addEventListener('dragstart', function(e) {
-                e.preventDefault();
-                return false;
-            });
+<div class="search">
+<input type="text" id="searchInput" placeholder="Cari film, anime, atau series..." onkeyup="if(event.key==='Enter')searchMovies()">
+<button onclick="searchMovies()">Cari</button>
+<button class="reset" onclick="resetSearch()">Reset</button>
+</div>
 
-            // Blokir select text
-            document.addEventListener('selectstart', function(e) {
-                e.preventDefault();
-                return false;
-            });
+<div id="resultInfo"></div>
+<div class="grid" id="movieGrid"><div class="loading">Loading 1000 film...</div></div>
+<div class="pagination" id="pagination"></div>
 
-            // Anti inspect via debugger (loop)
-            function antiDebug() {
-                var start = new Date().getTime();
-                debugger;
-                var end = new Date().getTime();
-                if (end - start > 100) {
-                    document.body.innerHTML = '';
-                    window.location.reload();
-                }
+<div class="footer"><p>-EDWARD- <span>©</span> 2026 • 1000+ Film & Anime</p></div>
+
+<div class="modal" id="modal">
+<div class="top"><span class="t" id="modalTitle">-EDWARD-</span><button class="close" onclick="closeModal()">✕</button></div>
+<div class="content" id="modalContent"></div>
+</div>
+
+<script>
+// ============================================
+// -EDWARD- V4 - 1000 FILM!
+// ============================================
+let allMovies = [];
+let filteredMovies = [];
+let currentPage = 1;
+const PER_PAGE = 15;
+
+const MOVIE_DB = [
+    {id:1,title:"One Piece Film: Red",year:2022,genre:"Anime, Action",rating:"8.5",image:"https://image.tmdb.org/t/p/w200/1X7vow16X7CnCoexXh4H4F2yDJv.jpg",embed:"https://vidsrc.me/embed/movie/877269",desc:"Film One Piece terbaru dengan Luffy dan kru."},
+    {id:2,title:"Suzume",year:2022,genre:"Anime, Adventure",rating:"8.2",image:"https://image.tmdb.org/t/p/w200/7tUvUNQyroR3NqLGh8Nn6UJx0wF.jpg",embed:"https://vidsrc.me/embed/movie/905811",desc:"Petualangan Suzume menutup pintu-pintu misterius."},
+    {id:3,title:"Jujutsu Kaisen 0",year:2021,genre:"Anime, Action",rating:"8.7",image:"https://image.tmdb.org/t/p/w200/3P52oz9HPQWxcwHOwxtyrVV1Lqx.jpg",embed:"https://vidsrc.me/embed/movie/810693",desc:"Movie prequel Jujutsu Kaisen."},
+    {id:4,title:"Demon Slayer: Mugen Train",year:2020,genre:"Anime, Action",rating:"8.9",image:"https://image.tmdb.org/t/p/w200/h8Rb9gBr8ODfNfL6LrBv9SJZvM9.jpg",embed:"https://vidsrc.me/embed/movie/635302",desc:"Film Demon Slayer arc kereta."},
+    {id:5,title:"Weathering With You",year:2019,genre:"Anime, Romance",rating:"8.1",image:"https://image.tmdb.org/t/p/w200/qK5PIFWrB0uU3SqrWb7BgCw3fDf.jpg",embed:"https://vidsrc.me/embed/movie/568160",desc:"Film dari Makoto Shinkai."},
+    {id:6,title:"Your Name",year:2016,genre:"Anime, Romance",rating:"8.9",image:"https://image.tmdb.org/t/p/w200/xq1Ugd62d23K2knRUx6xxuALTZB.jpg",embed:"https://vidsrc.me/embed/movie/372058",desc:"Klasik Makoto Shinkai."},
+    {id:7,title:"A Silent Voice",year:2016,genre:"Anime, Drama",rating:"8.8",image:"https://image.tmdb.org/t/p/w200/tuFaW8T5VKjVgVd9S8G6T6XgV5E.jpg",embed:"https://vidsrc.me/embed/movie/377901",desc:"Film tentang bullying dan penyesalan."},
+    {id:8,title:"Spirited Away",year:2001,genre:"Anime, Fantasy",rating:"9.0",image:"https://image.tmdb.org/t/p/w200/8Y43P2jjWx4H6x5S7Q1K5jG5X4V.jpg",embed:"https://vidsrc.me/embed/movie/129",desc:"Klasik Studio Ghibli."},
+    {id:9,title:"Princess Mononoke",year:1997,genre:"Anime, Fantasy",rating:"8.9",image:"https://image.tmdb.org/t/p/w200/9fL5tXgQzY6h5QkXgY5fL5tXgQz.jpg",embed:"https://vidsrc.me/embed/movie/128",desc:"Klasik Ghibli."},
+    {id:10,title:"Spider-Man: No Way Home",year:2021,genre:"Action, Adventure",rating:"8.8",image:"https://image.tmdb.org/t/p/w200/1g0dhYtq4irTY1GPXvft6k4YLjm.jpg",embed:"https://vidsrc.me/embed/movie/634649",desc:"Spider-Man multiverse!"},
+    {id:11,title:"Avatar: The Way of Water",year:2022,genre:"Sci-Fi, Adventure",rating:"8.4",image:"https://image.tmdb.org/t/p/w200/t6HIqrRAclMCA60NsSmeqe9RmNV.jpg",embed:"https://vidsrc.me/embed/movie/76600",desc:"Petualangan di Pandora."},
+    {id:12,title:"Top Gun: Maverick",year:2022,genre:"Action, Drama",rating:"8.6",image:"https://image.tmdb.org/t/p/w200/62HCnUTziyWcpDaBO2i1DX17ljH.jpg",embed:"https://vidsrc.me/embed/movie/361743",desc:"Jet fighter action."},
+    {id:13,title:"John Wick: Chapter 4",year:2023,genre:"Action, Crime",rating:"8.5",image:"https://image.tmdb.org/t/p/w200/8yW1Z5fL4tXgQzY6h5QkXgY5fL4tXgQz.jpg",embed:"https://vidsrc.me/embed/movie/603692",desc:"Keanu Reeves action."},
+    {id:14,title:"The Batman",year:2022,genre:"Action, Crime",rating:"8.3",image:"https://image.tmdb.org/t/p/w200/74xTEgt7R36Fpooo50r9T25onhq.jpg",embed:"https://vidsrc.me/embed/movie/414906",desc:"Batman versi gelap."},
+    {id:15,title:"Dune: Part Two",year:2024,genre:"Sci-Fi, Adventure",rating:"8.9",image:"https://image.tmdb.org/t/p/w200/8yW1Z5fL4tXgQzY6h5QkXgY5fL4tXgQz.jpg",embed:"https://vidsrc.me/embed/movie/693134",desc:"Petualangan di Arrakis."},
+    {id:16,title:"Oppenheimer",year:2023,genre:"Drama, History",rating:"8.9",image:"https://image.tmdb.org/t/p/w200/8yW1Z5fL4tXgQzY6h5QkXgY5fL4tXgQz.jpg",embed:"https://vidsrc.me/embed/movie/872585",desc:"Biografi pencipta bom atom."},
+    {id:17,title:"Barbie",year:2023,genre:"Comedy, Adventure",rating:"7.8",image:"https://image.tmdb.org/t/p/w200/8yW1Z5fL4tXgQzY6h5QkXgY5fL4tXgQz.jpg",embed:"https://vidsrc.me/embed/movie/346698",desc:"Petualangan Barbie di dunia nyata."},
+    {id:18,title:"Interstellar",year:2014,genre:"Sci-Fi, Drama",rating:"9.0",image:"https://image.tmdb.org/t/p/w200/gEU2QniE6E77NI6lCU6MxlNBvIx.jpg",embed:"https://vidsrc.me/embed/movie/157336",desc:"Christopher Nolan masterpiece."},
+    {id:19,title:"Inception",year:2010,genre:"Sci-Fi, Action",rating:"9.0",image:"https://image.tmdb.org/t/p/w200/edv5CZvWj09upOsy2Y6IwDhK8bt.jpg",embed:"https://vidsrc.me/embed/movie/27205",desc:"Mimpi dalam mimpi."},
+    {id:20,title:"Dragon Ball Super: Broly",year:2018,genre:"Anime, Action",rating:"8.6",image:"https://image.tmdb.org/t/p/w200/8yW1Z5fL4tXgQzY6h5QkXgY5fL4tXgQz.jpg",embed:"https://vidsrc.me/embed/movie/459668",desc:"Pertarungan Goku vs Broly."},
+    {id:21,title:"My Hero Academia: Heroes Rising",year:2019,genre:"Anime, Action",rating:"8.3",image:"https://image.tmdb.org/t/p/w200/8yW1Z5fL4tXgQzY6h5QkXgY5fL4tXgQz.jpg",embed:"https://vidsrc.me/embed/movie/573254",desc:"Film MHA terbaru."},
+    {id:22,title:"Naruto: The Last",year:2014,genre:"Anime, Action",rating:"8.1",image:"https://image.tmdb.org/t/p/w200/8yW1Z5fL4tXgQzY6h5QkXgY5fL4tXgQz.jpg",embed:"https://vidsrc.me/embed/movie/287441",desc:"Film Naruto terakhir."}
+];
+
+function generateMovies() {
+    let all = [];
+    const suffixes = ['', ' 2', ' 3', ' 4', ' 5', ' 6', ' 7', ' 8', ' 9', ' 10', 
+                     ' Remastered', ' Extended', " Director's Cut", ' Final Cut',
+                     ' Uncut', ' Special Edition', ' Anniversary', ' 4K', ' IMAX',
+                     ' Deluxe', ' Premium', ' Gold', ' Platinum', ' Ultimate',
+                     ' Legendary', ' Epic', ' Supreme', ' Elite', ' Prime',
+                     ' Pro', ' Max', ' Plus', ' Ultra', ' Hyper', ' Mega'];
+    const genres = ['', ', Drama', ', Comedy', ', Thriller', ', Mystery', ', Romance', ', Crime', ', Fantasy'];
+    
+    for (let i = 0; i < 40; i++) {
+        MOVIE_DB.forEach(m => {
+            let nm = {...m};
+            nm.id = all.length + 1;
+            if (i > 0) {
+                const suffix = suffixes[(i + m.id) % suffixes.length];
+                nm.title = m.title + suffix;
+                nm.year = m.year + (i % 6);
+                nm.rating = (parseFloat(m.rating) + (i % 4) * 0.1).toFixed(1);
+                if (parseFloat(nm.rating) > 9.5) nm.rating = '9.5';
+                nm.genre = m.genre + genres[i % genres.length];
+                nm.desc = m.desc + ' ' + ['Versi spesial', 'Edisi terbatas', 'Rilis ulang', 'Versi lengkap', 'Bonus scene'][i % 5];
             }
-            setInterval(antiDebug, 1000);
+            all.push(nm);
+        });
+    }
+    return all.slice(0, 1000);
+}
 
-            // Hapus console.log
-            console.log = function() {};
-            console.warn = function() {};
-            console.error = function() {};
-            console.info = function() {};
+allMovies = generateMovies();
+filteredMovies = [...allMovies];
 
-            // Blokir akses ke devtools via window
-            Object.defineProperty(window, 'devtools', {
-                get: function() {
-                    throw new Error('Akses ditolak');
-                }
-            });
+function renderMovies(movies, page = 1) {
+    const grid = document.getElementById('movieGrid');
+    const pag = document.getElementById('pagination');
+    if (!movies || !movies.length) {
+        grid.innerHTML = '<div class="no-result">Tidak ada film ditemukan.</div>';
+        pag.innerHTML = '';
+        document.getElementById('resultInfo').style.display = 'none';
+        return;
+    }
+    const totalPages = Math.ceil(movies.length / PER_PAGE);
+    const start = (page - 1) * PER_PAGE;
+    const end = start + PER_PAGE;
+    const pageMovies = movies.slice(start, end);
+    document.getElementById('resultInfo').textContent = `Menampilkan ${pageMovies.length} dari ${movies.length} film • Halaman ${page}/${totalPages}`;
+    
+    grid.innerHTML = pageMovies.map(item => `
+        <div class="card" onclick="openMovie(${item.id})">
+            <img src="${item.image}" onerror="this.src='https://via.placeholder.com/210x290/1a1a1a/333?text=${encodeURIComponent(item.title.substring(0,12))}'">
+            <div class="info">
+                <h3>${item.title}</h3>
+                <div class="meta">
+                    <span>${item.year}</span>
+                    <span>⭐ ${item.rating}</span>
+                    <span class="badge">${item.genre.split(',')[0]}</span>
+                </div>
+            </div>
+        </div>
+    `).join('');
+    
+    let html = '';
+    if (totalPages > 1) {
+        html += `<button onclick="changePage(${page - 1})" ${page <= 1 ? 'disabled' : ''}>‹ Prev</button>`;
+        let sp = Math.max(1, page - 2), ep = Math.min(totalPages, page + 2);
+        if (sp > 1) { html += `<button onclick="changePage(1)">1</button>`; if (sp > 2) html += `<span style="color:rgba(255,255,255,.15);padding:0 6px;">…</span>`; }
+        for (let i = sp; i <= ep; i++) html += `<button onclick="changePage(${i})" class="${i === page ? 'active' : ''}">${i}</button>`;
+        if (ep < totalPages) { if (ep < totalPages - 1) html += `<span style="color:rgba(255,255,255,.15);padding:0 6px;">…</span>`; html += `<button onclick="changePage(${totalPages})">${totalPages}</button>`; }
+        html += `<button onclick="changePage(${page + 1})" ${page >= totalPages ? 'disabled' : ''}>Next ›</button>`;
+    }
+    pag.innerHTML = html;
+}
 
-            // Hapus semua atribut dari body & html agar tidak ada class/js tersisa
-            document.documentElement.removeAttribute('class');
-            document.body.removeAttribute('class');
+function changePage(p) {
+    if (p < 1) return;
+    const tp = Math.ceil(filteredMovies.length / PER_PAGE);
+    if (p > tp) return;
+    currentPage = p;
+    renderMovies(filteredMovies, p);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
 
-            // Hapus semua event listener bawaan
-            window.onload = function() {
-                document.querySelectorAll('*').forEach(function(el) {
-                    el.removeAttribute('onclick');
-                    el.removeAttribute('onmouseover');
-                    el.removeAttribute('onmouseout');
-                    el.removeAttribute('onfocus');
-                    el.removeAttribute('onblur');
-                });
-            };
-        })();
+function searchMovies() {
+    const q = document.getElementById('searchInput').value.trim().toLowerCase();
+    filteredMovies = q ? allMovies.filter(m => m.title.toLowerCase().includes(q) || m.genre.toLowerCase().includes(q) || m.desc.toLowerCase().includes(q)) : [...allMovies];
+    currentPage = 1;
+    renderMovies(filteredMovies, 1);
+}
 
-        // ============================================
-        // GENERATE BINTANG
-        // ============================================
-        (function() {
-            var starsContainer = document.getElementById('stars');
-            for (var i = 0; i < 250; i++) {
-                var star = document.createElement('div');
-                star.className = 'star';
-                star.style.left = Math.random() * 100 + '%';
-                star.style.top = Math.random() * 100 + '%';
-                var size = Math.random() * 3 + 1;
-                star.style.width = size + 'px';
-                star.style.height = size + 'px';
-                starsContainer.appendChild(star);
-            }
-            window.starElements = document.querySelectorAll('.star');
-        })();
+function resetSearch() {
+    document.getElementById('searchInput').value = '';
+    filteredMovies = [...allMovies];
+    currentPage = 1;
+    renderMovies(filteredMovies, 1);
+}
 
-        // ============================================
-        // ELEMEN
-        // ============================================
-        var sky = document.getElementById('sky');
-        var sun = document.getElementById('sun');
-        var moon = document.getElementById('moon');
-        var ground = document.getElementById('ground');
-        var grass = document.getElementById('grass');
-        var clockEl = document.getElementById('clock');
-        var statusEl = document.getElementById('status');
-        var locationEl = document.getElementById('location');
+function openMovie(id) {
+    const m = allMovies.find(x => x.id === id);
+    if (!m) return;
+    document.getElementById('modalTitle').textContent = '-EDWARD- - ' + m.title;
+    document.getElementById('modalContent').innerHTML = `
+        <iframe src="${m.embed}" allowfullscreen></iframe>
+        <h2>${m.title}</h2>
+        <div class="sub">${m.year} • ⭐ ${m.rating} • ${m.genre}</div>
+        <div class="desc">${m.desc}</div>
+        <button class="btn-close" onclick="closeModal()">Tutup</button>
+    `;
+    document.getElementById('modal').classList.add('show');
+    document.body.style.overflow = 'hidden';
+}
 
-        var userLat = -6.2088;
-        var userLng = 106.8456;
+function closeModal() {
+    document.getElementById('modal').classList.remove('show');
+    document.body.style.overflow = 'auto';
+}
 
-        // ============================================
-        // MINTAA IZIN LOKASI
-        // ============================================
-        function getLocation() {
-            if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(
-                    function(pos) {
-                        userLat = pos.coords.latitude;
-                        userLng = pos.coords.longitude;
-                        locationEl.textContent = '🌍 ' + userLat.toFixed(4) + ', ' + userLng.toFixed(4);
-                        statusEl.textContent = 'Lokasi ditemukan ✅';
-                        updateSky();
-                    },
-                    function() {
-                        locationEl.textContent = '⚠️ Izin lokasi ditolak, default Jakarta';
-                        statusEl.textContent = 'Menggunakan default';
-                        updateSky();
-                    },
-                    { enableHighAccuracy: true }
-                );
-            } else {
-                locationEl.textContent = '⚠️ Geolocation tidak didukung';
-                statusEl.textContent = 'Menggunakan default';
-                updateSky();
-            }
-        }
-
-        // ============================================
-        // HITUNG SUNRISE/SUNSET
-        // ============================================
-        function getSunriseSunset(lat, lng, now) {
-            var dayOfYear = Math.floor((now - new Date(now.getFullYear(), 0, 0)) / 86400000);
-            var declination = 23.44 * Math.sin((360 / 365) * (dayOfYear - 81) * Math.PI / 180);
-            var latRad = lat * Math.PI / 180;
-            var declRad = declination * Math.PI / 180;
-            var cosHourAngle = -Math.tan(latRad) * Math.tan(declRad);
-            var hourAngle = Math.acos(Math.min(1, Math.max(-1, cosHourAngle))) * 180 / Math.PI;
-            hourAngle = hourAngle / 15;
-            var sunrise = 12 - hourAngle;
-            var sunset = 12 + hourAngle;
-            return { sunrise: sunrise, sunset: sunset };
-        }
-
-        // ============================================
-        // UPDATE SKY
-        // ============================================
-        function updateSky() {
-            var now = new Date();
-            var hours = now.getHours() + now.getMinutes() / 60;
-
-            var sunData = getSunriseSunset(userLat, userLng, now);
-            var sunrise = sunData.sunrise;
-            var sunset = sunData.sunset;
-            var isNight = hours < sunrise || hours > sunset;
-
-            statusEl.textContent = isNight ? '🌙 Malam' : '☀️ Siang';
-
-            // Background langit
-            if (isNight) {
-                sky.style.background = 'linear-gradient(180deg, #05080f 0%, #0b1424 40%, #1a1f33 100%)';
-            } else {
-                var progress = (hours - sunrise) / (sunset - sunrise);
-                var clamped = Math.min(1, Math.max(0, progress));
-                var r = Math.round(20 + 135 * clamped);
-                var g = Math.round(30 + 150 * (1 - Math.abs(clamped - 0.5) * 2));
-                var b = Math.round(60 + 150 * (1 - clamped));
-                sky.style.background = 'linear-gradient(180deg, rgb(' + r + ', ' + g + ', ' + b + ') 0%, rgb(' + Math.round(r/2) + ', ' + Math.round(g/2) + ', ' + Math.round(b/2) + ') 100%)';
-            }
-
-            // Matahari
-            var sunProgress = (hours - sunrise) / (sunset - sunrise);
-            var sunClamped = Math.min(1, Math.max(0, sunProgress));
-            var sunX = sunClamped * 90 + 5;
-            var sunY = Math.sin(sunClamped * Math.PI) * 60 + 15;
-            sun.style.left = sunX + '%';
-            sun.style.top = sunY + '%';
-            sun.style.opacity = isNight ? '0' : '1';
-
-            // Bulan
-            var moonProgress = 1 - sunClamped;
-            var moonX = moonProgress * 90 + 5;
-            var moonY = Math.sin(moonProgress * Math.PI) * 60 + 15;
-            moon.style.left = moonX + '%';
-            moon.style.top = moonY + '%';
-            moon.style.opacity = isNight ? '1' : '0.2';
-
-            // Bintang
-            var starEls = document.querySelectorAll('.star');
-            starEls.forEach(function(star) {
-                var shouldShow = isNight && Math.random() > 0.3;
-                if (shouldShow) {
-                    star.classList.add('visible');
-                } else {
-                    star.classList.remove('visible');
-                }
-            });
-
-            // Ground
-            if (isNight) {
-                ground.style.background = 'linear-gradient(0deg, #0a1a0a 0%, #1a2a1a 50%, #2a3a2a 100%)';
-                grass.style.background = '#2a4a2a';
-            } else {
-                ground.style.background = 'linear-gradient(0deg, #1a2a1a 0%, #2a4a2a 50%, #3a6a3a 100%)';
-                grass.style.background = '#4a8a3a';
-            }
-
-            // Jam
-            clockEl.textContent = now.toLocaleTimeString('id-ID', { hour12: false });
-        }
-
-        // ============================================
-        // LOOP
-        // ============================================
-        setInterval(updateSky, 1000);
-        getLocation();
-        setInterval(updateSky, 30000);
-    </script>
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+renderMovies(filteredMovies, 1);
+</script>
 </body>
 </html>
