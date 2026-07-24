@@ -125,7 +125,7 @@ function processUrl() {
   loading.style.display = 'block';
   resultBox.classList.remove('show');
   // Panggil API kita sendiri
-  fetch(`/api/download?url=${encodeURIComponent(url)}&format=${format}`)
+  fetch(`https://edward-ed.vercel.app/api/download?url=${encodeURIComponent(url)}&format=${format}`)
     .then(res => res.json())
     .then(data => {
       loading.style.display = 'none';

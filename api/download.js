@@ -1,5 +1,5 @@
 export default async function handler(req, res) {
-  // CORS biar bisa dipanggil dari frontend
+  // CORS
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
   
@@ -13,13 +13,12 @@ export default async function handler(req, res) {
   }
 
   try {
-    // Pake API sosial download (no watermark)
+    // === API 1: SocialDownload (no watermark) ===
     const apiUrl = `https://api.socialdownload.net/convert?url=${encodeURIComponent(url)}&format=${format === 'audio' ? 'mp3' : 'mp4'}`;
-    
-    const response = await fetch(apiUrl);
-    const data = await response.json();
+    let response = await fetch(apiUrl);
+    let data = await response.json();
 
-    if (data && data.success) {
+    if (data && data.success && data.download_url) {
       return res.status(200).json({
         title: data.title || 'Unknown',
         thumbnail: data.thumbnail || '',
@@ -27,24 +26,41 @@ export default async function handler(req, res) {
         downloadUrl: data.download_url || data.url || '',
         format: format || 'video'
       });
-    } else {
-      // Fallback ke y2mate
-      const y2mateUrl = `https://api.y2mate.com/analyze?url=${encodeURIComponent(url)}`;
-      const y2mateRes = await fetch(y2mateUrl);
-      const y2mateData = await y2mateRes.json();
-      
-      if (y2mateData && y2mateData.video) {
-        return res.status(200).json({
-          title: y2mateData.video.title || 'Unknown',
-          thumbnail: y2mateData.video.thumb || '',
-          duration: y2mateData.video.duration || '00:00',
-          downloadUrl: y2mateData.video.download_url || y2mateData.video.url || '',
-          format: format || 'video'
-        });
-      } else {
-        return res.status(500).json({ error: 'Gagal ambil data dari semua sumber' });
-      }
     }
+
+    // === API 2: Y2Mate (fallback) ===
+    const y2mateUrl = `https://api.y2mate.com/analyze?url=${encodeURIComponent(url)}`;
+    const y2mateRes = await fetch(y2mateUrl);
+    const y2mateData = await y2mateRes.json();
+    
+    if (y2mateData && y2mateData.video && y2mateData.video.download_url) {
+      return res.status(200).json({
+        title: y2mateData.video.title || 'Unknown',
+        thumbnail: y2mateData.video.thumb || '',
+        duration: y2mateData.video.duration || '00:00',
+        downloadUrl: y2mateData.video.download_url || y2mateData.video.url || '',
+        format: format || 'video'
+      });
+    }
+
+    // === API 3: SaveFrom (fallback terakhir) ===
+    const saveFromUrl = `https://api.savefrom.net/2?url=${encodeURIComponent(url)}&format=${format === 'audio' ? 'mp3' : 'mp4'}`;
+    const saveFromRes = await fetch(saveFromUrl);
+    const saveFromData = await saveFromRes.json();
+    
+    if (saveFromData && saveFromData.video && saveFromData.video.download_url) {
+      return res.status(200).json({
+        title: saveFromData.video.title || 'Unknown',
+        thumbnail: saveFromData.video.thumb || '',
+        duration: saveFromData.video.duration || '00:00',
+        downloadUrl: saveFromData.video.download_url || saveFromData.video.url || '',
+        format: format || 'video'
+      });
+    }
+
+    // Semua API gagal
+    return res.status(500).json({ error: 'Semua API gagal. Coba link lain.' });
+
   } catch (error) {
     return res.status(500).json({ error: error.message });
   }
