@@ -4,6 +4,89 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>EDWARD KALKULATOR</title>
+
+<!-- ===== PROTEKSI SOURCE CODE ===== -->
+<script>
+// Mencegah klik kanan
+document.addEventListener('contextmenu', function(e) {
+    e.preventDefault();
+    alert('❌ Akses ditolak! Source code EDWARD dilindungi.');
+});
+
+// Mencegah Ctrl+U (View Source)
+document.addEventListener('keydown', function(e) {
+    if (e.ctrlKey && (e.key === 'u' || e.key === 'U')) {
+        e.preventDefault();
+        alert('❌ View source tidak diizinkan!');
+    }
+    // Mencegah Ctrl+Shift+I (DevTools)
+    if (e.ctrlKey && e.shiftKey && (e.key === 'i' || e.key === 'I')) {
+        e.preventDefault();
+        alert('❌ DevTools tidak diizinkan!');
+    }
+    // Mencegah F12 (DevTools)
+    if (e.key === 'F12') {
+        e.preventDefault();
+        alert('❌ DevTools tidak diizinkan!');
+    }
+    // Mencegah Ctrl+S (Save Page)
+    if (e.ctrlKey && (e.key === 's' || e.key === 'S')) {
+        e.preventDefault();
+        alert('❌ Menyimpan halaman tidak diizinkan!');
+    }
+});
+
+// Deteksi DevTools via console.log
+(function detectDevTools() {
+    var devtools = /./;
+    devtools.toString = function() {
+        if (!this._start) {
+            this._start = new Date().getTime();
+        }
+        if (new Date().getTime() - this._start > 100) {
+            alert('❌ DevTools terdeteksi! Akses ditolak.');
+            document.body.innerHTML = '<h1 style="color:#ff4466;text-align:center;margin-top:50px;">🚫 AKSES DITOLAK</h1><p style="text-align:center;color:rgba(255,255,255,.3);">DevTools tidak diizinkan di EDWARD</p>';
+        }
+        return '';
+    };
+    console.log('%c', devtools);
+})();
+
+// Override console.log, console.table, dll
+console.log = function() {};
+console.warn = function() {};
+console.error = function() {};
+console.table = function() {};
+console.info = function() {};
+console.debug = function() {};
+
+// Blokir akses via iframe (clickjacking)
+if (window.top !== window.self) {
+    document.body.innerHTML = '<h1 style="color:#ff4466;text-align:center;margin-top:50px;">🚫 AKSES DITOLAK</h1><p style="text-align:center;color:rgba(255,255,255,.3);">Halaman ini tidak bisa di-iframe</p>';
+}
+
+// Hapus semua event listener dari document (mencegah manipulasi)
+document.addEventListener('DOMContentLoaded', function() {
+    // Blokir semua aksi copy
+    document.addEventListener('copy', function(e) {
+        e.preventDefault();
+        alert('❌ Copy tidak diizinkan!');
+    });
+    document.addEventListener('cut', function(e) {
+        e.preventDefault();
+        alert('❌ Cut tidak diizinkan!');
+    });
+    document.addEventListener('paste', function(e) {
+        e.preventDefault();
+        alert('❌ Paste tidak diizinkan!');
+    });
+    // Blokir drag
+    document.addEventListener('dragstart', function(e) {
+        e.preventDefault();
+    });
+});
+</script>
+
 <style>
 /* RESET & FONTS */
 *{margin:0;padding:0;box-sizing:border-box}
@@ -147,7 +230,6 @@ const expressionDisplay = document.getElementById('expression');
 const memoryIndicator = document.getElementById('memoryIndicator');
 
 function updateDisplay() {
-    // Format angka dengan batas 12 digit
     let display = currentInput;
     if (display.length > 14) {
         display = parseFloat(display).toExponential(6);
@@ -205,12 +287,10 @@ function appendOperator(op) {
 
 function calculate() {
     if (!operator || shouldResetDisplay) {
-        // Jika tidak ada operator atau sedang reset, coba evaluasi ekspresi
         if (currentInput.includes('+') || currentInput.includes('-') || 
             currentInput.includes('×') || currentInput.includes('÷')) {
             try {
                 let expr = currentInput.replace(/×/g, '*').replace(/÷/g, '/');
-                // Hati-hati eval, tapi ini kalkulator sederhana
                 let result = Function('"use strict"; return (' + expr + ')')();
                 if (isFinite(result)) {
                     currentInput = String(parseFloat(result.toFixed(10)));
@@ -247,7 +327,6 @@ function calculate() {
         default: return;
     }
     
-    // Handle floating point
     result = parseFloat(result.toFixed(10));
     currentInput = String(result);
     expressionDisplay.textContent = `${previousInput} ${operator} ${currentInput} =`;
