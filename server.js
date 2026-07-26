@@ -1,7 +1,6 @@
 import express from 'express';
 import path from 'path';
 import { fileURLToPath } from 'url';
-import downloadHandler from './api/download.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -11,9 +10,6 @@ const port = process.env.PORT || 3000;
 
 // Serve static files
 app.use(express.static(path.join(__dirname, '.')));
-
-// API routes
-app.get('/api/download', downloadHandler);
 
 // Serve index.html for root path
 app.get('/', (req, res) => {
