@@ -5,38 +5,36 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>EDWARD KALKULATOR</title>
 
-<!-- ===== PROTEKSI SOURCE CODE ===== -->
+
 <script>
-// Mencegah klik kanan
+
 document.addEventListener('contextmenu', function(e) {
     e.preventDefault();
     alert('❌ Akses ditolak! Source code EDWARD dilindungi.');
 });
 
-// Mencegah Ctrl+U (View Source)
 document.addEventListener('keydown', function(e) {
     if (e.ctrlKey && (e.key === 'u' || e.key === 'U')) {
         e.preventDefault();
         alert('❌ View source tidak diizinkan!');
     }
-    // Mencegah Ctrl+Shift+I (DevTools)
+    
     if (e.ctrlKey && e.shiftKey && (e.key === 'i' || e.key === 'I')) {
         e.preventDefault();
         alert('❌ DevTools tidak diizinkan!');
     }
-    // Mencegah F12 (DevTools)
+   
     if (e.key === 'F12') {
         e.preventDefault();
         alert('❌ DevTools tidak diizinkan!');
     }
-    // Mencegah Ctrl+S (Save Page)
+   
     if (e.ctrlKey && (e.key === 's' || e.key === 'S')) {
         e.preventDefault();
         alert('❌ Menyimpan halaman tidak diizinkan!');
     }
 });
 
-// Deteksi DevTools via console.log
 (function detectDevTools() {
     var devtools = /./;
     devtools.toString = function() {
@@ -168,14 +166,14 @@ body{background:#0a0a0a;color:#e0e0e0;font-family:'Segoe UI','Inter',sans-serif;
         <div class="sub">KALKULATOR</div>
     </div>
 
-    <!-- DISPLAY -->
+    
     <div class="display">
         <div class="memory-indicator" id="memoryIndicator">M: 0</div>
         <div class="expression" id="expression"></div>
         <div class="result" id="result">0</div>
     </div>
 
-    <!-- BUTTONS -->
+    
     <div class="buttons">
         <!-- Baris 1: Memory & Clear -->
         <button class="btn memory" onclick="memoryRecall()">MR</button>
