@@ -1,419 +1,329 @@
 <!DOCTYPE html>
-<html>
+<html lang="id">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>EDWARD KALKULATOR</title>
-
-
-<script>
-
-document.addEventListener('contextmenu', function(e) {
-    e.preventDefault();
-    alert('❌ Akses ditolak! Source code EDWARD dilindungi.');
-});
-
-document.addEventListener('keydown', function(e) {
-    if (e.ctrlKey && (e.key === 'u' || e.key === 'U')) {
-        e.preventDefault();
-        alert('❌ View source tidak diizinkan!');
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WAKTU NYATA</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
     }
+
+    body, html {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      font-family: system-ui, -apple-system, sans-serif;
+    }
+
+    #sky {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      transition: background 1.5s ease;
+      background: #020111;
+    }
+
     
-    if (e.ctrlKey && e.shiftKey && (e.key === 'i' || e.key === 'I')) {
-        e.preventDefault();
-        alert('❌ DevTools tidak diizinkan!');
+    .star {
+      position: absolute;
+      background-color: #fff;
+      border-radius: 50%;
+      opacity: 0;
+      transition: opacity 2s ease;
+      animation: twinkle var(--duration) infinite ease-in-out;
     }
-   
-    if (e.key === 'F12') {
-        e.preventDefault();
-        alert('❌ DevTools tidak diizinkan!');
+
+    @keyframes twinkle {
+      0%, 100% { opacity: 0.2; }
+      50% { opacity: 1; }
     }
-   
-    if (e.ctrlKey && (e.key === 's' || e.key === 'S')) {
-        e.preventDefault();
-        alert('❌ Menyimpan halaman tidak diizinkan!');
+
+    
+    #celestial-body {
+      position: absolute;
+      width: 76px;
+      height: 76px;
+      border-radius: 50%;
+      top: 0;
+      left: 0;
+      margin-top: -38px;
+      margin-left: -38px;
+      transition: background 0.5s ease, box-shadow 0.5s ease;
+      z-index: 2;
     }
-});
 
-(function detectDevTools() {
-    var devtools = /./;
-    devtools.toString = function() {
-        if (!this._start) {
-            this._start = new Date().getTime();
-        }
-        if (new Date().getTime() - this._start > 100) {
-            alert('❌ DevTools terdeteksi! Akses ditolak.');
-            document.body.innerHTML = '<h1 style="color:#ff4466;text-align:center;margin-top:50px;">🚫 AKSES DITOLAK</h1><p style="text-align:center;color:rgba(255,255,255,.3);">DevTools tidak diizinkan di EDWARD</p>';
-        }
-        return '';
-    };
-    console.log('%c', devtools);
-})();
+    
+    #weather-canvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 10;
+    }
 
-// Override console.log, console.table, dll
-console.log = function() {};
-console.warn = function() {};
-console.error = function() {};
-console.table = function() {};
-console.info = function() {};
-console.debug = function() {};
+    
+    #info-card {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      background: rgba(0, 0, 0, 0.45);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      padding: 16px 22px;
+      border-radius: 16px;
+      color: #fff;
+      z-index: 20;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+      min-width: 200px;
+    }
 
-// Blokir akses via iframe (clickjacking)
-if (window.top !== window.self) {
-    document.body.innerHTML = '<h1 style="color:#ff4466;text-align:center;margin-top:50px;">🚫 AKSES DITOLAK</h1><p style="text-align:center;color:rgba(255,255,255,.3);">Halaman ini tidak bisa di-iframe</p>';
-}
+    #time-display {
+      font-size: 2rem;
+      font-weight: 800;
+      letter-spacing: 1px;
+      line-height: 1;
+    }
 
-// Hapus semua event listener dari document (mencegah manipulasi)
-document.addEventListener('DOMContentLoaded', function() {
-    // Blokir semua aksi copy
-    document.addEventListener('copy', function(e) {
-        e.preventDefault();
-        alert('❌ Copy tidak diizinkan!');
-    });
-    document.addEventListener('cut', function(e) {
-        e.preventDefault();
-        alert('❌ Cut tidak diizinkan!');
-    });
-    document.addEventListener('paste', function(e) {
-        e.preventDefault();
-        alert('❌ Paste tidak diizinkan!');
-    });
-    // Blokir drag
-    document.addEventListener('dragstart', function(e) {
-        e.preventDefault();
-    });
-});
-</script>
+    #phase-tag {
+      display: inline-block;
+      margin-top: 8px;
+      padding: 4px 10px;
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 8px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
 
-<style>
-/* RESET & FONTS */
-*{margin:0;padding:0;box-sizing:border-box}
-body{background:#0a0a0a;color:#e0e0e0;font-family:'Segoe UI','Inter',sans-serif;min-height:100vh;display:flex;justify-content:center;align-items:center;padding:20px;background-image:radial-gradient(circle at 20% 30%,#1a0a1e 0%,#0a0a0a 80%)}
-
-/* SCROLLBAR NEON */
-::-webkit-scrollbar{width:8px}
-::-webkit-scrollbar-track{background:#141414}
-::-webkit-scrollbar-thumb{background:linear-gradient(180deg,#ff00c8,#00ffe0);border-radius:10px}
-
-/* MAIN CONTAINER */
-.calculator{max-width:400px;width:100%;background:rgba(20,20,20,0.55);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-left:8px solid #ff00c8;border-right:8px solid #ff00c8;border-bottom:8px solid #00ffe0;box-shadow:0 0 60px rgba(255,0,200,.08),inset 0 0 60px rgba(255,0,200,.02),0 20px 60px rgba(0,0,0,.8);padding:30px;position:relative}
-
-/* BRAND */
-.brand{text-align:center;margin-bottom:25px;border-bottom:4px solid rgba(255,0,200,.2);padding-bottom:15px}
-.brand h1{font-size:28px;font-weight:900;color:#ff00c8;letter-spacing:4px;text-shadow:0 0 80px rgba(255,0,200,.15);font-family:'Inter',sans-serif;text-transform:uppercase}
-.brand .sub{font-size:10px;color:rgba(255,255,255,.1);letter-spacing:6px;text-transform:uppercase;margin-top:4px}
-
-/* DISPLAY */
-.display{background:#0a0a12;padding:20px;border:3px solid rgba(255,255,255,.05);margin-bottom:20px;position:relative;min-height:80px;display:flex;flex-direction:column;justify-content:flex-end;align-items:flex-end;overflow:hidden}
-.display .expression{color:rgba(255,255,255,.15);font-size:16px;font-family:'Courier New',monospace;word-break:break-all;width:100%;text-align:right;min-height:24px}
-.display .result{color:#00ffe0;font-size:42px;font-weight:700;font-family:'Courier New',monospace;word-break:break-all;width:100%;text-align:right;text-shadow:0 0 40px rgba(0,255,224,.1);transition:.15s}
-.display .memory-indicator{position:absolute;top:10px;left:15px;color:rgba(255,0,200,.2);font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px}
-
-/* BUTTON GRID */
-.buttons{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
-
-/* BUTTON STYLE - BRUTALISM */
-.btn{background:rgba(255,255,255,.02);border:3px solid rgba(255,255,255,.04);padding:18px 10px;font-size:22px;font-weight:700;color:rgba(255,255,255,.7);cursor:pointer;transition:.15s;font-family:'Inter',sans-serif;text-transform:uppercase;letter-spacing:0.5px;position:relative;user-select:none}
-.btn:hover{background:rgba(255,255,255,.06);border-color:rgba(255,255,255,.1);transform:scale(1.02)}
-.btn:active{transform:scale(.95)}
-
-/* OPERATOR */
-.btn.operator{color:#ff00c8;border-color:rgba(255,0,200,.1);background:rgba(255,0,200,.02)}
-.btn.operator:hover{border-color:#ff00c8;background:rgba(255,0,200,.08);box-shadow:0 0 30px rgba(255,0,200,.05)}
-
-/* EQUALS */
-.btn.equals{background:#ff00c8;border-color:#ff00c8;color:#fff;font-size:28px;box-shadow:0 0 40px rgba(255,0,200,.1)}
-.btn.equals:hover{background:#cc00a0;border-color:#cc00a0;box-shadow:0 0 60px rgba(255,0,200,.2);transform:scale(1.02)}
-
-/* CLEAR & DELETE */
-.btn.clear{color:#ff4466;border-color:rgba(255,68,102,.1);background:rgba(255,68,102,.02)}
-.btn.clear:hover{border-color:#ff4466;background:rgba(255,68,102,.08)}
-.btn.delete{color:#ff8800;border-color:rgba(255,136,0,.1);background:rgba(255,136,0,.02)}
-.btn.delete:hover{border-color:#ff8800;background:rgba(255,136,0,.08)}
-
-/* MEMORY */
-.btn.memory{color:#00ffe0;border-color:rgba(0,255,224,.1);background:rgba(0,255,224,.02);font-size:14px}
-.btn.memory:hover{border-color:#00ffe0;background:rgba(0,255,224,.08)}
-
-/* ZERO SPAN */
-.btn.zero{grid-column:span 2}
-
-/* PERCENT & DOT */
-.btn.percent{color:rgba(255,255,255,.3)}
-
-/* RESPONSIVE */
-@media(max-width:450px){
-    .calculator{padding:20px}
-    .btn{padding:15px 8px;font-size:18px}
-    .display .result{font-size:32px}
-    .brand h1{font-size:22px}
-}
-
-@media(max-width:350px){
-    .calculator{padding:15px}
-    .btn{padding:12px 6px;font-size:15px;gap:8px}
-    .display .result{font-size:26px}
-    .buttons{gap:8px}
-}
-</style>
+    #weather-status {
+      font-size: 0.85rem;
+      margin-top: 8px;
+      opacity: 0.85;
+    }
+  </style>
 </head>
 <body>
 
-<div class="calculator">
-    <!-- BRAND -->
-    <div class="brand">
-        <h1>EDWARD</h1>
-        <div class="sub">KALKULATOR</div>
+  <div id="sky">
+    <div id="stars-container"></div>
+    <div id="celestial-body"></div>
+    <canvas id="weather-canvas"></canvas>
+
+    <div id="info-card">
+      <div id="time-display">00:00:00</div>
+      <div id="phase-tag">MEMUAT...</div>
+      <div id="weather-status">Mencari lokasi cuaca...</div>
     </div>
+  </div>
+
+  <script>
+    
+    const starsContainer = document.getElementById('stars-container');
+    for (let i = 0; i < 120; i++) {
+      const star = document.createElement('div');
+      star.className = 'star';
+      const size = Math.random() * 2 + 1;
+      star.style.width = `${size}px`;
+      star.style.height = `${size}px`;
+      star.style.left = `${Math.random() * 100}%`;
+      star.style.top = `${Math.random() * 60}%`;
+      star.style.setProperty('--duration', `${Math.random() * 3 + 2}s`);
+      starsContainer.appendChild(star);
+    }
+
+
+    function updateSky() {
+      const now = new Date();
+      const h = now.getHours();
+      const m = now.getMinutes();
+      const s = now.getSeconds();
+
+      const totalMinutes = h * 60 + m;
+      
+      
+      document.getElementById('time-display').innerText = 
+        `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+
+      const sky = document.getElementById('sky');
+      const body = document.getElementById('celestial-body');
+      const stars = document.querySelectorAll('.star');
+      const phaseTag = document.getElementById('phase-tag');
+
+      let phaseText = "";
+      let isDay = false;
+      let angle = 0;
+
+      if (totalMinutes >= 270 && totalMinutes < 360) { 
+        
+        phaseText = "🌅Fajar";
+        isDay = true;
+        angle = ((totalMinutes - 270) / 90) * (Math.PI * 0.15);
+        sky.style.background = 'linear-gradient(to bottom, #0f172a, #581c87, #c2410c, #f97316)';
+        setBodyStyle(body, '#ff5722', '0 0 35px #ff5722, 0 0 70px #f97316');
+
+      } else if (totalMinutes >= 360 && totalMinutes < 660) { 
+        
+        phaseText = "🌤️ Pagi";
+        isDay = true;
+        angle = (Math.PI * 0.15) + ((totalMinutes - 360) / 300) * (Math.PI * 0.35);
+        sky.style.background = 'linear-gradient(to bottom, #1e3a8a, #3b82f6, #93c5fd)';
+        setBodyStyle(body, '#fff176', '0 0 50px #ffeb3b, 0 0 90px #fbc02d');
+
+      } else if (totalMinutes >= 660 && totalMinutes < 900) { 
+        
+        phaseText = "☀️ Siang";
+        isDay = true;
+        angle = (Math.PI * 0.5) + ((totalMinutes - 660) / 240) * (Math.PI * 0.2);
+        sky.style.background = 'linear-gradient(to bottom, #0284c7, #38bdf8, #bae6fd)';
+        setBodyStyle(body, '#ffffff', '0 0 60px #ffffff, 0 0 100px #81d4fa');
+
+      } else if (totalMinutes >= 900 && totalMinutes < 1050) { 
+        
+        phaseText = "🌤️ Sore";
+        isDay = true;
+        angle = (Math.PI * 0.7) + ((totalMinutes - 900) / 150) * (Math.PI * 0.18);
+        sky.style.background = 'linear-gradient(to bottom, #1e293b, #0369a1, #f59e0b)';
+        setBodyStyle(body, '#ff9800', '0 0 45px #ff9800, 0 0 80px #f57c00');
+
+      } else if (totalMinutes >= 1050 && totalMinutes < 1110) { 
+        
+        phaseText = "🌆Senja";
+        isDay = true;
+        angle = (Math.PI * 0.88) + ((totalMinutes - 1050) / 60) * (Math.PI * 0.12);
+        sky.style.background = 'linear-gradient(to bottom, #090d16, #1e1b4b, #831843, #ea580c)';
+        
+        setBodyStyle(body, '#ff3d00', '0 0 40px #ff3d00, 0 0 80px #dd2c00, 0 0 120px #ff6e40');
+
+      } else { 
+        
+        phaseText = "🌙 Malam";
+        isDay = false;
+        
+        let nightMinutes = totalMinutes >= 1110 ? totalMinutes - 1110 : totalMinutes + 330;
+        angle = (nightMinutes / 600) * Math.PI;
+        
+        sky.style.background = 'linear-gradient(to bottom, #020111 0%, #050b14 60%, #101728 100%)';
+        setBodyStyle(body, '#f1f5f9', '0 0 25px rgba(241, 245, 249, 0.9), 0 0 50px rgba(148, 163, 184, 0.4)');
+      }
+
+      phaseTag.innerText = phaseText;
+
+      const screenWidth = window.innerWidth;
+      const screenHeight = window.innerHeight;
+
+      
+      const xPos = (0.15 + (Math.cos(Math.PI - angle) + 1) / 2 * 0.70) * screenWidth;
+      const yPos = (0.78 - Math.sin(angle) * 0.62) * screenHeight;
+
+      body.style.transform = `translate(${xPos}px, ${yPos}px)`;
+
+      
+      stars.forEach(st => {
+        st.style.opacity = (!isDay || totalMinutes < 330) ? Math.random() : '0';
+      });
+    }
+
+    function setBodyStyle(el, color, shadow) {
+      el.style.backgroundColor = color;
+      el.style.boxShadow = shadow;
+    }
+
+    setInterval(updateSky, 1000);
+    updateSky();
 
     
-    <div class="display">
-        <div class="memory-indicator" id="memoryIndicator">M: 0</div>
-        <div class="expression" id="expression"></div>
-        <div class="result" id="result">0</div>
-    </div>
+    const canvas = document.getElementById('weather-canvas');
+    const ctx = canvas.getContext('2d');
+    let isRaining = false;
+    let raindrops = [];
 
-    
-    <div class="buttons">
-        <!-- Baris 1: Memory & Clear -->
-        <button class="btn memory" onclick="memoryRecall()">MR</button>
-        <button class="btn memory" onclick="memoryClear()">MC</button>
-        <button class="btn clear" onclick="clearAll()">AC</button>
-        <button class="btn delete" onclick="deleteLast()">⌫</button>
-
-        <!-- Baris 2: 7 8 9 ÷ -->
-        <button class="btn" onclick="appendNumber('7')">7</button>
-        <button class="btn" onclick="appendNumber('8')">8</button>
-        <button class="btn" onclick="appendNumber('9')">9</button>
-        <button class="btn operator" onclick="appendOperator('÷')">÷</button>
-
-        <!-- Baris 3: 4 5 6 × -->
-        <button class="btn" onclick="appendNumber('4')">4</button>
-        <button class="btn" onclick="appendNumber('5')">5</button>
-        <button class="btn" onclick="appendNumber('6')">6</button>
-        <button class="btn operator" onclick="appendOperator('×')">×</button>
-
-        <!-- Baris 4: 1 2 3 - -->
-        <button class="btn" onclick="appendNumber('1')">1</button>
-        <button class="btn" onclick="appendNumber('2')">2</button>
-        <button class="btn" onclick="appendNumber('3')">3</button>
-        <button class="btn operator" onclick="appendOperator('-')">-</button>
-
-        <!-- Baris 5: 0 00 . + -->
-        <button class="btn zero" onclick="appendNumber('0')">0</button>
-        <button class="btn" onclick="appendNumber('00')">00</button>
-        <button class="btn" onclick="appendDecimal()">.</button>
-        <button class="btn operator" onclick="appendOperator('+')">+</button>
-
-        <!-- Baris 6: % = -->
-        <button class="btn percent" onclick="appendPercent()">%</button>
-        <button class="btn equals" onclick="calculate()" style="grid-column:span 3;">=</button>
-    </div>
-</div>
-
-<script>
-// ============================================
-// EDWARD KALKULATOR - BRUTALISM NEON
-// ============================================
-
-let currentInput = '0';
-let previousInput = '';
-let operator = null;
-let shouldResetDisplay = false;
-let memory = 0;
-let hasMemory = false;
-
-const resultDisplay = document.getElementById('result');
-const expressionDisplay = document.getElementById('expression');
-const memoryIndicator = document.getElementById('memoryIndicator');
-
-function updateDisplay() {
-    let display = currentInput;
-    if (display.length > 14) {
-        display = parseFloat(display).toExponential(6);
+    function resizeCanvas() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
     }
-    resultDisplay.textContent = display;
-    updateMemoryIndicator();
-}
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
 
-function updateMemoryIndicator() {
-    if (hasMemory) {
-        memoryIndicator.textContent = `M: ${memory}`;
-        memoryIndicator.style.color = 'rgba(0,255,224,.5)';
-    } else {
-        memoryIndicator.textContent = 'M: 0';
-        memoryIndicator.style.color = 'rgba(255,255,255,.1)';
+    function createRain() {
+      raindrops = [];
+      const dropCount = Math.floor(window.innerWidth / 3);
+      for (let i = 0; i < dropCount; i++) {
+        raindrops.push({
+          x: Math.random() * canvas.width,
+          y: Math.random() * canvas.height,
+          length: Math.random() * 20 + 10,
+          speed: Math.random() * 12 + 15
+        });
+      }
     }
-}
 
-function appendNumber(num) {
-    if (shouldResetDisplay) {
-        currentInput = '0';
-        shouldResetDisplay = false;
-    }
-    if (currentInput === '0' && num !== '00') {
-        currentInput = num;
-    } else if (currentInput === '0' && num === '00') {
-        // tetap 0
-    } else {
-        if (currentInput.replace('-','').replace('.','').length >= 14) return;
-        currentInput += num;
-    }
-    updateDisplay();
-}
+    function renderRain() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      if (isRaining) {
+        ctx.strokeStyle = 'rgba(174, 194, 224, 0.6)';
+        ctx.lineWidth = 1.5;
+        for (let drop of raindrops) {
+          ctx.beginPath();
+          ctx.moveTo(drop.x, drop.y);
+          ctx.lineTo(drop.x - drop.length * 0.15, drop.y + drop.length);
+          ctx.stroke();
 
-function appendDecimal() {
-    if (shouldResetDisplay) {
-        currentInput = '0';
-        shouldResetDisplay = false;
-    }
-    if (!currentInput.includes('.')) {
-        currentInput += '.';
-    }
-    updateDisplay();
-}
+          drop.y += drop.speed;
+          drop.x -= drop.speed * 0.15;
 
-function appendOperator(op) {
-    if (operator && !shouldResetDisplay) {
-        calculate();
-    }
-    previousInput = currentInput;
-    operator = op;
-    shouldResetDisplay = true;
-    expressionDisplay.textContent = `${previousInput} ${operator}`;
-}
-
-function calculate() {
-    if (!operator || shouldResetDisplay) {
-        if (currentInput.includes('+') || currentInput.includes('-') || 
-            currentInput.includes('×') || currentInput.includes('÷')) {
-            try {
-                let expr = currentInput.replace(/×/g, '*').replace(/÷/g, '/');
-                let result = Function('"use strict"; return (' + expr + ')')();
-                if (isFinite(result)) {
-                    currentInput = String(parseFloat(result.toFixed(10)));
-                    updateDisplay();
-                }
-            } catch(e) {
-                // ignore
-            }
+          if (drop.y > canvas.height) {
+            drop.y = -drop.length;
+            drop.x = Math.random() * canvas.width;
+          }
         }
-        return;
+      }
+      requestAnimationFrame(renderRain);
     }
-    
-    const prev = parseFloat(previousInput);
-    const curr = parseFloat(currentInput);
-    
-    if (isNaN(prev) || isNaN(curr)) return;
-    
-    let result;
-    switch(operator) {
-        case '+': result = prev + curr; break;
-        case '-': result = prev - curr; break;
-        case '×': result = prev * curr; break;
-        case '÷': 
-            if (curr === 0) {
-                currentInput = 'Error';
-                updateDisplay();
-                operator = null;
-                previousInput = '';
-                expressionDisplay.textContent = '';
-                return;
-            }
-            result = prev / curr; 
-            break;
-        default: return;
+    renderRain();
+
+
+    async function getWeather(lat, lon) {
+      const statusEl = document.getElementById('weather-status');
+      try {
+        const res = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true`);
+        const data = await res.json();
+        const code = data.current_weather.weathercode;
+
+        const rainCodes = [51, 53, 55, 56, 57, 61, 63, 65, 66, 67, 80, 81, 82];
+        if (rainCodes.includes(code)) {
+          isRaining = true;
+          createRain();
+          statusEl.innerText = "Cuaca: Hujan 🌧️";
+        } else {
+          isRaining = false;
+          statusEl.innerText = "Cuaca: Cerah / Berawan 🌤️";
+        }
+      } catch (err) {
+        statusEl.innerText = "Cuaca: Menggunakan data estimasi";
+      }
     }
-    
-    result = parseFloat(result.toFixed(10));
-    currentInput = String(result);
-    expressionDisplay.textContent = `${previousInput} ${operator} ${currentInput} =`;
-    operator = null;
-    previousInput = '';
-    shouldResetDisplay = true;
-    updateDisplay();
-}
 
-function clearAll() {
-    currentInput = '0';
-    previousInput = '';
-    operator = null;
-    shouldResetDisplay = false;
-    expressionDisplay.textContent = '';
-    updateDisplay();
-}
-
-function deleteLast() {
-    if (shouldResetDisplay) return;
-    if (currentInput.length <= 1) {
-        currentInput = '0';
-    } else {
-        currentInput = currentInput.slice(0, -1);
+    function initWeather() {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          (pos) => getWeather(pos.coords.latitude, pos.coords.longitude),
+          () => getWeather(-6.2088, 106.8456),
+          { timeout: 5000 }
+        );
+      } else {
+        getWeather(-6.2088, 106.8456);
+      }
     }
-    updateDisplay();
-}
 
-function appendPercent() {
-    const num = parseFloat(currentInput);
-    if (isNaN(num)) return;
-    currentInput = String(num / 100);
-    updateDisplay();
-}
-
-// MEMORY FUNCTIONS
-function memoryRecall() {
-    if (!hasMemory) return;
-    currentInput = String(memory);
-    shouldResetDisplay = true;
-    updateDisplay();
-}
-
-function memoryClear() {
-    memory = 0;
-    hasMemory = false;
-    updateMemoryIndicator();
-}
-
-// Keyboard support
-document.addEventListener('keydown', (e) => {
-    const key = e.key;
-    if (key >= '0' && key <= '9') {
-        e.preventDefault();
-        appendNumber(key);
-    } else if (key === '.') {
-        e.preventDefault();
-        appendDecimal();
-    } else if (key === '+') {
-        e.preventDefault();
-        appendOperator('+');
-    } else if (key === '-') {
-        e.preventDefault();
-        appendOperator('-');
-    } else if (key === '*') {
-        e.preventDefault();
-        appendOperator('×');
-    } else if (key === '/') {
-        e.preventDefault();
-        appendOperator('÷');
-    } else if (key === 'Enter' || key === '=') {
-        e.preventDefault();
-        calculate();
-    } else if (key === 'Escape' || key === 'c' || key === 'C') {
-        e.preventDefault();
-        clearAll();
-    } else if (key === 'Backspace') {
-        e.preventDefault();
-        deleteLast();
-    } else if (key === '%') {
-        e.preventDefault();
-        appendPercent();
-    }
-});
-
-// Inisialisasi
-updateDisplay();
-console.log('🧮 EDWARD KALKULATOR · Brutalisme Neon');
-console.log('💡 Support keyboard: 0-9, + - * /, Enter, Backspace, Escape');
-</script>
+    initWeather();
+    setInterval(initWeather, 600000);
+  </script>
 </body>
 </html>
