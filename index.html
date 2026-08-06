@@ -225,8 +225,16 @@
       body.style.transform = `translate(${xPos}px, ${yPos}px)`;
 
       
-      stars.forEach(st => {
-        st.style.opacity = (!isDay || totalMinutes < 330) ? Math.random() : '0';
+ (isDay = false)
+stars.forEach(st => {
+  if (!isDay) {
+    st.style.opacity = Math.random():
+  } else {
+    st.style.opacity = '0'; 
+  }
+});
+
+
       });
     }
 
