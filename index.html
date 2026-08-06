@@ -26,7 +26,7 @@
       transition: background 1.5s ease;
     }
 
-   
+  
     #canvas-3d {
       position: absolute;
       top: 0;
@@ -47,7 +47,7 @@
       z-index: 10;
     }
 
-  
+   
     #celestial-body {
       position: absolute;
       width: 80px;
@@ -63,7 +63,7 @@
       perspective: 1000px;
     }
 
-    
+  
     #info-card {
       position: absolute;
       top: 20px;
@@ -101,20 +101,10 @@
       box-shadow: 0 2px 8px rgba(0,0,0,0.2);
     }
 
-    #location-info {
-      font-size: 0.95rem;
-      font-weight: 700;
-      margin-top: 10px;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      color: #f1f5f9;
-    }
-
     #weather-status {
-      font-size: 0.8rem;
-      margin-top: 4px;
-      opacity: 0.85;
+      font-size: 0.85rem;
+      margin-top: 8px;
+      opacity: 0.9;
     }
 
    
@@ -147,7 +137,7 @@
       box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
     }
 
-  
+    
     #game-modal {
       display: none;
       position: fixed;
@@ -238,13 +228,14 @@
 
     <div id="info-card">
       <div id="time-display">00:00:00</div>
-     
+      <div id="phase-tag">MEMUAT...</div>
       <div id="weather-status">Mengambil data cuaca...</div>
     </div>
 
     <button id="game-btn" onclick="openGame()">MAINKAN GAME</button>
   </div>
 
+  
   <div id="game-modal">
     <div class="game-header">
       <div>
@@ -268,7 +259,7 @@
   </div>
 
   <script>
- 
+    
     const AudioCtx = window.AudioContext || window.webkitAudioContext;
     let audioCtx;
 
@@ -332,7 +323,7 @@
       width = canvas3d.width = window.innerWidth;
       height = canvas3d.height = window.innerHeight;
       
-     
+    
       stars3D = [];
       for (let i = 0; i < numStars; i++) {
         stars3D.push({
@@ -343,7 +334,7 @@
         });
       }
 
-     
+    
       clouds = [];
       for (let i = 0; i < numClouds; i++) {
         clouds.push({
@@ -391,7 +382,7 @@
       const centerX = width / 2 + mouseX;
       const centerY = height / 2 + mouseY;
 
-  
+     
       if (!currentIsDay) {
         ctx3d.fillStyle = '#ffffff';
         for (let star of stars3D) {
@@ -413,7 +404,7 @@
         }
       }
 
-      // 2. Gambar Awan Parallax Bergerak
+   
       for (let cloud of clouds) {
         cloud.x += cloud.speed;
         if (cloud.x - 100 > width) cloud.x = -150;
@@ -561,19 +552,7 @@
     }
     renderRain();
 
-  
-    async function getCityName(lat, lon) {
-      const cityEl = document.getElementById('city-name');
-      try {
-        const res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}`);
-        const data = await res.json();
-        const city = data.address.city || data.address.town || data.address.county || data.address.state || "Lokasi Anda";
-        cityEl.innerText = city;
-      } catch (err) {
-        cityEl.innerText = "Indonesia";
-      }
-    }
-
+ 
     async function getWeather(lat, lon) {
       const statusEl = document.getElementById('weather-status');
       try {
@@ -592,35 +571,26 @@
           statusEl.innerText = `Cuaca: Cerah / Berawan 🌤️ (${temp}°C)`;
         }
       } catch (err) {
-        statusEl.innerText = "Cuaca: Estimasi lokal";
+        statusEl.innerText = "Cuaca: Cerah / Berawan 🌤️";
       }
     }
 
-    function initLocationAndWeather() {
+    function initWeather() {
       if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(
-          (pos) => {
-            const lat = pos.coords.latitude;
-            const lon = pos.coords.longitude;
-            getCityName(lat, lon);
-            getWeather(lat, lon);
-          },
-          () => {
-            getCityName(-6.2088, 106.8456);
-            getWeather(-6.2088, 106.8456);
-          },
+          (pos) => getWeather(pos.coords.latitude, pos.coords.longitude),
+          () => getWeather(-6.2088, 106.8456),
           { timeout: 5000 }
         );
       } else {
-        getCityName(-6.2088, 106.8456);
         getWeather(-6.2088, 106.8456);
       }
     }
 
-    initLocationAndWeather();
-    setInterval(initLocationAndWeather, 600000);
+    initWeather();
+    setInterval(initWeather, 600000);
 
-   
+  
     const gCanvas = document.getElementById('game-canvas');
     const gCtx = gCanvas.getContext('2d');
     const grid = 15;
@@ -675,7 +645,7 @@
       snake.cells.unshift({ x: snake.x, y: snake.y });
       if (snake.cells.length > snake.maxCells) snake.cells.pop();
 
-      
+    
       gCtx.fillStyle = '#ef4444';
       gCtx.shadowBlur = 10;
       gCtx.shadowColor = '#ef4444';
@@ -695,14 +665,14 @@
         }
       });
 
-     
+    
       gCtx.fillStyle = '#10b981';
       gCtx.shadowBlur = 6;
       gCtx.shadowColor = '#10b981';
       snake.cells.forEach((cell, index) => {
         gCtx.fillRect(cell.x, cell.y, grid - 1, grid - 1);
 
-      
+        
         if (cell.x === apple.x && cell.y === apple.y) {
           snake.maxCells++;
           score += 10;
@@ -722,7 +692,7 @@
           apple.y = getRandomInt(0, 20) * grid;
         }
 
-     
+      
         for (let i = index + 1; i < snake.cells.length; i++) {
           if (cell.x === snake.cells[i].x && cell.y === snake.cells[i].y) {
             playSound('gameover');
