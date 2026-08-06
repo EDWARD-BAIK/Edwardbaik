@@ -16,6 +16,7 @@
       height: 100%;
       overflow: hidden;
       font-family: system-ui, -apple-system, sans-serif;
+      background: #020111;
     }
 
     #sky {
@@ -23,36 +24,16 @@
       width: 100%;
       height: 100%;
       transition: background 1.5s ease;
-      background: #020111;
     }
 
     
-    .star {
+    #canvas-3d {
       position: absolute;
-      background-color: #fff;
-      border-radius: 50%;
-      opacity: 0;
-      transition: opacity 1.5s ease;
-      animation: twinkle var(--duration) infinite ease-in-out;
-    }
-
-    @keyframes twinkle {
-      0%, 100% { opacity: 0.2; }
-      50% { opacity: 1; }
-    }
-
-  
-    #celestial-body {
-      position: absolute;
-      width: 76px;
-      height: 76px;
-      border-radius: 50%;
       top: 0;
       left: 0;
-      margin-top: -38px;
-      margin-left: -38px;
-      transition: background 0.5s ease, box-shadow 0.5s ease;
-      z-index: 2;
+      width: 100%;
+      height: 100%;
+      z-index: 1;
     }
 
     
@@ -66,76 +47,97 @@
       z-index: 10;
     }
 
-   
+    
+    #celestial-body {
+      position: absolute;
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      top: 0;
+      left: 0;
+      margin-top: -40px;
+      margin-left: -40px;
+      transition: background 0.8s ease, box-shadow 0.8s ease;
+      z-index: 5;
+      transform-style: preserve-3d;
+      perspective: 1000px;
+    }
+
+    
     #info-card {
       position: absolute;
       top: 20px;
       left: 20px;
-      background: rgba(0, 0, 0, 0.45);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-      padding: 16px 22px;
-      border-radius: 16px;
+      background: rgba(15, 23, 42, 0.55);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      padding: 18px 24px;
+      border-radius: 20px;
       color: #fff;
       z-index: 20;
-      border: 1px solid rgba(255, 255, 255, 0.15);
-      box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
-      min-width: 200px;
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.3);
+      transform: perspective(500px) rotateX(2deg);
     }
 
     #time-display {
-      font-size: 2rem;
+      font-size: 2.2rem;
       font-weight: 800;
-      letter-spacing: 1px;
+      letter-spacing: 1.5px;
       line-height: 1;
+      text-shadow: 0 4px 12px rgba(0,0,0,0.5);
     }
 
     #phase-tag {
       display: inline-block;
-      margin-top: 8px;
-      padding: 4px 10px;
-      background: rgba(255, 255, 255, 0.2);
-      border-radius: 8px;
+      margin-top: 10px;
+      padding: 5px 12px;
+      background: rgba(255, 255, 255, 0.22);
+      border-radius: 10px;
       font-size: 0.8rem;
-      font-weight: 600;
+      font-weight: 700;
       text-transform: uppercase;
-      letter-spacing: 0.5px;
+      letter-spacing: 1px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
     }
 
     #weather-status {
       font-size: 0.85rem;
       margin-top: 8px;
-      opacity: 0.85;
+      opacity: 0.9;
     }
 
    
     #game-btn {
       position: absolute;
-      bottom: 24px;
+      bottom: 28px;
       left: 50%;
       transform: translateX(-50%);
-      background: rgba(255, 255, 255, 0.2);
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.25), rgba(255, 255, 255, 0.05));
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
       border: 1px solid rgba(255, 255, 255, 0.4);
+      border-bottom: 4px solid rgba(255, 255, 255, 0.6);
       color: #fff;
-      padding: 12px 28px;
-      border-radius: 30px;
-      font-size: 0.95rem;
-      font-weight: 700;
-      letter-spacing: 1px;
+      padding: 14px 32px;
+      border-radius: 35px;
+      font-size: 1rem;
+      font-weight: 800;
+      letter-spacing: 1.5px;
       cursor: pointer;
       z-index: 25;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-      transition: all 0.2s ease;
+      box-shadow: 0 12px 25px rgba(0, 0, 0, 0.4), 0 0 15px rgba(255, 255, 255, 0.2);
+      transition: all 0.15s ease;
+      text-transform: uppercase;
     }
 
     #game-btn:active {
-      transform: translateX(-50%) scale(0.95);
-      background: rgba(255, 255, 255, 0.35);
+      transform: translateX(-50%) translateY(3px);
+      border-bottom-width: 1px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
     }
 
-    
+   
     #game-modal {
       display: none;
       position: fixed;
@@ -143,8 +145,8 @@
       left: 0;
       width: 100%;
       height: 100%;
-      background: rgba(0, 0, 0, 0.85);
-      backdrop-filter: blur(10px);
+      background: rgba(2, 6, 23, 0.9);
+      backdrop-filter: blur(12px);
       z-index: 100;
       flex-direction: column;
       align-items: center;
@@ -157,54 +159,58 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 12px;
+      margin-bottom: 15px;
     }
 
     .game-title {
-      font-weight: 800;
-      font-size: 1.2rem;
+      font-weight: 900;
+      font-size: 1.3rem;
+      letter-spacing: 1px;
     }
 
     .close-btn {
-      background: #ff4757;
+      background: #ef4444;
       border: none;
       color: white;
-      padding: 6px 14px;
-      border-radius: 8px;
+      padding: 8px 16px;
+      border-radius: 10px;
       font-weight: bold;
       cursor: pointer;
+      box-shadow: 0 4px 10px rgba(239, 68, 68, 0.4);
     }
 
     #game-canvas {
-      background: #111827;
+      background: #0f172a;
       border: 2px solid rgba(255, 255, 255, 0.2);
-      border-radius: 12px;
-      box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+      border-radius: 16px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.6);
     }
 
     .game-controls {
-      margin-top: 15px;
+      margin-top: 18px;
       display: grid;
-      grid-template-columns: repeat(3, 60px);
-      grid-template-rows: repeat(2, 50px);
-      gap: 8px;
+      grid-template-columns: repeat(3, 65px);
+      grid-template-rows: repeat(2, 55px);
+      gap: 10px;
     }
 
     .dpad-btn {
       background: rgba(255, 255, 255, 0.15);
       border: 1px solid rgba(255, 255, 255, 0.3);
       color: white;
-      font-size: 1.3rem;
-      border-radius: 10px;
+      font-size: 1.4rem;
+      border-radius: 12px;
       display: flex;
       align-items: center;
       justify-content: center;
       cursor: pointer;
       user-select: none;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.3);
     }
 
     .dpad-btn:active {
       background: rgba(255, 255, 255, 0.4);
+      transform: scale(0.95);
     }
 
     .d-up { grid-column: 2; grid-row: 1; }
@@ -216,7 +222,7 @@
 <body>
 
   <div id="sky">
-    <div id="stars-container"></div>
+    <canvas id="canvas-3d"></canvas>
     <div id="celestial-body"></div>
     <canvas id="weather-canvas"></canvas>
 
@@ -226,11 +232,10 @@
       <div id="weather-status">Mencari lokasi cuaca...</div>
     </div>
 
-    
     <button id="game-btn" onclick="openGame()">MAINKAN GAME</button>
   </div>
 
-  
+ 
   <div id="game-modal">
     <div class="game-header">
       <div>
@@ -242,7 +247,6 @@
 
     <canvas id="game-canvas" width="300" height="300"></canvas>
 
-   
     <div class="game-controls">
       <div class="dpad-btn d-up" onclick="setDir('UP')">▲</div>
       <div class="dpad-btn d-left" onclick="setDir('LEFT')">◀</div>
@@ -252,21 +256,85 @@
   </div>
 
   <script>
- 
-    const starsContainer = document.getElementById('stars-container');
-    for (let i = 0; i < 120; i++) {
-      const star = document.createElement('div');
-      star.className = 'star';
-      const size = Math.random() * 2 + 1;
-      star.style.width = `${size}px`;
-      star.style.height = `${size}px`;
-      star.style.left = `${Math.random() * 100}%`;
-      star.style.top = `${Math.random() * 60}%`;
-      star.style.setProperty('--duration', `${Math.random() * 3 + 2}s`);
-      starsContainer.appendChild(star);
+    
+    const canvas3d = document.getElementById('canvas-3d');
+    const ctx3d = canvas3d.getContext('2d');
+
+    let width, height;
+    let stars3D = [];
+    const numStars = 160;
+    let mouseX = 0, mouseY = 0;
+    let targetMouseX = 0, targetMouseY = 0;
+
+    function init3DCanvas() {
+      width = canvas3d.width = window.innerWidth;
+      height = canvas3d.height = window.innerHeight;
+      stars3D = [];
+      for (let i = 0; i < numStars; i++) {
+        stars3D.push({
+          x: (Math.random() - 0.5) * width * 2,
+          y: (Math.random() - 0.5) * height * 2,
+          z: Math.random() * width,
+          size: Math.random() * 2 + 1
+        });
+      }
     }
 
     
+    window.addEventListener('mousemove', (e) => {
+      targetMouseX = (e.clientX - width / 2) * 0.08;
+      targetMouseY = (e.clientY - height / 2) * 0.08;
+    });
+
+    window.addEventListener('touchmove', (e) => {
+      if (e.touches.length > 0) {
+        targetMouseX = (e.touches[0].clientX - width / 2) * 0.08;
+        targetMouseY = (e.touches[0].clientY - height / 2) * 0.08;
+      }
+    });
+
+    let currentIsDay = false;
+
+    function render3D() {
+      ctx3d.clearRect(0, 0, width, height);
+
+      
+      mouseX += (targetMouseX - mouseX) * 0.05;
+      mouseY += (targetMouseY - mouseY) * 0.05;
+
+      const fov = 300;
+      const centerX = width / 2 + mouseX;
+      const centerY = height / 2 + mouseY;
+
+      if (!currentIsDay) { // Bintang hanya digambar saat Malam/Subuh
+        ctx3d.fillStyle = '#ffffff';
+        for (let star of stars3D) {
+          star.z -= 0.2; // Bintang bergerak lambat mendekati layar (efek 3D fly-through)
+          if (star.z <= 0) star.z = width;
+
+          const k = fov / star.z;
+          const px = star.x * k + centerX;
+          const py = star.y * k + centerY;
+
+          if (px >= 0 && px <= width && py >= 0 && py <= height) {
+            const alpha = Math.min(1, (1 - star.z / width) * 1.2);
+            const size = Math.max(0.5, (1 - star.z / width) * star.size * 2);
+            ctx3d.globalAlpha = alpha;
+            ctx3d.beginPath();
+            ctx3d.arc(px, py, size, 0, Math.PI * 2);
+            ctx3d.fill();
+          }
+        }
+      }
+
+      requestAnimationFrame(render3D);
+    }
+
+    window.addEventListener('resize', init3DCanvas);
+    init3DCanvas();
+    render3D();
+
+  
     function updateSky() {
       const now = new Date();
       const h = now.getHours();
@@ -280,55 +348,53 @@
 
       const sky = document.getElementById('sky');
       const body = document.getElementById('celestial-body');
-      const stars = document.querySelectorAll('.star');
       const phaseTag = document.getElementById('phase-tag');
 
       let phaseText = "";
-      let isDay = false;
       let angle = 0;
 
       if (totalMinutes >= 270 && totalMinutes < 360) { 
         phaseText = "🌅 Subuh / Fajar";
-        isDay = false;
+        currentIsDay = false;
         angle = ((totalMinutes - 270) / 90) * (Math.PI * 0.15);
-        sky.style.background = 'linear-gradient(to bottom, #0f172a, #581c87, #c2410c, #f97316)';
-        setBodyStyle(body, '#ff5722', '0 0 35px #ff5722, 0 0 70px #f97316');
+        sky.style.background = 'linear-gradient(to bottom, #090d16, #31103f, #9a3412, #ea580c)';
+        setBodyStyle(body, '#ff5722', '0 0 40px #ff5722, 0 0 80px #f97316, 0 0 120px rgba(249, 115, 22, 0.4)');
 
       } else if (totalMinutes >= 360 && totalMinutes < 660) { 
         phaseText = "🌤️ Pagi";
-        isDay = true;
+        currentIsDay = true;
         angle = (Math.PI * 0.15) + ((totalMinutes - 360) / 300) * (Math.PI * 0.35);
-        sky.style.background = 'linear-gradient(to bottom, #1e3a8a, #3b82f6, #93c5fd)';
-        setBodyStyle(body, '#fff176', '0 0 50px #ffeb3b, 0 0 90px #fbc02d');
+        sky.style.background = 'linear-gradient(to bottom, #1d4ed8, #3b82f6, #93c5fd)';
+        setBodyStyle(body, '#fef08a', '0 0 60px #fde047, 0 0 100px #eab308, 0 0 150px rgba(250, 204, 21, 0.5)');
 
       } else if (totalMinutes >= 660 && totalMinutes < 900) { 
         phaseText = "☀️ Siang";
-        isDay = true;
+        currentIsDay = true;
         angle = (Math.PI * 0.5) + ((totalMinutes - 660) / 240) * (Math.PI * 0.2);
         sky.style.background = 'linear-gradient(to bottom, #0284c7, #38bdf8, #bae6fd)';
-        setBodyStyle(body, '#ffffff', '0 0 60px #ffffff, 0 0 100px #81d4fa');
+        setBodyStyle(body, '#ffffff', '0 0 70px #ffffff, 0 0 110px #38bdf8, 0 0 160px rgba(56, 189, 248, 0.6)');
 
       } else if (totalMinutes >= 900 && totalMinutes < 1050) { 
         phaseText = "🌤️ Sore";
-        isDay = true;
+        currentIsDay = true;
         angle = (Math.PI * 0.7) + ((totalMinutes - 900) / 150) * (Math.PI * 0.18);
-        sky.style.background = 'linear-gradient(to bottom, #1e293b, #0369a1, #f59e0b)';
-        setBodyStyle(body, '#ff9800', '0 0 45px #ff9800, 0 0 80px #f57c00');
+        sky.style.background = 'linear-gradient(to bottom, #0f172a, #0369a1, #f59e0b)';
+        setBodyStyle(body, '#f97316', '0 0 50px #f97316, 0 0 90px #d97706, 0 0 130px rgba(217, 119, 6, 0.5)');
 
       } else if (totalMinutes >= 1050 && totalMinutes < 1110) { 
         phaseText = "🌆 Senja / Terbenam";
-        isDay = true;
+        currentIsDay = true;
         angle = (Math.PI * 0.88) + ((totalMinutes - 1050) / 60) * (Math.PI * 0.12);
-        sky.style.background = 'linear-gradient(to bottom, #090d16, #1e1b4b, #831843, #ea580c)';
-        setBodyStyle(body, '#ff3d00', '0 0 40px #ff3d00, 0 0 80px #dd2c00, 0 0 120px #ff6e40');
+        sky.style.background = 'linear-gradient(to bottom, #030712, #311b92, #881337, #c2410c)';
+        setBodyStyle(body, '#ef4444', '0 0 50px #ef4444, 0 0 90px #dc2626, 0 0 140px rgba(220, 38, 38, 0.6)');
 
       } else { 
         phaseText = "🌙 Malam";
-        isDay = false;
+        currentIsDay = false;
         let nightMinutes = totalMinutes >= 1110 ? totalMinutes - 1110 : totalMinutes + 330;
         angle = (nightMinutes / 600) * Math.PI;
-        sky.style.background = 'linear-gradient(to bottom, #020111 0%, #050b14 60%, #101728 100%)';
-        setBodyStyle(body, '#f1f5f9', '0 0 25px rgba(241, 245, 249, 0.9), 0 0 50px rgba(148, 163, 184, 0.4)');
+        sky.style.background = 'linear-gradient(to bottom, #020111 0%, #070a13 60%, #0f172a 100%)';
+        setBodyStyle(body, '#f8fafc', '0 0 30px rgba(248, 250, 252, 0.9), 0 0 60px rgba(148, 163, 184, 0.4), 0 0 100px rgba(148, 163, 184, 0.2)');
       }
 
       phaseTag.innerText = phaseText;
@@ -336,14 +402,14 @@
       const screenWidth = window.innerWidth;
       const screenHeight = window.innerHeight;
 
+      
       const xPos = (0.15 + (Math.cos(Math.PI - angle) + 1) / 2 * 0.70) * screenWidth;
       const yPos = (0.78 - Math.sin(angle) * 0.62) * screenHeight;
 
-      body.style.transform = `translate(${xPos}px, ${yPos}px)`;
+    
+      const scale3D = 0.85 + Math.sin(angle) * 0.3;
 
-      stars.forEach(st => {
-        st.style.opacity = !isDay ? Math.random() : '0';
-      });
+      body.style.transform = `translate(${xPos}px, ${yPos}px) scale(${scale3D})`;
     }
 
     function setBodyStyle(el, color, shadow) {
@@ -354,49 +420,50 @@
     setInterval(updateSky, 1000);
     updateSky();
 
- 
-    const canvas = document.getElementById('weather-canvas');
-    const ctx = canvas.getContext('2d');
+  
+    const canvasRain = document.getElementById('weather-canvas');
+    const ctxRain = canvasRain.getContext('2d');
     let isRaining = false;
     let raindrops = [];
 
-    function resizeCanvas() {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
+    function resizeRainCanvas() {
+      canvasRain.width = window.innerWidth;
+      canvasRain.height = window.innerHeight;
     }
-    window.addEventListener('resize', resizeCanvas);
-    resizeCanvas();
+    window.addEventListener('resize', resizeRainCanvas);
+    resizeRainCanvas();
 
     function createRain() {
       raindrops = [];
-      const dropCount = Math.floor(window.innerWidth / 3);
+      const dropCount = Math.floor(window.innerWidth / 2.5);
       for (let i = 0; i < dropCount; i++) {
         raindrops.push({
-          x: Math.random() * canvas.width,
-          y: Math.random() * canvas.height,
-          length: Math.random() * 20 + 10,
-          speed: Math.random() * 12 + 15
+          x: Math.random() * canvasRain.width,
+          y: Math.random() * canvasRain.height,
+          length: Math.random() * 22 + 12,
+          speed: Math.random() * 14 + 16,
+          z: Math.random() * 2 + 0.5 // Efek kedalaman 3D hujan
         });
       }
     }
 
     function renderRain() {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctxRain.clearRect(0, 0, canvasRain.width, canvasRain.height);
       if (isRaining) {
-        ctx.strokeStyle = 'rgba(174, 194, 224, 0.6)';
-        ctx.lineWidth = 1.5;
         for (let drop of raindrops) {
-          ctx.beginPath();
-          ctx.moveTo(drop.x, drop.y);
-          ctx.lineTo(drop.x - drop.length * 0.15, drop.y + drop.length);
-          ctx.stroke();
+          ctxRain.strokeStyle = `rgba(186, 230, 253, ${0.3 * drop.z})`;
+          ctxRain.lineWidth = drop.z;
+          ctxRain.beginPath();
+          ctxRain.moveTo(drop.x, drop.y);
+          ctxRain.lineTo(drop.x - drop.length * 0.15, drop.y + drop.length);
+          ctxRain.stroke();
 
-          drop.y += drop.speed;
-          drop.x -= drop.speed * 0.15;
+          drop.y += drop.speed * drop.z * 0.7;
+          drop.x -= drop.speed * 0.1;
 
-          if (drop.y > canvas.height) {
+          if (drop.y > canvasRain.height) {
             drop.y = -drop.length;
-            drop.x = Math.random() * canvas.width;
+            drop.x = Math.random() * canvasRain.width;
           }
         }
       }
@@ -404,7 +471,7 @@
     }
     renderRain();
 
-  
+   
     async function getWeather(lat, lon) {
       const statusEl = document.getElementById('weather-status');
       try {
@@ -422,7 +489,7 @@
           statusEl.innerText = "Cuaca: Cerah / Berawan 🌤️";
         }
       } catch (err) {
-        statusEl.innerText = "Cuaca: Menggunakan data estimasi";
+        statusEl.innerText = "Cuaca: Menggunakan estimasi lokal";
       }
     }
 
@@ -441,7 +508,7 @@
     initWeather();
     setInterval(initWeather, 600000);
 
-    
+   
     const gCanvas = document.getElementById('game-canvas');
     const gCtx = gCanvas.getContext('2d');
     const grid = 15;
@@ -449,29 +516,14 @@
     let score = 0;
     let gameInterval;
 
-    let snake = {
-      x: 150,
-      y: 150,
-      dx: grid,
-      dy: 0,
-      cells: [],
-      maxCells: 4
-    };
-
+    let snake = { x: 150, y: 150, dx: grid, dy: 0, cells: [], maxCells: 4 };
     let apple = { x: 60, y: 60 };
 
-    function getRandomInt(min, max) {
-      return Math.floor(Math.random() * (max - min)) + min;
-    }
+    function getRandomInt(min, max) { return Math.floor(Math.random() * (max - min)) + min; }
 
     function resetGame() {
-      snake.x = 150;
-      snake.y = 150;
-      snake.cells = [];
-      snake.maxCells = 4;
-      snake.dx = grid;
-      snake.dy = 0;
-      score = 0;
+      snake.x = 150; snake.y = 150; snake.cells = []; snake.maxCells = 4;
+      snake.dx = grid; snake.dy = 0; score = 0;
       document.getElementById('score-val').innerText = score;
       apple.x = getRandomInt(0, 20) * grid;
       apple.y = getRandomInt(0, 20) * grid;
@@ -479,38 +531,32 @@
 
     function gameLoop() {
       gameInterval = requestAnimationFrame(gameLoop);
-
       if (++count < 6) return;
       count = 0;
 
       gCtx.clearRect(0, 0, gCanvas.width, gCanvas.height);
+      snake.x += snake.dx; snake.y += snake.dy;
 
-      snake.x += snake.dx;
-      snake.y += snake.dy;
-
-     
       if (snake.x < 0) snake.x = gCanvas.width - grid;
       else if (snake.x >= gCanvas.width) snake.x = 0;
-      
       if (snake.y < 0) snake.y = gCanvas.height - grid;
       else if (snake.y >= gCanvas.height) snake.y = 0;
 
       snake.cells.unshift({ x: snake.x, y: snake.y });
+      if (snake.cells.length > snake.maxCells) snake.cells.pop();
 
-      if (snake.cells.length > snake.maxCells) {
-        snake.cells.pop();
-      }
-
-      
+    
       gCtx.fillStyle = '#ef4444';
+      gCtx.shadowBlur = 10;
+      gCtx.shadowColor = '#ef4444';
       gCtx.fillRect(apple.x, apple.y, grid - 1, grid - 1);
 
-      
+     
       gCtx.fillStyle = '#10b981';
+      gCtx.shadowBlur = 6;
+      gCtx.shadowColor = '#10b981';
       snake.cells.forEach((cell, index) => {
         gCtx.fillRect(cell.x, cell.y, grid - 1, grid - 1);
-
-        
         if (cell.x === apple.x && cell.y === apple.y) {
           snake.maxCells++;
           score += 10;
@@ -518,14 +564,11 @@
           apple.x = getRandomInt(0, 20) * grid;
           apple.y = getRandomInt(0, 20) * grid;
         }
-
-      
         for (let i = index + 1; i < snake.cells.length; i++) {
-          if (cell.x === snake.cells[i].x && cell.y === snake.cells[i].y) {
-            resetGame();
-          }
+          if (cell.x === snake.cells[i].x && cell.y === snake.cells[i].y) resetGame();
         }
       });
+      gCtx.shadowBlur = 0;
     }
 
     function setDir(dir) {
