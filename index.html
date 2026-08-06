@@ -26,7 +26,7 @@
       transition: background 1.5s ease;
     }
 
-    
+   
     #canvas-3d {
       position: absolute;
       top: 0;
@@ -36,7 +36,7 @@
       z-index: 1;
     }
 
-    
+ 
     #weather-canvas {
       position: absolute;
       top: 0;
@@ -47,7 +47,7 @@
       z-index: 10;
     }
 
-    
+  
     #celestial-body {
       position: absolute;
       width: 80px;
@@ -101,10 +101,20 @@
       box-shadow: 0 2px 8px rgba(0,0,0,0.2);
     }
 
+    #location-info {
+      font-size: 0.95rem;
+      font-weight: 700;
+      margin-top: 10px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      color: #f1f5f9;
+    }
+
     #weather-status {
-      font-size: 0.85rem;
-      margin-top: 8px;
-      opacity: 0.9;
+      font-size: 0.8rem;
+      margin-top: 4px;
+      opacity: 0.85;
     }
 
    
@@ -137,7 +147,7 @@
       box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
     }
 
-   
+  
     #game-modal {
       display: none;
       position: fixed;
@@ -159,12 +169,12 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 15px;
+      margin-bottom: 12px;
     }
 
     .game-title {
       font-weight: 900;
-      font-size: 1.3rem;
+      font-size: 1.2rem;
       letter-spacing: 1px;
     }
 
@@ -229,18 +239,21 @@
     <div id="info-card">
       <div id="time-display">00:00:00</div>
       <div id="phase-tag">MEMUAT...</div>
-      <div id="weather-status">Mencari lokasi cuaca...</div>
+      <div id="location-info">📍 <span id="city-name">Mencari kota...</span></div>
+      <div id="weather-status">Mengambil data cuaca...</div>
     </div>
 
     <button id="game-btn" onclick="openGame()">MAINKAN GAME</button>
   </div>
 
- 
   <div id="game-modal">
     <div class="game-header">
       <div>
         <div class="game-title">GAME ULAR</div>
-        <div style="font-size: 0.85rem; opacity: 0.8;">Skor: <span id="score-val">0</span></div>
+        <div style="font-size: 0.85rem; opacity: 0.9;">
+          Skor: <span id="score-val" style="color:#10b981; font-weight:bold;">0</span> | 
+          Tertinggi: <span id="high-score-val" style="color:#f59e0b; font-weight:bold;">0</span>
+        </div>
       </div>
       <button class="close-btn" onclick="closeGame()">Tutup</button>
     </div>
@@ -256,19 +269,71 @@
   </div>
 
   <script>
+ 
+    const AudioCtx = window.AudioContext || window.webkitAudioContext;
+    let audioCtx;
+
+    function initAudio() {
+      if (!audioCtx) audioCtx = new AudioCtx();
+    }
+
+    function playSound(type) {
+      if (!audioCtx) return;
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+
+      if (type === 'eat') {
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(300, audioCtx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(800, audioCtx.currentTime + 0.1);
+        gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.1);
+        osc.start();
+        osc.stop(audioCtx.currentTime + 0.1);
+      } else if (type === 'gameover') {
+        osc.type = 'sawtooth';
+        osc.frequency.setValueAtTime(250, audioCtx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(60, audioCtx.currentTime + 0.4);
+        gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.4);
+        osc.start();
+        osc.stop(audioCtx.currentTime + 0.4);
+      } else if (type === 'click') {
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(400, audioCtx.currentTime);
+        gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.05);
+        osc.start();
+        osc.stop(audioCtx.currentTime + 0.05);
+      }
+    }
+
+    function triggerVibrate(duration = 40) {
+      if ("vibrate" in navigator) {
+        navigator.vibrate(duration);
+      }
+    }
+
     
     const canvas3d = document.getElementById('canvas-3d');
     const ctx3d = canvas3d.getContext('2d');
 
     let width, height;
     let stars3D = [];
-    const numStars = 160;
+    let clouds = [];
+    const numStars = 150;
+    const numClouds = 5;
     let mouseX = 0, mouseY = 0;
     let targetMouseX = 0, targetMouseY = 0;
+    let currentIsDay = false;
 
     function init3DCanvas() {
       width = canvas3d.width = window.innerWidth;
       height = canvas3d.height = window.innerHeight;
+      
+     
       stars3D = [];
       for (let i = 0; i < numStars; i++) {
         stars3D.push({
@@ -278,9 +343,20 @@
           size: Math.random() * 2 + 1
         });
       }
+
+     
+      clouds = [];
+      for (let i = 0; i < numClouds; i++) {
+        clouds.push({
+          x: Math.random() * width,
+          y: Math.random() * (height * 0.4),
+          speed: Math.random() * 0.4 + 0.2,
+          scale: Math.random() * 0.6 + 0.7,
+          opacity: Math.random() * 0.3 + 0.2
+        });
+      }
     }
 
-    
     window.addEventListener('mousemove', (e) => {
       targetMouseX = (e.clientX - width / 2) * 0.08;
       targetMouseY = (e.clientY - height / 2) * 0.08;
@@ -293,12 +369,22 @@
       }
     });
 
-    let currentIsDay = false;
+    function drawCloud(x, y, scale, opacity) {
+      ctx3d.save();
+      ctx3d.fillStyle = currentIsDay ? `rgba(255, 255, 255, ${opacity})` : `rgba(148, 163, 184, ${opacity * 0.6})`;
+      ctx3d.beginPath();
+      ctx3d.arc(x, y, 30 * scale, 0, Math.PI * 2);
+      ctx3d.arc(x + 25 * scale, y - 10 * scale, 35 * scale, 0, Math.PI * 2);
+      ctx3d.arc(x + 55 * scale, y, 30 * scale, 0, Math.PI * 2);
+      ctx3d.arc(x + 25 * scale, y + 10 * scale, 25 * scale, 0, Math.PI * 2);
+      ctx3d.closePath();
+      ctx3d.fill();
+      ctx3d.restore();
+    }
 
     function render3D() {
       ctx3d.clearRect(0, 0, width, height);
 
-      
       mouseX += (targetMouseX - mouseX) * 0.05;
       mouseY += (targetMouseY - mouseY) * 0.05;
 
@@ -306,10 +392,11 @@
       const centerX = width / 2 + mouseX;
       const centerY = height / 2 + mouseY;
 
-      if (!currentIsDay) { // Bintang hanya digambar saat Malam/Subuh
+  
+      if (!currentIsDay) {
         ctx3d.fillStyle = '#ffffff';
         for (let star of stars3D) {
-          star.z -= 0.2; // Bintang bergerak lambat mendekati layar (efek 3D fly-through)
+          star.z -= 0.2;
           if (star.z <= 0) star.z = width;
 
           const k = fov / star.z;
@@ -325,6 +412,13 @@
             ctx3d.fill();
           }
         }
+      }
+
+      // 2. Gambar Awan Parallax Bergerak
+      for (let cloud of clouds) {
+        cloud.x += cloud.speed;
+        if (cloud.x - 100 > width) cloud.x = -150;
+        drawCloud(cloud.x + mouseX * 0.5, cloud.y + mouseY * 0.3, cloud.scale, cloud.opacity);
       }
 
       requestAnimationFrame(render3D);
@@ -402,11 +496,8 @@
       const screenWidth = window.innerWidth;
       const screenHeight = window.innerHeight;
 
-      
       const xPos = (0.15 + (Math.cos(Math.PI - angle) + 1) / 2 * 0.70) * screenWidth;
       const yPos = (0.78 - Math.sin(angle) * 0.62) * screenHeight;
-
-    
       const scale3D = 0.85 + Math.sin(angle) * 0.3;
 
       body.style.transform = `translate(${xPos}px, ${yPos}px) scale(${scale3D})`;
@@ -420,7 +511,7 @@
     setInterval(updateSky, 1000);
     updateSky();
 
-  
+
     const canvasRain = document.getElementById('weather-canvas');
     const ctxRain = canvasRain.getContext('2d');
     let isRaining = false;
@@ -442,7 +533,7 @@
           y: Math.random() * canvasRain.height,
           length: Math.random() * 22 + 12,
           speed: Math.random() * 14 + 16,
-          z: Math.random() * 2 + 0.5 // Efek kedalaman 3D hujan
+          z: Math.random() * 2 + 0.5
         });
       }
     }
@@ -471,42 +562,64 @@
     }
     renderRain();
 
-   
+  
+    async function getCityName(lat, lon) {
+      const cityEl = document.getElementById('city-name');
+      try {
+        const res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}`);
+        const data = await res.json();
+        const city = data.address.city || data.address.town || data.address.county || data.address.state || "Lokasi Anda";
+        cityEl.innerText = city;
+      } catch (err) {
+        cityEl.innerText = "Indonesia";
+      }
+    }
+
     async function getWeather(lat, lon) {
       const statusEl = document.getElementById('weather-status');
       try {
         const res = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true`);
         const data = await res.json();
         const code = data.current_weather.weathercode;
+        const temp = Math.round(data.current_weather.temperature);
 
         const rainCodes = [51, 53, 55, 56, 57, 61, 63, 65, 66, 67, 80, 81, 82];
         if (rainCodes.includes(code)) {
           isRaining = true;
           createRain();
-          statusEl.innerText = "Cuaca: Hujan 🌧️";
+          statusEl.innerText = `Cuaca: Hujan 🌧️ (${temp}°C)`;
         } else {
           isRaining = false;
-          statusEl.innerText = "Cuaca: Cerah / Berawan 🌤️";
+          statusEl.innerText = `Cuaca: Cerah / Berawan 🌤️ (${temp}°C)`;
         }
       } catch (err) {
-        statusEl.innerText = "Cuaca: Menggunakan estimasi lokal";
+        statusEl.innerText = "Cuaca: Estimasi lokal";
       }
     }
 
-    function initWeather() {
+    function initLocationAndWeather() {
       if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(
-          (pos) => getWeather(pos.coords.latitude, pos.coords.longitude),
-          () => getWeather(-6.2088, 106.8456),
+          (pos) => {
+            const lat = pos.coords.latitude;
+            const lon = pos.coords.longitude;
+            getCityName(lat, lon);
+            getWeather(lat, lon);
+          },
+          () => {
+            getCityName(-6.2088, 106.8456);
+            getWeather(-6.2088, 106.8456);
+          },
           { timeout: 5000 }
         );
       } else {
+        getCityName(-6.2088, 106.8456);
         getWeather(-6.2088, 106.8456);
       }
     }
 
-    initWeather();
-    setInterval(initWeather, 600000);
+    initLocationAndWeather();
+    setInterval(initLocationAndWeather, 600000);
 
    
     const gCanvas = document.getElementById('game-canvas');
@@ -514,12 +627,29 @@
     const grid = 15;
     let count = 0;
     let score = 0;
+    let highScore = localStorage.getItem('snake_high_score') || 0;
+    document.getElementById('high-score-val').innerText = highScore;
+
     let gameInterval;
+    let particles = [];
 
     let snake = { x: 150, y: 150, dx: grid, dy: 0, cells: [], maxCells: 4 };
     let apple = { x: 60, y: 60 };
 
     function getRandomInt(min, max) { return Math.floor(Math.random() * (max - min)) + min; }
+
+    function createExplosion(x, y) {
+      for (let i = 0; i < 12; i++) {
+        particles.push({
+          x: x + grid / 2,
+          y: y + grid / 2,
+          dx: (Math.random() - 0.5) * 6,
+          dy: (Math.random() - 0.5) * 6,
+          radius: Math.random() * 3 + 1,
+          alpha: 1
+        });
+      }
+    }
 
     function resetGame() {
       snake.x = 150; snake.y = 150; snake.cells = []; snake.maxCells = 4;
@@ -527,6 +657,7 @@
       document.getElementById('score-val').innerText = score;
       apple.x = getRandomInt(0, 20) * grid;
       apple.y = getRandomInt(0, 20) * grid;
+      particles = [];
     }
 
     function gameLoop() {
@@ -545,11 +676,25 @@
       snake.cells.unshift({ x: snake.x, y: snake.y });
       if (snake.cells.length > snake.maxCells) snake.cells.pop();
 
-    
+      
       gCtx.fillStyle = '#ef4444';
       gCtx.shadowBlur = 10;
       gCtx.shadowColor = '#ef4444';
       gCtx.fillRect(apple.x, apple.y, grid - 1, grid - 1);
+
+     
+      particles.forEach((p, index) => {
+        p.x += p.dx;
+        p.y += p.dy;
+        p.alpha -= 0.05;
+        if (p.alpha <= 0) particles.splice(index, 1);
+        else {
+          gCtx.fillStyle = `rgba(239, 68, 68, ${p.alpha})`;
+          gCtx.beginPath();
+          gCtx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+          gCtx.fill();
+        }
+      });
 
      
       gCtx.fillStyle = '#10b981';
@@ -557,21 +702,43 @@
       gCtx.shadowColor = '#10b981';
       snake.cells.forEach((cell, index) => {
         gCtx.fillRect(cell.x, cell.y, grid - 1, grid - 1);
+
+      
         if (cell.x === apple.x && cell.y === apple.y) {
           snake.maxCells++;
           score += 10;
           document.getElementById('score-val').innerText = score;
+
+          if (score > highScore) {
+            highScore = score;
+            localStorage.setItem('snake_high_score', highScore);
+            document.getElementById('high-score-val').innerText = highScore;
+          }
+
+          createExplosion(apple.x, apple.y);
+          playSound('eat');
+          triggerVibrate(30);
+
           apple.x = getRandomInt(0, 20) * grid;
           apple.y = getRandomInt(0, 20) * grid;
         }
+
+     
         for (let i = index + 1; i < snake.cells.length; i++) {
-          if (cell.x === snake.cells[i].x && cell.y === snake.cells[i].y) resetGame();
+          if (cell.x === snake.cells[i].x && cell.y === snake.cells[i].y) {
+            playSound('gameover');
+            triggerVibrate(200);
+            resetGame();
+          }
         }
       });
       gCtx.shadowBlur = 0;
     }
 
     function setDir(dir) {
+      initAudio();
+      playSound('click');
+      triggerVibrate(15);
       if (dir === 'LEFT' && snake.dx === 0) { snake.dx = -grid; snake.dy = 0; }
       else if (dir === 'UP' && snake.dy === 0) { snake.dy = -grid; snake.dx = 0; }
       else if (dir === 'RIGHT' && snake.dx === 0) { snake.dx = grid; snake.dy = 0; }
@@ -579,12 +746,15 @@
     }
 
     function openGame() {
+      initAudio();
+      playSound('click');
       document.getElementById('game-modal').style.display = 'flex';
       resetGame();
       requestAnimationFrame(gameLoop);
     }
 
     function closeGame() {
+      playSound('click');
       document.getElementById('game-modal').style.display = 'none';
       cancelAnimationFrame(gameInterval);
     }
