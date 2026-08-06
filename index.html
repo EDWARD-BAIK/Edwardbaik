@@ -26,7 +26,7 @@
       background: #020111;
     }
 
-    /* Bintang */
+    
     .star {
       position: absolute;
       background-color: #fff;
@@ -41,7 +41,7 @@
       50% { opacity: 1; }
     }
 
-    /* Matahari / Bulan */
+  
     #celestial-body {
       position: absolute;
       width: 76px;
@@ -55,7 +55,7 @@
       z-index: 2;
     }
 
-    /* Canvas Hujan */
+    
     #weather-canvas {
       position: absolute;
       top: 0;
@@ -66,7 +66,7 @@
       z-index: 10;
     }
 
-    /* Widget Info */
+   
     #info-card {
       position: absolute;
       top: 20px;
@@ -107,6 +107,110 @@
       margin-top: 8px;
       opacity: 0.85;
     }
+
+   
+    #game-btn {
+      position: absolute;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(255, 255, 255, 0.2);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.4);
+      color: #fff;
+      padding: 12px 28px;
+      border-radius: 30px;
+      font-size: 0.95rem;
+      font-weight: 700;
+      letter-spacing: 1px;
+      cursor: pointer;
+      z-index: 25;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+      transition: all 0.2s ease;
+    }
+
+    #game-btn:active {
+      transform: translateX(-50%) scale(0.95);
+      background: rgba(255, 255, 255, 0.35);
+    }
+
+    
+    #game-modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.85);
+      backdrop-filter: blur(10px);
+      z-index: 100;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+    }
+
+    .game-header {
+      width: 300px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+
+    .game-title {
+      font-weight: 800;
+      font-size: 1.2rem;
+    }
+
+    .close-btn {
+      background: #ff4757;
+      border: none;
+      color: white;
+      padding: 6px 14px;
+      border-radius: 8px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    #game-canvas {
+      background: #111827;
+      border: 2px solid rgba(255, 255, 255, 0.2);
+      border-radius: 12px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+    }
+
+    .game-controls {
+      margin-top: 15px;
+      display: grid;
+      grid-template-columns: repeat(3, 60px);
+      grid-template-rows: repeat(2, 50px);
+      gap: 8px;
+    }
+
+    .dpad-btn {
+      background: rgba(255, 255, 255, 0.15);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      color: white;
+      font-size: 1.3rem;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .dpad-btn:active {
+      background: rgba(255, 255, 255, 0.4);
+    }
+
+    .d-up { grid-column: 2; grid-row: 1; }
+    .d-left { grid-column: 1; grid-row: 2; }
+    .d-down { grid-column: 2; grid-row: 2; }
+    .d-right { grid-column: 3; grid-row: 2; }
   </style>
 </head>
 <body>
@@ -121,10 +225,34 @@
       <div id="phase-tag">MEMUAT...</div>
       <div id="weather-status">Mencari lokasi cuaca...</div>
     </div>
+
+    
+    <button id="game-btn" onclick="openGame()">MAINKAN GAME</button>
+  </div>
+
+  
+  <div id="game-modal">
+    <div class="game-header">
+      <div>
+        <div class="game-title">GAME ULAR</div>
+        <div style="font-size: 0.85rem; opacity: 0.8;">Skor: <span id="score-val">0</span></div>
+      </div>
+      <button class="close-btn" onclick="closeGame()">Tutup (X)</button>
+    </div>
+
+    <canvas id="game-canvas" width="300" height="300"></canvas>
+
+   
+    <div class="game-controls">
+      <div class="dpad-btn d-up" onclick="setDir('UP')">▲</div>
+      <div class="dpad-btn d-left" onclick="setDir('LEFT')">◀</div>
+      <div class="dpad-btn d-down" onclick="setDir('DOWN')">▼</div>
+      <div class="dpad-btn d-right" onclick="setDir('RIGHT')">▶</div>
+    </div>
   </div>
 
   <script>
-    
+ 
     const starsContainer = document.getElementById('stars-container');
     for (let i = 0; i < 120; i++) {
       const star = document.createElement('div');
@@ -138,7 +266,7 @@
       starsContainer.appendChild(star);
     }
 
-   
+    
     function updateSky() {
       const now = new Date();
       const h = now.getHours();
@@ -147,7 +275,6 @@
 
       const totalMinutes = h * 60 + m;
       
-      // Update Display Jam
       document.getElementById('time-display').innerText = 
         `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
 
@@ -161,15 +288,13 @@
       let angle = 0;
 
       if (totalMinutes >= 270 && totalMinutes < 360) { 
-        // 04:30 - 06:00 (Subuh / Fajar)
         phaseText = "🌅 Subuh / Fajar";
-        isDay = false; // Bintang masih samar
+        isDay = false;
         angle = ((totalMinutes - 270) / 90) * (Math.PI * 0.15);
         sky.style.background = 'linear-gradient(to bottom, #0f172a, #581c87, #c2410c, #f97316)';
         setBodyStyle(body, '#ff5722', '0 0 35px #ff5722, 0 0 70px #f97316');
 
       } else if (totalMinutes >= 360 && totalMinutes < 660) { 
-        // 06:00 - 11:00 (Pagi)
         phaseText = "🌤️ Pagi";
         isDay = true;
         angle = (Math.PI * 0.15) + ((totalMinutes - 360) / 300) * (Math.PI * 0.35);
@@ -177,7 +302,6 @@
         setBodyStyle(body, '#fff176', '0 0 50px #ffeb3b, 0 0 90px #fbc02d');
 
       } else if (totalMinutes >= 660 && totalMinutes < 900) { 
-        // 11:00 - 15:00 (Siang)
         phaseText = "☀️ Siang";
         isDay = true;
         angle = (Math.PI * 0.5) + ((totalMinutes - 660) / 240) * (Math.PI * 0.2);
@@ -185,7 +309,6 @@
         setBodyStyle(body, '#ffffff', '0 0 60px #ffffff, 0 0 100px #81d4fa');
 
       } else if (totalMinutes >= 900 && totalMinutes < 1050) { 
-        // 15:00 - 17:30 (Sore)
         phaseText = "🌤️ Sore";
         isDay = true;
         angle = (Math.PI * 0.7) + ((totalMinutes - 900) / 150) * (Math.PI * 0.18);
@@ -193,7 +316,6 @@
         setBodyStyle(body, '#ff9800', '0 0 45px #ff9800, 0 0 80px #f57c00');
 
       } else if (totalMinutes >= 1050 && totalMinutes < 1110) { 
-        // 17:30 - 18:30 (Senja / Terbenam)
         phaseText = "🌆 Senja / Terbenam";
         isDay = true;
         angle = (Math.PI * 0.88) + ((totalMinutes - 1050) / 60) * (Math.PI * 0.12);
@@ -201,13 +323,10 @@
         setBodyStyle(body, '#ff3d00', '0 0 40px #ff3d00, 0 0 80px #dd2c00, 0 0 120px #ff6e40');
 
       } else { 
-        // 18:30 - 04:30 (Malam)
         phaseText = "🌙 Malam";
         isDay = false;
-        
         let nightMinutes = totalMinutes >= 1110 ? totalMinutes - 1110 : totalMinutes + 330;
         angle = (nightMinutes / 600) * Math.PI;
-        
         sky.style.background = 'linear-gradient(to bottom, #020111 0%, #050b14 60%, #101728 100%)';
         setBodyStyle(body, '#f1f5f9', '0 0 25px rgba(241, 245, 249, 0.9), 0 0 50px rgba(148, 163, 184, 0.4)');
       }
@@ -222,13 +341,8 @@
 
       body.style.transform = `translate(${xPos}px, ${yPos}px)`;
 
-      // BINTANG HANYA MUNCUL SAAT MALAM / SUBUH SEBELUM JAM 06:00
       stars.forEach(st => {
-        if (!isDay) {
-          st.style.opacity = Math.random();
-        } else {
-          st.style.opacity = '0';
-        }
+        st.style.opacity = !isDay ? Math.random() : '0';
       });
     }
 
@@ -240,7 +354,7 @@
     setInterval(updateSky, 1000);
     updateSky();
 
-   
+ 
     const canvas = document.getElementById('weather-canvas');
     const ctx = canvas.getContext('2d');
     let isRaining = false;
@@ -290,7 +404,7 @@
     }
     renderRain();
 
-   
+  
     async function getWeather(lat, lon) {
       const statusEl = document.getElementById('weather-status');
       try {
@@ -326,6 +440,111 @@
 
     initWeather();
     setInterval(initWeather, 600000);
+
+    
+    const gCanvas = document.getElementById('game-canvas');
+    const gCtx = gCanvas.getContext('2d');
+    const grid = 15;
+    let count = 0;
+    let score = 0;
+    let gameInterval;
+
+    let snake = {
+      x: 150,
+      y: 150,
+      dx: grid,
+      dy: 0,
+      cells: [],
+      maxCells: 4
+    };
+
+    let apple = { x: 60, y: 60 };
+
+    function getRandomInt(min, max) {
+      return Math.floor(Math.random() * (max - min)) + min;
+    }
+
+    function resetGame() {
+      snake.x = 150;
+      snake.y = 150;
+      snake.cells = [];
+      snake.maxCells = 4;
+      snake.dx = grid;
+      snake.dy = 0;
+      score = 0;
+      document.getElementById('score-val').innerText = score;
+      apple.x = getRandomInt(0, 20) * grid;
+      apple.y = getRandomInt(0, 20) * grid;
+    }
+
+    function gameLoop() {
+      gameInterval = requestAnimationFrame(gameLoop);
+
+      if (++count < 6) return;
+      count = 0;
+
+      gCtx.clearRect(0, 0, gCanvas.width, gCanvas.height);
+
+      snake.x += snake.dx;
+      snake.y += snake.dy;
+
+     
+      if (snake.x < 0) snake.x = gCanvas.width - grid;
+      else if (snake.x >= gCanvas.width) snake.x = 0;
+      
+      if (snake.y < 0) snake.y = gCanvas.height - grid;
+      else if (snake.y >= gCanvas.height) snake.y = 0;
+
+      snake.cells.unshift({ x: snake.x, y: snake.y });
+
+      if (snake.cells.length > snake.maxCells) {
+        snake.cells.pop();
+      }
+
+      
+      gCtx.fillStyle = '#ef4444';
+      gCtx.fillRect(apple.x, apple.y, grid - 1, grid - 1);
+
+      
+      gCtx.fillStyle = '#10b981';
+      snake.cells.forEach((cell, index) => {
+        gCtx.fillRect(cell.x, cell.y, grid - 1, grid - 1);
+
+        
+        if (cell.x === apple.x && cell.y === apple.y) {
+          snake.maxCells++;
+          score += 10;
+          document.getElementById('score-val').innerText = score;
+          apple.x = getRandomInt(0, 20) * grid;
+          apple.y = getRandomInt(0, 20) * grid;
+        }
+
+      
+        for (let i = index + 1; i < snake.cells.length; i++) {
+          if (cell.x === snake.cells[i].x && cell.y === snake.cells[i].y) {
+            resetGame();
+          }
+        }
+      });
+    }
+
+    function setDir(dir) {
+      if (dir === 'LEFT' && snake.dx === 0) { snake.dx = -grid; snake.dy = 0; }
+      else if (dir === 'UP' && snake.dy === 0) { snake.dy = -grid; snake.dx = 0; }
+      else if (dir === 'RIGHT' && snake.dx === 0) { snake.dx = grid; snake.dy = 0; }
+      else if (dir === 'DOWN' && snake.dy === 0) { snake.dy = grid; snake.dx = 0; }
+    }
+
+    function openGame() {
+      document.getElementById('game-modal').style.display = 'flex';
+      resetGame();
+      requestAnimationFrame(gameLoop);
+    }
+
+    function closeGame() {
+      document.getElementById('game-modal').style.display = 'none';
+      cancelAnimationFrame(gameInterval);
+    }
   </script>
 </body>
 </html>
