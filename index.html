@@ -549,30 +549,40 @@
     renderRain();
 
     
+   
     async function getWeather(lat, lon) {
       const statusEl = document.getElementById('weather-status');
       try {
-        const res = await fetch(`https://api.weatherapi.com/v1/current.json?key=800e008df349479b9a2123514241804&q=${lat},${lon}&lang=id`);
+        
+        const res = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true`);
         if (!res.ok) throw new Error('Network error');
         
         const data = await res.json();
+        const temp = Math.round(data.current_weather.temperature);
+        const code = data.current_weather.weathercode;
+
+        :
+        // 51, 53, 55 = Drizzle (Gerimis)
+        // 61, 63, 65 = Rain (Hujan)
+        // 80, 81, 82 = Rain Showers (Hujan Deras)
+        // 95, 96, 99 = Thunderstorm (Badai / Petir)
+        const rainCodes = [51, 53, 55, 56, 57, 61, 63, 65, 66, 67, 80, 81, 82, 95, 96, 99];
         
-        const temp = Math.round(data.current.temp_c);
-        const conditionText = data.current.condition.text.toLowerCase();
-
-        const rainKeywords = ['hujan', 'rain', 'thunderstorm', 'shower', 'drizzle', 'badai', 'presipitasi'];
-        const isRainNow = rainKeywords.some(keyword => conditionText.includes(keyword));
-
-        if (isRainNow) {
+        if (rainCodes.includes(code)) {
           isRaining = true;
           createRain();
-          statusEl.innerText = `Cuaca: ${data.current.condition.text} 🌧️ (${temp}°C)`;
+          statusEl.innerText = `Cuaca: Hujan 🌧️ (${temp}°C)`;
+        } else if (code === 0) {
+          isRaining = false;
+          statusEl.innerText = `Cuaca: Cerah ☀️ (${temp}°C)`;
+        } else if ([1, 2, 3].includes(code)) {
+          isRaining = false;
+          statusEl.innerText = `Cuaca: Berawan 🌤️ (${temp}°C)`;
         } else {
           isRaining = false;
-          statusEl.innerText = `Cuaca: ${data.current.condition.text} 🌤️ (${temp}°C)`;
+          statusEl.innerText = `Cuaca: Berkabut / Normal 🌫️ (${temp}°C)`;
         }
       } catch (err) {
-        
         isRaining = false;
         statusEl.innerText = "Gagal memuat cuaca real-time ⚠️";
       }
@@ -586,6 +596,7 @@
         navigator.geolocation.getCurrentPosition(
           (pos) => getWeather(pos.coords.latitude, pos.coords.longitude),
           () => {
+            
             fetch('https://ipapi.co/json/')
               .then(res => res.json())
               .then(data => getWeather(data.latitude, data.longitude))
@@ -602,7 +613,7 @@
     }
 
     initWeather();
-    setInterval(initWeather, 300000); // Sinkronkan cuaca otomatis tiap 5 menit
+    setInterval(initWeather, 300000); // Re-fetch tiap 5 menit
 
     
     const gCanvas = document.getElementById('game-canvas');
