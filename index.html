@@ -552,53 +552,57 @@
     async function getWeather(lat, lon) {
       const statusEl = document.getElementById('weather-status');
       try {
-        
         const res = await fetch(`https://api.weatherapi.com/v1/current.json?key=800e008df349479b9a2123514241804&q=${lat},${lon}&lang=id`);
+        if (!res.ok) throw new Error('Network error');
+        
         const data = await res.json();
         
         const temp = Math.round(data.current.temp_c);
         const conditionText = data.current.condition.text.toLowerCase();
-        const code = data.current.condition.code;
 
-        
-        const rainKeywords = ['hujan', 'rain', 'thunderstorm', 'shower', 'drizzle', 'badai'];
+        const rainKeywords = ['hujan', 'rain', 'thunderstorm', 'shower', 'drizzle', 'badai', 'presipitasi'];
         const isRainNow = rainKeywords.some(keyword => conditionText.includes(keyword));
 
         if (isRainNow) {
           isRaining = true;
           createRain();
-          statusEl.innerText = `Cuaca: Hujan 🌧️ (${temp}°C)`;
+          statusEl.innerText = `Cuaca: ${data.current.condition.text} 🌧️ (${temp}°C)`;
         } else {
           isRaining = false;
           statusEl.innerText = `Cuaca: ${data.current.condition.text} 🌤️ (${temp}°C)`;
         }
       } catch (err) {
-        // Fallback jika fetch gagal
-        statusEl.innerText = "Cuaca: Cerah / Berawan 🌤️ (30°C)";
+        
         isRaining = false;
+        statusEl.innerText = "Gagal memuat cuaca real-time ⚠️";
       }
     }
 
     function initWeather() {
+      const statusEl = document.getElementById('weather-status');
+      statusEl.innerText = "Mengecek cuaca real-time...";
+
       if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(
           (pos) => getWeather(pos.coords.latitude, pos.coords.longitude),
           () => {
-            // Jika user tidak izinkan GPS, pakai IP Geolocation otomatis
             fetch('https://ipapi.co/json/')
               .then(res => res.json())
               .then(data => getWeather(data.latitude, data.longitude))
-              .catch(() => getWeather(-6.2088, 106.8456));
+              .catch(() => {
+                statusEl.innerText = "Akses lokasi ditolak ⚠️";
+                isRaining = false;
+              });
           },
           { timeout: 8000 }
         );
       } else {
-        getWeather(-6.2088, 106.8456);
+        statusEl.innerText = "GPS tidak didukung ⚠️";
       }
     }
 
     initWeather();
-    setInterval(initWeather, 300000); // Re-fetch cuaca otomatis tiap 5 menit
+    setInterval(initWeather, 300000); // Sinkronkan cuaca otomatis tiap 5 menit
 
     
     const gCanvas = document.getElementById('game-canvas');
@@ -709,15 +713,39 @@
       gCtx.shadowBlur = 0;
     }
 
+    
     function setDir(dir) {
       initAudio();
       playSound('click');
       triggerVibrate(15);
-      if (dir === 'LEFT' && snake.dx === 0) { snake.dx = -grid; snake.dy = 0; }
-      else if (dir === 'UP' && snake.dy === 0) { snake.dy = -grid; snake.dx = 0; }
-      else if (dir === 'RIGHT' && snake.dx === 0) { snake.dx = grid; snake.dy = 0; }
-      else if (dir === 'DOWN' && snake.dy === 0) { snake.dy = bg = 0; snake.dx = 0; }
+
+      if (dir === 'LEFT' && snake.dx === 0) { 
+        snake.dx = -grid; 
+        snake.dy = 0; 
+      }
+      else if (dir === 'UP' && snake.dy === 0) { 
+        snake.dy = -grid; 
+        snake.dx = 0; 
+      }
+      else if (dir === 'RIGHT' && snake.dx === 0) { 
+        snake.dx = grid; 
+        snake.dy = 0; 
+      }
+      else if (dir === 'DOWN' && snake.dy === 0) { 
+        snake.dy = grid; // FULL FIX dari typo bg=0
+        snake.dx = 0; 
+      }
     }
+
+    
+    window.addEventListener('keydown', function(e) {
+      if (document.getElementById('game-modal').style.display === 'flex') {
+        if (e.key === 'ArrowLeft') setDir('LEFT');
+        else if (e.key === 'ArrowUp') setDir('UP');
+        else if (e.key === 'ArrowRight') setDir('RIGHT');
+        else if (e.key === 'ArrowDown') setDir('DOWN');
+      }
+    });
 
     function openGame() {
       initAudio();
