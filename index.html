@@ -562,10 +562,7 @@
         const code = data.current_weather.weathercode;
 
         :
-        // 51, 53, 55 = Drizzle (Gerimis)
-        // 61, 63, 65 = Rain (Hujan)
-        // 80, 81, 82 = Rain Showers (Hujan Deras)
-        // 95, 96, 99 = Thunderstorm (Badai / Petir)
+        
         const rainCodes = [51, 53, 55, 56, 57, 61, 63, 65, 66, 67, 80, 81, 82, 95, 96, 99];
         
         if (rainCodes.includes(code)) {
