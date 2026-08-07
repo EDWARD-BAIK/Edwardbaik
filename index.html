@@ -26,7 +26,7 @@
       transition: background 1.5s ease;
     }
 
-  
+    
     #canvas-3d {
       position: absolute;
       top: 0;
@@ -36,7 +36,7 @@
       z-index: 1;
     }
 
- 
+    
     #weather-canvas {
       position: absolute;
       top: 0;
@@ -47,7 +47,7 @@
       z-index: 10;
     }
 
-   
+    
     #celestial-body {
       position: absolute;
       width: 80px;
@@ -63,7 +63,7 @@
       perspective: 1000px;
     }
 
-  
+    
     #info-card {
       position: absolute;
       top: 20px;
@@ -107,7 +107,7 @@
       opacity: 0.9;
     }
 
-   
+    
     #game-btn {
       position: absolute;
       bottom: 28px;
@@ -229,7 +229,7 @@
     <div id="info-card">
       <div id="time-display">00:00:00</div>
       <div id="phase-tag">MEMUAT...</div>
-      <div id="weather-status">Mengambil data cuaca...</div>
+      <div id="weather-status">Mengecek cuaca...</div>
     </div>
 
     <button id="game-btn" onclick="openGame()">MAINKAN GAME</button>
@@ -239,7 +239,7 @@
   <div id="game-modal">
     <div class="game-header">
       <div>
-        <div class="game-title">GAME ULAR @Edward</div>
+        <div class="game-title">GAME ULAR @EDWARD</div>
         <div style="font-size: 0.85rem; opacity: 0.9;">
           Skor: <span id="score-val" style="color:#10b981; font-weight:bold;">0</span> | 
           Tertinggi: <span id="high-score-val" style="color:#f59e0b; font-weight:bold;">0</span>
@@ -323,7 +323,6 @@
       width = canvas3d.width = window.innerWidth;
       height = canvas3d.height = window.innerHeight;
       
-    
       stars3D = [];
       for (let i = 0; i < numStars; i++) {
         stars3D.push({
@@ -334,7 +333,6 @@
         });
       }
 
-    
       clouds = [];
       for (let i = 0; i < numClouds; i++) {
         clouds.push({
@@ -382,7 +380,6 @@
       const centerX = width / 2 + mouseX;
       const centerY = height / 2 + mouseY;
 
-     
       if (!currentIsDay) {
         ctx3d.fillStyle = '#ffffff';
         for (let star of stars3D) {
@@ -404,7 +401,6 @@
         }
       }
 
-   
       for (let cloud of clouds) {
         cloud.x += cloud.speed;
         if (cloud.x - 100 > width) cloud.x = -150;
@@ -418,7 +414,7 @@
     init3DCanvas();
     render3D();
 
-  
+    
     function updateSky() {
       const now = new Date();
       const h = now.getHours();
@@ -501,7 +497,7 @@
     setInterval(updateSky, 1000);
     updateSky();
 
-
+    
     const canvasRain = document.getElementById('weather-canvas');
     const ctxRain = canvasRain.getContext('2d');
     let isRaining = false;
@@ -552,26 +548,34 @@
     }
     renderRain();
 
- 
+    
     async function getWeather(lat, lon) {
       const statusEl = document.getElementById('weather-status');
       try {
-        const res = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true`);
+        
+        const res = await fetch(`https://api.weatherapi.com/v1/current.json?key=800e008df349479b9a2123514241804&q=${lat},${lon}&lang=id`);
         const data = await res.json();
-        const code = data.current_weather.weathercode;
-        const temp = Math.round(data.current_weather.temperature);
+        
+        const temp = Math.round(data.current.temp_c);
+        const conditionText = data.current.condition.text.toLowerCase();
+        const code = data.current.condition.code;
 
-        const rainCodes = [51, 53, 55, 56, 57, 61, 63, 65, 66, 67, 80, 81, 82];
-        if (rainCodes.includes(code)) {
+        
+        const rainKeywords = ['hujan', 'rain', 'thunderstorm', 'shower', 'drizzle', 'badai'];
+        const isRainNow = rainKeywords.some(keyword => conditionText.includes(keyword));
+
+        if (isRainNow) {
           isRaining = true;
           createRain();
           statusEl.innerText = `Cuaca: Hujan 🌧️ (${temp}°C)`;
         } else {
           isRaining = false;
-          statusEl.innerText = `Cuaca: Cerah / Berawan 🌤️ (${temp}°C)`;
+          statusEl.innerText = `Cuaca: ${data.current.condition.text} 🌤️ (${temp}°C)`;
         }
       } catch (err) {
-        statusEl.innerText = "Cuaca: Cerah / Berawan 🌤️";
+        // Fallback jika fetch gagal
+        statusEl.innerText = "Cuaca: Cerah / Berawan 🌤️ (30°C)";
+        isRaining = false;
       }
     }
 
@@ -579,8 +583,14 @@
       if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(
           (pos) => getWeather(pos.coords.latitude, pos.coords.longitude),
-          () => getWeather(-6.2088, 106.8456),
-          { timeout: 5000 }
+          () => {
+            // Jika user tidak izinkan GPS, pakai IP Geolocation otomatis
+            fetch('https://ipapi.co/json/')
+              .then(res => res.json())
+              .then(data => getWeather(data.latitude, data.longitude))
+              .catch(() => getWeather(-6.2088, 106.8456));
+          },
+          { timeout: 8000 }
         );
       } else {
         getWeather(-6.2088, 106.8456);
@@ -588,9 +598,9 @@
     }
 
     initWeather();
-    setInterval(initWeather, 600000);
+    setInterval(initWeather, 300000); // Re-fetch cuaca otomatis tiap 5 menit
 
-  
+    
     const gCanvas = document.getElementById('game-canvas');
     const gCtx = gCanvas.getContext('2d');
     const grid = 15;
@@ -645,13 +655,11 @@
       snake.cells.unshift({ x: snake.x, y: snake.y });
       if (snake.cells.length > snake.maxCells) snake.cells.pop();
 
-    
       gCtx.fillStyle = '#ef4444';
       gCtx.shadowBlur = 10;
       gCtx.shadowColor = '#ef4444';
       gCtx.fillRect(apple.x, apple.y, grid - 1, grid - 1);
 
-     
       particles.forEach((p, index) => {
         p.x += p.dx;
         p.y += p.dy;
@@ -665,14 +673,12 @@
         }
       });
 
-    
       gCtx.fillStyle = '#10b981';
       gCtx.shadowBlur = 6;
       gCtx.shadowColor = '#10b981';
       snake.cells.forEach((cell, index) => {
         gCtx.fillRect(cell.x, cell.y, grid - 1, grid - 1);
 
-        
         if (cell.x === apple.x && cell.y === apple.y) {
           snake.maxCells++;
           score += 10;
@@ -692,7 +698,6 @@
           apple.y = getRandomInt(0, 20) * grid;
         }
 
-      
         for (let i = index + 1; i < snake.cells.length; i++) {
           if (cell.x === snake.cells[i].x && cell.y === snake.cells[i].y) {
             playSound('gameover');
@@ -711,7 +716,7 @@
       if (dir === 'LEFT' && snake.dx === 0) { snake.dx = -grid; snake.dy = 0; }
       else if (dir === 'UP' && snake.dy === 0) { snake.dy = -grid; snake.dx = 0; }
       else if (dir === 'RIGHT' && snake.dx === 0) { snake.dx = grid; snake.dy = 0; }
-      else if (dir === 'DOWN' && snake.dy === 0) { snake.dy = grid; snake.dx = 0; }
+      else if (dir === 'DOWN' && snake.dy === 0) { snake.dy = bg = 0; snake.dx = 0; }
     }
 
     function openGame() {
