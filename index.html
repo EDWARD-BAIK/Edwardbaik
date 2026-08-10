@@ -1,408 +1,336 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>CEK HP</title>
-  <style>
-    :root {
-      --bg-color: #0f172a;
-      --card-bg: #1e293b;
-      --text-color: #f8fafc;
-      --text-muted: #94a3b8;
-      --accent-color: #38bdf8;
-      --success-color: #22c55e;
-      --warning-color: #eab308;
-      --danger-color: #ef4444;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Berita<title>
+    <style>
+        :root {
+            --bg-color: #0b0e14;
+            --card-bg: #151a23;
+            --border-color: #222a38;
+            --accent-red: #ff3b5c;
+            --accent-green: #00e676;
+            --text-main: #f1f5f9;
+            --text-sub: #94a3b8;
+        }
 
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-    }
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
 
-    body {
-      background-color: var(--bg-color);
-      color: var(--text-color);
-      padding: 20px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      min-height: 100vh;
-    }
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
 
-    h1 {
-      margin-bottom: 8px;
-      font-size: 1.8rem;
-      text-align: center;
-      color: var(--accent-color);
-    }
+      
+        header {
+            background-color: var(--card-bg);
+            border-bottom: 1px solid var(--border-color);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
 
-    p.subtitle {
-      color: var(--text-muted);
-      margin-bottom: 24px;
-      font-size: 0.9rem;
-      text-align: center;
-    }
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-weight: 800;
+            font-size: 1.2rem;
+            letter-spacing: 0.5px;
+        }
 
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 16px;
-      width: 100%;
-      max-width: 900px;
-    }
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.75rem;
+            background: rgba(0, 230, 118, 0.1);
+            color: var(--accent-green);
+            padding: 4px 8px;
+            border-radius: 4px;
+            border: 1px solid rgba(0, 230, 118, 0.2);
+        }
 
-    .card {
-      background: var(--card-bg);
-      border-radius: 12px;
-      padding: 18px;
-      border: 1px solid #334155;
-      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2);
-    }
+        .dot {
+            width: 8px;
+            height: 8px;
+            background-color: var(--accent-green);
+            border-radius: 50%;
+            box-shadow: 0 0 8px var(--accent-green);
+        }
 
-    .card h2 {
-      font-size: 1.1rem;
-      margin-bottom: 12px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      border-bottom: 1px solid #334155;
-      padding-bottom: 8px;
-    }
+        
+        .category-bar {
+            background-color: var(--bg-color);
+            border-bottom: 1px solid var(--border-color);
+            padding: 0.8rem 2rem;
+            display: flex;
+            gap: 10px;
+            overflow-x: auto;
+        }
 
-    .info-row {
-      display: flex;
-      justify-content: space-between;
-      margin-bottom: 10px;
-      font-size: 0.95rem;
-    }
+        .category-btn {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            color: var(--text-sub);
+            padding: 6px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            white-space: nowrap;
+            transition: all 0.2s;
+        }
 
-    .info-row:last-child {
-      margin-bottom: 0;
-    }
+        .category-btn:hover, .category-btn.active {
+            background: var(--accent-red);
+            color: #fff;
+            border-color: var(--accent-red);
+        }
 
-    .label {
-      color: var(--text-muted);
-    }
+      
+        main {
+            padding: 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+            width: 100%;
+            flex: 1;
+        }
 
-    .value {
-      font-weight: 600;
-      text-align: right;
-    }
+        .news-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 1.5rem;
+        }
 
-    /* Battery Progress Bar */
-    .battery-bar-container {
-      width: 100%;
-      height: 16px;
-      background-color: #334155;
-      border-radius: 8px;
-      overflow: hidden;
-      margin: 12px 0;
-    }
+       
+        .card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.2s, border-color 0.2s;
+        }
 
-    .battery-bar {
-      height: 100%;
-      width: 0%;
-      background-color: var(--success-color);
-      transition: width 0.4s ease, background-color 0.4s ease;
-    }
+        .card:hover {
+            transform: translateY(-4px);
+            border-color: #334155;
+        }
 
-    .badge {
-      padding: 2px 8px;
-      border-radius: 4px;
-      font-size: 0.8rem;
-      font-weight: bold;
-    }
+        .card-img {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+            background-color: #0f172a;
+        }
 
-    .badge-online { background: #166534; color: #4ade80; }
-    .badge-offline { background: #991b1b; color: #fca5a5; }
-  </style>
+        .card-body {
+            padding: 1.2rem;
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+        }
+
+        .card-meta {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.75rem;
+            color: var(--text-sub);
+            margin-bottom: 0.6rem;
+        }
+
+        .card-source {
+            color: var(--accent-red);
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .card-title {
+            color: var(--text-main);
+            font-size: 1rem;
+            font-weight: 600;
+            line-height: 1.4;
+            text-decoration: none;
+            margin-bottom: 0.8rem;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .card-title:hover {
+            color: var(--accent-red);
+        }
+
+        .card-desc {
+            font-size: 0.85rem;
+            color: var(--text-sub);
+            line-height: 1.5;
+            margin-bottom: 1rem;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            flex: 1;
+        }
+
+        .card-footer {
+            border-top: 1px solid var(--border-color);
+            padding-top: 0.8rem;
+            font-size: 0.75rem;
+            color: var(--text-sub);
+        }
+
+       
+        .state-container {
+            text-align: center;
+            padding: 4rem 1rem;
+            color: var(--text-sub);
+            grid-column: 1 / -1;
+        }
+
+        footer {
+            text-align: center;
+            padding: 1.5rem;
+            border-top: 1px solid var(--border-color);
+            color: var(--text-sub);
+            font-size: 0.8rem;
+        }
+    </style>
 </head>
 <body>
 
-  <h1>CEK HP</h1>
-  <p class="subtitle">Memantau spesifikasi dan status perangkat Anda secara langsung</p>
+    <header>
+        <div class="brand">
+           
+            <div class="status-badge">
+                <div class="dot"></div>
+                <span>CONNECTED</span>
+            </div>
+        </div>
+        <div id="sync-time" style="font-size: 0.8rem; color: var(--text-sub);">Memuat data...</div>
+    </header>
 
-  <div class="grid">
-    <!-- Card Baterai Real-time -->
-    <div class="card">
-      <h2>Status Baterai</h2>
-      <div class="info-row">
-        <span class="label">Persentase</span>
-        <span class="value" id="bat-level">Mengambil data...</span>
-      </div>
-      <div class="battery-bar-container">
-        <div class="battery-bar" id="bat-bar"></div>
-      </div>
-      <div class="info-row">
-        <span class="label">Status Pengisian</span>
-        <span class="value" id="bat-status">-</span>
-      </div>
-      <div class="info-row">
-        <span class="label">Waktu Penuh</span>
-        <span class="value" id="bat-charge-time">-</span>
-      </div>
-    </div>
-
-    <!-- Card Perangkat & Sistem -->
-    <div class="card">
-      <h2>Detail HP</h2>
-      <div class="info-row">
-        <span class="label">Model HP / Hardware</span>
-        <span class="value" id="dev-model">Mendeteksi...</span>
-      </div>
-      <div class="info-row">
-        <span class="label">Sistem Operasi</span>
-        <span class="value" id="dev-os">Mendeteksi...</span>
-      </div>
-      <div class="info-row">
-        <span class="label">Versi Android/OS</span>
-        <span class="value" id="dev-os-ver">Mendeteksi...</span>
-      </div>
-      <div class="info-row">
-        <span class="label">Browser</span>
-        <span class="value" id="dev-browser">Mendeteksi...</span>
-      </div>
-    </div>
-
-    <!-- Card Hardware & Performa -->
-    <div class="card">
-      <h2>Hardware Perangkat</h2>
-      <div class="info-row">
-        <span class="label">Jumlah Core CPU</span>
-        <span class="value" id="hw-cpu">-</span>
-      </div>
-      <div class="info-row">
-        <span class="label">Estimasi RAM</span>
-        <span class="value" id="hw-ram">-</span>
-      </div>
-      <div class="info-row">
-        <span class="label">Renderer GPU</span>
-        <span class="value" id="hw-gpu">Mendeteksi...</span>
-      </div>
-      <div class="info-row">
-        <span class="label">Layar & Touch</span>
-        <span class="value" id="hw-touch">-</span>
-      </div>
-    </div>
-
-    <!-- Card Koneksi & Layar Real-time -->
-    <div class="card">
-      <h2>Koneksi dan Layar</h2>
-      <div class="info-row">
-        <span class="label">Status Internet</span>
-        <span class="value" id="net-status">-</span>
-      </div>
-      <div class="info-row">
-        <span class="label">Tipe Jaringan</span>
-        <span class="value" id="net-type">-</span>
-      </div>
-      <div class="info-row">
-        <span class="label">Resolusi Layar</span>
-        <span class="value" id="screen-res">-</span>
-      </div>
-      <div class="info-row">
-        <span class="label">Orientasi Layar</span>
-        <span class="value" id="screen-orient">-</span>
-      </div>
-    </div>
-  </div>
-
-  <script>
     
-    async function initBattery() {
-      if ('getBattery' in navigator) {
-        try {
-          const battery = await navigator.getBattery();
+    <nav class="category-bar">
+        <button class="category-btn active" onclick="filterCategory('top', this)">Top News</button>
+        <button class="category-btn" onclick="filterCategory('technology', this)">Teknologi</button>
+        <button class="category-btn" onclick="filterCategory('business', this)">Bisnis</button>
+        <button class="category-btn" onclick="filterCategory('sports', this)">Olahraga</button>
+        <button class="category-btn" onclick="filterCategory('entertainment', this)">Hiburan</button>
+    </nav>
 
-          function updateBatteryInfo() {
-            const level = Math.round(battery.level * 100);
-            const isCharging = battery.charging;
+    <main>
+        <div class="news-grid" id="news-container">
+            <div class="state-container">Mengambil data berita terbaru....</div>
+        </div>
+    </main>
 
-            document.getElementById('bat-level').innerText = level + '%';
-            document.getElementById('bat-status').innerText = isCharging ? 'Mengisi Daya (Charging)' : 'Tidak Diisi Daya';
+    <footer>
+        @Edward
+    </footer>
 
-            const batBar = document.getElementById('bat-bar');
-            batBar.style.width = level + '%';
-            
-            if (level <= 20) {
-              batBar.style.backgroundColor = 'var(--danger-color)';
-            } else if (level <= 50) {
-              batBar.style.backgroundColor = 'var(--warning-color)';
-            } else {
-              batBar.style.backgroundColor = 'var(--success-color)';
+    <script>
+      
+        const API_KEY = 'pub_beae432af9b04f2ea77803f34d6634e2';
+        const BASE_URL = 'https://newsdata.io/api/1/latest';
+        
+        let currentCategory = 'top';
+
+        async function fetchNews(category = 'top') {
+            const container = document.getElementById('news-container');
+            const syncTime = document.getElementById('sync-time');
+
+          
+            const url = `${BASE_URL}?apikey=${API_KEY}&language=id&category=${category}`;
+
+            try {
+                syncTime.textContent = 'Memperbarui...';
+                
+                const response = await fetch(url);
+                const data = await response.json();
+
+                if (data.status === 'success' && data.results && data.results.length > 0) {
+                    renderArticles(data.results);
+                    syncTime.textContent = `Terakhir Sync: ${new Date().toLocaleTimeString('id-ID')} WIB`;
+                } else if (data.results && data.results.length === 0) {
+                    container.innerHTML = `<div class="state-container">Tidak ada berita ditemukan untuk kategori ini.</div>`;
+                    syncTime.textContent = 'Sync selesai (0 Data)';
+                } else {
+                    throw new Error(data.results?.message || 'Gagal memuat berita dari server.');
+                }
+            } catch (error) {
+                console.error('API Error:', error);
+                container.innerHTML = `
+                    <div class="state-container">
+                        <p style="color: var(--accent-red); font-weight: bold; margin-bottom: 0.5rem;">Gagal Memuat Berita Real-Time!</p>
+                        <p style="font-size: 0.85rem;">${error.message}</p>
+                    </div>`;
+                syncTime.textContent = 'Koneksi API Gagal';
             }
-
-            
-            if (isCharging && battery.chargingTime !== Infinity) {
-              const mins = Math.round(battery.chargingTime / 60);
-              document.getElementById('bat-charge-time').innerText = `Penuh dlm ~${mins} menit`;
-            } else {
-              document.getElementById('bat-charge-time').innerText = isCharging ? 'Menghitung...' : 'N/A';
-            }
-          }
-
-           battery.addEventListener('levelchange', updateBatteryInfo);
-          battery.addEventListener('chargingchange', updateBatteryInfo);
-          battery.addEventListener('chargingtimechange', updateBatteryInfo);
-
-          updateBatteryInfo();
-        } catch (e) {
-          document.getElementById('bat-level').innerText = 'Tidak Diberi Izin / Dibatasi Browser';
         }
-      } else {
-        document.getElementById('bat-level').innerText = 'Tidak Didukung Browser';
-      }
-    }
 
-    
-    async function initDeviceSpecs() {
-      let modelName = 'Unknown';
-      let osName = 'Unknown';
-      let osVersion = 'Unknown';
+        function renderArticles(articles) {
+            const container = document.getElementById('news-container');
+            container.innerHTML = '';
 
-      
-      if (navigator.userAgentData) {
-        try {
-          const uaData = await navigator.userAgentData.getHighEntropyValues([
-            'model',
-            'platformVersion',
-            'platform'
-          ]);
+            articles.forEach(article => {
+             
+                const dateObj = new Date(article.pubDate);
+                const formattedDate = isNaN(dateObj) 
+                    ? article.pubDate 
+                    : dateObj.toLocaleString('id-ID', { dateStyle: 'medium', timeStyle: 'short' });
 
-          osName = uaData.platform || navigator.platform;
-          osVersion = uaData.platformVersion || '';
-          modelName = uaData.model || 'Perangkat Generik';
-        } catch (e) {
-          console.warn('Client hints fallback:', e);
+                
+                const imageUrl = article.image_url ? article.image_url : 'https://via.placeholder.com/600x350/151a23/94a3b8?text=NewsData+Image';
+
+                const card = document.createElement('article');
+                card.className = 'card';
+                card.innerHTML = `
+                    <img src="${imageUrl}" class="card-img" alt="Thumbnail Berita" onerror="this.src='https://via.placeholder.com/600x350/151a23/94a3b8?text=No+Image';">
+                    <div class="card-body">
+                        <div class="card-meta">
+                            <span class="card-source">${article.source_id || 'REDAKSI'}</span>
+                            <span>${formattedDate}</span>
+                        </div>
+                        <a href="${article.link}" target="_blank" rel="noopener noreferrer" class="card-title">${article.title}</a>
+                        <p class="card-desc">${article.description ? article.description : 'Klik judul di atas untuk membaca berita selengkapnya langsung dari penerbit asli.'}</p>
+                        <div class="card-footer">
+                            Penulis: <strong>${article.creator ? article.creator[0] : 'Redaksi Media'}</strong>
+                        </div>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
         }
-      }
 
-      
-      const ua = navigator.userAgent;
+        function filterCategory(category, buttonElement) {
+          
+            document.querySelectorAll('.category-btn').forEach(btn => btn.classList.remove('active'));
+            buttonElement.classList.add('active');
 
-      if (osName === 'Unknown' || osName === '') {
-        if (/Android/i.test(ua)) osName = 'Android';
-        else if (/iPhone|iPad|iPod/i.test(ua)) osName = 'iOS';
-        else if (/Windows/i.test(ua)) osName = 'Windows';
-        else if (/Macintosh/i.test(ua)) osName = 'macOS';
-      }
-
-      
-      if (osName === 'Android' && (osVersion === 'Unknown' || osVersion === '')) {
-        const androidMatch = ua.match(/Android\s([0-9\.]+)/i);
-        if (androidMatch) {
-          osVersion = androidMatch[1];
+            currentCategory = category;
+            fetchNews(category);
         }
-      }
 
-      
-      if (modelName === 'Unknown' || modelName === '' || modelName === 'Perangkat Generik') {
-        const modelMatch = ua.match(/\(([^)]+)\)/);
-        if (modelMatch && modelMatch[1]) {
-          const parts = modelMatch[1].split(';');
-          for (let part of parts) {
-            if (part.includes('Build/') || part.includes('Android')) {
-              modelName = part.replace(/Build\/.*/i, '').replace(/Android\s[0-9\.]+/i, '').trim();
-            }
-          }
-        }
-      }
-
-      
-      let browserName = 'Browser Lain';
-      if (ua.includes('Chrome')) browserName = 'Google Chrome / Chromium';
-      else if (ua.includes('Safari') && !ua.includes('Chrome')) browserName = 'Safari';
-      else if (ua.includes('Firefox')) browserName = 'Mozilla Firefox';
-      else if (ua.includes('Edg')) browserName = 'Microsoft Edge';
-
-      document.getElementById('dev-model').innerText = modelName || 'HP Android / Perangkat Mobile';
-      document.getElementById('dev-os').innerText = osName;
-      document.getElementById('dev-os-ver').innerText = osVersion ? `Android ${osVersion}` : 'Terdeteksi';
-      document.getElementById('dev-browser').innerText = browserName;
-    }
-
-    
-    function initHardware() {
-      
-      document.getElementById('hw-cpu').innerText = (navigator.hardwareConcurrency || 'N/A') + ' Cores';
-
-      
-      document.getElementById('hw-ram').innerText = navigator.deviceMemory ? `>= ${navigator.deviceMemory} GB` : 'Dipertahankan Browser';
-
-      
-      const maxTouch = navigator.maxTouchPoints || 0;
-      document.getElementById('hw-touch').innerText = maxTouch > 0 ? `Layar Sentuh (${maxTouch} titik)` : 'Tanpa Touchscreen';
-
-      
-      try {
-        const canvas = document.createElement('canvas');
-        const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
-        if (gl) {
-          const debugInfo = gl.getExtension('WEBGL_debug_renderer_info');
-          if (debugInfo) {
-            const renderer = gl.getParameter(debugInfo.UNMASKED_RENDERER_GL);
-            
-            document.getElementById('hw-gpu').innerText = renderer.replace(/^ANGLE \([^,]+,\s*/, '').replace(/\s*Direct3D.*/, '');
-          } else {
-            document.getElementById('hw-gpu').innerText = 'WebGL Didukung';
-          }
-        } else {
-          document.getElementById('hw-gpu').innerText = 'Tidak Mendukung WebGL';
-        }
-      } catch (e) {
-        document.getElementById('hw-gpu').innerText = 'Tidak Terdeteksi';
-      }
-    }
-
-    
-    function initRealtimeStatus() {
-      
-      function updateOnlineStatus() {
-        const netEl = document.getElementById('net-status');
-        if (navigator.onLine) {
-          netEl.innerHTML = '<span class="badge badge-online">Terhubung (Online)</span>';
-        } else {
-          netEl.innerHTML = '<span class="badge badge-offline">Terputus (Offline)</span>';
-        }
-      }
-
-      window.addEventListener('online', updateOnlineStatus);
-      window.addEventListener('offline', updateOnlineStatus);
-      updateOnlineStatus();
-
-      
-      if ('connection' in navigator) {
-        function updateConnection() {
-          const conn = navigator.connection;
-          document.getElementById('net-type').innerText = `${conn.effectiveType ? conn.effectiveType.toUpperCase() : 'N/A'} (Downlink: ~${conn.downlink || '?'} Mbps)`;
-        }
-        navigator.connection.addEventListener('change', updateConnection);
-        updateConnection();
-      } else {
-        document.getElementById('net-type').innerText = 'Diakses via Browser';
-      }
-
-      
-      function updateScreenInfo() {
-        document.getElementById('screen-res').innerText = `${window.screen.width} x ${window.screen.height} px`;
-        document.getElementById('screen-orient').innerText = window.innerHeight > window.innerWidth ? 'Portrait' : 'Landscape';
-      }
-
-      window.addEventListener('resize', updateScreenInfo);
-      updateScreenInfo();
-    }
-
-   
-    window.addEventListener('DOMContentLoaded', () => {
-      initBattery();
-      initDeviceSpecs();
-      initHardware();
-      initRealtimeStatus();
-    });
-  </script>
+       
+        fetchNews(currentCategory);
+    </script>
 </body>
 </html>
