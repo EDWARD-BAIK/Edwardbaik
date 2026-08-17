@@ -247,90 +247,40 @@
     </footer>
 
     <script>
-      
-        const API_KEY = 'pub_beae432af9b04f2ea77803f34d6634e2';
-        const BASE_URL = 'https://newsdata.io/api/1/latest';
+    
+
+async function fetchNews(category = 'top') {
+    const container = document.getElementById('news-container');
+    const syncTime = document.getElementById('sync-time');
+
+    
+    const url = `/api/news?category=${category}`;
+
+    try {
+        syncTime.textContent = 'Memperbarui...';
         
-        let currentCategory = 'top';
+        const response = await fetch(url);
+        const data = await response.json();
 
-        async function fetchNews(category = 'top') {
-            const container = document.getElementById('news-container');
-            const syncTime = document.getElementById('sync-time');
-
-          
-            const url = `${BASE_URL}?apikey=${API_KEY}&language=id&category=${category}`;
-
-            try {
-                syncTime.textContent = 'Memperbarui...';
-                
-                const response = await fetch(url);
-                const data = await response.json();
-
-                if (data.status === 'success' && data.results && data.results.length > 0) {
-                    renderArticles(data.results);
-                    syncTime.textContent = `Terakhir Sync: ${new Date().toLocaleTimeString('id-ID')} WIB`;
-                } else if (data.results && data.results.length === 0) {
-                    container.innerHTML = `<div class="state-container">Tidak ada berita ditemukan untuk kategori ini.</div>`;
-                    syncTime.textContent = 'Sync selesai (0 Data)';
-                } else {
-                    throw new Error(data.results?.message || 'Gagal memuat berita dari server.');
-                }
-            } catch (error) {
-                console.error('API Error:', error);
-                container.innerHTML = `
-                    <div class="state-container">
-                        <p style="color: var(--accent-red); font-weight: bold; margin-bottom: 0.5rem;">Gagal Memuat Berita Real-Time!</p>
-                        <p style="font-size: 0.85rem;">${error.message}</p>
-                    </div>`;
-                syncTime.textContent = 'Koneksi API Gagal';
-            }
+        if (data.status === 'success' && data.results && data.results.length > 0) {
+            renderArticles(data.results);
+            syncTime.textContent = `Terakhir Sync: ${new Date().toLocaleTimeString('id-ID')} WIB`;
+        } else {
+            throw new Error(data.message || 'Gagal memuat berita.');
         }
+    } catch (error) {
+        console.error('API Error:', error);
+        container.innerHTML = `
+            <div class="state-container">
+                <p style="color: var(--accent-red); font-weight: bold;">Gagal Memuat Berita!</p>
+                <p style="font-size: 0.85rem;">${error.message}</p>
+            </div>`;
+        syncTime.textContent = 'Koneksi Gagal';
+    }
+}
 
-        function renderArticles(articles) {
-            const container = document.getElementById('news-container');
-            container.innerHTML = '';
 
-            articles.forEach(article => {
-             
-                const dateObj = new Date(article.pubDate);
-                const formattedDate = isNaN(dateObj) 
-                    ? article.pubDate 
-                    : dateObj.toLocaleString('id-ID', { dateStyle: 'medium', timeStyle: 'short' });
-
-                
-                const imageUrl = article.image_url ? article.image_url : 'https://via.placeholder.com/600x350/151a23/94a3b8?text=NewsData+Image';
-
-                const card = document.createElement('article');
-                card.className = 'card';
-                card.innerHTML = `
-                    <img src="${imageUrl}" class="card-img" alt="Thumbnail Berita" onerror="this.src='https://via.placeholder.com/600x350/151a23/94a3b8?text=No+Image';">
-                    <div class="card-body">
-                        <div class="card-meta">
-                            <span class="card-source">${article.source_id || 'REDAKSI'}</span>
-                            <span>${formattedDate}</span>
-                        </div>
-                        <a href="${article.link}" target="_blank" rel="noopener noreferrer" class="card-title">${article.title}</a>
-                        <p class="card-desc">${article.description ? article.description : 'Klik judul di atas untuk membaca berita selengkapnya langsung dari penerbit asli.'}</p>
-                        <div class="card-footer">
-                            Penulis: <strong>${article.creator ? article.creator[0] : 'Redaksi Media'}</strong>
-                        </div>
-                    </div>
-                `;
-                container.appendChild(card);
-            });
-        }
-
-        function filterCategory(category, buttonElement) {
-          
-            document.querySelectorAll('.category-btn').forEach(btn => btn.classList.remove('active'));
-            buttonElement.classList.add('active');
-
-            currentCategory = category;
-            fetchNews(category);
-        }
-
-       
-        fetchNews(currentCategory);
+    
     </script>
 </body>
 </html>
